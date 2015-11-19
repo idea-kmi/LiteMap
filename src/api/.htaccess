@@ -1,0 +1,4 @@
+
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !/api/service.php$
+RewriteRule $ restapi.php

@@ -1,0 +1,92 @@
+
+.EVIDENCE_HUB-EvidenceHubHelper {
+	z-index:15000; 
+	float:left;
+	position:fixed; 
+	left:0; 
+	top:0; 
+	border:2px solid #D3D3D3; 
+	padding:0px;
+	display:block; 
+	background:white;
+	border-bottom-right-radius: 8px; 
+	-o-border--bottom-right-radius: 8px; 
+	-icab-border-bottom-right-radius: 8px; 
+	-khtml-border-bottom-right-radius: 8px; 
+	-moz-border-radius-bottomright: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+}
+
+.EVIDENCE_HUB-EvidenceHubHelperOff {
+	z-index:100; 
+	float:left;
+	position:fixed; 
+	left:0; 
+	top:0; 
+	border:2px solid #D3D3D3; 
+	padding:0px;
+	display:block; 
+	background:white;
+	border-bottom-right-radius: 8px; 
+	-o-border--bottom-right-radius: 8px; 
+	-icab-border-bottom-right-radius: 8px; 
+	-khtml-border-bottom-right-radius: 8px; 
+	-moz-border-radius-bottomright: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+}
+
+.EVIDENCE_HUB-EvidenceHubHelperMain {
+	clear:both;
+	border-top: 1px solid #D3D3D3;
+	float:left;
+	display:block;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+.EVIDENCE_HUB-addbutton {
+	cursor:pointer;
+	padding:0px; 
+	margin-left:5px;
+	margin-top:5px;
+	margin-right:5px;
+}
+
+.EVIDENCE_HUB-closebutton {
+	clear:both;
+	float:right;
+	padding:0px;
+	margin:0px;
+	margin-top:10px;
+	margin-right:2px;
+	margin-bottom:2px;
+}
+
+.EVIDENCE_HUB-buttondivider {
+	clear:both;
+	float:left;
+	border-top: 1px dashed #D3D3D3;
+	height:6px;width:100%;
+}
+
+.EVIDENCE_HUB-message {
+	z-index:15000; 
+	padding:5px;
+	width: 300px; 
+	position: absolute; 
+	border: 1px solid gray;
+	overflow:hidden;	
+	left:0px; 
+	top:0px; 
+	visibility: hidden; 
+	background-color: #40B5B2; 
+	font-face: Arial; 
+	font-weight:bold;
+}
+
+.EVIDENCE_HUB-imagebutton {
+	width: 16px;
+	height:16px;
+	margin:3px;
+	background-color: yellow;
+}

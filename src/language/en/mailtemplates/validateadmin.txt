@@ -1,0 +1,9 @@
+<p>Dear %s,</p>
+<h3>Welcome to the %s</h3>
+<p>You have been registered on our Hub.</p>
+<p><b>Please <a href="%sui/pages/registercomplete.php?id=%s&key=%s">click here</a></b> to verify your email address and complete your registration.</p>
+<p>Please Sign In with this email address and the password: <b>%s</b><br>
+<br>Once you login you are advised to go to your profile and change this password to something more personal.
+<br>You might also like to consider adding a profile image to your account.
+</p>
+<br>

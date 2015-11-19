@@ -1,0 +1,4 @@
+<p>Liebe %r,</p>
+<p>Vielen Dank fÃ¼r die Nutzung von %s</p>
+<p><b>Bitte <a href="%sui/pages/logincomplete.php?id=%s&key=%s&referrer=%s">klicken Sie hier</a></b> um Ihre Email-Adresse zu bestÃ¤tigen.</p>
+<br>

@@ -1,0 +1,5 @@
+<p>Dear %s,</p>
+<p>%s</p>
+<p>%s</p>
+<p style="font-size:8pt">To stop receiving this email digest please uncheck 'Email Digest' on your <a href="%s">user profile page</a>.
+<br>

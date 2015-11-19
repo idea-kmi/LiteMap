@@ -1,0 +1,4 @@
+<p>Querido %s,</p>
+<p>Gracias por registrarse en la %s</p>
+<p><b>Por favor <a href="%sui/pages/externalregistercomplete.php?userid=%s&id=%s&key=%s&referrer=%s">click aquí</a></b> para validar su correo electrónico y completar el proceso de registro.</p>
+<br>

@@ -1,0 +1,5 @@
+<p>Dear %s,</p>
+<h3>A continuación se muestra el %s LiteMap Informe de actividades</h3>
+
+<p>%s</p>
+<br>

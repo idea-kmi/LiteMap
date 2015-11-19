@@ -1,0 +1,4 @@
+<p>Hallo %s,</p>
+<p>Leider konnte Ihr Antrag zum Anschließen an die Gruppe <b><a href="%sgroup.php?groupid=%s">%s</a></b> auf %s nicht genehmigt werden.</p>
+<p>Wir danken Ihnen für Ihr Interesse.</p>
+<br>

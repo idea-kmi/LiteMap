@@ -1,0 +1,5 @@
+<p>Liebe %r,</p>
+<p>%s</p>
+<p>%s</p>
+<p style="font-size:8pt">Um von uns keine Nachrichten mehr zu erhalten, deaktivieren Sie bitte 'Email Digest' (Newsletter) auf Ihrer <a href="%s">Benutzer-Profilseite</a>.
+<br>

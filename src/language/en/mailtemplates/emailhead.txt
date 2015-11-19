@@ -1,0 +1,17 @@
+<html>
+<head>
+<style>
+body {
+	font-family: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif; 
+	margin: 10px;
+	font-size: 90%%; /*must be two else it thinks it is a parameter*/
+	color: DimGrey; 
+}
+
+a {
+ 	color: #e80074;
+}
+</style>
+</head>
+<body>
+<img src="%s" alt="Evidence Hub logo"/>

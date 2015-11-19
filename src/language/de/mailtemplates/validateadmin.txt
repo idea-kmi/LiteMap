@@ -1,0 +1,9 @@
+<p>Liebe %r,</p>
+<h3>Willkommen bei %s</h3>
+<p>Sie haben sich auf unserem Hub registriert.</p>
+<p><b>Bitte <a href="%sui/pages/registercomplete.php?id=%s&key=%s">klicken Sie hier</a></b> um Ihre Email-Adresse zu bestätigen und die Registrierung abzuschließen.</p>
+<p>Bitte loggen Sie sich mit dieser Email-Adresse und diesem Passwort ein: <b>%s</b><br>
+<br>Wir bitten Sie, Ihr Profil aufzurufen, sobald Sie sich eingeloggt haben, und dort Ihr Passwort zu ändern.
+<br>Gerne können Sie dort auch ein persönliches Profil-Bild hochladen.
+</p>
+<br>

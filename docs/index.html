@@ -1,0 +1,850 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<title>LiteMap Documentation</title>
+<style>
+<!--
+body {
+	font-family:"Arial";
+	font-size:12.0pt;
+	font-family:"Arial";
+}
+li {
+	margin-bottom: 15px;
+}
+p {
+	margin:0cm;
+	margin-bottom:10px;
+}
+-->
+</style>
+</head>
+
+<body lang=EN-US link=blue vlink=blue style='tab-interval:36.0pt;margin:30px;'>
+<a name="top"></a>
+
+<center><h1>LiteMap Documentation</h1></center>
+
+<br/>
+<b>NOTE:</b> We realize that these notes are not complete or very detailed.
+We hope it is enough to get you started and we hope to supply more extensive documentation in the future.
+
+<br/>
+<h2><a name="contents">Contents</a></h2>
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#requirements">System Requirements</a></li>
+<li><a href="#folders">A Quick What's Where</a></li>
+<li><a href="#setup">Setting up a LiteMap website</a></li>
+<li><a href="#config">Config Settings</a></li>
+<li><a href="#language">Language</a></li>
+<li><a href="#tailor">Tailoring your LiteMap instance</a></li>
+<li><a href="#dev">Additional Developer Notes</a></li>
+</ul>
+
+<h2><a name="intro">Intro</a></h2>
+<p>This is a really quick overview of the site structure with some
+instructions further down on setting up the database and config file.</p>
+
+<p><b>NOTE:</b> The LiteMap code base is released under the LGPL license: <a href="http://www.fsf.org/licensing/licenses/lgpl.html">http://www.fsf.org/licensing/licenses/lgpl.html</a>.<br>
+It includes third party code which should all have licenses which are compatible with LGPL (see <b>/core/lib</b> and <b>/ui/lib</b> folders to view third party libraries used)</p>
+
+<!-- p>If you need more help at present, please ask your questions through our <a href="http://evidence-hub.net/support/">LiteMap Reporting System</a></p -->
+
+<h2><a name="requirements">System Requirements</a></h2>
+The LiteMap code has been developed and tested on a Red Hat Enterprise Linux server using:
+<br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Apache 2.4.6.</h3>
+Please add the following in your Apache config:<br><br>
+	<code>Options All -Indexes -MultiViews
+    <br>RewriteEngine on
+    <br>AllowOverride FileInfo AuthConfig</code>
+
+<br>LiteMap has embeddable iframes as part of its infastructure. Therefore LiteMap needs to have permissions set so the browsers allow LiteMap pages to be embedded in thrid party websites.
+
+<br><br>If you have .htaccess files disabled (AllowOverride none), it will not affect the running of the site.
+<br>Our .htaccess file has the following:
+<br>
+
+<pre>
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE text/javascript
+AddOutputFilterByType DEFLATE text/x-js
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+AddOutputFilterByType DEFLATE application/json
+AddOutputFilterByType DEFLATE application/ld+json
+AddOutputFilterByType DEFLATE image/svg+xml
+AddOutputFilterByType DEFLATE font/truetype
+AddOutputFilterByType DEFLATE font/opentype
+AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+</IfModule>
+
+#RewriteEngine on
+#RewriteCond %{REQUEST_URI} !/index-maintenance.php$
+#RewriteRule $ /index-maintenance.php [R=302,L]
+
+ErrorDocument 404 /404-error-page.php
+ErrorDocument 403 /403-error-page.php
+</pre>
+
+<br>So we use it to compress files to speed up the website and for having site specific 404 and 403 pages.
+<br>We also uncomment the  'Rewrite' lines if we want to put the site into maintenace mode
+and display a holding page to the user (index-maintenace.php)
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">PHP version 5.4</h3>
+Modules installed:
+<br>
+<code>core mod_so http_core mod_access_compat mod_actions mod_alias
+mod_allowmethods mod_auth_basic mod_auth_digest mod_authn_anon mod_authn_core
+mod_authn_dbd mod_authn_dbm mod_authn_file mod_authn_socache mod_authz_core
+mod_authz_dbd mod_authz_dbm mod_authz_groupfile mod_authz_host mod_authz_owner
+mod_authz_user mod_autoindex mod_cache mod_cache_disk mod_data mod_dbd
+mod_deflate mod_dir mod_dumpio mod_echo mod_env mod_expires mod_ext_filter
+mod_filter mod_headers mod_include mod_info mod_log_config mod_logio
+mod_mime_magic mod_mime mod_negotiation mod_remoteip mod_reqtimeout mod_rewrite mod_setenvif
+mod_slotmem_plain mod_slotmem_shm mod_socache_dbm mod_socache_memcache mod_socache_shmcb
+mod_status mod_substitute mod_suexec mod_unique_id mod_unixd mod_userdir mod_version
+mod_vhost_alias mod_dav mod_dav_fs mod_dav_lock mod_lua prefork mod_proxy
+mod_lbmethod_bybusyness mod_lbmethod_byrequests mod_lbmethod_bytraffic
+mod_lbmethod_heartbeat mod_proxy_ajp mod_proxy_balancer mod_proxy_connect
+mod_proxy_express mod_proxy_fcgi mod_proxy_fdpass mod_proxy_ftp mod_proxy_http
+mod_proxy_scgi mod_ssl mod_systemd mod_cgi mod_perl mod_php5 mod_apreq2</code>
+
+<br><br>LiteMap is not necessarily dependent on all these modules. These are just what are installed on the server LiteMap was developed on.
+I am unsure at this stage if any of them are non standard, or if the LiteMap code in anyway replies on them. So, just in case, I am listing them.
+<br>
+<br/>NOTE: In your php.ini make sure allow-url-fopen = on.
+For importing and handling large CIF files, you may also want to set generous memory and timouts in PHP.
+
+<br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">MySQL</h3>
+LiteMap uses MySQL as the database at present.
+So you will need to install MySQL on your server. We have developed and tested on MySQL (MariaDB): 5.5.
+The database layer of the code has been abstracted out somewhat to make it eaiser for a developer to
+extend the LiteMap code base to use a different database.
+
+<br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Email</h3>
+LiteMap uses emails to validate account setups, tell users their registration is successful, send out email digests etc.
+So your server should be able to do emailing if you want these to be sent.
+You can switch off emailing with a setting in the config file if required (see <a href="#config">Config Settings</a>, below),
+but then all accounts would need to be setup and validated by hand.
+
+<br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Crons</h3>
+To send out the digest emails you will need to setup some cron jobs. An example is shown below.
+To use the lines below you need to add the file system path to your LiteMap code where indicated
+and the domain name to run then against (as LiteMap can be multi domain):
+
+<br><br>0 1 * * 4 php <code>path to code</code>/core/cron/cron-follow-weekly.php <code>domain name</code>
+<br><br>0 1 25 * * php <code>path to code</code>/core/cron/cron-follow-monthly.php <code>domain name</code>
+<br><br>0 2 * * * php <code>path to code</code>/core/cron/cron-follow-daily.php <code>domain name</code>
+<br><br>0 * * * *  php <code>path to code</code>/core/cron/cron-follow-hourly.php <code>domain name</code>
+<br><br>0 0 15 * * php <code>path to code</code>/core/cron/cron-recent-activity.php <code>domain name</code>
+
+<p>
+
+<br>
+<h2><a name="folders">A Quick What's Where in the 'src' folder</a></h2>
+<p>The top level of the file structure has the main base config.php file,
+(see below for more details on the domain level config file <a href="#config">Config Settings</a>) and the setup.php file.
+</p>
+
+<p>This level also has the files for the main pages of the site. These are:<br><br>
+builder.php  - this is the web bookmarklet landing page,<br>
+chats.php - the viewing chat pages,<br>
+explore.php - for viewing a given entry,<br>
+explore-slim.php - for viewing a given entry when on the map page,<br>
+group.php - for viewing a group page,<br>
+index.php - for viewing the main site page/starting point,<br>
+map.php - for a viewing given map,<br>
+knowledgetrees.php - for viewing a knowledge tree on the explore page,<br>
+networkgraph.php - for viewing a network graph on the explore page,<br>
+search.php - for viewing searhes, <br>
+user.php - for viewing a given user</p>
+
+<p>The majority of these top-level page should probably move to ui/pages in the future.</p>
+
+<p><b>The Folders in 'src':</b></p>
+
+<ul style="list-style:none;">
+
+<li><b>api </b> - This folder holds the LiteMap services file that processes incoming service request,
+(see core/apilib.php for the actual guts).</li>
+
+<li><b>core </b> - This is where the server side code resides.
+	<ul>
+	<li><b>cron </b> - This folder has various files that run the cron jobs.</li>
+	<li><b>database </b> - This holds the database manager and the sql statements. There is a README.txt file in there with more details.</li>
+	<li><b>datamodel </b> - This holds that classes that hold that database record information when it is loaded. There are classes for all the mail items types, like user, node, linktype etc...</li>
+	<li><b>formats </b> - This holds the files that process the api return data into the correct format, e.g. json, xml etc..</li>
+	<li><b>io </b> - This folder holds the code to handle the import options in LiteMap: Currently just from <a href="http://catalyst-fp7.eu/" target="_blank">Catalyst</a> and its
+	<a href="http://catalyst-fp7.eu/wp-content/uploads/2014/03/D3.1-Software-Architecture-and-Cross-Platform-Interoperability-Specification.pdf" target="_blank"> Catalyst Interchange Format</a>.</li>
+	<li><b>lib </b> - This holds all the external libraries that LiteMap is using in the server side code.</li>
+	</ul>
+</li>
+<li><b>images </b> - This is where most of the graphics for the site are. Some are also in the themes (see below)</li>
+<li><b>install</b> - This folder has the sql file needed to create a LiteMap database and the script to install the default data. See <a href="#setup">Setting up an LiteMap</a> below.
+<br><b>Once you have finished the install process remove this folder from your website.</b>
+</li>
+<li><b>language </b> - This folder holds the language files for all the interface text.
+By changing the $CFG->language property (see below) you can override the default language
+of 'en' and add a different folder and then convert all the language files to another
+language if you want to. For more details on how this works see <a href='#lang'>Language</a> below.
+	<ul>
+	<li><b>en </b> - This holds the default English language version of all interface text shown to the user. Please never remove this folder.
+	</li>
+	</ul>
+</li>
+
+<li><b>sites</b> - There is a README.txt file with more details
+	<ul>
+	<li><b>default</b> - This is where you setup a sinlge instance or the base instance of the site. There is a README.txt file there with more details.</li>
+	<li><b>multi</b> - This is where you setup multiple instance of the site for different domains, but sharing the codebase. There is a README.txt file there with more details.</li>
+	</ul>
+</li>
+
+<li><b>themes</b> - This is where you can setup alternative themes. We supply the Default theme.
+It has a sub-folder for images and one for the stylesheets.
+Please see the README.txt file that is in the themes folder for more details about setitng up themes.</li>
+
+<li><b>ui</b> - This folder has most of the client side code e.g. header, footer, homepage etc... etc.
+	<ul>
+	<li><b>admin  </b> - This folder has various files for the Administrator option pages.
+		If you are a user who has the 'IsAdministrator' field in the Users table set to 'Y', you will see an
+		extra menu item when logged in at the top of the screen called 'admin' which will take you to the Administrator options.
+	</li>
+	<li><b>embed </b> - This folder has the embed file for embedding readonly and editable maps in third party sites.</li>
+	<li><b>explore </b> - This holds that classes that create the item explore pages,
+	like the slim version on maps and the full version on the explore.php page. It also has the chat pages code.
+		<ul>
+			<li><b>chat</b> - The code for the chats pages.</li>
+			<li><b>slim</b> - The code for the details divs for nodes in a map.</li>
+			<li><b>widget</b> - The code for the explore.php pages for items.</li>
+		</ul>
+	</li>
+	<li><b>lib </b> - This holds all the external libraries that the LiteMap is using in the client side code.</li>
+	<li><b>movies </b> - This holds all the help movies.</li>
+	<li><b>networkmaps </b> - This holds the files that create all the visualisations used on the Dashboards and also the explore page network pages.
+	It also holds the files that call CIDashboard for the map level visualisation pages.</li>
+	<li><b>pages </b> - This holds the secondary page files, like login and logout, register, conditionsofuse etc..</li>
+	<li><b>popups </b> - This holds the files that are shown in popup windows pages, like the add and edit forms, activity viewer pages etc..</li>
+	<li><b>stats </b> - This holds internally created dashboard code for system, group and map level dashboards.</li>
+	</ul>
+</li>
+</ul>
+
+<br>
+<h2><a name="setup">Setting up a LiteMap website</a></h2>
+
+<ol>
+
+<li><b>Creating the Database:</b>
+	<ol style="list-style-type: lower-alpha;">
+		<li>Create an empty database for the LiteMap to use in your MySQL installation,
+		making sure that the database character set and collation are UTF-8, e.g.<br>
+		<code>CREATE DATABASE dbname CHARACTER SET utf8 COLLATE utf8_general_ci;</code><br><br>
+		If you do not want to use utf8, you will need to edit the db.sql file before you run it in c. below, as the table creation statements are using utf8.</li>
+		<li>Create a MySQL user for LiteMap to use.</li>
+		<li>Load the database schema from /install/mysql.sql into your new LiteMap Database to create all the required tables.</li>
+	</ol>
+</li>
+<li><b>Adding the Default Data:</b>
+	<ol style="list-style-type: lower-alpha;">
+
+		<li>Edit /install/adddefaultdata.php. You must fill in the following data in the file:
+			<ul>
+				<li>$dirAddress = the file path to where your website code resides on the server (ending in '/')</li>
+				<li>$databaseaddress = the address of your mysql database - usually 'localhost';</li>
+				<li>$databaseuser = the username of your mysql user for LiteMap, as created in step 1b above;</li>
+				<li>$databasepass = the password of your mysql user for LiteMap, as created in step 1b above;</li>
+				<li>$databasename = the name of your mysql database for LiteMap, as created in step 1a above;</li>
+				<li>$email = fill in a default user email address for LiteMap - this can be made up. This user account owns the default node and links types and acts as a template for all subsequent user accounts;</li>
+				<li>$password = fill in an default user password for LiteMap;</li>
+				<li>$email2 = fill in a theme admin user email address for LiteMap - this can be made up. This user account manages the LiteMap News list and is called the System Admin user.</li>
+				<li>$password2 = fill in an theme admin user password for LiteMap;</li>
+			</ul>
+		</li>
+		<li>Now run the adddefaultdata.php file on your server. You can do this in two ways:
+			<ol>
+				<li>Run it from the command line. Note that the file will output data that you will need, specifically two UserIDs and the deafult role group ID (as well as possible error messages).
+				You can get the user ids you will need from the database Users table, adnd the deafult NodeTypeGroupID from the NodeTypeGroup table if required. But I would send the output to a file myself.</li>
+				<li>Surf to the file through your browser. In this case the three ids you need for your config file will be displayed on screen as well as any error messages.</li>
+			</ol>
+		When it completes (hopefully without error) make a note of the ids it displays. You will need these in a moment to put in the Config file.</li>
+	</ol>
+</li>
+
+<li>Copy /config-sample.php to /config.php.
+You will need to edit the config.php file here to just add two things:
+<ol>
+<li>$CFG->basedomain - this is the domain that is the default one for the installation. If you are running this as a single site this will be your actual domain.
+For multi-sites you still need a base domain entered here. The details config.php file for this base domain can be found in 'sites/default/'.</li>
+<li>$CFG->dirAddress - this is the file path on your server to the website code, ending in a '/'</li>
+</ol>
+</li>
+
+<li>Copy sites/default/config-sample.php to sites/default/config.php.
+<br>Edit settings in sites/default/config.php to point to your set up and database and to configure other important aspects of LiteMap.
+<br/>For the setting $CFG-&gt;ADMIN_USERID, $CFG-&gt;defaultUserID and $CFG-&gt;defaultRoleGroupID you need to copy in the ids given from step 2c. above
+<br/>All config file settings are explained below in <a href="config">Config Settings</a>.
+<br/>The ones in <span style="color:red">red</span> represent the minimum settings that you must look at and edit as required.
+</li>
+
+<li>At this point you should be able to surf to the website and check it comes up OK.</li>
+
+<li>If all is well, remove the <b>install</b> folder from your website.</li>
+
+</ol>
+
+<br>
+<h2><a name="config">Config Settings</a></h2>
+
+All setting have comments explaining their use.
+
+<br/><br/><b><span>$CFG-&gt;privateSite = false;</span></b>
+<br/>( Does this site require login for all access, including interface and API; true if it does, else false if it does not.
+This basically would lock down the site for access by non-logged in users.
+You would need to really edit the login page to make it more of a landing page if you choose to set this to 'true', as the login page would be what people initally always see. ).
+
+<br/><br/><b><span style="color:red">$CFG-&gt;START_DATE = 	mktime(0, 0, 0, 01, 01, 2013);</span></b>
+<br/>( This is the date you setup your site. It is currently used by the site Analytics. E.g. mktime(0, 0, 0, 7, 01, 2012) = 1st July 2012 )
+just edit the last three number month, date, year).
+
+<br/><br/><b><span style="color:red">$CFG-&gt;SITE_TITLE = &quot;The title of your instance of LiteMap&quot;;</span></b>
+<br/>( This is used in the header title as well as being displayed to the user in various places. )
+
+<br/><br/><b><span style="color:red">$CFG-&gt;ADMIN_USERID = &quot;the database user id number of your System administrator&quot;;</span></b>
+<br/>( This person is the owner of the News nodes in the system and you have to log in as them to manage themes. You will have been given this id as output from the install process.
+Please note: by default News is not currently active on the homepage. So you would need to uncomment the News section to see andy News entriues you add through the 'admin' area.)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;defaultUserID = &quot;the database user id number of your Default user&quot;;</span></b>
+<br/>( This person acts as a template for new users. Their node and link types are copied into new user accounts. You will have been given this id as output from the install process.)
+
+<br><br><b><span style="color:red">$CFG-&gt;defaultRoleGroupID = "";</span></b>
+<br/> ( As found in the database NodeTypeGroup table. You will have been given this id as output from the install process)
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">URL Setup</h3>
+<b><span style="color:red">$CFG-&gt;homeAddress = &quot;http://web/path/to/website/&quot;;</span></b>
+<br/>( home address is the base url for the website and must end with trailing '/' )
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Database Setup</h3>
+
+<b><span>$CFG-&gt;databasetype = &quot;mysql&quot;;</span></b>
+<br/> (Currently we support MySQL databases.So the value below must be 'mysql' at present. But we hope to add more options in the future.
+If you extend the Database layer yourself to use a different database type,
+the name you add here would need to match the one you add in /core/databases/databasemanager.class.php)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;databaseaddress = &quot;localhost&quot;;</span></b>
+<br/> (The database address, e.g. localhost or a url etc.)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;databaseuser</span></b>
+<br/> (The database username that site uses to login to the database)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;databasepass</span></b>
+<br/> (The database password to go with the above username)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;databasename</span></b>
+<br/> (The database name for the site to use)
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Language</h3>
+<b>$CFG-&gt;language = 'en';</b>
+<br/> (This string indicates what language the interface text should use. The name must correspnd to a folder in the 'language' folder where the translated texts should exist.)
+<br/> For more information about the language system please see <a href="#language">Language</a> below.
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Interface Theme</h3>
+<b>$CFG-&gt;uitheme = "default";</b>
+<br/> (This string indicates what theme the interface should use.
+The name must correspond to a folder in the 'theme' folder where the theme specific style sheets, images and pages should exist.
+The default theme is 'deault'. Make sure this is never deleted as it is the fall back position.)
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Bits and Pieces</h3>
+
+<b>$CFG-&gt;hasAlerts = true (or false);</b>
+<br/> (Does this site want to display Metric alerts fropm the Metrics server against maps? 'true' if you do, else 'false'.)
+
+<br/><br/><b>$CFG-&gt;workdir = &quot;/tmp/&quot;</b>
+<br/> (The path to a temp directory that LiteMap can use)
+
+<br/><br/><b>$CFG-&gt;hasRss = false (or true);</b>
+<br/> (If set to 'true', you get RSS feed buttons at various places in the site. If set to 'false', you get no RSS feed buttons.
+Default is 'true')
+
+<br/><br/><b>$CFG-&gt;hasCIFImport = false (or true);</b>
+<br/> (Does this site want to use the
+<a href="http://catalyst-fp7.eu/" target="_blank">Catalyst</a> import feature which imports files in the
+	<a href="http://purl.org/catalyst/jsonld" target="_blank"> Catalyst Interchange Format</a> - 'true' / 'false'.
+See also <a href="http://catalyst-fp7.eu/wp-content/uploads/2014/03/D3.1-Software-Architecture-and-Cross-Platform-Interoperability-Specification.pdf" target="_blank"> Software Architecture and Cross-Platform Interoperability Specification</a>.)
+
+<br/><br/><b>$CFG-&gt;ImportLimit = 2000;</b>
+<br/> (This says how many nodes can be imported from CIF in a single transaction. Only relevant if you set hasCIFImport to 'true'.
+Note: php.ini settings may need to be changed to allow large files sizes and import times fopr really big files)
+
+<br/><br/><b>$CFG-&gt;hasUserHomePageOption = false (or true);</b>
+<br/> (Does this site want to have the homepage field on the user registration/profile forms. )
+
+<br/><br/><b>$CFG-&gt;hasConditionsOfUserAgreement = false (or true);</b>
+<br/> (Does this site want to display a Conditions of use Agreement statement when user's sign up? The default text for this can be overriden in the language custom folder.)
+
+<br><br>
+<p>The following two values work together.
+<br>For example if the debateCountOpen is 1 and the debateChildCount Open is 10,
+then on the knowledge builder explore page, a knowledge tree will be opened automatically
+when the page is loaded only if there is only 1 tree with less than 10 items on it, otherwise trees will be closed.
+</p>
+<b>$CFG-&gt;debateCountOpen = 1;</b>
+<br/> (this value determines how many knowledge trees there should be to decide if they should be opened automoatcially.)
+
+<br/><br/><b>$CFG-&gt;debateChildCountOpen = 10;</b>
+<br/> (This value determines how many items they should be less than in a knowledge tree to open it automatically.)
+
+<br><br>
+<p>The following two values work together.
+<br>For example if the chatCountOpen is 1 and the chatChildCount Open is 15,
+then on the Chats explore page, a chat tree will be opened automatically
+when the page is loaded only if there is only 1 tree with less than 10 items on it, otherwise trees will be closed.
+</p>
+<b>$CFG-&gt;chatCountOpen = 1;</b>
+<br/> (this value determines how many chat trees there should be to decide if they should be opened automoatcially.)
+
+<br/><br/><b>$CFG-&gt;chatChildCountOpen = 15;</b>
+<br/> (This value determines how many items they should be less than in a chat tree to open it automatically.)
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="registration">Site Registration</a></h3>
+<b><span style="color:red">$CFG-&gt;signupstatus = $CFG-&gt;SIGNUP_CLOSED;</span></b>
+<br/> (Set this to one of the 3 static variables;$CFG-&gt;SIGNUP_OPEN, $CFG-&gt;SIGNUP_REQUEST, $CFG-&gt;SIGNUP_CLOSED, explained below.
+The default is $CFG-&gt;SIGNUP_CLOSED.)
+<ul>
+<li><b>$CFG-&gt;SIGNUP_OPEN = "open";</b>
+<br/> (If you use this state for signup below, then users can register themselves for using the Hub)</li>
+<li><b>$CFG-&gt;SIGNUP_REQUEST = "request";</b>
+<br/> (If you use this state for signup below, then users can request an account for using the Hub which is then validated by the Hub administrator)</li>
+<li><b>$CFG-&gt;SIGNUP_CLOSED = "closed";</b>
+<br/> (If you use this state for signup below, then users cannot register, they must be sent login details. So by invitation only.)</li>
+</ul>
+<b><span style="color:red">$CFG-&gt;signuprequestemail = ''; //defaults to $CFG->EMAIL_REPLY_TO</span></b>
+<br/> (The email address of the site user managing the registration requests if SIGNUP_REQUEST is used. They must be an admin user (IsAdmin set to 'Y' in Users table the database))
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Background colours used in visualisations.</h3>
+They have the same names as styles in the styles.css file,
+ but we found we needed slightly darker shades than their stylesheet equivalents.
+<br>NOTE to self: These really should be coded out.
+<br/><br/>
+<b>$CFG-&gt;challengebackpale = '#6FCBF5';</b>
+<br/><b>$CFG-&gt;issuebackpale = '#DFC7EB';</b>
+<br/><b>$CFG-&gt;solutionbackpale = '#B9C1DD';</b>
+<br/><b>$CFG-&gt;probackpale = '#C3D6BC';</b>
+<br/><b>$CFG-&gt;conbackpale = '#DE9898';</b>
+<br/><b>$CFG-&gt;claimbackpale = '#F0B288';</b>
+<br/><b>$CFG-&gt;orgbackpale = '#A4AED4';</b>
+<br/><b>$CFG-&gt;projectbackpale = '#DEE2F0';</b>
+<br/><b>$CFG-&gt;peoplebackpale = '#C6ECFE';</b>
+<br/><b>$CFG-&gt;evidencebackpale ='#DFC7EB';</b>
+<br/><b>$CFG-&gt;resourcebackpale = '#E1F1C9';</b>
+<br/><b>$CFG-&gt;themebackpale = '#FAB8DA';</b>
+<br/><b>$CFG-&gt;plainbackpale = '#D0D0D0';</b>
+<br/><b>$CFG-&gt;argumentbackpale = '#F0F1AD';</b>
+<br/><b>$CFG-&gt;ideabackpale = '#D0D0D0';</b>
+<br/><b>$CFG-&gt;commentbackpale = '#FAB8DA';</b>
+<br/><b>$CFG-&gt;mapbackpale = '#F9B257';</b>
+
+<br/><br/>
+<b>$CFG-&gt;challengeback = '#83548B';</b>
+<br/><b>$CFG-&gt;issueback = '#DFC7EB';</b>
+<br/><b>$CFG-&gt;solutionback = '#A4AED4';</b>
+<br/><b>$CFG-&gt;proback = '#A9C89E';</b>
+<br/><b>$CFG-&gt;conback = '#D46A6A';</b>
+<br/><b>$CFG-&gt;claimback = '#CD6119';</b>
+<br/><b>$CFG-&gt;orgback = '#5B70BD';</b>
+<br/><b>$CFG-&gt;projectback = '#94A5E4';</b>
+<br/><b>$CFG-&gt;peopleback = '#0000C0';</b>
+<br/><b>$CFG-&gt;evidenceback ='#BC84DC';</b>
+<br/><b>$CFG-&gt;resourceback = '#BCE482';</b>
+<br/><b>$CFG-&gt;themeback = '#F777B9';</b>
+<br/><b>$CFG-&gt;plainback = '#D0D0D0';</b>
+<br/><b>$CFG-&gt;argumentback = '#E1E353';</b>
+<br/><b>$CFG-&gt;ideaback = '#D0D0D0';</b>
+<br/><b>$CFG-&gt;commentback = '#F777B9';</b>
+<br/><b>$CFG-&gt;mapback = '#F9B257';</b>
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Browser Bookmarklet Tool</h3>
+<b><span style="color:red">$CFG-&gt;buildername = "Open Source LiteMap";</span></b>
+<br/> (The name of the  web browser bookmarklet toolbar for this site. A shortening of the main site name or something like that.)
+<br/><br/><b><span style="color:red">$CFG-&gt;buildernamekey = "&lt;your tool key - e.g. 'MyLiteMapInstance'&gt;";</span></b>
+<br/> (This needs to be a unique <b>single word</b> key that is used before all function names in the bookmarklet to avoid clashing with any other scripts loaded in wepages.)
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Emailing</h3>
+<b><span style="color:red">$CFG-&gt;send_mail = true;</span></b>
+<br/> (whether or not to send emails.
+This should really always be true unless you have a development instance or something, otherwise account creation will not work.
+For example if your server can't do emailing - true/false, default 'true')
+
+<br/><br/><b><span style="color:red">$CFG-&gt;EMAIL_FROM_ADDRESS = "";</span></b>
+<br/> (The email address to show system emails as being sent from)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;EMAIL_FROM_NAME = $CFG-&gt;SITE_TITLE." Admin";</span></b>
+<br/> (The email from name to show system emails as being sent by. Defaults to your site title plus 'Admin')
+
+<br/><br/><b><span style="color:red">$CFG-&gt;ERROR_ALERT_RECIPIENT = "";</span></b>
+<br/> (The email address to show system emails should be replied to)
+
+<br/><br/><b><span style="color:red">$CFG-&gt;EMAIL_REPLY_TO = "";</span></b>
+<br/> (The email address to sent system error alerts to. Usually your developer.)
+
+<br/><br/><h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Newsletters and Email Digests</h3>
+<b><span>$CFG-&gt;RECENT_EMAIL_SENDING_ON = true;</span></b>
+<br/> (Should recent activity email sending should be included in this hub? - true/false)
+
+<br/><br/><b><span>$CFG-&gt;RECENT_EMAIL_SENDING_SELECTED = true;</span></b>
+<br/> (If recent activity email sending should be on or off by default for new user - 'Y' == on / 'N' = off)
+
+<br/><br/><b>$CFG-&gt;ACTIVITY_EMAIL_SENDING_ON = 'Y';</b>
+<br/> (If email sending should be on or off by default for new user - 'Y' == on / 'N' = off)
+
+<br><br/><b>$CFG-&gt;ACTIVITY_EMAIL_SENDING_INTERVAL = 'daily';</b>
+<br/> (When to send email alerts by default for new users - 'daily'/'weekly'/'monthly')
+
+
+<br/><br/>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Proxy Settings</h3>
+if the server needs a proxy to access internet, set it here.
+<br/><br/><b><span style="color:red">$CFG-&gt;PROXY_HOST = "";</span></b>
+<br/><br/><b><span style="color:red">$CFG-&gt;PROXY_PORT = "";</span></b>
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Captcha</h3>
+<b><span style="color:red">$CFG-&gt;CAPTCHA_ON = false;</span></b>
+<br/>(If you want to use Capthca set this to 'true. ('true' or 'false'))
+<br/>If this is set to 'true' you must also complete CAPTCHA_PUBLIC and CAPTCHA_PRIVATE below.
+<br/>We strongly recommend that you use Captch on your registration forms to stop automated registrations.
+
+<br/><br/>
+<b><span style="color:red">$CFG-&gt;CAPTCHA_PUBLIC = &quot;&lt;add recaptcha public key here&gt;&quot;;</span></b>
+<br/><b><span style="color:red">$CFG-&gt;CAPTCHA_PRIVATE = &quot;&lt;add recaptcha private key here&gt;&quot;;</span></b>
+<br/>(If you want to use Captcha on your site, you can get the public and private keys from the Captcha website (<a href="http://www.captcha.net/">http://www.captcha.net/</a>))
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Google</h3>
+
+<b><span style="color:red">$CFG-&gt;GOOGLE_ANALYTICS_ON = false;</span></b>
+<br/> (If you want to use Google Analytics set this to 'true. ('true' or 'false'))
+<br/>If this is set to 'true' you must also complete the GOOGLE_ANALYTICS_KEY below.
+
+<br/><br/><b><span style="color:red">$CFG-&gt;GOOGLE_ANALYTICS_KEY = &quot;&quot;;</span></b>
+<br/> (Google analytics key: You will need to go and get a Google analytics key for your site, if you want the analytics to work)
+
+<br><br><b><span style="color:red">$CFG-&gt;GOOGLE_ANALYTICS_DOMAIN = &quot;&quot;;</span></b>
+<br/> (Google analytics domain: This is the domain you specified against the key above on Google Analytics.)
+
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Safe URLs</h3>
+<p>This field is a list of urls that are allowed in IFrame and Object embeds in formatted descriptions.
+<br>To add a new one repeat the pattern but increase the number, e.g.
+$CFG-&gt;safeurls[11] = 'xyz.zom/'; etc..</p>
+
+<br><b>$CFG-&gt;safeurls[0] = 'www.youtube.com/embed/';</b>
+<br><b>$CFG-&gt;safeurls[1] = 'player.vimeo.com/video/';</b>
+<br><b>$CFG-&gt;safeurls[2] = 'www.ustream.tv/';</b>
+<br><b>$CFG-&gt;safeurls[3] = 'www.schooltube.com/';</b>
+<br><b>$CFG-&gt;safeurls[4] = 'archive.org/';</b>
+<br><b>$CFG-&gt;safeurls[5] = 'www.blogtv.com/';</b>
+<br><b>$CFG-&gt;safeurls[6] = 'uk.video.yahoo.com/';</b>
+<br><b>$CFG-&gt;safeurls[7] = 'www.teachertube.com/';</b>
+<br><b>$CFG-&gt;safeurls[8] = 'sciencestage.com/';</b>
+<br><b>$CFG-&gt;safeurls[9] = 'www.flickr.com/';</b>
+<br><b>$CFG-&gt;safeurls[10] = 'cohere.open.ac.uk/';</b>
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Spam Alert</h3>
+<b>$CFG-&gt;SPAM_ALERT_ON = false;</b>
+<br/> (If you want to enable spam reporting on this site, set the above to 'true'.
+New interface elements will then display to allow Spam Reporting.
+If this is set to 'true' you must also complete the SPAM_ALERT_RECIPIENT field below)
+
+<br/><br/><b>$CFG-&gt;SPAM_ALERT_RECIPIENT = "email address of person to receive spam reports";</b>
+<br/> (If you set spam reporting to true you must then enter the email address that the spam
+reports should be sent to here.)
+
+<br><br>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Social Sign On</h3>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_ON = false;</b>
+<br/> (If you want to allow users to Sign on with external services like Facebook or Twitter change this to 'true'.
+Before you turn this facility on you must follow the instructions below and obtain ids and secrets for each service you wish to include.)
+
+<p>
+Please note that the individual instructions for each provider may have changed,
+as providers change the way you register and what you need to set.
+So consider these instructions a rough guide only. Check the help for each provider for more details
+and also the core/lib/hybridauth library which will ultimately use these settings.
+</p>
+
+
+<h3 style="font-size:11pt;text-decoration:underline">Yahoo</h3>
+<b>$CFG-&gt;SOCIAL_SIGNON_YAHOO_ON = false;</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_YAHOO_ID = "";</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_YAHOO_SECRET = "";</b>
+<ol>
+<li>Go to <a href="https://developer.apps.yahoo.com/dashboard/createKey.html">https://developer.apps.yahoo.com/dashboard/createKey.html</a> and create a project.</li>
+<li>Fill out any required fields such as the Application name and description.</li>
+<li>Set the 'Applcation Type' to be 'Web-based'.</li>
+<li>Set the 'Home Page URL' to be you hub url<br>
+     It should match with the current domain given in $CFG->homeAddress minus the final slash.</li>
+<li>Int 'Access Scope' select 'This app requires access to private user data'.<br>
+ 	A section will expand out. Enter the Application Domain as in 4. above.</li>
+<li>In 'Select APIs for private user data access:', select 'Social Directory' and leave it as 'Read Public'.</li>
+<li>Once you have created the project, copy and paste the 'Consumer Key' as the $CFG-SOCIAL_SIGNON_YAHOO_ID<br>
+     and the 'Consumer Secret' as the $CFG->SOCIAL_SIGNON_YAHOO_SECRET<br>
+     and set $CFG->SOCIAL_SIGNON_YAHOO_ON = true.</li>
+</ol>
+
+<h3 style="font-size:11pt;text-decoration:underline">Google</h3>
+<b>$CFG-&gt;SOCIAL_SIGNON_GOOGLE_ON = false;</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_GOOGLE_ID = "";</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_GOOGLE_SECRET = "";</b>
+<ol>
+<li>Go to <a href="https://code.google.com/apis/console/">https://code.google.com/apis/console/</a> and create a new project, if you don't have one.</li>
+<li>Fill out any required fields such as the name and description.</li>
+<li>Click on "Create client ID..."/"Create another client ID...". This open a popup</li>
+<li>Make sure 'Application Type' has 'Web Application' selected.</li>
+<li>In the section 'Your site or hostname' fill in your hub url
+<br>It should match with the current domain given in $CFG->homeAddress minus the final slash.</li>
+<li>Then select '(more options)'.</li>
+<li>In the section 'Authorized Redirect URIs' you need to add a callback URL for your application:
+<br>The URL should start with the URL you have entered into $CFG->homeAddress
+<br>followed by 'core/lib/hybridauth-2.1.2/hybridauth/?hauth.done=Google'
+<br>e.g. https://test.evidence-hub.net/core/lib/hybridauth-2.1.2/hybridauth/?hauth.done=Google
+<br>Then press 'Create Client ID'</li>
+<li>Once you have done this, copy and paste the 'Client ID' as the $CFG-SOCIAL_SIGNON_GOOGLE_ID
+<br>and the 'Client Secret' as the $CFG->SOCIAL_SIGNON_GOOGLE_SECRET
+<br>and set $CFG->SOCIAL_SIGNON_GOOGLE_ON = true.</li>
+</ol>
+
+<h3 style="font-size:11pt;text-decoration:underline">Facebook</h3>
+<b>$CFG-&gt;SOCIAL_SIGNON_FACEBOOK_ON = false;</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_FACEBOOK_ID = "";</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_FACEBOOK_SECRET = "";</b>
+<ol>
+<li>Go to <a href="https://www.facebook.com/developers/">https://www.facebook.com/developers/</a> and create a new application.</li>
+<li>Fill out any required fields such as the application name and description.</li>
+<li>Make sure you have 'Sandbox Mode' set to Disabled once your site is live, or only
+your developer Facebook user will be able to use the Social Sign On.</li>
+<li>Select 'Website with Facebook Login' and add your hub url into the 'Site URL' field.
+<br>It should match with the current domain given in $CFG->homeAddress minus the final slash.</li>
+<li>Once you have registered, copy and paste the 'App ID' as the $CFG->SOCIAL_SIGNON_FACEBOOK_ID
+<br>and the 'App Secret' as the $CFG->SOCIAL_SIGNON_FACEBOOK_SECRET
+<br>and set $CFG->SOCIAL_SIGNON_FACEBOOK_ON = true.</li>
+</ol>
+
+<h3 style="font-size:11pt;text-decoration:underline">Twitter</h3>
+<b>$CFG-&gt;SOCIAL_SIGNON_TWITTER_ON = false;</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_TWITTER_ID = "";</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_TWITTER_SECRET = "";</b>
+<ol>
+<li>Go to <a href="https://dev.twitter.com/apps">https://dev.twitter.com/apps</a> and create a new application.</li>
+<li>Fill out any required fields such as the application name and description.</li>
+<li>Put your website domain in the Application Website and Application Callback URL fields.
+<br>It should match with the current domain given in $CFG->homeAddress minus the final slash.</li>
+<li>Set the Default Access Type to 'Read, Write, & Direct Messages'.</li>
+<li>Tick the checkbox beside 'Allow this application to be used to Sign in with Twitter'</li>
+<li>Once you have registered, copy and paste the 'Consumer key' as the $CFG->SOCIAL_SIGNON_TWITTER_ID
+<br>and the 'Consumer secret' as the $CFG->SOCIAL_SIGNON_TWITTER_SECRET
+<br>and set $CFG->SOCIAL_SIGNON_YAHOO_ON = true.</li>
+</ol>
+
+<h3 style="font-size:11pt;text-decoration:underline">LinkedIn</h3>
+<b>$CFG-&gt;SOCIAL_SIGNON_LINKEDIN_ON = false;</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_LINKEDIN_ID = "";</b>
+<br/><b>$CFG-&gt;SOCIAL_SIGNON_LINKEDIN_SECRET = "";</b>
+<ol>
+<li>Go to <a href="https://www.linkedin.com/secure/developer">https://www.linkedin.com/secure/developer</a> and create a new application.</li>
+<li>Fill out any required fields such as the application name and description.</li>
+<li>Put your website domain in the Website URL field.
+<br>It should match with the current domain given in $CFG->homeAddress minus the final slash.</li>
+<li>Set 'Live Status' to Live (if you are live).</li>
+<li>In the OAuth User Agreement section, select  'r_fullprofile' and 'r_emailaddress'</li>
+<li>Once you have registered, copy and paste the 'API Key' as the $CFG->SOCIAL_SIGNON_LINKEDIN_ID
+<br>and the 'Secret Key' as the $CFG->SOCIAL_SIGNON_LINKEDIN_SECRET
+<br>and set $CFG->SOCIAL_SIGNON_LINKEDIN_ON = true.</li>
+</ol>
+<br>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Testing</h3>
+<p>This is something we used when testing LiteMap with various user bases.
+ It ties to an AuditTesting table in the database and various bits of code that can be
+ used to write to this table when running tests.
+ Search for $CFG->TEST_TRIAL_START in the code base to find examples of use from our last tests. There is a function in
+ ui/util.js.php called auditTesting for writing to the AuditTesting table.
+ You can ignore this unless you want to run a test of specific ui element's usage.<p>
+<br/><b>$CFG-&gt;TEST_TRIAL_NAME = '';</b>
+<br>(The name for the test you are running).
+<br/><br/><b>$CFG-&gt;TEST_TRIAL_START = date_timestamp_get(DateTime::createFromFormat('d-m-Y', '0-0-0'));</b>
+<br>(The date the test will start.Edit the last three zeros to set day, month and year).
+<br/><br/><b>$CFG-&gt;TEST_TRIAL_END = date_timestamp_get(DateTime::createFromFormat('d-m-Y', '0-0-0'));</b>
+<br>(The date the test will end. Edit the last three zeros to set day, month and year).
+
+
+<br><br>
+<h2><a name="language">Language</a></h2>
+
+<p>The current language system allows you to do two important things:
+<ol>
+<li>Add another language: You can change the language you are using by translating all the language files into another language.</li>
+<li>Site specific text: You can change the text in your version of the hub to be site specific.</li>
+</ol>
+</p>
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Adding another language</h3>
+<p>If you want to add a new language set to the LiteMap you need to:
+<ol>
+<li>Create a new folder inside the 'language' folder whose name the two letter abbreviation for the language you are providing a translation for.
+These codes are specified by the <a href="http://www.ics.uci.edu/pub/ietf/http/related/iso639.txt">ISO 639</a> standard, e.g.</p>
+<table style="width: 216px; height: 205px;" bgcolor="#cccccc" border="1" bordercolor="#000000" cellpadding="7" cellspacing="2">
+<tbody>
+<tr bgcolor="#3366ff">
+<td valign="top"><em>Language Code</em></td>
+<td valign="top"><em>Language</em></td>
+</tr>
+<tr>
+<td><code>en</code></td>
+<td>English</td>
+</tr>
+<tr>
+<td><code>fr</code></td>
+<td>French</td>
+</tr>
+<tr>
+<td><code>it</code></td>
+<td>Italian</td>
+</tr>
+<tr>
+<td><code>de</code></td>
+<td>German</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+</li>
+<li>Copy the language files from inside the default 'en' language folder into you new folder.</li>
+<li>Inside any given language file, each item is set up as a key/value pair, in the form key='value'.
+You must translate/change only the values on the right hand side, NEVER change the key name on the left.</li>
+<li>Change the language variables in the config file: <b>$CFG-&gt;language = 'en';</b> to reflect your new language of choice.
+The <b>$CFG-&gt;language</b> setting must match the folder name for your new language.
+
+</li>
+</ol>
+<p>NB: Some HTML is mixed up in the language files especially in the language heavy areas like the About and the Help pages.
+<p>The languagecore.php file contains the node and link names used by other language files. It will always be loaded first so that other language files can refernece it.
+</p>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">Site specific text</a></h3>
+
+To provide site specific text for any of the interface languages you follow this basic pattern:
+<ol>
+<li>Locate the term you wish to replace in the language files.</li>
+<li>Create a files with the same name as the file containing the term you wish to change but with 'Custom' at the end and place it in the 'custom' folder of the language file you are using.
+So, for example, if you wish to replace the About page in the English language files, create a file in the 'language/en/custom' folder called 'aboutCustom.php'.</li>
+<li>Inside this new file you must use the same key label on the left as in the original file, and then just replace the part on the right after the '=' sign.
+All files in the 'custom' folder are loaded after the ones outside, and provided you have used the same keys, the text will be replaced with your version when the language files are loaded.</li>
+</ol>
+NOTE: If what you want to change any of the core terms, the names of the categories or links, for example, if you wish to call 'Themes' say 'Topics' instead on your Hub, you can just create a custom languagecore.php file
+and change the text in that. These terms will ripple through the rest of the interface text as all the rest of the text should reference those terms through their keys.
+This makes it easy to change the basic terminology for a given Hub community without editing lots of interface text.
+<br><br>
+<p>
+<b>IMPORTANT:</b> There are two none-standard items in the language folder that are not handled in the same way as the other language files:
+<ol>
+<li>The <b>countries.php</b> file: This holds the country names used in the location drop-down menus displayed to users.
+It is also the place where you set your default country when displaying the list.
+When translating these, please, as with the other files change only the part on the right after the '='.
+NOTE: this file may need updating if new countries come into existence.
+The location of where to check for updates is in the file header.</li>
+<li>The <b>mailtemplates</b> folder: The files inside this folder are used when constructing the emails send out to users.
+When translating them please change only the words and leave all HTML alone, unless you know what you are doing.
+Be especially careful about leaving all <b>%s</b> items alone.
+These are replace with specific text when an email is created.
+So the number of <b>%s</b> and their order in the file is very important. Please don't remove any or that email will no longer be written correctly.</li>
+</ol>
+</p>
+
+<br>
+<h2><a name="lang">Tailoring your LiteMap</a></h2>
+At present, if you want to change the look and feel or text of your LiteMap site,these are the main places you should look at making changes:
+<ul>
+<li><b>Themes:</b> The style sheets for the ui can be found in 'themes/default/styles/'. Please don't edit those ones.
+If you want to create your own theme you should copy the 'default' folder, rename it and edit the styles there.
+In the images folder you will see some image files like the header logo etc, that you will also probably want to replace.
+Just make sure the files names and sizes stay the same. In addition you can override themes for a given domain or the default domain in the 'sites' folder.
+For more information see the README.txt file in the 'themes' folder.
+<li><b>Language:</b> All text displayed in LiteMap has been placed in various files in the 'language' folder system.
+So you can override all the default texts your specific site needs.
+You may especially like to add to or redo the <b>about</b> page (language/en/about.php and help.php pages).
+(See the <a href="#language">Language</a> section of these notes for more details and there is also a README.txt file in the 'language' folder).</li>
+<li><b>Homepage:</b> The file that draws the homepage (ui/homepage.php) is in the 'ui' folder. While all the text can be
+changed through the language files, you may want to completely redo this page for your specific version of LiteMap.</li>
+<li><b>Images:</b> The theme specific images can be found in the themes as mentioned above.
+All other icons and images can be found in the 'images' folder. If you want to replace an image make sure the size and file name stay the same
+and you will not need to edit any code. We suggest you backup the images folder before you make changes.</li>
+<li><b>Headers and Footers:</b> The header and footer files can be found in the 'ui' folder.
+The main 'header.php' and 'footer.php' do the base site pages, but you will see there are also specific header and footer pages
+for other parts of the site, like popup dialogs and the embeds etc., so you may want to look at all of them when making any changes.
+</li>
+</ul>
+</p>
+
+
+<br/>
+<h2><a name="dev">Additional Developer Notes</a></h2>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">RESTful API</a></h3>
+LiteMap has a RESTful API. This returns jsonld formatted data in the <a href="http://purl.org/catalyst/jsonld" target="_blank"> Catalyst Interchange Format</a>.
+<br/>The main use patterns are:<br/>
+<br/> 'your website address/api/views/map id number' - for getting maps
+<br/> 'your website address/api/conversations/group id' - for getting all maps in a group
+
+<br/><br/>
+<p>There is a jsonld icon button on group and map pages to get the api url for that group or map. The code handling these requests
+can be found in 'api/restapi.php'.
+Note also there is a .htaccess file in the 'api' folder which directs between the RESTful api calls and the ui RPCs</p>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">Database Schema</a></h3>
+<p>As well as the install/mysql.sql file which has the sql for the database schema, there are two additional documents:
+<ul>
+	<li><a href="LiteMapSchemaDocs.htm">'docs/LiteMapSchemaDocs.htm'</a>, which describes the schema in an easy to read format.</li>
+	<li><a href="LiteMapDatabaseSchemaDrawing.pdf">'docs/LiteMapDatabaseSchemaDrawing.pdf'</a>, which shows a graphics model of the LiteMap database schema and how the tables relate.</li>
+</ul>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">Datamodel Rules</a></h3>
+<p>If you are interested in the connection rules for the Datamodel that LiteMap uses these are listed in <a href="LiteMapDatamodelConnectionRules.pdf">'docs/LiteMapDatamodelConnectionRules.pdf'</a>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">README</a></h3>
+<p>In addition to this document many folders in 'src' have a README.txt
+file with specifics about areas like 'sites', 'sites/multi', 'sites/default', 'sites/default/custom' etc..</p>
+
+<h3 style="font-style:italic;font-size:12pt;text-decoration:underline"><a name="sitetext">Translating the Interface</a></h3>
+<p>The file <a href="Language-File-Translation-Help.docx">docs/Language-File-Translation-Help.docx</a>
+has more specific help for people translating the language files.
+
+<br/>
+<br/>
+
+</body>
+
+</html>

@@ -1,0 +1,378 @@
+[
+    {
+  	"term": "CHALLENGE_NAME",
+	"label": [
+	      {
+	         "language": "en",
+	         "singular": "Topic",
+	         "plural": "Topics"
+	      },
+	      {
+	         "language": "pt",
+	         "singular": "Tema",
+	         "plural": "Temas"
+	      },
+	      {
+	         "language": "de",
+	         "singular": "Thema",
+	         "plural": "Themen"
+	      },
+	      {
+	         "language": "es",
+	         "singular": "Tema",
+	         "plural": "Temas"
+	      }
+	]
+    },
+    {
+  	"term": "ISSUE_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Issue",
+	 	"plural": "Issues"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Problema",
+	 	"plural": "Problemas"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Fragestellung",
+	 	"plural": "Fragestellungen"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Problema",
+	 	"plural": "Problemas"
+	      }
+	]
+    },
+    {
+  	"term": "SOLUTION_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Idea",
+	 	"plural": "Ideas"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Idéia",
+	 	"plural": "Idéias"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Aspekt",
+	 	"plural": "Aspekte"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Idea",
+	 	"plural": "Ideas"
+	      }
+	]
+    },
+    {
+  	"term": "ARGUMENT_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Argument",
+	 	"plural": "Arguments"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Argumento",
+	 	"plural": "Argumentos"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Argument",
+	 	"plural": "Argumente"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Argumento",
+	 	"plural": "Argumentos"
+	      }
+	]
+    },
+    {
+  	"term": "PRO_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Supporting Argument",
+	 	"plural": "Supporting Arguments"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Argumento a favor",
+	 	"plural": "Argumentos a favor"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Pro Argument",
+	 	"plural": "Pro Argumente"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Argumento a favor",
+	 	"plural": "Argumentos a favor"
+	      }
+	]
+    },
+    {
+  	"term": "CON_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Counter Argument",
+	 	"plural": "Counter Arguments"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Argumento contrário",
+	 	"plural": "Argumentos contrários"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Contra Argument",
+	 	"plural": "Contra Argumente"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Argumento en contra",
+	 	"plural": "Argumentos en contra"
+	      }
+	]
+    },
+    {
+  	"term": "RESOURCE_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Url",
+	 	"plural": "Urls"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Url",
+	 	"plural": "Urls"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Url",
+	 	"plural": "Urls"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Url",
+	 	"plural": "Urls"
+	      }
+	]
+    },
+    {
+  	"term": "IDEA_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Open Comment",
+	 	"plural": "Open Comments"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Comentário aberto",
+	 	"plural": "Comentários abertos"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Undefinierter Kommentar",
+	 	"plural": "Undefinierter Kommentare"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Comentario abierto",
+	 	"plural": "Comentarios abiertos"
+	      }
+	]
+    },
+    {
+  	"term": "MAP_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Map",
+	 	"plural": "Maps"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Mapa",
+	 	"plural": "Mapas"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Karte",
+	 	"plural": "Karten"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Mapa",
+	 	"plural": "Mapas"
+	      }
+	]
+    },
+    {
+  	"term": "DEBATE_NAME",
+	"label": [
+	      {
+	        "language": "en",
+	 	"singular": "Conversation",
+	 	"plural": "Conversations"
+	      },
+	      {
+	        "language": "pt",
+	 	"singular": "Conversa",
+	 	"plural": "Negociações"
+	      },
+	      {
+	        "language": "de",
+	 	"singular": "Unterhaltung",
+	 	"plural": "Gespräche"
+	      },
+	      {
+	        "language": "es",
+	 	"singular": "Conversación",
+	 	"plural": "Conversaciones"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_ISSUE_CHALLENGE",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "is related to"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "esta relacionado com"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "ist Teil von"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "esta relacionado con"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_SOLUTION_ISSUE",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "responds to"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "respostas"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "beantwortet"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "responde a"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_ISSUE_SOLUTION",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "raised by"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "sugerido por"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "durch erhöhte"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "subido por"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_PRO_SOLUTION",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "supports"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "apoios"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "unterstÃ¼tzt"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "apoyos"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_CON_SOLUTION",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "challenges"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "desafios"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "fordert heraus"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "retos"
+	      }
+	]
+    },
+    {
+  	"term": "LINK_IDEA_NODE",
+	"label": [
+	      {
+	        "language": "en",
+	 	"text": "is related to"
+	      },
+	      {
+	        "language": "pt",
+	 	"text": "esta relacionado com"
+	      },
+	      {
+	        "language": "de",
+	 	"text": "ist Teil von"
+	      },
+	      {
+	        "language": "es",
+	 	"text": "esta relacionado con"
+	      }
+	]
+    }
+]

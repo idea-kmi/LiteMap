@@ -1,0 +1,18 @@
+<html>
+<encabezado>
+<stilo>
+cuerpo {
+	fontes-usadas: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif; 
+	margem: 10px;
+	fonte-tamanho: 90%%; /*devem ser duas pessoas que pensam em uma gama de parâmetros*/
+	color: DimGrey; 
+}
+
+a {
+ 	color: #e80074;
+}
+</estilo>
+</cabeçalho>
+<corpo>
+<img src="%s" alt="Evidence Hub logo"/>
+

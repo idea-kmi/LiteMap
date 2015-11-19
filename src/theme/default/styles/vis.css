@@ -1,0 +1,126 @@
+
+.trafficlight {
+    float:left;
+    background-color: #000;
+    box-shadow: 0 0 5px rgba(0,0,0, .8);
+    overflow: hidden;
+    padding: 0 0 4px;
+    width: 40px;
+    margin:5px;
+    margin-top:10px;
+}
+
+.trafficlight span {
+    border-radius: 40px;
+    display: block;
+    height: 30px;
+    margin: 4px auto 0;
+    opacity: .3;
+    width: 30px;
+}
+
+.trafficlightsmall {
+    float:left;
+    background-color: #000;
+    box-shadow: 0 0 5px rgba(0,0,0, .8);
+    overflow: hidden;
+    padding: 0 0 4px;
+    width: 28px;
+    margin:5px;
+    margin-top:10px;
+}
+
+.trafficlightsmall span {
+    border-radius: 20px;
+    display: block;
+    height: 20px;
+    margin: 4px auto 0;
+    opacity: .3;
+    width: 20px;
+}
+
+.trafficlightacross {
+    float:left;
+    background-color: #000;
+    box-shadow: 0 0 5px rgba(0,0,0, .8);
+    overflow: hidden;
+    padding-top:4px;
+    padding-bottom:4px;
+    padding-left:2px;
+    width: 64px;
+    margin-top:5px;
+    margin-right:5px;
+}
+
+.trafficlightacross span {
+    border-radius: 15px;
+    float:left;
+    display: block;
+    height: 15px;
+    margin-left:4px;
+    opacity: .3;
+    width: 15px;
+}
+
+/*! Light colours */
+.trafficlightred    { background-color: #FF0000; }
+.trafficlightorange { background-color: #FCBD36; }
+.trafficlightgreen  { background-color: #1AC81A; }
+
+.trafficlightredon    { background-color: #FF0000; box-shadow: 0 0 10px #FF0000; }
+.trafficlightorangeon { background-color: #FCBD36; box-shadow: 0 0 10px #FCBD36; }
+.trafficlightgreenon  { background-color: #1AC81A; box-shadow: 0 0 10px #1AC81A; }
+
+/*! Active states */
+.trafficlight span.trafficlightredon    { opacity: 1; }
+.trafficlight span.trafficlightorangeon    { opacity: 1; }
+.trafficlight span.trafficlightgreenon    { opacity: 1; }
+
+.trafficlightsmall span.trafficlightredon    { opacity: 1; }
+.trafficlightsmall span.trafficlightorangeon    { opacity: 1; }
+.trafficlightsmall span.trafficlightgreenon    { opacity: 1; }
+
+.trafficlightacross span.trafficlightredon    { opacity: 1; }
+.trafficlightacross span.trafficlightorangeon    { opacity: 1; }
+.trafficlightacross span.trafficlightgreenon    { opacity: 1; }
+
+.trafficlightbutton {
+	background: #E8E8E8;
+	border:2px outset #C0C0C0;
+	float:left;
+	clear:both;
+	margin-top:5px;
+	width:185px;
+	text-align: center;
+}
+
+.trafficlightbutton:hover {
+	border:2px inset #C0C0C0;
+}
+
+.vishelpdiv {
+	float:left;
+	margin:5px;
+	margin-left:10px;
+}
+
+.vishelpheading {
+	margin:0px;
+	margin-bottom:5px;
+}
+
+.vishelparrow {
+	padding-left:10px;
+	vertical-align:middle;
+}
+
+.vishelpmessage {
+	font-size:10pt;
+}
+
+.vismaindiv {
+	clear:both;
+	float:left;
+	width:100%;
+	height:100%;
+}

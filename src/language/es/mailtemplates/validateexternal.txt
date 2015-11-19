@@ -1,0 +1,4 @@
+<p>Dear %s,</p>
+<p>Gracias por utilizar el %s</p>
+<p><b>Por favor <a href="%sui/pages/logincomplete.php?id=%s&key=%s&referrer=%s">click aquí</a></b> para completar su validación correo electrónico.</p>
+<br>

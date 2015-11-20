@@ -888,3 +888,18 @@ hr.urldivider {
     font-family:"Trebuchet MS", Helvetica, sans-serif;
     font-size:10pt;
 }
+
+.promptbox {
+	z-index:200;
+	background: #E8E8E8; 
+	border: 1px solid #C0C0C0;
+	padding:5px; 
+	width: 400px; 
+	height: 200px; 
+	position: absolute; 
+	left:0px; 
+	top:0px; 
+	overflow: auto; 
+	display: none; 
+	font-face: Arial;
+}

@@ -242,7 +242,7 @@ window.onload = init;
 <form id="commentform" name="commentform" commentform="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
 
 	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_IMAGE_LABEL; ?>
+		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
 			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
 		</label>
 		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">

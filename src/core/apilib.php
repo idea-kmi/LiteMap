@@ -4843,7 +4843,7 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 
 function getDataFromJsonld($url) {
 	global $HUB_FLM;
-	require_once($HUB_FLM->getCodeDirPath("io/catalyst/catalyst_jsonld_reader.class.php"));
+	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
 	$withhistory = false;
 	$withvotes = false;
 	$reader = new catalyst_jsonld_reader();
@@ -4867,7 +4867,7 @@ function getDataFromJsonld($url) {
  */
 function addNodesFromJsonld($url, $private, $selectedids="") {
 	global $USER, $HUB_FLM, $CFG;
-	require_once($HUB_FLM->getCodeDirPath("io/catalyst/catalyst_jsonld_reader.class.php"));
+	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
 	if (count($selectedids) > $CFG->ImportLimit) {
@@ -4996,7 +4996,7 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
  */
 function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $private) {
 	global $USER, $HUB_FLM, $CFG, $ERROR;
-	require_once($HUB_FLM->getCodeDirPath("io/catalyst/catalyst_jsonld_reader.class.php"));
+	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
 	//error_log(print_r($selectedids, true));

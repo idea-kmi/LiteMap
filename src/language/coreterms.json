@@ -179,23 +179,23 @@
 	"label": [
 	      {
 	        "language": "en",
-	 	"singular": "Open Comment",
-	 	"plural": "Open Comments"
+	 	"singular": "Note",
+	 	"plural": "Notes"
 	      },
 	      {
 	        "language": "pt",
-	 	"singular": "Comentário aberto",
-	 	"plural": "Comentários abertos"
+	 	"singular": "Nota",
+	 	"plural": "Notas"
 	      },
 	      {
 	        "language": "de",
-	 	"singular": "Undefinierter Kommentar",
-	 	"plural": "Undefinierter Kommentare"
+	 	"singular": "Notiz",
+	 	"plural": "Notizen"
 	      },
 	      {
-	        "language": "de",
-	 	"singular": "Comentario abierto",
-	 	"plural": "Comentarios abiertos"
+	        "language": "es",
+	 	"singular": "Nota",
+	 	"plural": "Notas"
 	      }
 	]
     },

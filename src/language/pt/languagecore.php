@@ -84,7 +84,7 @@ $LNG->CHALLENGES_NAME_SHORT = "Temas";
 $LNG->FOLLOWERS_NAME = "Seguidores";
 $LNG->VOTES_NAME = "Votos";
 $LNG->COMMENTS_NAME = "Notas";
-$LNG->COMMENTS_NAME_SHORT = "Nota";
+$LNG->COMMENTS_NAME_SHORT = "Notas";
 $LNG->DEBATES_NAME = "Negociações";
 
 /** Link Type Name **/

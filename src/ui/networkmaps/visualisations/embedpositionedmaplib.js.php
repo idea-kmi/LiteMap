@@ -1117,25 +1117,9 @@ function createMapNode(viewnode, node) {
 	}
 
 	// Get HEX for node Role
-	var nodeHEX = "";
-	if (rolename == 'Challenge') {
-		nodeHEX = challengebackpale;
-	} else if (rolename == 'Issue') {
-		nodeHEX = issuebackpale;
-	} else if (rolename == 'Solution') {
-		nodeHEX = solutionbackpale;
-	} else if (rolename == 'Argument') {
-		nodeHEX = argumentbackpale;
-	} else if (rolename == 'Idea') {
-		nodeHEX = commentbackpale;
-	} else if (rolename == "Pro") {
-		nodeHEX = probackpale;
-	} else if (rolename == "Con") {
-		nodeHEX = conbackpale;
-	} else {
-		nodeHEX = plainbackpale;
-	}
+	var nodeHEX = getHexForRole(rolename);
 
+	// Get language name for role
 	rolename = getNodeTitleAntecedence(rolename, false);
 
 	var user = null;

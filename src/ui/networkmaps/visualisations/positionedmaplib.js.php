@@ -901,7 +901,8 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 				//alert(e.which+":"+e.button);
 				//added last check as two drag starts (one right and one left click)
 				//being sent on a right-click so this stops it overriding a right-click drag that has started.
-				if (e.which == 3 || e.button == 2 || fd.config.drag === false) {
+				if (e.which == 3 || e.button == 2
+						|| (fd.config.drag && fd.config.drag === false)) {
 					fd.config.drag = false;
 					//console.log("RIGHT CLICK");
 				} else {
@@ -3329,6 +3330,7 @@ function createMapNode(viewnode, node) {
 	// Get HEX for node Role
 	var nodeHEX = getHexForRole(rolename);
 
+	// Get language name for role
 	rolename = getNodeTitleAntecedence(rolename, false);
 
 	var user = null;
@@ -3389,31 +3391,6 @@ function createMapNode(viewnode, node) {
 	};
 
 	return thisnode;
-}
-
-function getHexForRole(rolename) {
-
-	var nodeHEX = "";
-
-	if (rolename == 'Challenge') {
-		nodeHEX = challengebackpale;
-	} else if (rolename == 'Issue') {
-		nodeHEX = issuebackpale;
-	} else if (rolename == 'Solution') {
-		nodeHEX = solutionbackpale;
-	} else if (rolename == "Pro") {
-		nodeHEX = probackpale;
-	} else if (rolename == "Con") {
-		nodeHEX = conbackpale;
-	} else if (rolename == 'Argument') {
-		nodeHEX = argumentbackpale;
-	} else if (rolename == 'Idea') {
-		nodeHEX = ideabackpale;
-	} else {
-		nodeHEX = plainbackpale;
-	}
-
-	return nodeHEX;
 }
 
 /**

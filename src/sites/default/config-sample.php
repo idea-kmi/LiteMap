@@ -200,7 +200,7 @@ $CFG->plainbackpale = '#D0D0D0';
 $CFG->argumentbackpale = '#F0F1AD';
 $CFG->ideabackpale = '#D0D0D0';
 $CFG->commentbackpale = '#FAB8DA';
-$CFG->mapbackpale = '#F9B257';
+$CFG->mapbackpale = '#C83089';
 
 /**
  * These are the background colours used in Analytics graphs
@@ -222,7 +222,7 @@ $CFG->plainback = '#D0D0D0';
 $CFG->argumentback = '#E1E353';
 $CFG->ideaback = '#D0D0D0';
 $CFG->commentback = '#F777B9';
-$CFG->mapback = '#F9B257';
+$CFG->mapback = '#A6156C';
 
 /** BROWSER BOOKMARKLET TOOL **/
 

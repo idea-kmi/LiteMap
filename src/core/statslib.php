@@ -123,8 +123,8 @@ function getStackedAreaData($nodes) {
 
 	$count = count($nodes);
 
-	$typeArray = array($LNG->MAP_NAME,$LNG->CHALLENGE_NAME,$LNG->ISSUE_NAME,$LNG->SOLUTION_NAME,$LNG->PRO_NAME,$LNG->CON_NAME);
-	$coloursArray = array($CFG->claimbackpale,$CFG->challengebackpale,"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A");
+	$typeArray = array($LNG->MAP_NAME,$LNG->CHALLENGE_NAME,$LNG->ISSUE_NAME,$LNG->SOLUTION_NAME,$LNG->PRO_NAME,$LNG->CON_NAME,$LNG->ARGUMENT_NAME,$LNG->COMMENT_NAME);
+	$coloursArray = array($CFG->mapbackpale,$CFG->challengebackpale,$CFG->issuebackpale, $CFG->solutionbackpale, $CFG->probackpale, $CFG->conbackpale, $CFG->argumentbackpale, $CFG->ideabackpale);
 	$dateArray = array();
 
 	for ($i=0; $i<$count; $i++) {
@@ -140,6 +140,8 @@ function getStackedAreaData($nodes) {
 				$typearray[$LNG->SOLUTION_NAME] = 0;
 				$typearray[$LNG->PRO_NAME] = 0;
 				$typearray[$LNG->CON_NAME] = 0;
+				$typearray[$LNG->ARGUMENT_NAME] = 0;
+				$typearray[$LNG->COMMENT_NAME] = 0;
 				$typearray[$nodetype] = 1;
 				$dateArray[$datekey] = $typearray;
 			} else {

@@ -910,6 +910,33 @@ var mapRectangle = function (x, y, width, height) {
 	}
 };
 
+function getHexForRole(rolename) {
+
+	var nodeHEX = "";
+
+	if (rolename == 'Challenge') {
+		nodeHEX = challengebackpale;
+	} else if (rolename == 'Issue') {
+		nodeHEX = issuebackpale;
+	} else if (rolename == 'Solution') {
+		nodeHEX = solutionbackpale;
+	} else if (rolename == "Pro") {
+		nodeHEX = probackpale;
+	} else if (rolename == "Con") {
+		nodeHEX = conbackpale;
+	} else if (rolename == 'Argument') {
+		nodeHEX = argumentbackpale;
+	} else if (rolename == 'Idea') {
+		nodeHEX = ideabackpale;
+	} else if (rolename == 'Map') {
+		nodeHEX = mapbackpale;
+	} else {
+		nodeHEX = plainbackpale;
+	}
+
+	return nodeHEX;
+}
+
 /**
  * Prototype of BB.Geom.Rectangle
  */

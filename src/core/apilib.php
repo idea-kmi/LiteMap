@@ -5159,7 +5159,7 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 						error_log(print_r($connection, true));
 					}
 				} else {
-					error_log("for label:".$linklabelname.":".print_t($lt, true));
+					error_log("for label:".$linklabelname.":".print_r($lt, true));
 				}
 			}
 		}

@@ -141,7 +141,7 @@ function reorderMaps(){
  	MAP_ARGS['sort'] = $('select-sort-map').options[$('select-sort-map').selectedIndex].value;
  	MAP_ARGS['orderby'] = $('select-orderby-map').options[$('select-orderby-map').selectedIndex].value;
 
- 	loadissues(CONTEXT,MAP_ARGS);
+ 	loadmaps(CONTEXT,MAP_ARGS);
 }
 
 /**

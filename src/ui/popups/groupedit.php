@@ -382,7 +382,7 @@ window.onload = init;
 		<label  class="formlabelbig" for="website"><span style="vertical-align:top"><?php echo $LNG->GROUP_FORM_WEBSITE; ?></span>
 			<span class="active" onMouseOver="showFormHint('GroupWebsite', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
 		</label>
-        <input class="forminput hgrwide" type="text" id="website" name="website" value="<?php if(isset($homepage)) {print $website;} ?>">
+        <input class="forminput hgrwide" type="text" id="website" name="website" value="<?php if(isset($website)) {print $website;} ?>">
     </div>
 
     <div class="formrow">

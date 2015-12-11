@@ -635,7 +635,7 @@ switch($method) {
 		$xpos = required_param('xpos',PARAM_TEXT);
 		$ypos = required_param('ypos',PARAM_TEXT);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-        $response = addNodeToView($viewid,$nodeid,$xpos, $ypos, $groupid="");
+        $response = addNodeToView($viewid,$nodeid,$xpos, $ypos, $groupid);
 		break;
 	case "addnewnodetoview":
 		$viewid = required_param('viewid',PARAM_ALPHANUMEXT);
@@ -645,7 +645,7 @@ switch($method) {
 		$xpos = required_param('xpos',PARAM_TEXT);
 		$ypos = required_param('ypos',PARAM_TEXT);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-        $response = addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $groupid="");
+        $response = addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $groupid);
 		break;
 	case "addnodetoviewandconnect":
 		$viewid = required_param('viewid',PARAM_ALPHANUMEXT);
@@ -656,7 +656,7 @@ switch($method) {
         $linktypename = required_param('linktypename',PARAM_TEXT);
         $direction = optional_param('direction','from',PARAM_ALPHA);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-		$response = addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $groupid="");
+		$response = addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $groupid);
 		break;
     case "editviewnode":
         $userid = required_param('userid',PARAM_ALPHANUMEXT);

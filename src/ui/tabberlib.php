@@ -145,7 +145,7 @@ function display_tabber($context,$args, $wasEmpty){
 					</span>
 					<?php } ?>
 
-					<div id="searchuser" style="float:left;margin-left:10px;">
+					<div id="searchgroup" style="float:left;margin-left:10px;">
 
 						<label for="q" style="float: left; margin-right: 3px; margin-top: 3px;"><?php echo $LNG->TAB_SEARCH_GROUP_LABEL; ?></label>
 

@@ -31,6 +31,7 @@ if ($HUB_FLM->hasCustomVersion($me)) {
 	die;
 }
 
+array_push($HEADER,'<script src="'.$HUB_FLM->getCodeWebPath('ui/searchlib.js.php').'" type="text/javascript"></script>');
 array_push($HEADER,'<script src="'.$HUB_FLM->getCodeWebPath('ui/grouplib.js.php').'" type="text/javascript"></script>');
 
 include_once($HUB_FLM->getCodeDirPath("ui/popuplib.php"));
@@ -38,6 +39,29 @@ include_once($HUB_FLM->getCodeDirPath("ui/popuplib.php"));
 global $USER;
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 $group = getGroup($groupid);
+if($group instanceof Error){
+	// Check if Users table has OriginalID field and if so check if this groupid is an old ID and adjust.
+	$params = array();
+	$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+	if ($resArray !== false) {
+		if (count($resArray) > 0) {
+			$array = $resArray[0];
+			if (isset($array['OriginalID'])) {
+				$params = array();
+				$params[0] = $groupid;
+				$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+				if ($resArray2 !== false) {
+					if (count($resArray2) > 0) {
+						$array2 = $resArray2[0];
+						$groupid = $array2['UserID'];
+						header("Location: ".$CFG->homeAddress."group.php?groupid=".$groupid);
+						die;
+					}
+				}
+			}
+		}
+	}
+ }
 
 if($group instanceof Error){
 	include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
@@ -130,6 +154,16 @@ echo "<script type='text/javascript'>";
 echo "var CONTEXT = '".$context."';";
 echo "var NODE_ARGS = ".$argsStr.";";
 echo "var MAP_ARGS = ".$argsStr.";";
+echo "var URL_ARGS = ".$argsStr.";";
+echo "var SOLUTION_ARGS = ".$argsStr.";";
+echo "var ISSUE_ARGS = ".$argsStr.";";
+echo "var CON_ARGS = ".$argsStr.";";
+echo "var PRO_ARGS = ".$argsStr.";";
+echo "var CHAT_ARGS = ".$argsStr.";";
+echo "var ARGUMENT_ARGS = ".$argsStr.";";
+echo "var COMMENT_ARGS = ".$argsStr.";";
+echo "var NEWS_ARGS = ".$argsStr.";";
+echo "var MAP_ARGS = ".$argsStr.";";
 
 try {
 	$jsonnode = json_encode($group);
@@ -147,8 +181,10 @@ echo "</script>";
 <div style="clear:both;border-top:2px solid #E8E8E8;"></div>
 
 <div style="clear:both;float: left; width:100%;">
+
 	<!-- LEFT COLUMN -->
 	<div style="width 100%;margin-right: 210px;">
+
 		<div style="float:left;width: 100%;font-weight:normal;margin-top:0px;font-size:11pt;">
 			<div id="maingroupdiv" style="clear:both;width:100%;float:left;padding:0px;padding-bottom:20px;padding-top:10px;"></div>
 			<div id="addnewmaparea" style="clear:both; float:left;margin-bottom:10px;">
@@ -181,8 +217,24 @@ echo "</script>";
 					} ?>
 				</div>
 			</div>
+			<div id="searchmap" style="clear:both;float:left;">
+				<label for="q" style="float: left; margin-right: 3px; margin-top: 3px;"><?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?></label>
+				<?php
+					// if search term is present in URL then show in search box
+					$q = stripslashes(optional_param("gq","",PARAM_TEXT));
+				?>
+				<div style="float: left;">
+					<input type="text" style="margin-right:3px; width:250px" onkeyup="if (checkKeyPressed(event)) { $('map-go-button').onclick();}" id="qmap" name="gq" value="<?php print( htmlspecialchars($gq) ); ?>"/>
+					<div style="clear: both;"></div>
+				<div id="q_choices" class="autocomplete" style="border-color: white;"></div>
+				</div>
+				<div style="float:left;">
+					<img id="map-go-button" src="<?php echo $HUB_FLM->getImagePath('search.png'); ?>" class="active" width="20" height="20" onclick="javascript: refreshGroupSearch();" title="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?>" />
+				</div>
+			</div>
 		</div>
-	</div>
+ 	</div>
+
 	<!-- RIGHT COLUMN -->
 	<div style="float: right; height:100%;width:195px; margin-left: -210px; padding: 5px;">
 		<div style="float:left;height:100%;">
@@ -225,10 +277,90 @@ echo "</script>";
 		</div>
 	</div>
 </div>
-<div style="clear:both;float: left; width:100%;">
-	<div style="float:left;width: 100%;font-weight:normal;margin-top:0px;font-size:11pt;">
-		<div id='tab-content-toolbar-map' style='clear:both; float:left; width: 100%;'>
-			<div id='tab-content-map-list' class='tabcontentinner'></div>
+
+<div id="tabber" style="clear:both;float:left; width: 100%;">
+	<div style="height:1px;clear:both;float:left;width:100%;margin:0px;background:#E8E8E8"></div>
+	<ul id="tabs" class="tab">
+		<li class="tab"><a class="tab" id="tab-map" href="<?php echo $CFG->homeAddress; ?>group.php#map"><span class="tab tabissue"><?php echo $LNG->TAB_MAP; ?></span></a></li>
+		<li class="tab"><a class="tab" id="tab-search" href="<?php echo $CFG->homeAddress; ?>group.php#search"><span class="tab tabissue"><?php echo $LNG->FORM_SELECTOR_TAB_SEARCH_RESULTS; ?></span></a></li>
+	</ul>
+
+    <div id="tabs-content" style="float: left; width: 100%;">
+		<div id='tab-content-map-div' class='tabcontent' style="display:none;">
+			<div id="tabs-content" style="float: left; width: 100%;">
+				<div style="clear:both;float: left; width:100%;">
+					<div style="float:left;width: 100%;font-weight:normal;margin-top:0px;font-size:11pt;">
+						<div id='tab-content-toolbar-map' style='clear:both; float:left; width: 100%;'>
+							<div id='tab-content-map-list' class='tabcontentinner'></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id='tab-content-search-div' class='tabcontent' style="display:none;">
+			<div id="context" style="float:left;width: 100%;">
+				<div style="float:left; margin-bottom: 15px;">
+					<div id="content-controls"></div>
+				</div>
+				<div id="q_results" name="q_results" style="clear:both;float left;margin-bottom: 15px;">
+					<div style="float:left;margin-right: 5px;"><a id="issue-result-menu" href="#issueresult"><?php echo $LNG->ISSUES_NAME; ?>: <span id="issue-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;"><a id="solution-result-menu" href="#solutionresult"><?php echo $LNG->SOLUTIONS_NAME; ?>: <span id="solution-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;"><a id="pro-result-menu" href="#proresult"><?php echo $LNG->PROS_NAME; ?>: <span id="pro-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;"><a id="con-result-menu" href="#conresult"><?php echo $LNG->CONS_NAME; ?>: <span id="con-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;"><a id="arg-result-menu" href="#argresult"><?php echo $LNG->ARGUMENTS_NAME; ?>: <span id="arg-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;"><a id="map-result-menu" href="#mapresult"><?php echo $LNG->MAPS_NAME; ?>: <span id="map-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<!-- div style="float:left;margin-right: 5px;margin-bottom: 15px;"><a id="web-result-menu" href="#webresult"><?php echo $LNG->RESOURCES_NAME; ?>: <span id="web-list-count-main"></span></a><span style="margin-left:5px;">|</span></div -->
+					<div style="float:left;margin-right: 5px;margin-bottom: 5px;"><a id="chat-result-menu" href="#chatresult"><?php echo $LNG->CHATS_NAME; ?>: <span id="chat-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+					<div style="float:left;margin-right: 5px;margin-bottom: 5px;"><a id="idea-result-menu" href="#idearesult"><?php echo $LNG->COMMENTS_NAME; ?>: <span id="idea-list-count-main"></span></a><span style="margin-left:5px;">|</span></div>
+				</div>
+				<div id="content-issue-main" class="searchresultblock">
+					<a name="issueresult"></a>
+					<div class="strapline searchresulttitle"><span id="issue-list-count">0</span> <span id="issue-list-title"><?php echo $LNG->ISSUES_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-issue-list"></div>
+				</div>
+				<div id="content-solution-main" class="searchresultblock">
+					<a name="solutionresult"></a>
+					<div class="strapline searchresulttitle"><span id="solution-list-count">0</span> <span id="solution-list-title"><?php echo $LNG->SOLUTIONS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-solution-list"></div>
+				</div>
+				<div id="content-pro-main" class="searchresultblock">
+					<a name="proresult"></a>
+					<div class="strapline searchresulttitle"><span id="pro-list-count">0</span> <span id="pro-list-title"><?php echo $LNG->PROS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-pro-list"></div>
+				</div>
+				<div id="content-con-main" class="searchresultblock">
+					<a name="conresult"></a>
+					<div class="strapline searchresulttitle"><span id="con-list-count">0</span> <span id="con-list-title"><?php echo $LNG->CONS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-con-list"></div>
+				</div>
+				<div id="content-arg-main" class="searchresultblock">
+					<a name="argresult"></a>
+					<div class="strapline searchresulttitle"><span id="arg-list-count">0</span> <span id="arg-list-title"><?php echo $LNG->ARGUMENTS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-arg-list"></div>
+				</div>
+				<div id="content-map-main" class="searchresultblock">
+					<a name="mapresult"></a>
+					<div class="strapline searchresulttitle"><span id="map-list-count">0</span> <span id="map-list-title"><?php echo $LNG->MAPS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-map-list"></div>
+				</div>
+				<!-- div id="content-web-main" class="searchresultblock">
+					<a name="webresult"></a>
+					<div class="strapline searchresulttitle"><span id="web-list-count">0</span> <span id="web-list-title"><?php echo $LNG->RESOURCES_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-web-list"></div>
+				</div -->
+				<div id="content-chat-main" class="searchresultblock">
+					<a name="chatresult"></a>
+					<div class="strapline searchresulttitle"><span id="chat-list-count">0</span> <span id="chat-list-title"><?php echo $LNG->CHATS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-chat-list"></div>
+				</div>
+
+				<div id="content-idea-main" class="searchresultblock">
+					<a name="idearesult"></a>
+					<div class="strapline searchresulttitle"><span id="idea-list-count">0</span> <span id="idea-list-title"><?php echo $LNG->COMMENTS_NAME; ?></span><a title="<?php echo $LNG->SEARCH_BACKTOTOP; ?>" href="#top"><img alt="<?php echo $LNG->SEARCH_BACKTOTOP_IMG_ALT; ?>" class="searchresultuparrow" border="0" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" /></a></div>
+					<div class="searchresultcontent" id="content-idea-list"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

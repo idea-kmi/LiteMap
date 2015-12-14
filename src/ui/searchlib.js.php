@@ -821,11 +821,11 @@ function loadcomments(context,args) {
 				$('idea-list-title').innerHTML = "";
 
 				$('content-idea-main').style.display = "block";
-				$('idea-result-menu').href = "#commentresult";
+				$('idea-result-menu').href = "#idearesult";
 				$('idea-result-menu').className = '';
 
 				if (total > parseInt( args["max"] )) {
-					$("content-idea-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+					$("content-idea-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
 				}
 
 				$('idea-list-count').insert(json.nodeset[0].totalno);
@@ -839,7 +839,7 @@ function loadcomments(context,args) {
 				displaySearchNodes($("content-idea-list"),json.nodeset[0].nodes,parseInt(args['start'])+1, true);
 
 				if (total > parseInt( args["max"] )) {
-					$("content-idea-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comment"));
+					$("content-idea-list").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"comments"));
 				}
 			} else {
 				$('content-idea-main').style.display = "none";

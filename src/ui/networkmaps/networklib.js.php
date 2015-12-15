@@ -1047,7 +1047,7 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 
 	var linktext = getLinkText();
 	var linktextChoiceDiv = new Element("div", {'id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
-	var linktextChoiceIcon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktexton.png'); ?>", 'border':'0'});
+	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktexton.png'); ?>", 'border':'0'});
 	linktextChoiceIcon.chosen = true;
 	if (linktext == 'false') {
 		linktextChoiceDiv.className = "active iconUnselected";

@@ -46,6 +46,9 @@ function nodeOrderString($o,$s){
         case "nodeid":
             $orderby = "t.NodeID";
             break;
+        case "name":
+            $orderby = "t.Name";
+            break;
         case "desc":
             $orderby = "t.Description";
             break;

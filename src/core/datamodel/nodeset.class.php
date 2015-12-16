@@ -76,10 +76,8 @@ class NodeSet {
 		$carray = $DB->select($csql, $params);
         $totalconns = $carray[0]["totalnodes"];
 
-        // ADD SORTING - name done after as Virtuoso can't sort on long fields
-       	if ($orderby != 'name') {
-        	$sql = $DB->nodeOrderString($sql, $orderby, $sort);
-        }
+        // ADD SORTING
+       	$sql = $DB->nodeOrderString($sql, $orderby, $sort);
 
         // ADD LIMITING
         $sql = $DB->addLimitingResults($sql, $start, $max);
@@ -97,10 +95,6 @@ class NodeSet {
 			$array = $resArray[$i];
             $node = new CNode($array["NodeID"]);
             $this->add($node->load($style));
-        }
-
-        if ($orderby == 'name') {
-			usort($this->nodes, 'nameSort');
         }
 
         return $this;

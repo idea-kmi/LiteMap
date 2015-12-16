@@ -170,7 +170,7 @@ function auditSearch($userid, $searchtext, $tagsonly, $type='main', $typeitemid=
 	$params[5] = $type;
 	$params[6] = $typeitemid;
 
-    $res = $DB->insert($HUB_SQL->AUDIT_TRIPLE_INSERT, $params);
+    $res = $DB->insert($HUB_SQL->AUDIT_SEARCH_INSERT, $params);
 
     if (!$res) {
         return "";
@@ -1263,6 +1263,27 @@ function loadUserFromDomNode($node, &$errors) {
 			if (isset($nodeData['userid'])) {
 				$userObj = new User($nodeData['userid']);
 
+				// Check if Users table has OriginalID field and if so check if this userid is an old ID and adjust.
+				$params = array();
+				$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+				if ($resArray !== false) {
+					if (count($resArray) > 0) {
+						$array = $resArray[0];
+						if (isset($array['OriginalID'])) {
+							$params = array();
+							$params[0] = $nodeData['userid'];
+							$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+							if ($resArray2 !== false) {
+								if (count($resArray2) > 0) {
+									$array2 = $resArray2[0];
+									$userObj->olduserid = $nodeData['userid'];
+									$userObj->userid = $array2['UserID'];
+								}
+							}
+						}
+					}
+				}
+
 				if (isset($nodeData['name'])) {
 					$userObj->name = $nodeData['name'];
 				}
@@ -1384,6 +1405,27 @@ function loadGroupFromDomNode($node, &$errors) {
 		if (empty($errors)) {
 			if (isset($nodeData['groupid'])) {
 				$groupObj = new Group($nodeData['groupid']);
+
+				// Check if Users table has OriginalID field and if so check if this userid is an old ID and adjust.
+				$params = array();
+				$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+				if ($resArray !== false) {
+					if (count($resArray) > 0) {
+						$array = $resArray[0];
+						if (isset($array['OriginalID'])) {
+							$params = array();
+							$params[0] = $nodeData['groupid'];
+							$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+							if ($resArray2 !== false) {
+								if (count($resArray2) > 0) {
+									$array2 = $resArray2[0];
+									$groupObj->oldid = $nodeData['groupid'];
+									$groupObj->groupid = $array2['UserID'];
+								}
+							}
+						}
+					}
+				}
 
 				if (isset($nodeData['name'])) {
 					$groupObj->name = $nodeData['name'];

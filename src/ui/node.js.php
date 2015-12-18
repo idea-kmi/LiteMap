@@ -715,29 +715,24 @@ function renderMapNode(width, height, node, uniQ, role, includeUser, type, inclu
 	var title = node.name;
 	var description = node.description;
 
-	if (mainheading) {
-		var exploreButton = new Element('h1');
-		textDiv.insert(exploreButton);
-		exploreButton.insert(title);
+	var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'style':'font-weight:bold;font-size:12pt;float:left;margin-top:5px;'});
+	if (node.searchid && node.searchid != "") {
+		exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"&sid="+node.searchid;
+	} else if (node.groupid && node.groupid != "") {
+		exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?groupid="+node.groupid+"&id="+node.nodeid;
 	} else {
-		var exploreButton = new Element('a', {'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>', 'style':'font-weight:bold;font-size:12pt;float:left;margin-top:5px;'});
-		if (node.searchid && node.searchid != "") {
-			exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"&sid="+node.searchid;
-		} else if (node.groupid && node.groupid != "") {
-			exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?groupid="+node.groupid+"&id="+node.nodeid;
-		} else {
-			exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid;
-		}
-
-		var croppedtitle = title;
-		if (cropdesc && title.length > 100) {
-			croppedtitle = title.substr(0,100)+"...";
-		}
-
-		exploreButton.insert(croppedtitle);
-		textDiv.insert(exploreButton);
-		textDiv.insert("<br>");
+		exploreButton.href= "<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid;
 	}
+
+	var croppedtitle = title;
+	if (cropdesc && title.length > 100) {
+		croppedtitle = title.substr(0,100)+"...";
+	}
+
+	exploreButton.insert(croppedtitle);
+	textDiv.insert(exploreButton);
+	textDiv.insert("<br>");
+
 	if (node.description != "" && title.length <=80) {
 		var hint = removeHTMLTags(description);
 		var cutoff = 180;
@@ -1124,13 +1119,8 @@ function renderMapNodeHeading(width, height, node, uniQ, role, includeUser, type
 	imageCell.style.width="150px";
 	row.insert(imageCell);
 
-	var imageObj = new Element('img',{'alt':node.name, 'title': node.name, 'style':'padding:5px;padding-bottom:10px;', 'border':'0','src': node.image});
-	var imagelink = new Element('a', {
-		'href':URL_ROOT+"explore.php?id="+node.nodeid,
-	});
-
-	imagelink.insert(imageObj);
-	imageCell.insert(imagelink);
+	var imageObj = new Element('img',{'alt':node.name, 'style':'padding:5px;padding-bottom:10px;', 'border':'0','src': node.image});
+	imageCell.insert(imageObj);
 	imageCell.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>';
 
 	var textCell = new Element( 'div', {'class':'nodetablecelltop'} );
@@ -1153,7 +1143,7 @@ function renderMapNodeHeading(width, height, node, uniQ, role, includeUser, type
 		exploreButton.insert(padlockicon);
 	}
 
-	if (node.description != "" && title.length <=80) {
+	if (node.description != "") {
 		var hint = description;
 		var croplength = 80-title.length;
 		if (cropdesc && description.length > croplength) {

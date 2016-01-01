@@ -159,7 +159,7 @@ for ($i=0; $i<$count; $i++) {
 
 						$drawRow = true;
 						if (in_array($nextnode->role->name, $CFG->EVIDENCE_TYPES)
-							&& ($othernode->role->name == "Solution") {
+							&& ($othernode->role->name == "Solution")) {
 							$drawRow = false;
 						}
 

@@ -441,6 +441,7 @@ function uploadImageToFitComments($field,&$errors,$directory="", $maxwidth, $max
              array_push($errors,$LNG->CORE_NOT_IMAGE_RESIZE_ERROR);
              return "";
         }
+
 		$size = calculateAspectRatioFit($width, $height, $maxwidth, $maxheight);
        	if (!create_image_thumb($filename, $size['width'], $directory)){
 			//delete the file, it could be dodgy
@@ -809,11 +810,16 @@ function geoCodeAddress($address1, $address2, $postcode, $loc, $cc) {
     $opts = array();
     $opts['http'] = $http;
     $context  = stream_context_create($opts);
-    $response = file_get_contents($geocodeURL, 0, $context);
 
-	$output= json_decode($response);
-	$geo["lat"] = $output->results[0]->geometry->location->lat;
-	$geo["lng"] = $output->results[0]->geometry->location->lng;
+    try {
+    	$response = file_get_contents($geocodeURL, 0, $context);
+
+		$output = json_decode($response);
+		if (isset($output) && isset($output->results[0])) {
+			$geo["lat"] = $output->results[0]->geometry->location->lat;
+			$geo["lng"] = $output->results[0]->geometry->location->lng;
+		}
+	} catch(Exception $e) {}
 
     return $geo;
 }

@@ -64,122 +64,124 @@ $count = count($users);
 //echo "Users=".$count."\n";
 
 foreach($users as $user) {
-	$USER = $user;
+	if (!$user instanceof Error) {
+		$USER = $user;
 
-//echo $user->userid.":Starting"."\n";
+	//echo $user->userid.":Starting"."\n";
 
-	$nextMessage = '';
+		$nextMessage = '';
 
-	// maps
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Map");
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->mapicon.'" />&nbsp;'.$LNG->MAPS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// maps
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Map");
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->mapicon.'" />&nbsp;'.$LNG->MAPS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// issues
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Issue");
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->issueicon.'" />&nbsp;'.$LNG->ISSUES_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// issues
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Issue");
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->issueicon.'" />&nbsp;'.$LNG->ISSUES_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Solution");
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->solutionicon.'" />&nbsp;'.$LNG->SOLUTIONS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Solution");
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->solutionicon.'" />&nbsp;'.$LNG->SOLUTIONS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// pro
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Pro');
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->proicon.'" />&nbsp;'.$LNG->PROS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// pro
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Pro');
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->proicon.'" />&nbsp;'.$LNG->PROS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// con
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Con');
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->conicon.'" />&nbsp;'.$LNG->CONS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// con
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Con');
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->conicon.'" />&nbsp;'.$LNG->CONS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// argument
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Con');
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->argumenticon.'" />&nbsp;'.$LNG->ARGUMENTS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// argument
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', 'Con');
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->argumenticon.'" />&nbsp;'.$LNG->ARGUMENTS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// comments
-	$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Idea");
-	$nodes = $nodeSet->nodes;
-	$nextSet = "";
-	$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->commenticon.'" />&nbsp;'.$LNG->COMMENTS_NAME.'</b><br>';
-	foreach($nodes as $node) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'index.php?q='.urlencode($node->name).'">'.($node->name).'</a><br />';
-	}
-	if (count($nodes) > 0) {
-		$nextMessage .= $nextSet;
-	}
+		// comments
+		$nodeSet = getNodesByGlobal(0, 5 , 'date','DESC', "Idea");
+		$nodes = $nodeSet->nodes;
+		$nextSet = "";
+		$nextSet .= '<br><b><img width="20" border="0" src="'.$CFG->commenticon.'" />&nbsp;'.$LNG->COMMENTS_NAME.'</b><br>';
+		foreach($nodes as $node) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'index.php?q='.urlencode($node->name).'">'.($node->name).'</a><br />';
+		}
+		if (count($nodes) > 0) {
+			$nextMessage .= $nextSet;
+		}
 
-	// user
-	$userSet = getUsersByGlobal(false,0,5);
-	$innerusers = $userSet->users;
-	$nextSet = "";
-	$nextSet .= '<br><b>'.$LNG->USERS_NAME.'</b><br>';
-	foreach($innerusers as $inneruser) {
-		$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'user.php?userid='.urlencode($inneruser->userid).'"><img width="20" border="0" src="'.$inneruser->thumb.'">&nbsp;'.($inneruser->name).'</a><br />';
-	}
+		// user
+		$userSet = getUsersByGlobal(false,0,5);
+		$innerusers = $userSet->users;
+		$nextSet = "";
+		$nextSet .= '<br><b>'.$LNG->USERS_NAME.'</b><br>';
+		foreach($innerusers as $inneruser) {
+			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'user.php?userid='.urlencode($inneruser->userid).'"><img width="20" border="0" src="'.$inneruser->thumb.'">&nbsp;'.($inneruser->name).'</a><br />';
+		}
 
-	// Don't send if there are only users
-	if (count($innerusers) > 0 && $nextMessage != "") {
-		$nextMessage .= $nextSet;
-	}
+		// Don't send if there are only users
+		if (count($innerusers) > 0 && $nextMessage != "") {
+			$nextMessage .= $nextSet;
+		}
 
-//echo $user->userid.":BEFORE SEND message=".$nextMessage."\n";
+	//echo $user->userid.":BEFORE SEND message=".$nextMessage."\n";
 
-	if ($nextMessage != "") {
-		// email messages can't have more than 998 characters on one line or you get odd characters ! randomly through the email.
-		$nextMessage = wordwrap($nextMessage,900, "\n");
-		$unsubscribe = $CFG->homeAddress."ui/pages/profile.php";
-		$paramArray = array ($user->name, $LNG->ADMIN_CRON_RECENT_ACTIVITY_MESSAGE, $nextMessage, $unsubscribe);
+		if ($nextMessage != "") {
+			// email messages can't have more than 998 characters on one line or you get odd characters ! randomly through the email.
+			$nextMessage = wordwrap($nextMessage,900, "\n");
+			$unsubscribe = $CFG->homeAddress."ui/pages/profile.php";
+			$paramArray = array ($user->name, $LNG->ADMIN_CRON_RECENT_ACTIVITY_MESSAGE, $nextMessage, $unsubscribe);
 
-//echo $user->userid.":Emailing:".$user->getEmail()."\n";
+	//echo $user->userid.":Emailing:".$user->getEmail()."\n";
 
-		sendMail("recentactivity",$LNG->ADMIN_CRON_RECENT_ACTIVITY_TITLE, $user->getEmail(),$paramArray);
-	} else {
-		echo "\r\n".$LNG->$LNG->ADMIN_CRON_RECENT_ACTIVITY_NO_DIGEST." ".$user->getEmail();
+			sendMail("recentactivity",$LNG->ADMIN_CRON_RECENT_ACTIVITY_TITLE, $user->getEmail(),$paramArray);
+		} else {
+			echo "\r\n".$LNG->$LNG->ADMIN_CRON_RECENT_ACTIVITY_NO_DIGEST." ".$user->getEmail();
+		}
 	}
 }
 

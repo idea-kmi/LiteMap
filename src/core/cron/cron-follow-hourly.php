@@ -59,103 +59,105 @@ $count = count($users);
 
 for ($i=0; $i<$count; $i++) {
 	$user = $users[$i];
-	$userid = $user->userid;
+	if (!$user instanceof Error) {
+		$userid = $user->userid;
 
-	//if ($userid != '137108251921190199260') { // '1722128760393014001402920636'
-	//	continue;
-	//}
+		//if ($userid != '137108251921190199260') { // '1722128760393014001402920636'
+		//	continue;
+		//}
 
-	$USER = $user;
+		$USER = $user;
 
-	$nextMessage = ""; //'<div style="font-family:sans-serif,Arial,Helvettica; font-size: 10pt">';
+		$nextMessage = ""; //'<div style="font-family:sans-serif,Arial,Helvettica; font-size: 10pt">';
 
-	$followlastrun = $user->followlastrun;
-	$now = time();
-	if ($followlastrun == 0) {
-		$timeback = 3600; //3600 = 1 hour
-		$followlastrun = $now - $timeback;
-	}
-
-	// GET PEOPLE THEY FOLLOW
-	$followingusers = getUsersBeingFollowedByMe($userid);
-	$countj = count($followingusers);
-	for ($j=0; $j<$countj;$j++) {
-		$next = $followingusers[$j];
-		$name = $next['Name'];
-		$nextuserid = $next['UserID'];
-
-		$as = getUserActivity($nextuserid, $followlastrun);
-		if ($as->totalno > 0) {
-			$nextMessage .= '<br />'.$LNG->ADMIN_CRON_FOLLOW_USER_ACTIVITY_MESSAGE.' <span style="font-weight:bold">'.($name).'</span>: <a href="'.$CFG->homeAddress.'ui/popups/activityviewerusers.php?userid='.$nextuserid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_SEE_ACTIVITY_LINK.'</a>';
-		}
-	}
-
-
-	// GET ITEMS THEY FOLLOW
-	$itemArray = getItemsBeingFollowedByMe($userid);
-	$k=0;
-	$countk = count($itemArray);
-	for ($k = 0; $k<$countk; $k++) {
-		$array = $itemArray[$k];
-
-		$nodeid = $array['NodeID'];
-		$nodename = $array['Name'];
-		$nodetype = $array['NodeType'];
-
-		$as = getNodeActivity($nodeid, $followlastrun, false);
-		$activities = $as->activities;
-
-		if (count($activities) > 0) {
-			$nextMessage .= '<br /><br /><hr />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($nodetype, false).': <span style="font-weight:bold">'. ($nodename).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
-			$nextMessage .= processActivityList($activities, $array, $user);
+		$followlastrun = $user->followlastrun;
+		$now = time();
+		if ($followlastrun == 0) {
+			$timeback = 3600; //3600 = 1 hour
+			$followlastrun = $now - $timeback;
 		}
 
-		/** IF THE NODE IS AN DEBATE ISSUE GET THE ACTIVITY ALSO FOR ALL THE ITEMS BELOW IN THE TREE **/
-		if ($nodetype == "Issue") {
-			$conSet = getDebate($nodeid);
-			$conns = $conSet->connections;
-			$countl = count($conns);
-			for ($l=0; $l < $countl; $l++) {
-				$con = $conns[$l];
-				$from = $con->from;
-				$to = $con->to;
+		// GET PEOPLE THEY FOLLOW
+		$followingusers = getUsersBeingFollowedByMe($userid);
+		$countj = count($followingusers);
+		for ($j=0; $j<$countj;$j++) {
+			$next = $followingusers[$j];
+			$name = $next['Name'];
+			$nextuserid = $next['UserID'];
 
-				$node = array();
-				$node['NodeID'] = $from->nodeid;
-				$node['Name'] = $from->name;
-				$node['NodeType'] = $from->role->name;
-				$node['UserID'] = $from->users[0]->userid;
+			$as = getUserActivity($nextuserid, $followlastrun);
+			if ($as->totalno > 0) {
+				$nextMessage .= '<br />'.$LNG->ADMIN_CRON_FOLLOW_USER_ACTIVITY_MESSAGE.' <span style="font-weight:bold">'.($name).'</span>: <a href="'.$CFG->homeAddress.'ui/popups/activityviewerusers.php?userid='.$nextuserid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_SEE_ACTIVITY_LINK.'</a>';
+			}
+		}
 
-				$as = getNodeActivity($from->nodeid, $followlastrun, false);
-				$activities = $as->activities;
 
-				if (count($activities) > 0) {
-					$nextMessage .= '<br /><br /><br />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($node['NodeType'], false).': <span style="font-weight:bold">'. ($from->name).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$from->nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
-					$nextMessage .= processActivityList($activities, $node, $user);
+		// GET ITEMS THEY FOLLOW
+		$itemArray = getItemsBeingFollowedByMe($userid);
+		$k=0;
+		$countk = count($itemArray);
+		for ($k = 0; $k<$countk; $k++) {
+			$array = $itemArray[$k];
+
+			$nodeid = $array['NodeID'];
+			$nodename = $array['Name'];
+			$nodetype = $array['NodeType'];
+
+			$as = getNodeActivity($nodeid, $followlastrun, false);
+			$activities = $as->activities;
+
+			if (count($activities) > 0) {
+				$nextMessage .= '<br /><br /><hr />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($nodetype, false).': <span style="font-weight:bold">'. ($nodename).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
+				$nextMessage .= processActivityList($activities, $array, $user);
+			}
+
+			/** IF THE NODE IS AN DEBATE ISSUE GET THE ACTIVITY ALSO FOR ALL THE ITEMS BELOW IN THE TREE **/
+			if ($nodetype == "Issue") {
+				$conSet = getDebate($nodeid);
+				$conns = $conSet->connections;
+				$countl = count($conns);
+				for ($l=0; $l < $countl; $l++) {
+					$con = $conns[$l];
+					$from = $con->from;
+					$to = $con->to;
+
+					$node = array();
+					$node['NodeID'] = $from->nodeid;
+					$node['Name'] = $from->name;
+					$node['NodeType'] = $from->role->name;
+					$node['UserID'] = $from->users[0]->userid;
+
+					$as = getNodeActivity($from->nodeid, $followlastrun, false);
+					$activities = $as->activities;
+
+					if (count($activities) > 0) {
+						$nextMessage .= '<br /><br /><br />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($node['NodeType'], false).': <span style="font-weight:bold">'. ($from->name).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$from->nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
+						$nextMessage .= processActivityList($activities, $node, $user);
+					}
 				}
 			}
 		}
-	}
 
-	$user->updateFollowLastRun($now);
+		$user->updateFollowLastRun($now);
 
-	if ($nextMessage != "") {
-		$nextMessage = $LNG->ADMIN_CRON_FOLLOW_DATE_FROM_TO_PART1." ".date("d M Y", $followlastrun)." ".$LNG->ADMIN_CRON_FOLLOW_DATE_FROM_TO_PART2." ".date("d M Y", $now)."<br />".$nextMessage;
+		if ($nextMessage != "") {
+			$nextMessage = $LNG->ADMIN_CRON_FOLLOW_DATE_FROM_TO_PART1." ".date("d M Y", $followlastrun)." ".$LNG->ADMIN_CRON_FOLLOW_DATE_FROM_TO_PART2." ".date("d M Y", $now)."<br />".$nextMessage;
 
-		//email messages can't have more than 998 characters on one line or you get odd characters ! randomly through the email.
-		$nextMessage = wordwrap($nextMessage,900, "\n");
+			//email messages can't have more than 998 characters on one line or you get odd characters ! randomly through the email.
+			$nextMessage = wordwrap($nextMessage,900, "\n");
 
-		$nextMessage .= '<br><br><p style="font-size:8pt">'.$LNG->ADMIN_CRON_FOLLOW_UNSUBSCRIBE_PART1.' <a href="'.$CFG->homeAddress.'user.php?userid='.$userid.'"> '.$LNG->ADMIN_CRON_FOLLOW_UNSUBSCRIBE_PART2.'</a></p><br>';
+			$nextMessage .= '<br><br><p style="font-size:8pt">'.$LNG->ADMIN_CRON_FOLLOW_UNSUBSCRIBE_PART1.' <a href="'.$CFG->homeAddress.'user.php?userid='.$userid.'"> '.$LNG->ADMIN_CRON_FOLLOW_UNSUBSCRIBE_PART2.'</a></p><br>';
 
-		//$myFile = $user->userid."C.html";
-		//$fh = fopen($myFile, 'w') or die("can't open file");
-		//fwrite($fh, $nextMessage);
-		//fclose($fh);
+			//$myFile = $user->userid."C.html";
+			//$fh = fopen($myFile, 'w') or die("can't open file");
+			//fwrite($fh, $nextMessage);
+			//fclose($fh);
 
-		$paramArray = array ($user->name, $LNG->ADMIN_CRON_FOLLOW_HOURLY, $nextMessage);
-		sendMail("activityreport",$LNG->ADMIN_CRON_FOLLOW_HOURLY_TITLE,$user->getEmail(),$paramArray);
-	} else {
-		echo "\r\n".$LNG->ADMIN_CRON_FOLLOW_NO_DIGEST." ".$user->getEmail();
+			$paramArray = array ($user->name, $LNG->ADMIN_CRON_FOLLOW_HOURLY, $nextMessage);
+			sendMail("activityreport",$LNG->ADMIN_CRON_FOLLOW_HOURLY_TITLE,$user->getEmail(),$paramArray);
+		} else {
+			echo "\r\n".$LNG->ADMIN_CRON_FOLLOW_NO_DIGEST." ".$user->getEmail();
+		}
 	}
 }
 

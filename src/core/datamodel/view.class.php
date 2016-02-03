@@ -235,6 +235,7 @@ class View {
 
 		$viewnode = new ViewNode();
 		$viewnode = $viewnode->add($this->nodeid, $nodeid, $xpos, $ypos);
+		$viewnode = $viewnode->load();
 		if (!$viewnode instanceof Error) {
 			array_push($this->nodes, $viewnode);
 		}
@@ -243,9 +244,9 @@ class View {
     }
 
     /**
-     * Adds a node to this view
+     * Adds a connection to this view
      *
-     * @param string $nodeid the id of the node to add to this view
+     * @param string $connid the id of the connection to add to this view
      * @return ViewConnection object (this)
      */
     function addConnection($connid){
@@ -259,6 +260,7 @@ class View {
 
 		$viewconn = new ViewConnection();
 		$viewconn = $viewconn->add($this->nodeid, $connid);
+		$viewconn = $viewconn->load();
 		if (!$viewconn instanceof Error) {
 			array_push($this->connections, $viewconn);
 		}

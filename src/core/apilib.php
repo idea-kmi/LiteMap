@@ -4477,7 +4477,7 @@ function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $group
  * @param string $ypos.
  * @param string $groupid (optional) the id of the group to add the node to.
  *
- * @return ViewConnection or Error
+ * @return View with new node and connection in or Error
  */
 function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $groupid=""){
     global $USER;
@@ -4532,7 +4532,7 @@ function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$link
 					}
 
 					$viewcon = $view->addConnection($connection->connid);
-					return $viewcon;
+					return $view;
 				} else {
 					return $connection;
 				}

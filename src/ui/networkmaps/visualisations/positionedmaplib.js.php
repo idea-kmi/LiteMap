@@ -1942,11 +1942,24 @@ function addExistingNodeToMap(mapid, fromnodeid, tonodeid, linktypename, xpos, y
 				return;
 			}
 
-			var viewconnection = json.viewconnection[0];
+			// There should only be one node and one Connections in the view returned.
+			var viewnode = json.view[0].nodes[0].viewnode;
+			var node = viewnode.node[0].cnode;
+			if (node) {
+				var role = node.role[0].role;
+				var rolename = role.name;
+				var mapnode = addNodeToMap(viewnode, positionedMap);
+				if (mapnode) {
+					mapnode.selected = true;
+				}
+			}
 
-			addConnectionToMap(viewconnection, positionedMap);
-			var c = viewconnection.connection[0].connection;
-			allConnections.push(c);
+			var viewconnection = json.view[0].connections[0].viewconnection;
+			if (viewconnection) {
+				addConnectionToMap(viewconnection, positionedMap);
+				var c = viewconnection.connection[0].connection;
+				allConnections.push(c);
+			}
 
 			//update tree
 			if ($('treedata') && allConnections.length > 0) {
@@ -1965,6 +1978,7 @@ function addExistingNodeToMap(mapid, fromnodeid, tonodeid, linktypename, xpos, y
 				setMapTabDataReload();
 			}
 
+			positionedMap.refresh();
 			positionedMap.refresh();
    		},
    		onFailure: function(transport) {

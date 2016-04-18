@@ -253,7 +253,7 @@ Please see the README.txt file that is in the themes folder for more details abo
 		<li>Create an empty database for the LiteMap to use in your MySQL installation,
 		making sure that the database character set and collation are UTF-8, e.g.<br>
 		<code>CREATE DATABASE dbname CHARACTER SET utf8 COLLATE utf8_general_ci;</code><br><br>
-		If you do not want to use utf8, you will need to edit the db.sql file before you run it in c. below, as the table creation statements are using utf8.</li>
+		If you do not want to use utf8, you will need to edit the mysql.sql file before you run it in c. below, as the table creation statements are using utf8.</li>
 		<li>Create a MySQL user for LiteMap to use.</li>
 		<li>Load the database schema from /install/mysql.sql into your new LiteMap Database to create all the required tables.</li>
 	</ol>
@@ -742,7 +742,7 @@ These codes are specified by the <a href="http://www.ics.uci.edu/pub/ietf/http/r
 </table>
 <p>&nbsp;</p>
 </li>
-<li>Copy the language files from inside the default 'en' language folder into you new folder.</li>
+<li>Copy the language files from inside the default 'en' language folder into your new folder.</li>
 <li>Inside any given language file, each item is set up as a key/value pair, in the form key='value'.
 You must translate/change only the values on the right hand side, NEVER change the key name on the left.</li>
 <li>Change the language variables in the config file: <b>$CFG-&gt;language = 'en';</b> to reflect your new language of choice.
@@ -759,10 +759,9 @@ The <b>$CFG-&gt;language</b> setting must match the folder name for your new lan
 To provide site specific text for any of the interface languages you follow this basic pattern:
 <ol>
 <li>Locate the term you wish to replace in the language files.</li>
-<li>Create a files with the same name as the file containing the term you wish to change but with 'Custom' at the end and place it in the 'custom' folder of the language file you are using.
-So, for example, if you wish to replace the About page in the English language files, create a file in the 'language/en/custom' folder called 'aboutCustom.php'.</li>
+<li>Create a file with the same name as the file containing the term you wish to change and put it in the languages folder of sites/default or sites/multi/<your domain>, in the same structure e.g. sites/default/language/en/languageui.php.</li>
 <li>Inside this new file you must use the same key label on the left as in the original file, and then just replace the part on the right after the '=' sign.
-All files in the 'custom' folder are loaded after the ones outside, and provided you have used the same keys, the text will be replaced with your version when the language files are loaded.</li>
+All domain specific files in the 'sites' language sub-folders are loaded after the main language files, and provided you have used the same keys, the text will be replaced with your version when the language files are loaded.</li>
 </ol>
 NOTE: If what you want to change any of the core terms, the names of the categories or links, for example, if you wish to call 'Themes' say 'Topics' instead on your Hub, you can just create a custom languagecore.php file
 and change the text in that. These terms will ripple through the rest of the interface text as all the rest of the text should reference those terms through their keys.
@@ -772,7 +771,7 @@ This makes it easy to change the basic terminology for a given Hub community wit
 <b>IMPORTANT:</b> There are two none-standard items in the language folder that are not handled in the same way as the other language files:
 <ol>
 <li>The <b>countries.php</b> file: This holds the country names used in the location drop-down menus displayed to users.
-It is also the place where you set your default country when displaying the list.
+It is also the place where you set your default country when displaying the list ($LNG-&gt;DEFAULT_COUNTRY=).
 When translating these, please, as with the other files change only the part on the right after the '='.
 NOTE: this file may need updating if new countries come into existence.
 The location of where to check for updates is in the file header.</li>
@@ -792,7 +791,7 @@ At present, if you want to change the look and feel or text of your LiteMap site
 If you want to create your own theme you should copy the 'default' folder, rename it and edit the styles there.
 In the images folder you will see some image files like the header logo etc, that you will also probably want to replace.
 Just make sure the files names and sizes stay the same. In addition you can override themes for a given domain or the default domain in the 'sites' folder.
-For more information see the README.txt file in the 'themes' folder.
+For more information see the README.txt file in the 'themes' folder.</li>
 <li><b>Language:</b> All text displayed in LiteMap has been placed in various files in the 'language' folder system.
 So you can override all the default texts your specific site needs.
 You may especially like to add to or redo the <b>about</b> page (language/en/about.php and help.php pages).

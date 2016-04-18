@@ -74,8 +74,6 @@
 			$r = getRoleByName("Idea");
 			$roleComment = $r->roleid;
 
-			// EDIT THE COMMENT NODE
-
 			$filename = "";
 			if (isset($commentnode->filename)) {
 				$filename = $commentnode->filename;
@@ -83,7 +81,6 @@
 
 			$commentnode = $commentnode->edit($label, $desc, $private, $roleComment, $filename, '');
 			if (!$commentnode instanceof Error) {
-				/** ADD RESOURCES/URLS **/
 				if(empty($errors)){
 
 					$imagedelete = optional_param("imagedelete","N",PARAM_ALPHA);
@@ -100,6 +97,7 @@
 						}
 					}
 
+					/** ADD RESOURCES/URLS **/
 					if(empty($errors)){
 						$commentnode->removeAllURLs();
 
@@ -114,14 +112,8 @@
 
 							//check all fields entered
 							if ($resourcetitle != "" && ($resourceurl == "http://" || $resourceurl == "")){
-								array_push($errors,$LNG->FORM_RESOURCE_URL_REQUIRED);
+								array_push($errors,$LNG->FORM_ERROR_URL_INVALID);
 								break;
-							}
-
-							$URLValidator = new mrsnk_URL_validation($resourceurl, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
-							if($resourceurl != "" && !$URLValidator->isValid()){
-								 array_push($errors,$LNG->FORM_RESOURCE_URL_FORMAT_ERROR);
-								 break;
 							}
 
 							if ($resourcetitle == ""){
@@ -150,6 +142,8 @@
 					}
 				}
 			}
+
+
 
 			if (empty($errors)) {
 				echo "<script type='text/javascript'>";

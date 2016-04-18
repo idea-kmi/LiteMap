@@ -263,7 +263,15 @@ function clean_param($param, $type) {
             $param = ereg_replace('//+', '/', $param);
             return ereg_replace('/(\./)+', '/', $param);
 
-        case PARAM_URL:          // allow safe ftp, http, mailto urls
+        case PARAM_URL:
+
+			if (!filter_var($param, FILTER_VALIDATE_URL) === false) {
+				// all is ok, param is respected
+			} else {
+				$param =''; // not really ok
+			}
+
+            /*
             include_once($CFG->dirAddress .'core/lib/url-validation.class.php');
 
             $URLValidator = new mrsnk_URL_validation($param, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
@@ -272,6 +280,8 @@ function clean_param($param, $type) {
             } else {
                 $param =''; // not really ok
 			}
+			*/
+
             return $param;
 
  		case PARAM_EMAIL:

@@ -208,9 +208,10 @@ function uploadImage($field,&$errors,$imagewidth,$directory=""){
         //replace any non alphanum chars in filename
         //should warn user about the file type Gary 2009. 01. 13
         //$t_filename = $dt ."_". basename( preg_replace('/([^A-Za-z0-9.])/i', '',$_FILES[$field]['name']));
-        $t_filename =  basename( preg_replace('/([^A-Za-z0-9.])/i', '',$_FILES[$field]['name']));
 
-        //echo "t-filename: " . $t_filename;
+        $t_filename = basename( preg_replace('/([^A-Za-z0-9.])/i', '',$_FILES[$field]['name']));
+
+        //error_log("t-filename: " . $t_filename);
 
         //replace the filetype with png (as the resize image code makes everything a png)
         $filename = preg_replace('/(.[B|b][m|M][p|P]$)/i', '.png', $t_filename);
@@ -218,8 +219,13 @@ function uploadImage($field,&$errors,$imagewidth,$directory=""){
         $filename = preg_replace('/(.[J|j][p|P][g|G]$)/i', '.png', $t_filename);
         $filename = preg_replace('/(.[J|j][p|P][e|E][g|G]$)/i', '.png', $t_filename);
 
-       //echo "filename: ".$filename;
-       //exit();
+		if ($field == 'background') {
+	        $info = pathinfo($filename);
+	        $filename = $info['filename']."_back.".$info['extension'];
+		}
+
+        //error_log("filename: ".$filename);
+        //exit();
         $target_path = $target_path . $filename;
 
         if(!getimagesize($_FILES[$field]['tmp_name'])){

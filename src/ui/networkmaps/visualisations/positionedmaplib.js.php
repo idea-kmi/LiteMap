@@ -2246,9 +2246,9 @@ function linkNodes(fromNodeID, toNodeID, isCon) {
 			} else if ((rolenameFrom == "Pro" || rolenameFrom == "Con" || rolenameFrom == "Argument")
 						&& (rolenameTo == "Pro" || rolenameTo == "Con" || rolenameTo == "Argument")) {
 				allowedConnection = true;
-				if (rolenameFrom == "Pro" || isCon == false) {
+				if (rolenameFrom == "Pro" || (rolenameFrom != "Con" && isCon == false)) {
 					linktypename = '<?php echo $CFG->LINK_PRO_SOLUTION; ?>';
-				} else if (rolenameFrom == "Con" || isCon == true) {
+				} else if (rolenameFrom == "Con" || (rolenameFrom != "Con" && isCon == true)) {
 					linktypename = '<?php echo $CFG->LINK_CON_SOLUTION; ?>';
 				}
 			} else if (rolenameFrom == "Solution" && rolenameTo == "Solution") {

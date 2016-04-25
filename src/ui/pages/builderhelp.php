@@ -93,7 +93,9 @@
 				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/chrome-bar-on.png'); ?>" border="0" />
 			</div>
 
-			<div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="http://crossrider.com/download/ff/70627"><img src="<?php echo $HUB_FLM->getImagePath('help/firefox-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_FIREFOX; ?></a></div>
+			<!-- div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="http://crossrider.com/download/ff/70627"><img src="<?php echo $HUB_FLM->getImagePath('help/firefox-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_FIREFOX; ?></a></div -->
+			<div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="https://litemap.net/litemap_toolbar-0.95.33-fx.xpi"><img src="<?php echo $HUB_FLM->getImagePath('help/firefox-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_FIREFOX; ?></a></div>
+
 			<div style="float:left;margin-top:20px;">
 				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/firefox-bar.png'); ?>" border="0" />
 				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/firefox-bar-on.png'); ?>" border="0" />

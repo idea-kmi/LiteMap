@@ -1692,7 +1692,7 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 			}
 		}
 
-		var nodeextra = getNodeTitleAntecedence(role.name, true);
+		var nodeextra = ""; //getNodeTitleAntecedence(role.name, true);
 		nodeArea.insert("<span style='font-style:italic'>"+nodeextra+"</span>"+node.name);
 
 		nodeArea.href= "#";

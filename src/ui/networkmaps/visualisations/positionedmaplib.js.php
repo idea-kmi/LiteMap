@@ -122,6 +122,8 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 			var swap = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
 
 			var context = canvas.getCtx();
+			context.globalCompositeOperation='destination-over';
+
 			// invert edge direction
 			if (swap) {
 				var tmp = from;
@@ -213,6 +215,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
     'cohere': {
 		'render': function(node, canvas){
 			var context = canvas.getCtx();
+			context.globalCompositeOperation='source-over';
 
 			var width = node.getData('width');
 			var height = node.getData('height')+10;

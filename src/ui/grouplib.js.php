@@ -215,7 +215,7 @@ function loadgroupmaps(context,args){
 				var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 				window.location.hash = "-"+currentPage;
 
-				$("tab-content-map-list").update(createGroupNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"maps"));
+				$("tab-content-map-list").update(createGroupNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"groupmaps"));
 
 				//display nodes
 				if(json.nodeset[0].nodes.length > 0){
@@ -245,7 +245,7 @@ function loadgroupmaps(context,args){
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-map-list").insert(createGroupNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"maps"));
+					$("tab-content-map-list").insert(createGroupNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"groupmaps"));
 				}
 
 				DATA_LOADED.map = true;
@@ -344,7 +344,7 @@ function createGroupNav(total, start, count, argArray, context, type){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);
 		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+		    	Event.observe(page,"click", GroupPages.next.bindAsEventListener(GroupPages,type,context,newArr));
 	    	} else {
 	    		page.addClassName("currentpage");
 	    	}
@@ -391,7 +391,7 @@ function createGroupNavCounter(total, start, count, type){
     return objH;
 }
 
-var Pages = {
+var GroupPages = {
 	next: function(e){
 		var data = $A(arguments);
 		eval("load"+data[1]+"(data[2],data[3])");

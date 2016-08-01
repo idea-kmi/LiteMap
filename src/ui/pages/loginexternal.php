@@ -24,7 +24,7 @@
  ********************************************************************************/
 
     include_once("../../config.php");
-	require_once( $CFG->dirAddress.'core/lib/hybridauth-2.4.1/hybridauth/Hybrid/Auth.php' );
+	require_once( $CFG->dirAddress.'core/lib/hybridauth-2.6.0/hybridauth/Hybrid/Auth.php' );
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
     if ($HUB_FLM->hasCustomVersion($me)) {

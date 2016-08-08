@@ -790,6 +790,298 @@ function getAllVoting(&$direction, $sort, $oldsort) {
 	return $ns;
 }
 
+
+/*** VOTING STATS BY GROUP ***/
+
+function getTotalItemVotesByGroup($groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+
+	$totals = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOTAL_ITEM_VOTES_SELECT;
+
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($totals, $array);
+		}
+	}
+
+	return $totals;
+}
+
+function getTotalConnectionVotesByGroup($groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+
+	$totals = array();
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOTAL_CONNECTION_VOTES_SELECT ;
+
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($totals, $array);
+		}
+	}
+
+	return $totals;
+}
+
+function getTotalVotesByGroup($groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+
+	$totals = array();
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOTAL_VOTES_SELECT;
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($totals, $array);
+		}
+	}
+
+	return $totals;
+}
+
+/**
+ * Get the Top Voted on Items.
+ * @return a 'NodeSet' with variable where each node has an additional properties:
+ * 'vote' = total votes, 'up'=for node votes, 'down'=against node votes,
+ * 'cup' = for connection votes, 'cdown' = against connection votes
+ */
+function getTotalTopVotesByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $count;
+
+	$topVotedNodes = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOTAL_TOP_VOTES;
+
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	$ns = new NodeSet();
+	return $ns->loadNodesWithExtras($sql,$params,'short');
+}
+
+/**
+ * Get the Top Voted FOR Items.
+ * @return a 'NodeSet' with variable where each node has an additional properties.
+ * 'vote' = total votes, 'up'=for node votes, 'cup' = for connection votes.
+ */
+function getTopNodeForVotesByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $count;
+
+	$topVotedForNodes = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOP_NODE_FOR_VOTES;
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	/*
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($topVotedForNodes, $array);
+		}
+	}
+	return $topVotedForNodes;
+	*/
+
+	$ns = new NodeSet();
+	return $ns->loadNodesWithExtras($sql,$params,'short');
+}
+
+/**
+ * Get the Top Voted AGAINST Items.
+ * @return a 'NodeSet' with variable where each node has an additional properties.
+ * 'vote' = total votes, 'down'=against node votes, 'cdown' = against connection votes.
+ */
+function getTopNodeAgainstVotesByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $count;
+
+	$topVotedAgainstNodes = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOP_NODE_AGAINST_VOTES;
+
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	$ns = new NodeSet();
+	return $ns->loadNodesWithExtras($sql,$params,'short');
+}
+
+function getTopVotersByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $groupid;
+	$params[3] = $count;
+
+	$topVoters = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOP_VOTERS;
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($topVoters, $array);
+		}
+	}
+
+	return $topVoters;
+}
+
+function getTopForVotersByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $groupid;
+	$params[3] = $count;
+
+	$topVotersFor = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOP_FOR_VOTERS;
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($topVotersFor, $array);
+		}
+	}
+
+	return $topVotersFor;
+}
+
+function getTopAgainstVotersByGroup($count, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+	$params[2] = $groupid;
+	$params[3] = $count;
+
+	$topVotersAgainst = array();
+
+	$sql = $HUB_SQL->STATSLIB_GROUP_TOP_FOR_VOTERS;
+	// ADD LIMITING
+	$sql = $DB->addLimitingResults($sql, 0, $count);
+
+	$resArray = $DB->select($sql, $params);
+	$nodeArray = array();
+	if ($resArray !== false) {
+		$count = count($resArray);
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			array_push($topVotersAgainst, $array);
+		}
+	}
+
+	return $topVotersAgainst;
+}
+
+function getAllVotingByGroup(&$direction, $sort, $oldsort, $groupid) {
+	global $DB,$CFG,$HUB_SQL;
+
+	$params = array();
+	$params[0] = $groupid;
+	$params[1] = $groupid;
+
+	if ($direction) {
+		if ($oldsort === $sort) {
+			if ($direction === 'ASC') {
+				$direction = "DESC";
+			} else {
+				$direction = "ASC";
+			}
+		} else {
+			$direction = "DESC";
+		}
+	} else {
+		$direction = "DESC";
+	}
+
+	$allNodeVotes = array();
+	$sql = $HUB_SQL->STATSLIB_GROUP_ALL_VOTING;
+
+	if ($sort != 'Name' && $sort != "NodeType") {
+		$sql .= $HUB_SQL->STATSLIB_ALL_VOTING_ORDER_BY.$sort." ".$direction;
+	}
+
+	$ns = new NodeSet();
+	$ns->loadNodesWithExtras($sql,$params,'short');
+
+	// These properties had to be taken out of the original sql call
+	// as Virtuoso complained about a long data type error
+	// Do now data called as separate Nodes and these sorts are done afterwards.
+	if ($sort === "Name") {
+		if ($direction === "ASC") {
+			usort($ns->nodes, 'nameSortASC');
+		} else {
+			usort($ns->nodes, 'nameSortDESC');
+		}
+	} else if ($sort === "NodeType") {
+		if ($direction === "ASC") {
+			usort($ns->nodes, 'roleTextSortASC');
+		} else {
+			usort($ns->nodes, 'roleTextSortDESC');
+		}
+	}
+
+	return $ns;
+}
+
+
+
 /*** USER CONTEXT STATS ***/
 
 function getTotalVotesForUser($userid) {
@@ -797,7 +1089,6 @@ function getTotalVotesForUser($userid) {
 
 	$params = array();
 	$params[0] = $userid;
-
 	$totals = array();
 
 	$sql = $HUB_SQL->STATSLIB_USER_TOTAL_VOTES;

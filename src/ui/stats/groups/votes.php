@@ -27,23 +27,26 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 global $CFG,$LNG;
 
+$groupid = required_param("groupid",PARAM_ALPHANUMEXT);
+error_log($groupid);
+
 $sort = optional_param("sort","vote",PARAM_ALPHANUM);
 $oldsort = optional_param("lastsort","",PARAM_ALPHANUM);
 $direction = optional_param("lastdir","DESC",PARAM_ALPHANUM);
 
-$totalsItems = getTotalItemVotes();
-$totalsConns = getTotalConnectionVotes();
-$totals = getTotalVotes();
+$totalsItems = getTotalItemVotesByGroup($groupid);
+$totalsConns = getTotalConnectionVotesByGroup($groupid);
+$totals = getTotalVotesByGroup($groupid);
 
-$topVotedNodes = getTotalTopVotes(10);
-$topVotedForNodes = getTopNodeForVotes(10);
-$topVotedAgainstNodes = getTopNodeAgainstVotes(10);
+$topVotedNodes = getTotalTopVotesByGroup(10,$groupid);
+$topVotedForNodes = getTopNodeForVotesByGroup(10,$groupid);
+$topVotedAgainstNodes = getTopNodeAgainstVotesByGroup(10,$groupid);
 
-$topVoters = getTopVoters(10);
-$topVotersFor = getTopForVoters(10);
-$topVotersAgainst = getTopAgainstVoters(10);
+$topVoters = getTopVotersByGroup(10,$groupid);
+$topVotersFor = getTopForVotersByGroup(10,$groupid);
+$topVotersAgainst = getTopAgainstVotersByGroup(10,$groupid);
 
-$allNodeVotes = getAllVoting($direction, $sort, $oldsort);
+$allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 ?>
 
 <h3 style="margin-top:0px;"><?php echo $LNG->STATS_GLOBAL_VOTES_MENU_TITLE; ?></h3>
@@ -258,66 +261,66 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 			<?php echo $LNG->STATS_GLOBAL_VOTES_ALL_VOTING_TITLE; ?></h3>
 			<table border="1" cellpadding="5" style="float:left; border-collapse:collapse;width:100%" width="100%">
 				<tr style="background:#D8D8D8">
-					<?php echo '<td align="left" valign="bottom" width="15%" class="adminTableHead"><a href="votes.php?&sort=NodeType&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_CATEGORY_HEADING.'</b>';
+					<?php echo '<td align="left" valign="bottom" width="15%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=NodeType&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_CATEGORY_HEADING.'</b>';
 					if ($sort === 'NodeType') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="55%" class="adminTableHead"><a href="votes.php?&sort=Name&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TITLE_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="55%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=Name&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TITLE_HEADING.'</b>';
 					if ($sort === 'Name') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=up&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_FOR_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=up&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_FOR_HEADING.'</b>';
 					if ($sort === 'up') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=down&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_AGAINST_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=down&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_ITEM_AGAINST_HEADING.'</b>';
 					if ($sort === 'down') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=cup&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_FOR_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=cup&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_FOR_HEADING.'</b>';
 					if ($sort === 'cup') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?&sort=cdown&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_AGAINST_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="5%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=cdown&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_CONN_AGAINST_HEADING.'</b>';
 					if ($sort === 'cdown') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';
-					echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="votes.php?&sort=vote&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING.'</b>';
+					echo '<td align="left" valign="bottom" width="10%" class="adminTableHead"><a href="votes.php?groupid='.$groupid.'&sort=vote&lastsort='.$sort.'&lastdir='.$direction.'#allvotes">'.$LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING.'</b>';
 					if ($sort === 'vote') {
 						if ($direction === 'ASC') {
-							echo '<img border="0" src="../../images/uparrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/uparrow.gif" width="16" height="8" />';
 						} else {
-							echo '<img border="0" src="../../images/downarrow.gif" width="16" height="8" />';
+							echo '<img border="0" src="../../../images/downarrow.gif" width="16" height="8" />';
 						}
 					}
 					echo '</td>';

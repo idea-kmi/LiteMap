@@ -46,7 +46,7 @@
 		$tagsonlyoption = 'N';
 		$searchid = auditSearch($USER->userid, $query, $tagsonlyoption, 'main', $fromid);
 		if ($searchid != "") {
-			header("Location: ".$CFG->homeAddress."search.php?sid=".$searchid."&q=".$query."&scope=".$scope."&tagsonly=".$tagsonly);
+			header("Location: ".$CFG->homeAddress."search.php?sid=".$searchid."&q=".$query);
 			exit();
 		}
 	}

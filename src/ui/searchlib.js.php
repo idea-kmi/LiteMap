@@ -640,6 +640,7 @@ function loadgroups(context,args){
 
 			var total = json.groupset[0].totalno;
 
+			//alert(json.groupset[0].totalno);
 			//alert(json.groupset[0].count);
 
 			if(json.groupset[0].count > 0){
@@ -649,8 +650,10 @@ function loadgroups(context,args){
 					var groups = json.groupset[0].groups;
 					var count = groups.length;
 					for (var i=0; i<count; i++) {
-						var group = groups[i].user;
-						group.searchid = args['searchid'];
+						var group = groups[i];
+						if (group) {
+							group.searchid = args['searchid'];
+						}
 					}
 				}
 

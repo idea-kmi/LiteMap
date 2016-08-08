@@ -31,7 +31,7 @@ if ($HUB_FLM->hasCustomVersion($me)) {
 	return; //must not die at this point
 }
 
-$sequence = array(11,1,2,3,4,7,8,9,10);
+$sequence = array(11,1,2,3,4,7,8,9,10,12);
 
 $dashboarddata = array();
 
@@ -153,6 +153,17 @@ $next[3] = $CFG->homeAddress."ui/stats/images/overview-sm.png";
 $next[4] = $CFG->homeAddress."ui/stats/groups/overview.php?";
 $next[5] = $LNG->STATS_GROUP_HELP_OVERVIEW;
 $next[6] = "overview";
+$next[7] = 170;
+array_push($dashboarddata, $next);
+
+$next = array();
+$next[0] = $LNG->STATS_TAB_VOTES;
+$next[1] = 12;
+$next[2] = '';
+$next[3] = $CFG->homeAddress."ui/stats/images/votes.png";
+$next[4] = $CFG->homeAddress."ui/stats/groups/votes.php?";
+$next[5] = '';
+$next[6] = "votes";
 $next[7] = 170;
 array_push($dashboarddata, $next);
 

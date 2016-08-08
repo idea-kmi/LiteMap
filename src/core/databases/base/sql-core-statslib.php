@@ -159,6 +159,160 @@ $HUB_SQL->STATSLIB_ALL_VOTING_ORDER_BY = " order by ";
 
 
 
+/*** VOTING GROUP STATS ***/
+
+/** Get Total Group Item Votes  **/
+
+$HUB_SQL->STATSLIB_GROUP_TOTAL_ITEM_VOTES_SELECT = $HUB_SQL->STATSLIB_VOTES_SELECT_START.
+						"FROM (select ItemID, VoteType from Voting Where ItemID in
+						(Select NodeID from Node
+						where NodeID IN (Select ng.NodeID from NodeGroup ng where GroupID=?)) ) ot ";
+
+/**  Get Total Group Connection Votes **/
+
+$HUB_SQL->STATSLIB_GROUP_TOTAL_CONNECTION_VOTES_SELECT = $HUB_SQL->STATSLIB_VOTES_SELECT_START.
+						"FROM (select ItemID, VoteType from Voting Where ItemID
+						in (Select TripleID from Triple
+						where TripleID IN (Select tg.TripleID from TripleGroup tg where GroupID=?)) ) ot ";
+
+
+/** Get Total Group Votes **/
+
+$HUB_SQL->STATSLIB_GROUP_TOTAL_VOTES_SELECT = $HUB_SQL->STATSLIB_VOTES_SELECT_START.
+						"FROM (select ItemID, VoteType from Voting Where ItemID
+						in (Select TripleID from Triple
+						where TripleID IN (Select tg.TripleID from TripleGroup tg where GroupID=?)) or ItemID in
+						(Select NodeID from Node
+						where NodeID IN (Select ng.NodeID from NodeGroup ng where GroupID=?)) ) ot ";
+
+/** Get Group Total Top Votes **/
+
+$HUB_SQL->STATSLIB_GROUP_TOTAL_TOP_VOTES = "SELECT ot.NodeID,
+						case 'ItemID' when null then 0 else Count(ot.ItemID) end vote,
+						Sum(case when VoteA='Y' then 1 else 0 end) as up,
+						Sum(case when VoteA='N' then 1 else 0 end) as down,
+						Sum(case when VoteB='Y' then 1 else 0 end) as cup,
+						Sum(case when VoteB='N' then 1 else 0 end) as cdown
+						FROM (select n.NodeID,
+						v.ItemID as ItemID, v.VoteType as VoteA, '' as VoteB from Voting v left join Node n
+						on v.ItemID = n.NodeID left join NodeType t on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND n.NodeID IN (Select NodeID from NodeGroup where GroupID=?)
+						UNION ALL select n.NodeID,
+						v.ItemID as ItemID, '' as VoteA, v.VoteType as VoteB from Voting v left join Triple tr
+						on v.ItemID = tr.TripleID left join Node n on tr.FromID = n.NodeID left join NodeType t
+						on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND tr.TripleID IN (Select TripleID from TripleGroup where GroupID=?)) as ot
+						group by ot.NodeID having vote > 0
+						order by vote DESC";
+
+
+/** Get Group Top Node For Votes **/
+
+$HUB_SQL->STATSLIB_GROUP_TOP_NODE_FOR_VOTES = "SELECT ot.NodeID,
+						case 'ItemID' when null then 0 else Count(ot.ItemID) end vote,
+						Sum(case when VoteA='Y' then 1 else 0 end) as up,
+						Sum(case when VoteB='Y' then 1 else 0 end) as cup
+						From (select n.NodeID,
+						v.ItemID as ItemID, v.VoteType as VoteA, '' as VoteB from Voting v left join Node n
+						on v.ItemID = n.NodeID left join NodeType t on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND v.VoteType='Y'
+						AND n.NodeID IN (Select NodeID from NodeGroup where GroupID=?)
+						UNION ALL select n.NodeID,
+						v.ItemID as ItemID, '' as VoteA, v.VoteType as VoteB from Voting v left join Triple tr
+						on v.ItemID = tr.TripleID left join Node n on tr.FromID = n.NodeID left join NodeType t
+						on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND v.VoteType='Y'
+						AND tr.TripleID IN (Select TripleID from TripleGroup where GroupID=?)) as ot
+						group by ot.NodeID having vote > 0
+						order by vote DESC";
+
+
+
+/** Get Group Top Node Against Votes **/
+
+$HUB_SQL->STATSLIB_GROUP_TOP_NODE_AGAINST_VOTES = "SELECT ot.NodeID,
+						case 'ItemID' when null then 0 else Count(ot.ItemID) end vote,
+						Sum(case when VoteA='N' then 1 else 0 end) as down,
+						Sum(case when VoteB='N' then 1 else 0 end) as cdown
+						From (select n.NodeID,
+						v.ItemID as ItemID, v.VoteType as VoteA, '' as VoteB from Voting v left join Node n
+						on v.ItemID = n.NodeID left join NodeType t on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND v.VoteType='N'
+						AND n.NodeID IN (Select NodeID from NodeGroup where GroupID=?)
+						UNION ALL select n.NodeID,
+						v.ItemID as ItemID, '' as VoteA, v.VoteType as VoteB from Voting v left join Triple tr
+						on v.ItemID = tr.TripleID left join Node n on tr.FromID = n.NodeID left join NodeType t
+						on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND v.VoteType='N'
+						AND tr.TripleID IN (Select TripleID from TripleGroup where GroupID=?)) as ot
+						group by ot.NodeID having vote > 0
+						order by vote DESC";
+
+
+/** Get Group Top Voters **/
+
+$HUB_SQL->STATSLIB_GROUP_TOP_VOTERS = "SELECT ot.UserID, ot.Name,
+						case 'ItemID' when null then 0 else Count(ot.ItemID) end vote,
+						Sum(case when ot.VoteType='Y' then 1 else 0 end) as up,
+						Sum(case when ot.VoteType='N' then 1 else 0 end) as down
+						From (select n.Name, n.UserID, v.ItemID, v.VoteType from Voting v
+						left join Users n on n.UserID=v.UserID
+						where n.UserID IN (Select UserID from UserGroup where GroupID=?)
+						AND (v.ItemID IN (Select NodeID from NodeGroup where GroupID=?)
+						OR v.ItemID IN (Select TripleID from TripleGroup where GroupID=?))
+						) ot
+						group by UserID having vote > 0 order by vote DESC";
+
+
+/** Top Group For Voters **/
+
+$HUB_SQL->STATSLIB_GROUP_TOP_FOR_VOTERS = "SELECT ot.UserID, ot.Name,
+						Sum(case when ot.VoteType='Y' then 1 else 0 end) as vote
+						From (select n.Name, n.UserID, v.ItemID, v.VoteType from Voting v
+						left join Users n on n.UserID=v.UserID
+						where n.UserID IN (Select UserID from UserGroup where GroupID=?)
+						AND (v.ItemID IN (Select NodeID from NodeGroup where GroupID=?)
+						OR v.ItemID IN (Select TripleID from TripleGroup where GroupID=?))
+						) ot
+						group by UserID having vote > 0 order by vote DESC";
+
+
+
+/** Top Group Against Voters **/
+
+$HUB_SQL->STATSLIB_GROUP_TOP_FOR_VOTERS = "SELECT ot.UserID, ot.Name,
+						Sum(case when ot.VoteType='N' then 1 else 0 end) as vote
+						From (select n.Name, n.UserID, v.ItemID, v.VoteType from Voting v
+						left join Users n on n.UserID=v.UserID
+						where n.UserID IN (Select UserID from UserGroup where GroupID=?)
+						AND (v.ItemID IN (Select NodeID from NodeGroup where GroupID=?)
+						OR v.ItemID IN (Select TripleID from TripleGroup where GroupID=?))
+						) ot
+						group by UserID having vote > 0 order by vote DESC";
+
+/** Get All Group Voting **/
+
+$HUB_SQL->STATSLIB_GROUP_ALL_VOTING = "SELECT NodeID,
+						case 'ItemID' when null then 0 else Count(ItemID) end as vote,
+						Sum(case when VoteA='Y' then 1 else 0 end) as up,
+						Sum(case when VoteA='N' then 1 else 0 end) as down,
+						Sum(case when VoteB='Y' then 1 else 0 end) as cup,
+						Sum(case when VoteB='N' then 1 else 0 end) as cdown
+						FROM (select n.NodeID, v.ItemID as ItemID,
+						v.VoteType as VoteA, '' as VoteB from Voting v left join Node n on v.ItemID = n.NodeID left join NodeType t
+						on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND n.NodeID IN (Select NodeID from NodeGroup where GroupID=?)
+						UNION ALL select n.NodeID,
+						v.ItemID as ItemID, '' as VoteA, v.VoteType as VoteB from Voting v left join Triple tr
+						on v.ItemID = tr.TripleID left join Node n on tr.FromID = n.NodeID left join NodeType t
+						on n.NodeTypeID=t.NodeTypeID where n.NodeID <> ''
+						AND tr.TripleID IN (Select TripleID from TripleGroup where GroupID=?)) as ot
+						group by ot.NodeID having vote > 0";
+
+$HUB_SQL->STATSLIB_GROUP_ALL_VOTING_ORDER_BY = " order by ";
+
+
+
 /*** USER CONTEXT STATS ***/
 
 /** Get Total Votes For User **/

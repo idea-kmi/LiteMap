@@ -224,7 +224,7 @@ echo "</script>";
 					$q = stripslashes(optional_param("gq","",PARAM_TEXT));
 				?>
 				<div style="float: left;">
-					<input type="text" style="margin-right:3px; width:250px" onkeyup="if (checkKeyPressed(event)) { $('map-go-button').onclick();}" id="qmap" name="gq" value="<?php print( htmlspecialchars($gq) ); ?>"/>
+					<input type="text" style="margin-right:3px; width:250px" onkeyup="if (checkKeyPressed(event)) { $('map-go-button').onclick();}" id="qmap" name="q" value="<?php print( htmlspecialchars($q) ); ?>"/>
 					<div style="clear: both;"></div>
 				<div id="q_choices" class="autocomplete" style="border-color: white;"></div>
 				</div>

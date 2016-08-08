@@ -53,7 +53,7 @@ var recommendColumn = {};
 function loadEvidenceWidgetPage() {
 
 	refreshWidgetMaps();
-	refreshWidgetFollowers();
+	//refreshWidgetFollowers();
 	refreshNodeEvidence();
 	Event.observe(window,"resize",resizeWidgets);
 	resizeWidgets();
@@ -61,7 +61,7 @@ function loadEvidenceWidgetPage() {
 
 function resizeWidgets() {
 	resizeKeyWidget(mapkey);
-	resizeKeyWidget(followkey);
+	//resizeKeyWidget(followkey);
 	resizeNodeWidget(nodekey, nodeheight);
 }
 

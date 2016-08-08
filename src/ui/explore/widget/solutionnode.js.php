@@ -53,7 +53,7 @@ var recommendColumn = {};
 
 function loadSolutionWidgetPage() {
 	refreshWidgetMaps();
-	refreshWidgetFollowers();
+	//refreshWidgetFollowers();
 	refreshNodeSolution();
 
 	Event.observe(window,"resize",resizeWidgets);
@@ -62,7 +62,7 @@ function loadSolutionWidgetPage() {
 
 function resizeWidgets() {
 	resizeKeyWidget(mapkey);
-	resizeKeyWidget(followkey);
+	//resizeKeyWidget(followkey);
 	resizeNodeWidget(nodekey, nodeheight);
 }
 

@@ -54,7 +54,7 @@ function loadChallengeWidgetPage () {
 
 	refreshWidgetMaps();
 
-	refreshWidgetFollowers();
+	//refreshWidgetFollowers();
 	refreshNodeChallenge();
 	Event.observe(window,"resize",resizeWidgets);
 	resizeWidgets();
@@ -62,7 +62,7 @@ function loadChallengeWidgetPage () {
 
 function resizeWidgets() {
 	resizeKeyWidget(mapkey);
-	resizeKeyWidget(followkey);
+	//resizeKeyWidget(followkey);
 	resizeNodeWidget(nodekey, nodeheight);
 }
 

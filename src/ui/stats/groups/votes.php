@@ -28,7 +28,6 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 global $CFG,$LNG;
 
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);
-error_log($groupid);
 
 $sort = optional_param("sort","vote",PARAM_ALPHANUM);
 $oldsort = optional_param("lastsort","",PARAM_ALPHANUM);

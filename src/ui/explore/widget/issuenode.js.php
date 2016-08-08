@@ -55,7 +55,7 @@ var recommendColumn = {};
 function loadIssueWidgetPage() {
 	nodeid = ISSUE_ARGS['nodeid'];
 
-	refreshWidgetFollowers();
+	//refreshWidgetFollowers();
 	refreshWidgetMaps();
 	refreshNodeIssue();
 	Event.observe(window,"resize",resizeWidgets);
@@ -63,7 +63,7 @@ function loadIssueWidgetPage() {
 };
 
 function resizeWidgets() {
-	resizeKeyWidget(followkey);
+	//resizeKeyWidget(followkey);
 	resizeKeyWidget(mapkey);
 	resizeNodeWidget(nodekey, nodeheight);
 }

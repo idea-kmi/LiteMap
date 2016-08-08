@@ -34,16 +34,16 @@ var nodekey = "Node"+nodeid;
 var followkey = currentime+"Follow"+nodeid;
 var mapkey = currentime+"Map"+nodeid;
 
-var followisopen = true;
-var mapisopen = false;
+var followisopen = false;
+var mapisopen = true;
 
 var nodeheight = 400;
 var followheight = 300;
-var mapheight = 300;
+var mapheight = 200;
 
 function loadChallengeWidgetPage () {
 	refreshWidgetMaps();
-	refreshWidgetFollowers();
+	//refreshWidgetFollowers();
 	refreshNodeChallenge();
 	Event.observe(window,"resize",resizeWidgets);
 	resizeWidgets();
@@ -51,7 +51,7 @@ function loadChallengeWidgetPage () {
 
 function resizeWidgets() {
 	resizeKeyWidget(mapkey);
-	resizeKeyWidget(followkey);
+	//resizeKeyWidget(followkey);
 	resizeNodeWidget(nodekey, nodeheight);
 }
 

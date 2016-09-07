@@ -1,5 +1,5 @@
 
-.EVIDENCE_HUB-EvidenceHubHelper {
+.LITEMAP-EvidenceHubHelper {
 	z-index:15000; 
 	float:left;
 	position:fixed; 
@@ -17,7 +17,7 @@
 	-webkit-border-bottom-right-radius: 8px;
 }
 
-.EVIDENCE_HUB-EvidenceHubHelperOff {
+.LITEMAP-EvidenceHubHelperOff {
 	z-index:100; 
 	float:left;
 	position:fixed; 
@@ -35,7 +35,7 @@
 	-webkit-border-bottom-right-radius: 8px;
 }
 
-.EVIDENCE_HUB-EvidenceHubHelperMain {
+.LITEMAP-EvidenceHubHelperMain {
 	clear:both;
 	border-top: 1px solid #D3D3D3;
 	float:left;
@@ -44,7 +44,7 @@
 	margin-bottom:5px;
 }
 
-.EVIDENCE_HUB-addbutton {
+.LITEMAP-addbutton {
 	cursor:pointer;
 	padding:0px; 
 	margin-left:5px;
@@ -52,7 +52,7 @@
 	margin-right:5px;
 }
 
-.EVIDENCE_HUB-closebutton {
+.LITEMAP-closebutton {
 	clear:both;
 	float:right;
 	padding:0px;
@@ -62,14 +62,14 @@
 	margin-bottom:2px;
 }
 
-.EVIDENCE_HUB-buttondivider {
+.LITEMAP-buttondivider {
 	clear:both;
 	float:left;
 	border-top: 1px dashed #D3D3D3;
 	height:6px;width:100%;
 }
 
-.EVIDENCE_HUB-message {
+.LITEMAP-message {
 	z-index:15000; 
 	padding:5px;
 	width: 300px; 
@@ -84,7 +84,7 @@
 	font-weight:bold;
 }
 
-.EVIDENCE_HUB-imagebutton {
+.LITEMAP-imagebutton {
 	width: 16px;
 	height:16px;
 	margin:3px;

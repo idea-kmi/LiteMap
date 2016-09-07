@@ -54,7 +54,7 @@ function codeToRun<?php echo $CFG->buildernamekey; ?>() {
 		selectAllIdeasEvidenceHub<?php echo $CFG->buildernamekey; ?>();
 	} else {
 		helper<?php echo $CFG->buildernamekey; ?>.style.display = "block";
-		helper<?php echo $CFG->buildernamekey; ?>.className = 'EVIDENCE_HUB-EvidenceHubHelper';
+		helper<?php echo $CFG->buildernamekey; ?>.className = 'LITEMAP-EvidenceHubHelper';
 		toggleHelper<?php echo $CFG->buildernamekey; ?>(true);
 		clearPageIdeaLinks<?php echo $CFG->buildernamekey; ?>();
 		selectAllIdeasEvidenceHub<?php echo $CFG->buildernamekey; ?>();
@@ -69,21 +69,21 @@ function buildToolbar<?php echo $CFG->buildernamekey; ?>() {
 	document.getElementsByTagName('head')[0].appendChild(script);
 
 	helper<?php echo $CFG->buildernamekey; ?> = document.createElement('div');
-	var tmp = '<div id="EvidenceHubHelper<?php echo $CFG->buildernamekey; ?>" class="EVIDENCE_HUB-EvidenceHubHelper" style="width:'+EvidenceHubexpandedWidth<?php echo $CFG->buildernamekey; ?>+'px;display:block;">';
+	var tmp = '<div id="EvidenceHubHelper<?php echo $CFG->buildernamekey; ?>" class="LITEMAP-EvidenceHubHelper" style="width:'+EvidenceHubexpandedWidth<?php echo $CFG->buildernamekey; ?>+'px;display:block;">';
 	tmp += '<div style="clear:both;float:left;width:'+EvidenceHubwidth<?php echo $CFG->buildernamekey; ?>+'px;">';
 	tmp += '<a style="float:left;" target="_blank" title="<?php echo $LNG->BUILDER_GOTO_HOME_SITE_HINT; ?>" href="<?php echo $CFG->homeAddress; ?>"><img style="margin-left:3px;margin-right:7px; margin-top:4px;" src="<?php echo $HUB_FLM->getImagePath('builder-logo.png'); ?>" border="0" /></a>';
 	tmp += '<div style="float:left;" id="EvidenceHubButton<?php echo $CFG->buildernamekey; ?>"><img onclick="return toggleHelper<?php echo $CFG->buildernamekey; ?>()" style="margin-top:4px;" id="EvidenceHubButtonImg<?php echo $CFG->buildernamekey; ?>" title="<?php echo $LNG->BUILDER_COLLAPSE_TOOLBAR_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>" border="0" /></div>';
 	tmp += '</div>';
-	tmp += '<div id="EvidenceHubHelperMain<?php echo $CFG->buildernamekey; ?>" class="EVIDENCE_HUB-EvidenceHubHelperMain">';
+	tmp += '<div id="EvidenceHubHelperMain<?php echo $CFG->buildernamekey; ?>" class="LITEMAP-EvidenceHubHelperMain">';
 
-	tmp += '<img class="EVIDENCE_HUB-addbutton" title="<?php echo $LNG->BUILDER_ADD_COMMENT_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'commentadd\', \''+EvidenceHubAddress+'ui/popups/commentadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->commenticon; ?>" />';
-	tmp += '<img class="EVIDENCE_HUB-addbutton" title="<?php echo $LNG->BUILDER_ADD_ISSUE_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'issueadd\', \''+EvidenceHubAddress+'ui/popups/issueadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->issueicon; ?>" />';
-	tmp += '<img class="EVIDENCE_HUB-addbutton" title="<?php echo $LNG->BUILDER_ADD_SOLUTION_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'solutionadd\', \''+EvidenceHubAddress+'ui/popups/solutionadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->solutionicon; ?>" />';
-	tmp += '<img class="EVIDENCE_HUB-addbutton" title="<?php echo $LNG->BUILDER_ADD_EVIDENCE_PRO_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'evidenceadd\', \''+EvidenceHubAddress+'ui/popups/evidenceadd.php?nodetypename=Pro&isremote=true\', 750,600)" src="<?php echo $CFG->proicon; ?>" />';
-	tmp += '<img class="EVIDENCE_HUB-addbutton" title="<?php echo $LNG->BUILDER_ADD_EVIDENCE_CON_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'evidenceadd\', \''+EvidenceHubAddress+'ui/popups/evidenceadd.php?nodetypename=Con&isremote=true\', 750,600)" src="<?php echo $CFG->conicon; ?>" />';
+	tmp += '<img class="LITEMAP-addbutton" title="<?php echo $LNG->BUILDER_ADD_COMMENT_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'commentadd\', \''+EvidenceHubAddress+'ui/popups/commentadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->commenticon; ?>" />';
+	tmp += '<img class="LITEMAP-addbutton" title="<?php echo $LNG->BUILDER_ADD_ISSUE_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'issueadd\', \''+EvidenceHubAddress+'ui/popups/issueadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->issueicon; ?>" />';
+	tmp += '<img class="LITEMAP-addbutton" title="<?php echo $LNG->BUILDER_ADD_SOLUTION_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'solutionadd\', \''+EvidenceHubAddress+'ui/popups/solutionadd.php?&isremote=true\', 750,600)" src="<?php echo $CFG->solutionicon; ?>" />';
+	tmp += '<img class="LITEMAP-addbutton" title="<?php echo $LNG->BUILDER_ADD_EVIDENCE_PRO_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'evidenceadd\', \''+EvidenceHubAddress+'ui/popups/evidenceadd.php?nodetypename=Pro&isremote=true\', 750,600)" src="<?php echo $CFG->proicon; ?>" />';
+	tmp += '<img class="LITEMAP-addbutton" title="<?php echo $LNG->BUILDER_ADD_EVIDENCE_CON_HINT; ?>" onclick="prepareDialog<?php echo $CFG->buildernamekey; ?>(\'evidenceadd\', \''+EvidenceHubAddress+'ui/popups/evidenceadd.php?nodetypename=Con&isremote=true\', 750,600)" src="<?php echo $CFG->conicon; ?>" />';
 
 	tmp += '</div>';
-	tmp += '<div class="EVIDENCE_HUB-closebutton">';
+	tmp += '<div class="LITEMAP-closebutton">';
 	tmp += '<span style="cursor:pointer;" id="EvidenceHubCloseButton<?php echo $CFG->buildernamekey; ?>" onclick="return closeHelper<?php echo $CFG->buildernamekey; ?>();" title="<?php echo $LNG->BUILDER_CLOSE_TOOLBAR_HINT; ?>"><img src="<?php echo $HUB_FLM->getImagePath("close.png"); ?>" border="0" /></span>';
 	tmp += '</div>';
 	tmp += '</div>';
@@ -94,7 +94,7 @@ function buildToolbar<?php echo $CFG->buildernamekey; ?>() {
 	//Add messge popup div
 	message<?php echo $CFG->buildernamekey; ?> = document.createElement('div');
 	message<?php echo $CFG->buildernamekey; ?>.setAttribute("id", 'message<?php echo $CFG->buildernamekey; ?>');
-	message<?php echo $CFG->buildernamekey; ?>.className = 'EVIDENCE_HUB-message';
+	message<?php echo $CFG->buildernamekey; ?>.className = 'LITEMAP-message';
 	document.getElementsByTagName('body')[0].appendChild(message<?php echo $CFG->buildernamekey; ?>);
 
 	document.addEventListener('click', function(event) {
@@ -108,7 +108,7 @@ function buildToolbar<?php echo $CFG->buildernamekey; ?>() {
 function closeHelper<?php echo $CFG->buildernamekey; ?>() {
 	var helper = document.getElementById('EvidenceHubHelper<?php echo $CFG->buildernamekey; ?>');
 	helper.style.display = "none";
-	helper.className = 'EVIDENCE_HUB-EvidenceHubHelperOff';
+	helper.className = 'LITEMAP-EvidenceHubHelperOff';
 }
 
 function toggleHelper<?php echo $CFG->buildernamekey; ?>(open) {
@@ -512,7 +512,7 @@ function searchTextEvidenceHub<?php echo $CFG->buildernamekey; ?>(url, hubnode) 
 					button.setAttribute("height", "16");
 					button.setAttribute("name", "<?php echo $CFG->buildernamekey; ?>idealink");
 					button.setAttribute("id", "<?php echo $CFG->buildernamekey; ?>"+url.urlid);
-					button.setAttribute("class", "<?php echo $CFG->buildernamekey; ?>-imagebutton");
+					button.setAttribute("class", "LITEMAP-imagebutton");
 					button.border = "0";
 					button.clipid = url.urlid;
 					button.addEventListener('click', function(event) {
@@ -563,7 +563,7 @@ function searchTextEvidenceHub<?php echo $CFG->buildernamekey; ?>(url, hubnode) 
 						button.setAttribute("height", "16");
 						button.setAttribute("name", "<?php echo $CFG->buildernamekey; ?>idealink");
 						button.setAttribute("id", "<?php echo $CFG->buildernamekey; ?>"+url.urlid);
-						button.setAttribute("class", "<?php echo $CFG->buildernamekey; ?>-imagebutton");
+						button.setAttribute("class", "LITEMAP-imagebutton");
 						button.border = "0";
 						button.clipid = url.urlid;
 						button.addEventListener('click', function(event) {
@@ -911,7 +911,7 @@ function processPathEvidenceHub<?php echo $CFG->buildernamekey; ?>(url, hubnode)
 			button.setAttribute("width", "16");
 			button.setAttribute("height", "16");
 			button.setAttribute("name", "<?php echo $CFG->buildernamekey; ?>idealink");
-			button.setAttribute("class", "<?php echo $CFG->buildernamekey; ?>-imagebutton");
+			button.setAttribute("class", "LITEMAP-imagebutton");
 			button.setAttribute("id", "<?php echo $CFG->buildernamekey; ?>"+url.urlid);
 			button.border = "0";
 			button.clipid = url.urlid;

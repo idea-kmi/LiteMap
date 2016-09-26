@@ -437,13 +437,18 @@ function renderGroup(group, width, height, mainheading, cropdesc){
 		textDiv.insert("<br>");
 	}
 	if (description != "") {
-		var hint = description;
-		if (cropdesc && description.length > 90) {
-			hint = description;
-			description = description.substr(0,90)+"...";
-			textDiv.insert('<p title="'+hint+'">'+description+'</p>');
+		var hint = removeHTMLTags(description);
+		var cutoff = 180;
+		if (width < 400) {
+			cutoff = 100;
+		}
+		var croplength = cutoff-title.length;
+		if (cropdesc && description.length > croplength) {
+			var description = removeHTMLTags(description);
+			var final = description.substr(0,croplength)+"...";
+			textDiv.insert('<p class="wordwrap" title="'+hint+'">'+final+'</p>');
 		} else {
-			textDiv.insert('<p>'+description+'</p>');
+			textDiv.insert('<p class="wordwrap">'+description+'</p>');
 		}
 	}
 

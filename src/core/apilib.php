@@ -4366,7 +4366,7 @@ function cleanNodeGroups($nodeid) {
 	for ($i=0; $i<$count; $i++) {
 		$next = $allmaps[$i];
 		$nextgroups = $next->groups;
-		$countj = count();
+		$countj = count($nextgroups);
 		for ($j=0; $j<$countj; $j++) {
 			$nextgroup = $nextgroups[$j];
 			if (!in_array($nextgroup->groupid, $allGroups)) {

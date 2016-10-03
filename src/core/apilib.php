@@ -4370,7 +4370,7 @@ function cleanNodeGroups($nodeid) {
 		for ($j=0; $j<$countj; $j++) {
 			$nextgroup = $nextgroups[$j];
 			if (!in_array($nextgroup->groupid, $allGroups)) {
-				$allGroups.push($nextgroup->groupid);
+				array_push($allGroups,$nextgroup->groupid);
 			}
 		}
 	}

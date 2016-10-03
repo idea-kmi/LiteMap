@@ -4338,8 +4338,30 @@ function editViewNode($viewid,$nodeid,$userid,$xpos,$ypos) {
  */
 function removeNodeFromView($viewid,$nodeid,$userid) {
     global $USER, $HUB_SQL, $DB;
+
 	$view = new View($viewid);
     if (!$view instanceof Error) {
+		$view = $view->load(); // so it loads the connections
+
+	    // First try and delete the connections.
+	    // Deleting them from inside the view->removeNode function did not always work.
+	    // Don't know why
+		$count = count($view->connections);
+		for ($i=0; $i<$count; $i++) {
+			$viewconnection = $view->connections[$i];
+			$connection = $viewconnection->connection;
+			$from = $connection->from;
+			$to = $connection->to;
+			if (!$from instanceof Error && !$to instanceof Error) {
+				if ($to->nodeid == $nodeid || $from->nodeid == $nodeid) {
+					$view->removeConnection($connection->connid, $userid);
+				}
+			} else {
+				error_log("FAILED TO DELETE CONNECIOTN: ".print_r($connection, true));
+			}
+		}
+
+		$view = $view->load(); // reload the view so it picks up the connections again
 		$viewnode = $view->removeNode($nodeid, $userid);
 		cleanNodeGroups($nodeid);
 	}

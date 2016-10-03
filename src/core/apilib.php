@@ -4338,13 +4338,50 @@ function editViewNode($viewid,$nodeid,$userid,$xpos,$ypos) {
  */
 function removeNodeFromView($viewid,$nodeid,$userid) {
     global $USER, $HUB_SQL, $DB;
-
 	$view = new View($viewid);
     if (!$view instanceof Error) {
 		$viewnode = $view->removeNode($nodeid, $userid);
+		cleanNodeGroups($nodeid);
 	}
 
 	return $viewnode;
+}
+
+/**
+ * For the given node, check that all the groups it is in are still relevant
+ * by comparing against the groups of all the maps that the node is in.
+ */
+function cleanNodeGroups($nodeid) {
+
+	$n = new CNode($nodeid);
+	$node = $n->load('long');
+	$nodegroups = $node->groups;
+	$nodeset = getMapsForNode($nodeid);
+
+	$allGroups = array();
+
+	// get a list of all groups that the maps that the node is in, are in.
+	$allmaps = $nodeset->nodes;
+	$count = count($allmaps);
+	for ($i=0; $i<$count; $i++) {
+		$next = $allmaps[$i];
+		$nextgroups = $next->groups;
+		$countj = count();
+		for ($j=0; $j<$countj; $j++) {
+			$nextgroup = $nextgroups[$j];
+			if (!in_array($nextgroup->groupid, $allGroups)) {
+				$allGroups.push($nextgroup->groupid);
+			}
+		}
+	}
+
+	$count = count($nodegroups);
+	for ($i=0; $i<$count; $i++) {
+		$nextgroup = $nodegroups[$i];
+		if (!in_array($nextgroup->groupid, $allGroups)) {
+			$node->removeGroup($nextgroup->groupid);
+		}
+	}
 }
 
 

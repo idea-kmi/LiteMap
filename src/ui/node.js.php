@@ -1,4 +1,4 @@
-displayConnectionNodes<?php
+<?php
 /********************************************************************************
  *                                                                              *
  *  (c) Copyright 2015 The Open University UK                                   *
@@ -221,6 +221,30 @@ function displayReportNodes(objDiv,nodes,start){
 			iUL.insert(blobDiv);
 		}
 	}
+}
+
+
+/**
+ * Render a list of connection nodes
+ */
+function displayReportConnectionNodes(objDiv, nodes,start,includeUser,uniqueid, childCountSpan, parentrefreshhandler){
+	if (uniqueid == undefined) {
+		uniqueid = 'idea-list';
+	}
+
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol', 'style':'float:left;margin-top:0px;padding-top: 0px;padding-bottom:0px;'});
+	for(var i=0; i< nodes.length; i++){
+		if(nodes[i].cnode){
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li', 'style':'margin: 0px; padding: 0px;'});
+			lOL.insert(iUL);
+			var blobDiv = new Element("div", {'class':'idea-blob-list', 'style':'clear:both;float:left;margin: 0px; padding: 0px;'});
+			var blobNode = renderReportConnectionNode(nodes[i].cnode, uniqueid,nodes[i].cnode.role[0].role,includeUser, childCountSpan, parentrefreshhandler);
+			blobDiv.insert(blobNode);
+			iUL.insert(blobDiv);
+		}
+	}
+
+	objDiv.insert(lOL);
 }
 
 /**
@@ -1817,15 +1841,17 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	// META DATA - DESCRIPTION, URLS ETC
 
  	// add urls
-	innerexpandDiv.insert('<span style="margin-right:5px;"><b><?php echo $LNG->NODE_URL_HEADING; ?></b></span>');
-	var link = new Element("a", {'href':node.name,'target':'_blank','title':'<?php echo $LNG->NODE_RESOURCE_LINK_HINT; ?>'} );
-	link.insert(node.name);
-	innerexpandDiv.insert(link);
 
 	if (node.urls && node.urls.length > 0) {
 		var hasClips = false;
 		var iUL = new Element("ul", {});
 		for (var i=0 ; i< node.urls.length; i++){
+
+			innerexpandDiv.insert('<span style="margin-right:5px;"><b><?php echo $LNG->NODE_URL_HEADING; ?></b></span>');
+			var link = new Element("a", {'href':node.urls[i].url.url,'target':'_blank','title':'<?php echo $LNG->NODE_RESOURCE_LINK_HINT; ?>'} );
+			link.insert(node.urls[i].url.title);
+			innerexpandDiv.insert(link);
+
 			if (node.urls[i].url && node.urls[i].url.clip && node.urls[i].url.clip != "") {
 				var link = new Element("li");
 				link.insert(node.urls[i].url.clip);
@@ -1914,6 +1940,439 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		} else if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1) {
 			childCell.insert('<div style="clear:both;"></div>');
 			childCell.insert('<div style="clear:both;"></div>');
+		}
+	} else {
+		lineCell.className=""; // = "1px solid white"; // hide the dot
+	}
+
+	idDiv.insert(innerexpandDiv);
+	idDiv.insert(expandDiv);
+	imDiv.insert(idDiv);
+	iwDiv.insert(imDiv);
+	iDiv.insert(ihDiv);
+	iDiv.insert(iwDiv);
+
+	return iDiv;
+}
+
+
+/**
+ * Render the given node from an associated connection in the knowledge tree.
+ * @param node the node object do render
+ * @param uniQ is a unique id element prepended to the nodeid to form an overall unique id within the currently visible site elements
+ * @param role the role object for this node
+ * @param includeUser whether to include the user image and link
+ * @param childCountSpan The element into which to put the running total of children in this conneciotn tree..
+ * @param parentrefreshhandler a statment to eval after actions have occurred to refresh this list.
+ */
+function renderReportConnectionNode(node, uniQ, role, includeUser, childCountSpan, parentrefreshhandler){
+
+	if (childCountSpan === undefined) {
+		childCountSpan = null;
+	}
+
+	var originaluniQ = uniQ;
+
+	if(role === undefined){
+		role = node.role[0].role;
+	}
+
+	var nodeuser = null;
+	// JSON structure different if coming from popup where json_encode used.
+	if (node.users[0].userid) {
+		nodeuser = node.users[0];
+	} else {
+		nodeuser = node.users[0].user;
+	}
+	var connection = node.connection;
+	var user = null;
+	if (connection && connection.users) {
+		user = connection.users[0].user;
+	}
+
+	//needs to check if embedded as a snippet
+	var breakout = "";
+	if(top.location != self.location){
+		breakout = " target='_blank'";
+	}
+
+	var focalnodeid = "";
+	if (node.focalnodeid) {
+		focalnodeid = node.focalnodeid;
+	}
+	var focalrole = "";
+	var connrole = role;
+	var otherend = "";
+	if (connection) {
+		uniQ = connection.connid+uniQ;
+		var fN = connection.from[0].cnode;
+		var tN = connection.to[0].cnode;
+		if (node.nodeid == fN.nodeid) {
+			connrole = connection.fromrole[0].role;
+			focalrole = tN.role[0].role;
+			otherend = tN;
+		} else {
+			connrole = connection.torole[0].role;
+			focalrole = fN.role[0].role;
+			otherend = fN;
+		}
+	} else {
+		uniQ = node.nodeid + uniQ;
+	}
+
+	var iDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
+	var ihDiv = new Element("div", {'style':'padding:0px;margin:0px;'});
+	var itDiv = new Element("div", {'class':'idea-title','style':'padding:0px;'});
+
+	var nodeTable = new Element( 'table' );
+	nodeTable.className = "toConnectionsTable";
+	nodeTable.width="100%";
+	//nodeTable.border = "1";
+
+	itDiv.insert(nodeTable);
+
+	var row = nodeTable.insertRow(-1);
+
+	// ADD THE ARROW IF REQUIRED
+	if (node.istop) {
+		var expandArrow = null;
+		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
+			|| role.name == "Issue" || role.name == "Solution") {
+
+			var arrowCell = row.insertCell(-1);
+			arrowCell.vAlign="middle";
+			arrowCell.align="left";
+
+			if (DEBATE_TREE_OPEN_ARRAY["desc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["desc"+uniQ] == true) {
+				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'float:left;visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>'});
+				expandArrow.uniqueid = uniQ;
+			} else {
+				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'float:left;visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>'});
+				expandArrow.uniqueid = uniQ;
+			}
+			Event.observe(expandArrow,'click',function (){ toggleDebate("treedesc"+uniQ,uniQ);});
+			arrowCell.insert(expandArrow);
+		}
+	} else {
+		var lineCell = row.insertCell(-1);
+		//lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
+		lineCell.width="15px;"
+		lineCell.vAlign="middle";
+		var lineDiv = new Element('div',{'class':'graylinewide', 'style':'float:left;width:100%;'});
+		lineCell.insert(lineDiv);
+	}
+
+	var textCell = row.insertCell(-1);
+	textCell.vAlign="middle";
+	textCell.align="left";
+	var textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell', 'class':'whiteborder', 'style':'float:left;padding:3px;'});
+	textCellDiv.nodeid = node.nodeid;
+	textCellDiv.focalnodeid = node.focalnodeid;
+	textCellDiv.nodetype = role.name;
+	textCellDiv.parentuniQ = originaluniQ;
+	if (connection) {
+		textCellDiv.connection = connection;
+	}
+
+	if (typeof CURRENT_ADD_AREA_NODEID != 'undefined' && node.nodeid == CURRENT_ADD_AREA_NODEID) {
+		var bordercolor = 'plainborder';
+		var backcolor = 'focusedback';
+		var nodetype = role.name;
+		if (nodetype == 'Challenge') {
+			bordercolor = 'challengeborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'challengeback';
+			}
+		} else if (nodetype == 'Issue') {
+			bordercolor = 'issueborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'issueback';
+			}
+		} else if (nodetype == 'Idea') {
+			bordercolor = 'ideaborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'ideaback';
+			}
+		} else if (nodetype == 'Solution') {
+			bordercolor = 'solutionborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'solutionback';
+			}
+		} else if (nodetype == 'Pro') {
+			bordercolor = 'proborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'proback';
+			}
+		} else if (nodetype == 'Con') {
+			bordercolor = 'conborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'conback';
+			}
+		} else if (nodetype == 'Argument') {
+			bordercolor = 'evidenceborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'evidenceback';
+			}
+		} else if (nodetype == 'Map') {
+			bordercolor = 'plainborder';
+			if (node.nodeid == node.focalnodeid) {
+				backcolor = 'plainback';
+			}
+		}
+
+		//if (node.nodeid == node.focalnodeid) {
+		//	bordercolor = 'selectedborder';
+		//}
+
+		textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell', 'class':backcolor+' '+bordercolor, 'style':'float:left;padding:3px'});
+		textCellDiv.nodeid = node.nodeid;
+		textCellDiv.nodetype = role.name;
+		textCellDiv.focalnodeid = node.focalnodeid;
+		textCellDiv.parentuniQ = originaluniQ;
+		if (connection) {
+			textCellDiv.connection = connection;
+		}
+	} else if (node.nodeid == node.focalnodeid) {
+		var bordercolor = 'plainborder';
+		var backcolor = 'whiteback';
+		var nodetype = role.name;
+		if (nodetype == 'Challenge') {
+			bordercolor = 'challengeborder';
+			backcolor = 'challengeback';
+		} else if (nodetype == 'Issue') {
+			bordercolor = 'issueborder';
+			backcolor = 'issueback';
+		} else if (nodetype == 'Idea') {
+			bordercolor = 'ideaborder';
+			backcolor = 'ideaback';
+		} else if (nodetype == 'Solution') {
+			bordercolor = 'solutionborder';
+			backcolor = 'solutionback';
+		} else if (nodetype == 'Pro') {
+			bordercolor = 'proborder';
+			backcolor = 'proback';
+		} else if (nodetype == 'Con') {
+			bordercolor = 'conborder';
+			backcolor = 'conback';
+		} else if (nodetype == 'Argument') {
+			bordercolor = 'evidenceborder';
+			backcolor = 'evidenceback';
+		} else if (nodetype == 'Map') {
+			bordercolor = 'plainborder';
+			backcolor = 'plainback';
+		}
+
+		textCellDiv = new Element("div", { 'id':'textDivCell'+uniQ, 'name':'textDivCell','class':bordercolor+' '+backcolor, 'style':'float:left;padding:3px;'});
+		textCellDiv.nodeid = node.nodeid;
+		textCellDiv.nodetype = role.name;
+		textCellDiv.focalnodeid = node.focalnodeid;
+		textCellDiv.parentuniQ = originaluniQ;
+		if (connection) {
+			textCellDiv.connection = connection;
+		}
+	}
+
+	var toolbarCell = row.insertCell(-1);
+	toolbarCell.vAlign="middle";
+	toolbarCell.align="left";
+	toolbarCell.width="80";
+
+	textCell.insert(textCellDiv);
+
+	var dStr = "";
+	if (user != null) {
+		var cDate = new Date(connection.creationdate*1000);
+		var dStr = "<?php echo $LNG->NODE_CONNECTED_BY; ?> "+user.name+ " on "+cDate.format(DATE_FORMAT)+' - <?php echo $LNG->NODE_TOGGLE_HINT;?>'
+	}
+
+	// ADD THE NODE ICON
+	var nodeArea = new Element("span", {'name':'nodeArea', 'style':'font-weight:bold;font-size:12pt;float:left;padding-top:2px;','title':dStr} );
+	nodeArea.nodeid = node.nodeid;
+	if (typeof node.focalnodeid != 'undefined') {
+		nodeArea.focalnodeid = node.focalnodeid;
+	}
+
+	var alttext = getNodeTitleAntecedence(role.name, false);
+	if (node.imagethumbnail != null && node.imagethumbnail != "") {
+		var originalurl = "";
+		if(node.urls && node.urls.length > 0){
+			for (var i=0 ; i< node.urls.length; i++){
+				var urlid = node.urls[i].url.urlid;
+				if (urlid == node.imageurlid) {
+					originalurl = node.urls[i].url.url;
+					break;
+				}
+			}
+		}
+		if (originalurl == "") {
+			originalurl = node.imagethumbnail;
+		}
+		var iconlink = new Element('a', {
+			'href':originalurl,
+			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
+		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'width:20px;height:20px;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+		iconlink.insert(nodeicon);
+		nodeArea.insert(iconlink);
+		nodeArea.insert(alttext+": ");
+	} else if (node.image != null && node.image != "") {
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'height:24px;padding-right:5px;','align':'left','border':'0','src': node.image});
+		nodeArea.insert(nodeicon);
+	} else if (connrole.image != null && connrole.image != "") {
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'height:24px;padding-right:5px;','align':'left','border':'0','src': URL_ROOT + connrole.image});
+		nodeArea.insert(nodeicon);
+	} else {
+		nodeArea.insert(alttext+": ");
+	}
+
+	// ADD THE NODE LABEL
+	textCellDiv.insert(nodeArea);
+	if (role.name != 'Comment') {
+		if (typeof CURRENT_ADD_AREA_NODEID != 'undefined' && node.nodeid == CURRENT_ADD_AREA_NODEID) {
+			if (node.nodeid == node.focalnodeid) {
+				nodeArea.className = "itemtextwhite";
+			} else {
+				nodeArea.className = "itemtext selectedlabel";
+			}
+		} else {
+			if (node.nodeid == node.focalnodeid) {
+				nodeArea.className = "itemtextwhite";
+			} else {
+				nodeArea.className = "itemtext unselectedlabel";
+			}
+		}
+
+		var nodeextra = ""; //getNodeTitleAntecedence(role.name, true);
+		nodeArea.insert("<span style='font-style:italic'>"+nodeextra+"</span>"+node.name);
+	}
+	if (node.istop) {
+		var expandArrow = null;
+		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
+			|| role.name == "Issue" || role.name == "Solution" || role.name == "Idea"
+			|| role.name == "Pro"  || role.name == "Con" || role.name == "Argument") {
+
+			var childCount = new Element('div',{'style':'float:left; margin-left:5px;margin-right:5px;margin-top:2px;', 'title':'<?php echo $LNG->NODE_DEBATE_TREE_COUNT_HINT; ?>'});
+			childCount.insert("(");
+			childCountSpan = new Element('span',{'name':'toptreecount'});
+			childCountSpan.id = 'toptreecount'+uniQ;
+			childCountSpan.insert(1);
+			childCountSpan.uniqueid = uniQ;
+			childCount.insert(childCountSpan);
+			childCount.insert(")");
+			toolbarCell.insert(childCount);
+		}
+	}
+
+	ihDiv.insert(itDiv);
+
+	var iwDiv = new Element("div", {'class':'idea-wrapper'});
+	var imDiv = new Element("div", {'class':'idea-main'});
+	var idDiv = new Element("div", {'class':'idea-detail'});
+
+	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
+	if (node.istop) {
+		if (DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] == true) {
+			expandDiv.style.display = 'block';
+		} else {
+			expandDiv.style.display = 'none';
+		}
+	} else {
+		expandDiv.style.display = 'block';
+	}
+	var hint = alttext+": "+node.name;
+	hint += " <?php echo $LNG->NODE_GOTO_PARENT_HINT; ?>"
+
+	/**
+	 * This is for the rollover hint around the vertical line - background image 21px wide 1px line in middle
+	 * This was the only way to get it to work in all four main browsers!!!!!
+   	 **/
+	var expandTable = new Element( 'table', {'style':'empty-cells:show;border-collapse:collapse;'} );
+	expandTable.height="100%";
+	//expandTable.border="1";
+	var expandrow = expandTable.insertRow(-1);
+	expandrow.style.height="100%";
+	if (node.istop) {
+		expandTable.style.marginLeft = "5px";
+	} else {
+		expandTable.style.marginLeft = "20px";
+	}
+
+	var lineCell = expandrow.insertCell(-1);
+	lineCell.style.borderLeft = "1px solid white"; // needed for IE to draw the background image
+	lineCell.width="5px;";
+	lineCell.style.marginLeft="3px";
+
+	lineCell.title=hint;
+	lineCell.className="grayline";
+	Event.observe(lineCell,'click',function (){
+		var pos = getPosition(textCellDiv);
+		window.scroll(0,pos.y-3);
+	});
+
+	var childCell = expandrow.insertCell(-1);
+	childCell.vAlign="top";
+	childCell.align="left";
+	childCell.style.padding="0px";
+	childCell.style.margin="0px";
+
+	expandDiv.insert(expandTable);
+
+	if (node.istop) {
+		expandDiv.style.marginLeft = "22px";
+	} else {
+		expandDiv.style.marginLeft = "4px";
+	}
+
+	/** EXPAND DIV **/
+	var innerexpandDiv = new Element("div", {'id':'desc'+uniQ,'class':'ideadata', 'style':'padding-left:20px;color:Gray;display:block;'} );
+
+	var nodeTable = new Element( 'table' );
+	nodeTable.className = "toConnectionsTable";
+	nodeTable.width="100%";
+
+	innerexpandDiv.insert(nodeTable);
+
+	var row = nodeTable.insertRow(-1);
+	var nextCell = row.insertCell(-1);
+	nextCell.vAlign="middle";
+	nextCell.align="left";
+
+	// META DATA - DESCRIPTION, URLS ETC
+
+	var dStr = "";
+
+	if(node.description || node.hasdesc){
+		dStr += '<div style="margin:0px;padding:0px;" class="idea-desc" id="desc'+uniQ+'div"><span style="margin-top: 5px;"><b><?php echo $LNG->NODE_DESC_HEADING; ?> </b></span><br>';
+		if (node.description && node.description != "") {
+			innerexpandDiv.description = true;
+			dStr += node.description;
+		}
+		dStr += '</div>';
+		innerexpandDiv.insert(dStr);
+	}
+
+	// CHILD LISTS
+	if (node.children) {
+		var nodes = node.children
+		if (nodes.length > 0) {
+
+			childCell.insert('<div style="clear:both;"></div>');
+			var childrenDiv = new Element("div", {'id':'children'+uniQ, 'style':'clear:both;float:left;margin-left:0px;padding-left:0px;margin-bottom:5px;color:Gray;display:block;'} );
+			childCell.insert(childrenDiv);
+			childCell.insert('<div style="clear:both;"></div>');
+			if (expandArrow) {
+				expandArrow.style.visibility = 'visible';
+			}
+			var parentrefreshhanlder = "";
+			if (node.istop) {
+				childCountSpan.update(nodes.length+1);
+			} else {
+				if (childCountSpan != null) {
+					var countnow = parseInt(childCountSpan.innerHTML);
+					var finalcount = countnow+nodes.length;
+					childCountSpan.innerHTML = finalcount;
+				}
+			}
+			displayReportConnectionNodes(childrenDiv, nodes, parseInt(0), true, uniQ, childCountSpan, parentrefreshhanlder);
 		}
 	} else {
 		lineCell.className=""; // = "1px solid white"; // hide the dot

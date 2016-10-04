@@ -1691,6 +1691,8 @@ function mapEditNode(node) {
 			loadDialog('ideaedit',URL_ROOT+"ui/popups/commentedit.php?handler=mapedithandler&nodeid="+node.id, 750,500);
 		} else if (rolename == "Map") {
 			loadDialog('mapedit',URL_ROOT+"ui/popups/mapedit.php?handler=mapedithandler&nodeid="+node.id, 750,500);
+		} else if (rolename == "Argument") {
+			loadDialog('evidenceedit',URL_ROOT+"ui/popups/evidenceedit.php?handler=mapedithandler&nodeid="+node.id, 750,500);
 		}
 	}
 }

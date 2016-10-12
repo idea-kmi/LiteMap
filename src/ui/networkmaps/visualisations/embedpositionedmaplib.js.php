@@ -984,7 +984,7 @@ function showMapMenu(type, node, evt) {
 
 
 function showURLMenu(node, evt) {
-	var panel = $('maparrowdiv');
+	var panel = $('weblinkdiv');
 	panel.innerHTML = "";
 
 	var innerpanel = new Element("div", {'style':'float:left;width:100%;height:100%;'} );
@@ -1005,8 +1005,8 @@ function showURLMenu(node, evt) {
 				'style':'margin-bottom:5px;clear:both;float:left;font-size:10pt',
 				'title':'<?php echo $LNG->NODE_URL_LINK_TEXT; ?>: '+urltitle,
 			});
-			if (urltitle && urltitle.length > 20) {
-				urltitle = urltitle.substr(0,20)+"...";
+			if (urltitle && urltitle.length > 40) {
+				urltitle = urltitle.substr(0,40)+"...";
 			}
 			urlnode.insert(urltitle);
 			urlnode.href = url;
@@ -1017,7 +1017,7 @@ function showURLMenu(node, evt) {
 
 	panel.update(innerpanel);
 	adjustMenuPosition(panel, evt);
-	showBox('maparrowdiv');
+	showBox('weblinkdiv');
 }
 
 function adjustMenuPosition(panel, event) {

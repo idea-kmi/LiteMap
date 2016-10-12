@@ -66,6 +66,14 @@ function loadExploreMapNet(){
 	Event.observe(maphintDiv,'mouseover',function (event){ showBox('maphintdiv'); });
 	$("network-map-div").insert(maphintDiv);
 
+	/** USED BY THE VISUALISATION FOR THE WEB LINK MENU **/
+	var weblinkdiv = new Element("div", {'class':'boxshadowsquare', 'id':'weblinkdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:300px;background:white'} );
+	Event.observe(weblinkdiv,'mouseout',function (event){
+		hideBox('weblinkdiv');
+	});
+	Event.observe(weblinkdiv,'mouseover',function (event){ showBox('weblinkdiv'); });
+	$("network-map-div").insert(weblinkdiv);
+
 	/** USED BY THE VISUALISATION FOR THE CREATION MENU **/
 	var maparrowDiv = new Element("div", {'class':'boxshadowsquare', 'id':'maparrowdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:200px;background:white'} );
 	Event.observe(maparrowDiv,'mouseout',function (event){

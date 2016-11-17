@@ -78,13 +78,22 @@
 
 			$evidencenode = addNode($summary, $desc, $private, $roleType);
 
-			/** ADD RESOURCES **/
-        	if(empty($errors)){
+			if (!$evidencenode instanceof Error) {
+
+				if ($_FILES['image']['error'] == 0) {
+					$imagedir = $HUB_FLM->getUploadsNodeDir($evidencenode->nodeid);
+					$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+					if($photofilename != ""){
+						$evidencenode->updateImage($photofilename);
+					}
+				}
+
+				/** ADD RESOURCES **/
 				$lt = getLinkTypeByLabel('is related to');
 				$linkRelated = $lt->linktypeid;
 
 				$i = 0;
-                foreach($resourceurlarray as $resourceurl) {
+				foreach($resourceurlarray as $resourceurl) {
 					$resourcetitle = trim($resourcetitlearray[$i]);
 
 					// If they have entered nothing, don't do anything.
@@ -271,6 +280,13 @@ window.onload = init;
 					<option value='<?php echo $item; ?>' <?php if ($nodetypename == $item || ($nodetypename == "" && $item == $CFG->EVIDENCE_TYPES_DEFAULT)) { echo 'selected=\"true\"'; }  ?> ><?php echo $item ?></option>
 			<?php } ?>
 		</select>
+	</div>
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
+		</label>
+		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
 	</div>
 
 	<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>

@@ -80,6 +80,15 @@
 			$issuenode = addNode($issue, $desc, $private, $roleIssue);
 
 			if (!$issuenode instanceof Error) {
+
+				if ($_FILES['image']['error'] == 0) {
+					$imagedir = $HUB_FLM->getUploadsNodeDir($issuenode->nodeid);
+					$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+					if($photofilename != ""){
+						$issuenode->updateImage($photofilename);
+					}
+				}
+
 				// Add a see also to the chat comment node this was cread from if chatnodeid exists
 				if ($clonenodeid != "") {
 					$clonenode = getNode($clonenodeid);
@@ -311,16 +320,12 @@ window.onload = init;
 	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
 	<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
 
-	<!-- div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->ISSUE_IMAGE_LABEL; ?>
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
 			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
 		</label>
 		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
 	</div>
-	<div class="formrow">
-		<label class="formlabelbig">&nbsp;</label>
-		<span class="forminput"><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></span>
-	</div -->
 
     <div class="hgrformrow">
 		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>

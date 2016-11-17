@@ -63,10 +63,12 @@
 
         if(empty($errors)){
 	        $private = optional_param("private","Y",PARAM_ALPHA);
+			$currentUser = $USER;
+
+			$issuenode = getNode($nodeid);
 
 			$r = getRoleByName("Issue");
 			$roleIssue = $r->roleid;
-			$issuenode = getNode($nodeid);
 
 			$filename = "";
 			if (isset($issuenode->filename)) {
@@ -75,19 +77,21 @@
 
 			$issuenode->edit($issue, $desc, $private, $roleIssue, $filename, '');
 			if (!$issuenode instanceof Error) {
-			    /*if ($_FILES['image']['error'] == 0) {
-					$imagedir = $HUB_FLM->getUploadsNodeDir($issuenode->nodeid);
-
-					$photofilename = uploadImageToFit('image',$errors,$imagedir);
-					if($photofilename == ""){
-						$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
+				$imagedelete = optional_param("imagedelete","N",PARAM_ALPHA);
+				if ($imagedelete == 'Y') {
+					$issuenode->updateImage("");
+				} else {
+					if ($_FILES['image']['error'] == 0) {
+						$imagedir = $HUB_FLM->getUploadsNodeDir($issuenode->nodeid);
+						$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+						if($photofilename != ""){
+							$issuenode->updateImage($photofilename);
+						}
 					}
-					$issuenode->updateImage($photofilename);
-				}*/
+				}
 
 				/** ADD RESOURCES/URLS **/
 				if(empty($errors)){
-
 					// remove all the existing urls so they can be re-added below
 					$issuenode->removeAllURLs();
 
@@ -246,6 +250,18 @@ insertFormHeaderMessage();
 	<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
 	<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
 	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+
+    <div class="hgrformrow">
+		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
+		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;overflow:auto">
+			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
+		</div>
+    </div>
+    <div class="hgrformrow">
+		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
+		<input class="forminput" type="file" id="image" name="image" size="40">
+		<input id="imagedelete" class="forminput" type="checkbox" name="imagedelete" value="Y" /><?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
+    </div>
 
     <div class="hgrformrow">
 		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>

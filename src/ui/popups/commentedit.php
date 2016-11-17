@@ -85,20 +85,20 @@
 
 					$imagedelete = optional_param("imagedelete","N",PARAM_ALPHA);
 					if ($imagedelete == 'Y') {
-						$commentnode->updateImage($CFG->DEFAULT_ISSUE_PHOTO);
+						$commentnode->updateImage("");
 					} else {
 						if ($_FILES['image']['error'] == 0) {
 							$imagedir = $HUB_FLM->getUploadsNodeDir($commentnode->nodeid);
 							$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
-							if($photofilename == ""){
-								$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
+							if($photofilename != ""){
+								$commentnode->updateImage($photofilename);
 							}
-							$commentnode->updateImage($photofilename);
 						}
 					}
 
 					/** ADD RESOURCES/URLS **/
 					if(empty($errors)){
+						// remove all the existing urls so they can be re-added below
 						$commentnode->removeAllURLs();
 
 						$i = 0;
@@ -260,7 +260,7 @@ window.onload = init;
 
     <div class="hgrformrow">
 		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
-		<div style="position:relative;overflow:hidden;border:1px solid gray;width:150px;height:100;max-width:150px;max-height:100px;min-width:150px;min-height:100px;overflow:auto">
+		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;min-width:160px;min-height:120px;overflow:auto">
 			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
 		</div>
     </div>

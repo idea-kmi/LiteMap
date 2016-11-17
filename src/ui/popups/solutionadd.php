@@ -79,6 +79,15 @@
 			$solutionnode = addNode($solution,$desc, $private, $roleSolution);
 
 			if (!$solutionnode instanceof Error) {
+
+				if ($_FILES['image']['error'] == 0) {
+					$imagedir = $HUB_FLM->getUploadsNodeDir($solutionnode->nodeid);
+					$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+					if($photofilename != ""){
+						$solutionnode->updateImage($photofilename);
+					}
+				}
+
 				// Add a see also to the chat comment node this was cread from if chatnodeid exists
 				if ($clonenodeid != "") {
 					$clonenode = getNode($clonenodeid);
@@ -263,6 +272,13 @@ window.onload = init;
 
 <form id="solutionform" name="solutionform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
 	<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
+		</label>
+		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
+	</div>
 
     <div class="hgrformrow">
 		<label  class="formlabelbig" for="solution"><span style="vertical-align:top"><?php echo $LNG->FORM_SOLUTION_LABEL_SUMMARY; ?></span>

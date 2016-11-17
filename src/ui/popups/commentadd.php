@@ -83,10 +83,9 @@
 				if ($_FILES['image']['error'] == 0) {
 					$imagedir = $HUB_FLM->getUploadsNodeDir($commentnode->nodeid);
 					$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
-					if($photofilename == ""){
-						$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
+					if($photofilename != ""){
+						$commentnode->updateImage($photofilename);
 					}
-					$commentnode->updateImage($photofilename);
 				}
 
 				/** ADD RESOURCES **/

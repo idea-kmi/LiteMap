@@ -39,6 +39,7 @@
     $errors = array();
 
  	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
+   	$node = new CNode($nodeid);
 	$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
 
 	$handler = optional_param("handler","", PARAM_TEXT);
@@ -121,7 +122,6 @@
 			}
         }
     } else if ($nodeid != "") {
-    	$node = new CNode($nodeid);
     	$node = $node->load('long');
 		$maptitle = $node->name;
 		$desc = $node->description;
@@ -172,6 +172,15 @@ function checkForm() {
 
 window.onload = init;
 
+function toggleGroups() {
+	if ( $("groupsdiv").style.display == "block") {
+		$("groupsdiv").style.display = "none";
+		$("groupsimg").src=URL_ROOT+"images/arrow-down-green.png";
+	} else {
+		$("groupsdiv").style.display = "block";
+		$("groupsimg").src=URL_ROOT+"images/arrow-up-green.png";
+	}
+}
 </script>
 
 <form id="mapform" name="mapform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
@@ -181,7 +190,7 @@ window.onload = init;
 
     <div class="hgrformrow">
 		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
-		<div style="position:relative;overflow:hidden;border:1px solid gray;width:150px;height:100;max-width:150px;max-height:100px;min-width:150px;min-height:100px;">
+		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;">
 			<img style="position:absolute; top:0px left:0px;cursor:move;" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
 		</div>
     </div>
@@ -246,7 +255,7 @@ window.onload = init;
 		}
 	?>
 
-    <br>
+   <br>
     <div class="hgrformrow">
 		<label class="formlabelbig">&nbsp;</label>
         <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editmap" name="editmap">

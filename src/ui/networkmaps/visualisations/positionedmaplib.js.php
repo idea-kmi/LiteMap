@@ -625,7 +625,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			var maxWidth = 155;
 
 			// Does the node have its own image?
-			if (orinode.image && orirole.name == 'Idea') {
+			if (orinode.image) {
 				var roleicon = positionedMap.graph.getImage(orinode.image);
 				if (roleicon.complete) {
 					var imgheight = roleicon.height;
@@ -872,7 +872,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 							var title = node.name;
 							var orinode = node.getData('orinode');
 							var orirole = node.getData('orirole');
-							if (orinode.image && orirole.name == 'Idea') {
+							if (orinode.image) {
 								title += ' - (<?php echo $LNG->COMMENT_IMAGE_HINT;?>)';
 							}
 							showMapHint('mapdescdiv', node, title, e);

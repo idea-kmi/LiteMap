@@ -78,6 +78,20 @@
 		    if ($evidencenode instanceof Error){
 				array_push($errors, $LNG->FORM_EVIDENCE_ALREADY_EXISTS);
 			} else {
+
+				$imagedelete = optional_param("imagedelete","N",PARAM_ALPHA);
+				if ($imagedelete == 'Y') {
+					$evidencenode->updateImage("");
+				} else {
+					if ($_FILES['image']['error'] == 0) {
+						$imagedir = $HUB_FLM->getUploadsNodeDir($evidencenode->nodeid);
+						$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+						if($photofilename != ""){
+							$evidencenode->updateImage($photofilename);
+						}
+					}
+				}
+
 				// Get all connections this node is used in and update any that are now using the wrong link type or role type.
 				if ($node->role->name != $nodetypename) {
 					$mainConnections = getConnectionsByNode($nodeid,0,-1,'date','ASC', 'all', '', 'Solution');
@@ -304,6 +318,18 @@ window.onload = init;
 			</select>
 		</div>
    	<?php } ?>
+
+    <div class="hgrformrow">
+		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
+		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;overflow:auto">
+			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
+		</div>
+    </div>
+    <div class="hgrformrow">
+		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
+		<input class="forminput" type="file" id="image" name="image" size="40">
+		<input id="imagedelete" class="forminput" type="checkbox" name="imagedelete" value="Y" /><?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
+    </div>
 
 	<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>
 

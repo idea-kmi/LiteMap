@@ -65,6 +65,18 @@
 			$solutionnode = editNode($nodeid, $solution,$desc, $private, $rolesolution);
 
 			if (!$solutionnode instanceof Error) {
+				$imagedelete = optional_param("imagedelete","N",PARAM_ALPHA);
+				if ($imagedelete == 'Y') {
+					$solutionnode->updateImage("");
+				} else {
+					if ($_FILES['image']['error'] == 0) {
+						$imagedir = $HUB_FLM->getUploadsNodeDir($solutionnode->nodeid);
+						$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
+						if($photofilename != ""){
+							$solutionnode->updateImage($photofilename);
+						}
+					}
+				}
 
 				/** ADD RESOURCES/URLS **/
 				if(empty($errors)){
@@ -238,6 +250,18 @@ window.onload = init;
 <form id="solutionform" name="solutionform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
 	<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
 	<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
+
+    <div class="hgrformrow">
+		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
+		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;overflow:auto">
+			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
+		</div>
+    </div>
+    <div class="hgrformrow">
+		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
+		<input class="forminput" type="file" id="image" name="image" size="40">
+		<input id="imagedelete" class="forminput" type="checkbox" name="imagedelete" value="Y" /><?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
+    </div>
 
     <div class="hgrformrow">
 		<label  class="formlabelbig" for="solution"><span style="vertical-align:top"><?php echo $LNG->FORM_SOLUTION_LABEL_SUMMARY; ?></span>

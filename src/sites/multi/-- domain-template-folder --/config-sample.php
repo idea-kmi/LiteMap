@@ -297,6 +297,8 @@ $CFG->GOOGLE_ANALYTICS_ON = false;
 $CFG->GOOGLE_ANALYTICS_KEY = "";
 $CFG->GOOGLE_ANALYTICS_DOMAIN = "";
 
+// Google Maps server key - https://developers.google.com/maps/documentation/geocoding/start#get-a-key
+$CFG->GOOGLE_MAPS_KEY = "";
 
 /**
  * urls that are allowed in IFrame and Object embeds in formatted descriptions

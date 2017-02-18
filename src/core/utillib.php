@@ -804,30 +804,42 @@ function geoCodeAddress($address1, $address2, $postcode, $loc, $cc) {
     	$address .= $cc.",";
     }
 
-    $geocodeURL  = "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=".urlencode($address);
+    $geocodeURL  = "https://maps.googleapis.com/maps/api/geocode/json?key=".$CFG->GOOGLE_MAPS_KEY."&address=".urlencode($address);
 
-    $http = array('method'  => 'GET',
-                    'request_fulluri' => true,
-                    'timeout' => '2');
-    if($CFG->PROXY_HOST != ""){
-        $http['proxy'] = $CFG->PROXY_HOST . ":".$CFG->PROXY_PORT;
-    }
+    $response = callGeoURL($geocodeURL);
 
-    $opts = array();
-    $opts['http'] = $http;
-    $context  = stream_context_create($opts);
+	$output = json_decode($response);
+	//error_log(print_r($output, true));
 
-    try {
-    	$response = file_get_contents($geocodeURL, 0, $context);
-
-		$output = json_decode($response);
-		if (isset($output) && isset($output->results[0])) {
-			$geo["lat"] = $output->results[0]->geometry->location->lat;
-			$geo["lng"] = $output->results[0]->geometry->location->lng;
-		}
-	} catch(Exception $e) {}
+	if (isset($output->results[0])) {
+		$geo["lat"] = $output->results[0]->geometry->location->lat;
+		$geo["lng"] = $output->results[0]->geometry->location->lng;
+	}
 
     return $geo;
+}
+
+function callGeoURL($url) {
+
+	$ch = curl_init();
+
+	$curl = curl_init();
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+	$response = curl_exec($curl);
+	$httpCode = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+	curl_close($curl);
+
+	//error_log(print_r("RESPONSE=".$response, true));
+	//error_log("code=".$httpCode);
+
+	if($httpCode != 200 || $response === false) {
+		return false;
+    } else {
+		return $response;
+	}
 }
 
 /**

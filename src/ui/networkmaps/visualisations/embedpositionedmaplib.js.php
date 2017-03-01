@@ -203,6 +203,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			// ROLE ICON
 
 			// Does the node have its own image?
+			/*
 			if (orinode.image && orirole.name == 'Map') {
 				var roleicon = positionedMap.graph.getImage(orinode.image);
 				if (roleicon.complete) {
@@ -228,7 +229,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 						node.setData('iconrec', iconRect);
 					};
 				}
-			} else {
+			} else {*/
 				var roleicon = "";
 				if (orirole.name == 'Issue' ) {
 					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue64px.png'); ?>');
@@ -257,7 +258,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 						node.setData('iconrec', iconRect);
 					};
 				}
-			}
+			//}
 
 			// Challenge node network graph view
 			if (orirole.name == 'Challenge') {
@@ -866,6 +867,7 @@ function showMapHint(panelname, node, text, evt) {
 function showViewMenu(node, evt, graphview) {
 	var panel = $('maparrowdiv');
 	panel.innerHTML = "";
+	var fromnodeid = node.id;
 
 	var innerpanel = new Element("div", {'style':'float:left;width:100%;height:100%;'} );
 	innerpanel.insert("loading...");
@@ -903,7 +905,7 @@ function showViewMenu(node, evt, graphview) {
 							Event.observe(next,'click',function (){
 								hideBox('maparrowdiv');
 								// link to map
-								viewMapDetails(nextnode.cnode.nodeid);
+								viewMapDetailsAndSelect(this.nodeid, fromnodeid);
 							});
 							innerpanel.insert(next);
 						}

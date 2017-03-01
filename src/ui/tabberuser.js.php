@@ -472,7 +472,7 @@ function loadcons(context,args){
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
-				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con")
+				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"cons")
 
 				$("tab-content-data-con").update(navbar);
 
@@ -504,7 +504,7 @@ function loadcons(context,args){
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-con").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"con"));
+					$("tab-content-data-con").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"cons"));
 				}
     		}
   		});
@@ -546,7 +546,7 @@ function loadpros(context,args){
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
-				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro")
+				var navbar = createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pros")
 
 				$("tab-content-data-pro").update(navbar);
 
@@ -578,7 +578,7 @@ function loadpros(context,args){
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-data-pro").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pro"));
+					$("tab-content-data-pro").insert(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"pros"));
 				}
     		}
   		});
@@ -708,7 +708,7 @@ function loadmaps(context,args){
 					var tb3 = new Element("div", {'class':'toolbarrow'});
 
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
-					tb3.insert(displaySortForm(sortOpts,args,'map',reorderIssues));
+					tb3.insert(displaySortForm(sortOpts,args,'map',reorderMaps));
 
 					$("tab-content-data-map").insert(tb3);
 
@@ -1658,7 +1658,6 @@ function createNav(total, start, count, argArray, context, type){
 	        prevSpan.addClassName("inactive");
 	    }
 
-	    //pages
 	    var pageSpan = new Element("span", {'id':"nav-pages"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
@@ -1667,8 +1666,12 @@ function createNav(total, start, count, argArray, context, type){
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);
-		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+		    	newArr["start"] = newArr["max"] * (i-1);
+		    	page.newArr = newArr;
+		        Event.observe(page,"click", function(){
+		            var newArr = this.newArr;
+		            eval("load"+type+"(context,newArr)");
+		        });
 	    	} else {
 	    		page.addClassName("currentpage");
 	    	}
@@ -1745,13 +1748,6 @@ function createNavCounter(total, start, count, type){
     }
     return objH;
 }
-
-var Pages = {
-	next: function(e){
-		var data = $A(arguments);
-		eval("load"+data[1]+"(data[2],data[3])");
-	}
-};
 
 /**
  * load JS file for creating the connection network (applet) for a user's social network

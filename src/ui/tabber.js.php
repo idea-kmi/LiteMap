@@ -492,8 +492,12 @@ function createNav(total, start, count, argArray, context, type){
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);
-		    	newArr["start"] = newArr["max"] * (i-1) ;
-		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
+		    	newArr["start"] = newArr["max"] * (i-1);
+		    	page.newArr = newArr;
+		        Event.observe(page,"click", function(){
+		            var newArr = this.newArr;
+		            eval("load"+type+"(context,newArr)");
+		        });
 	    	} else {
 	    		page.addClassName("currentpage");
 	    	}
@@ -538,10 +542,3 @@ function createNavCounter(total, start, count, type){
     }
     return objH;
 }
-
-var Pages = {
-	next: function(e){
-		var data = $A(arguments);
-		eval("load"+data[1]+"(data[2],data[3])");
-	}
-};

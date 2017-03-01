@@ -1080,7 +1080,11 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	var printButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
-		printCanvas(forcedirectedGraph);
+		if ($('treedata').style.display == 'block') {
+			printMapKnowledgeTree(NODE_ARGS['nodeid'], NODE_ARGS['title']);
+		} else {
+			printCanvas(forcedirectedGraph);
+		}
 	};
 	Event.observe(printButton,"click", printButtonhandler);
 	tb2.insert(printButton);
@@ -1458,6 +1462,16 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	tb2.insert(toggleview);
 
 	return tb2;
+}
+
+
+/**
+ * Called by the map to go to the given map
+ */
+function viewMapDetailsAndSelect(mapid, selectnodeid) {
+	var width = getWindowWidth();
+	var height = getWindowHeight()-20;
+	loadDialog('mapdetails', URL_ROOT+"map.php?id="+mapid+"&focusid="+selectnodeid, width,height);
 }
 
 /**

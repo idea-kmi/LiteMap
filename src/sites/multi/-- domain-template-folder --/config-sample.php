@@ -200,7 +200,7 @@ $CFG->plainbackpale = '#D0D0D0';
 $CFG->argumentbackpale = '#F0F1AD';
 $CFG->ideabackpale = '#D0D0D0';
 $CFG->commentbackpale = '#FAB8DA';
-$CFG->mapbackpale = '#C83089';
+$CFG->mapbackpale = '#E9B9D6'; //'#C83089'
 
 /**
  * These are the background colours used in Analytics graphs

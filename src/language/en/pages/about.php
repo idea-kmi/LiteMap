@@ -27,11 +27,11 @@ $LNG->PAGE_ABOUT_TITLE = "About ".$CFG->SITE_TITLE;
 
 $LNG->PAGE_ABOUT_BODY = '<div align="left" style="margin-bottom:20px;"><iframe width="560" height="315" src="//www.youtube.com/embed/3Sv5c6MRiZo" frameborder="0" allowfullscreen></iframe></div>';
 $LNG->PAGE_ABOUT_BODY .= '<p>'.$CFG->SITE_TITLE.' is developed by the ';
-$LNG->PAGE_ABOUT_BODY .= '<a href="http://projects.kmi.open.ac.uk/hyperdiscourse/">Knowledge Media Institute</a> ';
+$LNG->PAGE_ABOUT_BODY .= '<a href="http://idea.kmi.open.ac.uk/">Knowledge Media Institute</a> ';
 $LNG->PAGE_ABOUT_BODY .= 'team (';
-$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://people.kmi.open.ac.uk/anna/index.html">Anna De Liddo</a> and ';
-$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/bachler">Michelle Bachler</a>). ';
-$LNG->PAGE_ABOUT_BODY .= 'We are indebted to <a target="About" href="http://kmi.open.ac.uk/people/harry/">Harriett Cornish</a> for graphic design. ';
+$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/member/anna-de-liddo/">Anna De Liddo</a> and ';
+$LNG->PAGE_ABOUT_BODY .= '<a target="About" href="http://kmi.open.ac.uk/people/member/michelle-bachler">Michelle Bachler</a>). ';
+$LNG->PAGE_ABOUT_BODY .= 'We are indebted to <a target="About" href="http://kmi.open.ac.uk/people/member/harriett-cornish/">Harriett Cornish</a> for graphic design. ';
 $LNG->PAGE_ABOUT_BODY .= 'We gratefully acknowledge use of the <a target="About" href="http://philogb.github.io/jit//"> InfoVis Toolkit</a> for the Map views.</p>';
 $LNG->PAGE_ABOUT_BODY .= '<h2 class="page-heading"><b>Main Features</b></h2>';
 $LNG->PAGE_ABOUT_BODY .= '<ul>';

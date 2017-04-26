@@ -31,11 +31,11 @@ $LNG->PAGE_ABOUT_TITLE = "Sobre ".$CFG->SITE_TITLE;
 
 $LNG->PAGE_ABOUT_BODY = '<div alinear="izquierda" estilo="margin-bottom:20px;"><iframe width="560" height="315" src="//www.youtube.com/embed/3Sv5c6MRiZo" frameborder="0" allowfullscreen></iframe></div>';
 $LNG->PAGE_ABOUT_BODY .= '<p>'.$CFG->SITE_TITLE.' É desenvolvido por ';
-$LNG->PAGE_ABOUT_BODY .= '<a href="http://projects.kmi.open.ac.uk/hyperdiscourse/">Knowledge Media Institute</a> ';
+$LNG->PAGE_ABOUT_BODY .= '<a href="http://idea.kmi.open.ac.uk/">Knowledge Media Institute</a> ';
 $LNG->PAGE_ABOUT_BODY .= 'equipe (';
-$LNG->PAGE_ABOUT_BODY .= '<a objetivo="Sobre" href="http://people.kmi.open.ac.uk/anna/index.html">Anna De Liddo</a> and ';
-$LNG->PAGE_ABOUT_BODY .= '<a objetivo="Sobre" href="http://kmi.open.ac.uk/people/bachler">Michelle Bachler</a>). ';
-$LNG->PAGE_ABOUT_BODY .= 'Estamos associados com <a objetivo="Sobre" href="http://kmi.open.ac.uk/people/harry/">Harriett Cornish</a> para o desenho gráfico. ';
+$LNG->PAGE_ABOUT_BODY .= '<a objetivo="Sobre" href="http://kmi.open.ac.uk/people/member/anna-de-liddo/">Anna De Liddo</a> and ';
+$LNG->PAGE_ABOUT_BODY .= '<a objetivo="Sobre" href="http://kmi.open.ac.uk/people/member/michelle-bachler">Michelle Bachler</a>). ';
+$LNG->PAGE_ABOUT_BODY .= 'Estamos associados com <a objetivo="Sobre" href="http://kmi.open.ac.uk/people/member/harriett-cornish/">Harriett Cornish</a> para o desenho gráfico. ';
 $LNG->PAGE_ABOUT_BODY .= 'Agradecemos el uso de la <a equipo="Sobre" href="http://philogb.github.io/jit//"> InfoVis Toolkit</a> para visão dos mapas.</p>';
 $LNG->PAGE_ABOUT_BODY .= '<h2 class="page-heading"><b>Main Features</b></h2>';
 $LNG->PAGE_ABOUT_BODY .= '<ul>';

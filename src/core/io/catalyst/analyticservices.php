@@ -28,12 +28,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 require_once($HUB_FLM->getCodeDirPath("core/utillib.php"));
 
 global $serviceRootAnalytics;
-//$serviceRootAnalytics = 'http://deliberatorium.mit.edu/getmetrics';
-//$serviceRootAnalytics = 'http://franc2.mit.edu:5050/accept';
-//$serviceRootAnalytics = 'http://ns239264.ip-192-99-37.net:5050/accept';
-//$serviceRootAnalytics = 'http://discussions.bluenove.com:5050/accept';
-
-$serviceRootAnalytics = 'https://discussions.bluenove.com/analytics/accept';
+$serviceRootAnalytics = $CFG->analyticsServiceUrl.'accept';
 
 function getCannedResults($url) {
 	$jsondata = loadJsonLDFromURL($url);

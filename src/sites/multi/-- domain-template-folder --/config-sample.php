@@ -71,7 +71,7 @@ $CFG->defaultRoleGroupID = "";
 // e.g. http://litemapdev.kmi.open.ac.uk/
 $CFG->homeAddress = "";
 
-// The url of the analytics service being used.
+// The url of the analytics service being used - including trailing '/'
 // Sepcifically this is the one developed by Mark Klein on the Catalyst FP7 project (http://catalyst-fp7.eu/)
 // https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2962524
 $CFG->analyticsServiceUrl = "";

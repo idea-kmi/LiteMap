@@ -96,7 +96,7 @@ define('PARAM_EMAIL', 13);
 define('PARAM_XML', 14);
 
 /**
- * PARAM_ALPHANUMEXT the same contents as PARAM_ALPHANUM plus the char: "-" allowed.
+ * PARAM_ALPHANUMEXT the same contents as PARAM_ALPHANUM plus the chars: "-" and "_" are allowed.
  * Used for ids mostly
  */
 define('PARAM_ALPHANUMEXT', 15);
@@ -230,8 +230,8 @@ function clean_param($param, $type) {
         case PARAM_ALPHAEXT:     // Remove everything not a-zA-Z/_-
             return preg_replace('/([^a-zA-Z\/_-])/i', '', $param);
 
-        case PARAM_ALPHANUMEXT:     // Remove everything not a-zA-Z0-9-
-            return preg_replace('/([^a-zA-Z0-9-])/i', '', $param);
+        case PARAM_ALPHANUMEXT:     // Remove everything not a-zA-Z0-9_-
+            return preg_replace('/([^a-zA-Z0-9_-])/i', '', $param);
 
         case PARAM_BOOL:         // Convert to 1 or 0
             $tempstr = strtolower($param);

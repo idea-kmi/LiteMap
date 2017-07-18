@@ -46,8 +46,8 @@ $HUB_SQL->AUDIT_VOTE_INSERT = "INSERT into AuditVoting (UserID, ItemID, VoteType
 
 $HUB_SQL->AUDIT_SPAM_REPORTS_SELECT = "Select ReporterID from AuditSpamReports where ItemId=? order by CreationDate DESC";
 
-$HUB_SQL->AUDIT_VIEW_NODE_INSERT ="INSERT into AuditViewNode (UserID, ViewID, NodeID, ModificationDate, XPos, YPos, ChangeType)
-            					values (?, ?, ?, ?, ?, ?, ?)";
+$HUB_SQL->AUDIT_VIEW_NODE_INSERT ="INSERT into AuditViewNode (UserID, ViewID, NodeID, ModificationDate, XPos, YPos, ChangeType, MediaIndex)
+            					values (?, ?, ?, ?, ?, ?, ?, ?)";
 
 $HUB_SQL->AUDIT_VIEW_TRIPLE_INSERT ="INSERT into AuditViewTriple (UserID, ViewID, TripleID, ModificationDate, ChangeType)
             					values (?, ?, ?, ?, ?)";
@@ -67,4 +67,7 @@ $HUB_SQL->AUDIT_DASHBOARD_VIEW_INSERT ="INSERT into AuditDashboardView (UserID, 
 $HUB_SQL->AUDIT_TESTING_INSERT ="INSERT into AuditTesting (TrialName, UserID, ItemID, SessionID, IPAddress, Agent, ModificationDate, TestElementID, Event, State)
             					values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+$HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS = "SELECT * FROM Users LIMIT 1";
+
+$HUB_SQL->AUDIT_USER_SELECT_ORIGINALID = "SELECT * FROM Users WHERE OriginalID=?";
 ?>

@@ -38,6 +38,27 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 			var orifrom = adj.nodeFrom.pos.getc(true);
 			var orito = adj.nodeTo.pos.getc(true);
 
+			var player = NODE_ARGS['mediaplayer'];
+			if (player) {
+				var fromoffset = parseFloat(adj.nodeFrom.getData('mediaindex'));
+				var tooffset = parseFloat(adj.nodeTo.getData('mediaindex'));
+
+				var currenttime = mediaPlayerCurrentIndex();
+				if (positionedMap.mediaReplayMode) {
+					if ((fromoffset >=0 && currenttime < fromoffset) || (tooffset >=0 && currenttime < tooffset)) {
+						return;
+					}
+				}
+			} else {
+				if (positionedMap.mapReplayMode) {
+					var fromIndex = parseInt(adj.nodeFrom.getData('index'));
+					var toIndex = parseInt(adj.nodeTo.getData('index'));
+					if ((fromIndex > positionedMap.mapReplayCurrentIndex) || (toIndex > positionedMap.mapReplayCurrentIndex)) {
+						return;
+					}
+				}
+			}
+
 			//alert("fromNode = "+adj.nodeTo.pos.getc(true));
 			//alert("toNode = "+adj.nodeFrom.pos.getc(true));
 
@@ -52,7 +73,9 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 				from = orifrom
 			}
 
-			var dim = adj.getData('dim');
+			var toEdge = computeSideOfRectangle(adj.nodeTo, orito, orifrom, to);
+			var fromEdge = computeSideOfRectangle(adj.nodeFrom, orifrom, orito, from);
+
 			var direction = adj.data.$direction;
 			var swap = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
 
@@ -62,47 +85,102 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 			// invert edge direction
 			if (swap) {
 				var tmp = from;
+				var tmp2 = fromEdge;
+				fromEdge = toEdge;
 				from = to;
 				to = tmp;
+				toEdge = tmp2;
 			}
 
-			//var orifromrole = adj.nodeFrom.getData('orirole');
-			//var oritorole = adj.nodeTo.getData('orirole');
-
-			//alert("from="+orifromrole.name);
-			//alert("to="+oritorole.name);
-
-			var vect = new $jit.Complex(to.x - from.x, to.y - from.y);
-			vect.$scale(dim / vect.norm());
-			var posVect = vect;
-			var intermediatePoint = new $jit.Complex(to.x - posVect.x, to.y - posVect.y);
-			var normal = new $jit.Complex(-vect.y / 2, vect.x / 2);
-			var endPoint = intermediatePoint.add(vect);
-			var v1 = intermediatePoint.add(normal);
-			var v2 = intermediatePoint.$add(normal.$scale(-1));
+			var currentFill = context.fillStyle;
 
 			if (adj.getData('selected')) {
 				context.strokeStyle = '#FFFF40';
+				context.fillStyle = '#FFFF40';
 				context.lineWidth = 3;
 			}
 
-			//line
-			context.beginPath();
-			context.moveTo(from.x, from.y);
-			context.lineTo(to.x, to.y);
-			context.stroke();
+			//draw line
+			var isReallyNonLinear = false;
+			if (positionedMap.linkCurveOn) {
+				isReallyNonLinear = true;
+			}
 
-			// Arrow head
-			context.beginPath();
-			context.moveTo(v1.x, v1.y);
-			context.moveTo(v1.x, v1.y);
-			context.lineTo(v2.x, v2.y);
-			context.lineTo(endPoint.x, endPoint.y);
-			context.closePath();
-			context.fill();
+			var deltaX = to.x - from.x;
+			var deltaY = to.y - from.y;
+			if ((Math.abs(deltaX) < 20) || (Math.abs(deltaY) < 20)) {
+				isReallyNonLinear = false; //under 10 pixels, ‘linear’ mode is always used
+			}
+
+			if (isReallyNonLinear) {
+
+				// Middle point
+				var middle = {"x":(from.x + to.x)/2, "y":(from.y + to.y)/2};
+				var arrowOrientation = "";
+
+				var x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
+
+				if (toEdge == "bottom" || toEdge == "top") {
+					arrowOrientation = "VERTICAL";
+					x1 = from.x; y1 = from.y;
+					x2 = from.x; y2 = middle.y;
+					x3 = to.x; 	y3 = middle.y;
+					x4 = to.x;
+					x5 = to.x;
+					y5 = to.y;
+					// Adjust for arrow
+					if (toEdge == "bottom") {
+						y4 = to.y+15;
+					} else {
+						y4 = to.y-15;
+					}
+				} else { //if (toEdge == "left" || toEdge == "right") { // edge does not come back empty anymore
+					arrowOrientation = "HORIZONTAL";
+					x1 = from.x; y1 = from.y;
+					x2 = middle.x; y2 = from.y;
+					x3 = middle.x; 	y3 = to.y;
+					x5 = to.x;
+					y5 = to.y
+					//adjust for arrow
+					if (toEdge == "left") {
+						x4 = to.x-15;
+					} else if (toEdge == "right") {
+						x4 = to.x+15;
+					} else {
+						x4 = to.x;
+					}
+					y4 = to.y;
+				}
+
+				//console.log("to edge:"+toEdge+" toNode="+adj.nodeTo.name+" y="+y4);
+				//console.log("from edge:"+fromEdge+" fromNode="+adj.nodeFrom.name+" y="+y1);
+
+				var newTo = {"x":x4, "y":y4};
+				var newToArrow = {"x":x5, "y":y5};
+				var newFrom = {"x":x1,"y":y1};
+
+				context.beginPath();
+				context.moveTo(x1, y1);
+				context.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+				context.stroke();
+
+				// Arrow head
+				drawArrow(context, newFrom, newToArrow, 15, arrowOrientation);
+
+			} else {
+				context.beginPath();
+				context.moveTo(from.x, from.y);
+				context.lineTo(to.x, to.y);
+				context.stroke();
+
+				// Arrow head
+				drawArrow(context, from, to, 15, "FREE");
+			}
 
 			// Link Text
 			if (positionedMap.linkLabelTextOn) {
+				context.fillStyle = currentFill;
+
 				var labeltext = adj.getData('label');
 				context.font = "bold 12px Arial";
 				context.textBaseline = 'top';
@@ -113,8 +191,6 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 				// center label on line
 				var posVectLabel = new $jit.Complex((to.x - from.x)/2, (to.y - from.y)/2);
 				var intermediatePointLabel = new $jit.Complex(to.x - posVectLabel.x, to.y - posVectLabel.y);
-				//var endPointLabel = intermediatePointLabel.add(vect);
-
 				context.fillText(labeltext, (intermediatePointLabel.x-(testWidth/2)), intermediatePointLabel.y);
 			}
 		},
@@ -147,56 +223,67 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
     'cohere': {
 		'render': function(node, canvas){
 
+			var player = NODE_ARGS['mediaplayer'];
+			var offset = parseFloat(node.getData('mediaindex'));
+			var currenttime = mediaPlayerCurrentIndex();
+			if (player) {
+				if (positionedMap.mediaReplayMode) {
+					if (offset >= 0 && currenttime < offset ) {
+						return;
+					}
+				}
+			} else {
+				if (positionedMap.mapReplayMode) {
+					var index = parseInt(node.getData('index'));
+					if (index > positionedMap.mapReplayCurrentIndex) {
+						return;
+					}
+				}
+			}
+
 			var context = canvas.getCtx();
 			context.globalCompositeOperation='source-over';
 
 			var width = node.getData('width');
-			var height = node.getData('height');
+			var height = node.getData('height')+10;
 			var finalpos = node.pos.getc(true);
 			var pos = { x: finalpos.x - width / 2, y: finalpos.y - height / 2};
 
 			var nodeFillStyle = context.fillStyle;
 
 			context.fillStyle = '#ffffff';
-			//context.fillStyle = '#cccccc';
-			//context.strokeStyle = '#cccccc';
+			var nodeboxX = (finalpos.x - width / 2);
+			var nodeboxY = (finalpos.y - height / 2);
 
-			var nodeboxX = (finalpos.x - width / 2)+8;
-			var nodeboxY = (finalpos.y - height / 2)+4;
-
-			var nodeboxWidth = width-16;
-			var nodeboxHeight = height-12;
+			var nodeboxWidth = width;
+			var nodeboxHeight = height;
 
 			context['fill' + 'Rect'](nodeboxX, nodeboxY, nodeboxWidth, nodeboxHeight);
 			var mainRect = new mapRectangle(nodeboxX, nodeboxY, nodeboxWidth, nodeboxHeight);
 			node.setData('mainrec', mainRect);
 
-			if (node.id == NODE_ARGS['nodeid']) {
-				context.strokeStyle = '#606060';
-				context.lineWidth = 3;
-				context['stroke' + 'Rect']((finalpos.x - width / 6)+6, (finalpos.y - height / 4)+2,
-					width-12, height);
-			} else {
-				context.lineWidth="1";
-				context.strokeStyle='#E8E8E8'//nodeFillStyle;
-				context.fillStyle = '#E8E8E8'//nodeFillStyle;
-				context['stroke' + 'Rect']( (finalpos.x - width / 2)+8, (finalpos.y - height / 2)+4,
-					width-16, height-4);
-			}
-
-			if (node.selected) {
-				context.strokeStyle = '#FFFF40';
-				context.lineWidth = 3;
-				context['stroke' + 'Rect']((finalpos.x - width / 2)+6, (finalpos.y - height / 2)+2,
-					width-12, height);
-			}
-
-			context.fillStyle = context.strokeStyle = '#000000';
-			context.font = "12px Arial";
-			context.textBaseline = 'top';
-
-
 			var orinode = node.getData('orinode');
+
+			// clear rectangles that might change
+			node.setData('rolechangerec', null);
+			node.setData('voteforrec', null);
+			node.setData('voteagainstrec', null);
+			node.setData('viewrec', null);
+			node.setData('editrec', null);
+			node.setData('deleterec', null);
+			node.setData('linkrec', null);
+			node.setData('urlrec', null);
+			node.setData('rolechangerec', null);
+			//leftrec:null,
+			//rightrec:null,
+			//uprec:null,
+			//downrec:null,
+			//mainrec:null,
+			//userrec:null,
+			//iconrec:null,
+			//textrec:null,
+			//descrec:null,
+
 			var orirole = node.getData('orirole');
 			var user = node.getData('oriuser');
 
@@ -268,24 +355,33 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 				node.setData('networkrec', networkRect);
 			}
 
+			// PRIVATE PADLOCK - uneditable embedded map won't draw private nodes?
+			//var private = orinode.private;
+			//if (private == "Y") {
+			//	var	padlockicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('lock-32.png'); ?>");
+			//	context.drawImage(padlockicon, nodeboxX+22, pos.y+42,18,18);
+			//}
+
 			// TOOLBAR
+
 			var oldfill = context.fillStyle;
 			context.fillStyle = nodeFillStyle; //'#E8E8E8';
-			context['fill' + 'Rect'](nodeboxX, pos.y+height-18, nodeboxWidth, 18);
+			context['fill' + 'Rect'](nodeboxX, pos.y+height-20, nodeboxWidth, 20);
 			context.fillStyle = oldfill;
 
-			var currentX = nodeboxX+2;
+			var currentX = nodeboxX+3;
 
+			// TRANSCLUSION NUMBER
 			var mapcount = orinode.mapcount;
 			if (mapcount > 1) {
 				var currentFont = context.font;
 				context.font = "bold 10pt Arial";
 				if(navigator.userAgent.indexOf("Firefox") != -1 ) {
-					context.fillText(mapcount, currentX, pos.y+height-13);
-					var viewRect = new mapRectangle(currentX, pos.y+height-13, 10, 12);
-				} else {
 					context.fillText(mapcount, currentX, pos.y+height-15);
 					var viewRect = new mapRectangle(currentX, pos.y+height-15, 10, 12);
+				} else {
+					context.fillText(mapcount, currentX, pos.y+height-17);
+					var viewRect = new mapRectangle(currentX, pos.y+height-17, 10, 12);
 				}
 				node.setData('viewrec', viewRect);
 				currentX = currentX+16;
@@ -294,47 +390,77 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 
 			// EXPLORE.
 			var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
-			context.drawImage(descicon, currentX, pos.y+height-16, 16, 16);
-			var descRect = new mapRectangle(currentX, pos.y+height-16, 16, 16);
+			context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+			var descRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
 			node.setData('descrec', descRect);
-			currentX = currentX+22;
+			currentX = currentX+20;
 
 			// LINKS
 			if (orinode.urls && orinode.urls.length > 0) {
 				var	linkicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('link.png'); ?>');
-				context.drawImage(linkicon, currentX, pos.y+height-16,16,16);
-				var linkRect = new mapRectangle(currentX, pos.y+height-16, 16, 16);
+				context.drawImage(linkicon, currentX, pos.y+height-18,16,16);
+				var linkRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
 				node.setData('linkrec', linkRect);
 				currentX = currentX+20;
 			}
 
 			// NODE IN MAP URL
 			var	urlicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('link2.png'); ?>");
-			context.drawImage(urlicon, currentX, pos.y+height-17,16,16);
-			var urlRect = new mapRectangle(currentX, pos.y+height-17, 16, 16);
+			context.drawImage(urlicon, currentX, pos.y+height-19,16,16);
+			var urlRect = new mapRectangle(currentX, pos.y+height-19, 16, 16);
 			node.setData('urlrec', urlRect);
 			currentX = currentX+22;
 
 			// MENU ARROW
-			//var oldfill = context.fillStyle;
-			//context.fillStyle = '#E8E8E8';
-			//context['fill' + 'Rect'](nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
-			//context.fillStyle = oldfill;
-
-			/*var downarrowRect = new mapRectangle(nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
-			node.setData('downrec', downarrowRect);
-
-			$('maparrowdiv').innerHTML = "";
-			var downarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
-			var downarrowicon = positionedMap.graph.getImage(downarrow);
-			if (downarrowicon.complete) {
-				context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-17, 16, 17);
-			} else {
-				downarrowicon.onload = function () {
-					context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-17, 16, 17);
-				};
+			var player = NODE_ARGS['mediaplayer'];
+			if (player && offset != -1) {
+				var downarrowRect = new mapRectangle(nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
+				node.setData('downrec', downarrowRect);
+				var downarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
+				var downarrowicon = positionedMap.graph.getImage(downarrow);
+				if (downarrowicon.complete) {
+					context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-19, 16, 17);
+				} else {
+					downarrowicon.onload = function () {
+						context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-19, 16, 17);
+					};
+				}
 			}
-			*/
+
+			// End menu bar
+
+			// Draw Borders when required
+			if (node.id == NODE_ARGS['nodeid']) {
+				context.strokeStyle = '#606060';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width /  2), (finalpos.y - height / 2),
+					width2, height);
+			} else {
+				context.lineWidth="1";
+				context.strokeStyle='#E8E8E8'//nodeFillStyle;
+				context.fillStyle = '#E8E8E8'//nodeFillStyle;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			if (node.selected) {
+				context.strokeStyle = '#FFFF40';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			if ( (player && offset >=0 && currenttime >= offset && currenttime < (offset + 3.0))
+					|| (positionedMap.mapReplayMode && parseInt(node.getData('index')) == positionedMap.mapReplayCurrentIndex) ) {
+				context.strokeStyle = '#8080FF';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			context.fillStyle = context.strokeStyle = '#000000';
+			context.font = "12px Arial";
+			context.textBaseline = 'top';
 
 			// add user image using nodebox position/size
 			/*var user = node.getData('oriuser');
@@ -381,24 +507,24 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			var maxWidth = 155;
 
 			// Does the node have its own image?
-			if (orinode.thumb) {
-				var roleicon = positionedMap.graph.getImage(orinode.thumb);
+			if (orinode.image) {
+				var roleicon = positionedMap.graph.getImage(orinode.image);
 				if (roleicon.complete) {
 					var imgheight = roleicon.height;
 					var imgwidth = roleicon.width;
-					var imghid = nodeboxHeight-18;
+					var imghid = nodeboxHeight-30;
 					var imgwid = maxWidth;
 					var size = calculateAspectRatioFit(imgwidth,imgheight, imgwid, imghid);
 					context.drawImage(roleicon, nodeboxX+45, nodeboxY+5, size.width, size.height);
 				} else {
-					var roleimage = orinode.thumb;
+					var roleimage = orinode.image;
 					var	roleicon = new Image();
 					roleicon.src = roleimage;
 					positionedMap.graph.addImage(roleicon);
 					roleicon.onload = function () {
 						var imgheight = roleicon.height;
 						var imgwidth = roleicon.width;
-						var imghid = nodeboxHeight-18;
+						var imghid = nodeboxHeight-30;
 						var imgwid = maxWidth;
 						var size = calculateAspectRatioFit(imgwidth,imgheight, imgwid, imghid);
 						context.drawImage(roleicon, nodeboxX+45, nodeboxY+5, size.width, size.height);
@@ -431,22 +557,6 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 		}
 	}
 });
-
- /**
-  * Taken from: http://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
-  * Conserve aspect ratio of the orignal region. Useful when shrinking/enlarging
-  * images to fit into a certain area.
-  *
-  * @param {Number} srcWidth Source area width
-  * @param {Number} srcHeight Source area height
-  * @param {Number} maxWidth Fittable area maximum available width
-  * @param {Number} maxHeight Fittable area maximum available height
-  * @return {Object} { width, heigth }
-  */
-function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-    return { width: srcWidth*ratio, height: srcHeight*ratio };
-}
 
 function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 
@@ -498,6 +608,8 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 			connections:{},
 			xpos: 0,
 			ypos: 0,
+			mediaindex:-1,
+			index: -1,
 			leftrec:null,
 			rightrec:null,
 			uprec:null,
@@ -521,6 +633,7 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 		  	type: "labelarrow",
 		  	label: "",
 		  	connid: "",
+			oriconn: null,
 		  	oriuser:null,
 		},
 
@@ -532,26 +645,18 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 			type: 'Native',
 
 		  	onMouseUp: function(node, eventInfo, e) {
-				if (!node) {
-					//alert("drag moved");
-					//$jit.util.event.stop(e); //stop default event
-					return;
-				}
+		  		return;
 		  	},
 		  	onMouseDown: function(node, eventInfo, e) {
-				if (!node) {
-					//alert("drag moved");
-					//$jit.util.event.stop(e); //stop default event
-					return;
-				}
+		  		return;
 		  	},
 
 			//Change cursor style when hovering a node
 			onMouseEnter: function(node, eventInfo, e) {
-				if (!node) return;
+		  		return;
 			},
 			onMouseMove: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 
@@ -559,7 +664,6 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 				if (!isLink) {
 					var pos = eventInfo.getPos();
 
-					//var downarrowRec = node.getData('downrec');
 					var mainRec = node.getData('mainrec');
 					var userRec = node.getData('userrec');
 					var iconRec = node.getData('iconrec');
@@ -569,10 +673,19 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 					var linkRec = node.getData('linkrec');
 					var urlRec = node.getData('urlrec');
 
-					/*if (downarrowRec.contains(pos.x, pos.y)) {
-						fd.canvas.getElement().style.cursor = 'pointer';
-						showMapMenu("down", node, e);
-					} else*/ if (iconRec.contains(pos.x, pos.y)) {
+					var player = NODE_ARGS['mediaplayer'];
+					var mediaindex = node.getData('mediaindex');
+
+					if (player && mediaindex != -1) {
+						var downarrowRec = node.getData('downrec');
+						if (downarrowRec && downarrowRec.contains(pos.x, pos.y)) {
+							fd.canvas.getElement().style.cursor = 'pointer';
+							showMapMenu("down", node, e);
+							return;
+						}
+					}
+
+					if (iconRec.contains(pos.x, pos.y)) {
 						var text = node.getData('nodetype');
 						showMapHint('maphintdiv', node, text, e);
 					} else if (urlRec && urlRec.contains(pos.x, pos.y)) {
@@ -615,27 +728,22 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 
 			onMouseLeave: function(node, eventInfo, e) {
 				fd.canvas.getElement().style.cursor = '';
-				if (!node) return;
+				if (!node || fd.mapReplayMode) return;
 
-				//var isLink = node.nodeFrom ? true : false;
-				//if (isLink) {
-				//	hideHints();
-				//} else {
-					hideBox('maparrowdiv');
-					hideBox('maphintdiv');
-					hideBox('mapdescdiv');
-				//}
+				hideBox('maparrowdiv');
+				hideBox('maphintdiv');
+				hideBox('mapdescdiv');
 			},
 
 			//Update node positions when dragged
 			onDragMove: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 			},
 
 			onDragEnd: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 		  	},
@@ -651,7 +759,7 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 		  	},
 
 			onRightClick: function(node, eventInfo, e) {
-				if (!node) return;
+				if (!node || fd.mapReplayMode) return;
 
 				var isLink = node.nodeFrom ? true : false;
 				if (!isLink) {
@@ -667,7 +775,7 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 			},
 
 			onClick: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 				var isLink = node.nodeFrom ? true : false;
@@ -696,6 +804,14 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 					} else if (urlRec && urlRec.contains(pos.x, pos.y)) {
 						var code = URL_ROOT+'map.php?id='+NODE_ARGS['nodeid']+'&focusid='+node.id;
 						textAreaPrompt('<?php echo $LNG->GRAPH_LINK_MESSAGE; ?>', code, "", "", "");
+					} else if (e.shiftKey) {
+						if (toggleMediaBar) {
+							toggleMediaBar(true);
+						}
+						var mediaindex = node.getData('mediaindex');
+						if (mediaindex > -1) {
+							mediaPlayerSeek(mediaindex);
+						}
 					} else {
 						hideBox('maparrowdiv');
 						var nodeid = node.id;
@@ -734,14 +850,18 @@ function createNewEmbedMap(containername, rootNodeID, backgroundImagePath) {
 
 	fd.rolloverTitles = true;
 	fd.linkLabelTextOn = true;
+	fd.linkCurveOn = false;
+
+	fd.mediaReplayMode = false;
+
+	fd.mapReplayMode = false;
+	fd.mapReplayCurrentIndex = -1;
+	fd.mapReplayInterval = getReplaySpeed(); // milliseconds;
+	fd.mapReplayMaxIndex = 0;
 
 	fd.graph = new $jit.Graph(fd.graphOptions, fd.config.Node, fd.config.Edge, fd.config.Label);
 
-	var downarrow = '<?php echo $HUB_FLM->getImagePath('downarrowbig.gif'); ?>';
-	var downarrowicon = new Image();
-	downarrowicon.src = downarrow;
-	fd.graph.addImage(downarrowicon);
-
+	// PRELOAD TOOLBAR ICONS
 	var rightarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
 	var rightarrowicon = new Image();
 	rightarrowicon.src = rightarrow;
@@ -935,6 +1055,39 @@ function showMapMenu(type, node, evt) {
 
 	panel.innerHTML = "";
 
+	var mediaindex = node.getData('mediaindex');
+
+	var player = NODE_ARGS['mediaplayer'];
+	var currentindex = -1;
+	if (player) {
+		mediaPlayerPause()
+		currentindex = mediaPlayerCurrentIndex();
+	}
+
+	if (mediaindex >-1 && player && currentindex != mediaindex) {
+		var newnode = new Element("span", {'style':'cursor: pointer; margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_JUMP_HINT; ?>'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode.insert(nodeicon);
+		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
+		newnode.insert('<span class="active" style="padding-left:5px;"><?php echo $LNG->MAP_MEDIA_NODE_JUMP; ?></span>');
+		Event.observe(newnode,'click',function (){
+			hideBox('maparrowdiv');
+			if (toggleMediaBar) {
+				toggleMediaBar(true);
+			}
+			mediaPlayerSeek(mediaindex);
+		});
+
+		panel.insert(newnode);
+	} else if (mediaindex > -1 && player) {
+		var newnode = new Element("span", {'style':'margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode.insert(nodeicon);
+		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
+		panel.insert(newnode);
+	}
+
+	/*
 	var viewdetails = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_HINT; ?>'} );
 	viewdetails.insert("<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_LINK; ?>");
 	Event.observe(viewdetails,'click',function (evt){
@@ -952,6 +1105,7 @@ function showMapMenu(type, node, evt) {
 		viewUserHome(userid);
 	});
 	panel.insert(viewuser);
+	*/
 
 	/*var orinode = node.getData('orinode');
 	if (orinode.urls && orinode.urls.length > 0) {
@@ -983,7 +1137,6 @@ function showMapMenu(type, node, evt) {
 	adjustMenuPosition(panel, evt);
 	showBox('maparrowdiv');
 }
-
 
 function showURLMenu(node, evt) {
 	var panel = $('weblinkdiv');
@@ -1162,6 +1315,8 @@ function createMapNode(viewnode, node) {
 			"$connections":connections,
 			"$xpos":viewnode.xpos,
 			"$ypos":viewnode.ypos,
+			"$mediaindex":viewnode.mediaindex,
+			"$index":-1,
 			"$leftrec":new mapRectangle(0,0,0,0),
 			"$rightrec":new mapRectangle(0,0,0,0),
 			"$uprec":new mapRectangle(0,0,0,0),
@@ -1181,6 +1336,16 @@ function createMapNode(viewnode, node) {
 	};
 
 	return thisnode;
+}
+
+/**
+ * Compute positions incrementally and animate.
+ */
+function relayoutMap(graphview) {
+	var width = $(graphview.config.injectInto+'-outer').offsetWidth;
+	var height = $(graphview.config.injectInto+'-outer').offsetHeight;
+	clipInitialCanvas(graphview, width, height);
+	graphview.canvas.getPos(true);
 }
 
 /**
@@ -1264,4 +1429,139 @@ function getSelectLink(graphview) {
     }
 
 	return selectedLink;
+}
+
+/** MAP PLAYER FUNCTION **/
+
+function mapcreationdatenodesortasc(a, b) {
+	var nodeA = a.getData('orinode');
+	var nodeB = b.getData('orinode');
+	var nameA = nodeA.creationdate;
+	var nameB = nodeB.creationdate;
+	if (nameA < nameB) {
+		return -1;
+	}
+	if (nameA > nameB) {
+		return 1;
+	}
+	return 0 ;
+}
+
+/**
+ * sort map nodes by creationdate and assign indexes ready for replay
+ */
+function addMapNodeReplayIndexes(graphview) {
+	var sortArray = new Array();
+    for(var i in graphview.graph.nodes) {
+    	sortArray.push(graphview.graph.nodes[i]);
+    }
+
+	sortArray.sort(mapcreationdatenodesortasc);
+	var count = sortArray.length;
+	graphview.mapReplayMaxIndex = count;
+    for(var i=0; i<count; i++) {
+    	var n = sortArray[i];
+    	n.setData('index', i+1);
+    }
+}
+
+/**
+ * clear map nodes replay indexes
+ */
+function clearMapNodeReplayIndexes(graphview) {
+	graphview.mapReplayMaxIndex = 0;
+    for(var i in graphview.graph.nodes) {
+    	var n = graphview.graph.nodes[i];
+    	n.index = -1;
+    }
+}
+
+
+/** MEDIA PLAYER FUNCTION **/
+
+function mediaPlayerPlay() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.playVideo()) {
+			player.playVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.play();
+		} else {
+			player.play();
+		}
+	}
+}
+
+function mediaPlayerSeek(mediaindex) {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.seekTo) {
+			player.seekTo(mediaindex);
+			player.playVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.setCurrentTime(mediaindex).then(function(seconds) {
+				player.play();
+			});
+		} else {
+			player.currentTime = mediaindex;
+			player.play();
+		}
+	}
+}
+
+/*async function resolvePausePlayer() {
+	await player.pause();
+}*/
+
+function mediaPlayerPause() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.pauseVideo) {
+			player.pauseVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.pause()
+			//resolvePausePlayer();
+		} else {
+			player.pause();
+		}
+	}
+}
+
+/*
+var lastIndexFetched = 0.0;
+async function resolveCurrentIndex() {
+	lastIndexFetched = 0.0;
+	var player = NODE_ARGS['mediaplayer'];
+	try {
+		lastIndexFetched = await player.getCurrentTime();
+	}
+	catch (rejectedValue) {
+		console.log("rejectedValue: "+rejectedValue);
+	}
+}
+*/
+
+var currentindex = -1;
+
+function mediaPlayerCurrentIndex() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			//resolveCurrentIndex();
+			player.getCurrentTime().then(function(seconds) {
+			    currentindex = seconds;
+			}).catch(function(error) {
+			    currentindex = 0.0;
+			});
+			if (currentindex == -1) {
+				// I don't like this!
+				setTimeout(mediaPlayerCurrentIndex, 20);
+			}
+		} else if (player.getCurrentTime) {
+			currentindex = player.getCurrentTime();
+		} else {
+			currentindex = player.currentTime;
+		}
+	}
+	return currentindex;
 }

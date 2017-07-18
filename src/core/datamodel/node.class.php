@@ -1066,7 +1066,7 @@ class CNode {
            return access_denied_error();
         }
 
-        // check group not already in node
+        // check node not already in group
 		$params = array();
 		$params[0] = $this->nodeid;
 		$params[1] = $groupid;

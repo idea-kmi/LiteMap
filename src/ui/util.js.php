@@ -1699,3 +1699,55 @@ function getAlertHint(alerttype) {
 	}
 	return alertHint;
 }
+
+/**
+ * Pass in a file extension and return the audio/video type required for a html object setting.
+ * string @filetype mjust the file extension of the mvoie or audio wanting to be played.
+ * Currently done serverside - so this is not used.
+ */
+function getMediaMimeType(filetype){
+	var mimetype = '';
+	switch(filetype) {
+		case 'mp4':
+		case 'm4v':
+			mimetype = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+			break;
+		case 'ogg':
+		case 'ogv':
+			mimetype = 'video/ogg; codecs="theora, vorbis"';
+			break;
+		case 'webm':
+			mimetype = 'video/webm; codecs="vp8, vorbis"';
+			break;
+		case 'mp3':
+			mimetype = 'audio/mpeg';
+			break;
+	}
+	return mimetype;
+}
+
+/**
+ * string @mimetype the mimetype of the audio or video e.g. audio/mpeg
+ * string @container, video/audio
+ */
+function browserMediaSupport(mimetype, container) {
+	var elem = document.createElement(container);
+	if(typeof elem.canPlayType == 'function'){
+		var playable = elem.canPlayType(mimetype);
+		if((playable.toLowerCase() == 'maybe') ||(playable.toLowerCase() == 'probably')){
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Take a time in seconds and output 'minutes : seconds'
+ */
+function formatMovieTime(seconds) {
+	minutes = Math.floor(seconds / 60);
+	minutes = (minutes >= 10) ? minutes : "0" + minutes;
+	seconds = Math.floor(seconds % 60);
+	seconds = (seconds >= 10) ? seconds : "0" + seconds;
+	return minutes + ":" + seconds;
+}

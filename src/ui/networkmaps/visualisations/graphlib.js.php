@@ -112,6 +112,184 @@ function computeIntersectionWithRectangle(node, from, to) {
 }
 
 /**
+ * Returns the side of the rectagle the line will be on
+ *
+ * @param node the node whose Rectangle to check.
+ * @param from the origin point of the line to check.
+ * @param to the destination point of the line to check.
+ * @param pt the intersection point.
+ * @return Point the point the rectangle and line intersect, else null it they don not.
+ */
+function computeSideOfRectangle(node, from, to, pt) {
+
+	var edge = "";
+	var widthr = node.getData('width');
+	var heightr = node.getData('height');
+
+	var cpos = node.pos.getc(true);
+	var r = { x: cpos.x - widthr / 2, y: cpos.y - heightr / 2, width: node.getData('width'), height: node.getData('height')};
+
+	// need to set to fixed decimals otherwise they differ very slightly
+	// at the bottom end and then don not match an edge
+	var bottomY = parseFloat(cpos.y + (heightr / 2)).toFixed(12);
+	var topY = parseFloat(cpos.y - (heightr / 2)).toFixed(12);
+	var leftX = parseFloat(cpos.x - (widthr/2)).toFixed(12);
+	var rightX = parseFloat(cpos.x + (widthr/2)).toFixed(12);
+
+	var x = parseFloat(pt.x).toFixed(12);
+	var y = parseFloat(pt.y).toFixed(12);
+
+	if (y == bottomY) {
+		edge = "bottom";
+	} else if (y == topY) {
+		edge = "top";
+	} else if (x == leftX) {
+		edge = "left";
+	} else if (x == rightX) {
+		edge = "right";
+	}
+
+	/*
+	if (edge =="") {
+		console.log("bottomY :"+bottomY);
+		console.log("topY: "+topY);
+		console.log("leftX: "+leftX);
+		console.log("rightX: "+rightX);
+
+		console.log("pt.x: "+pt.x);
+		console.log("pt.y: "+pt.y);
+	}
+	*/
+	//console.log("edge: "+edge);
+
+	return edge;
+}
+
+/*
+function reduceLine(from, to, lineWidth) {
+
+	var width = 0;
+	if (to.x>from.x) {
+		width = to.x-from.x;
+	} else {
+		width = from.x-to.x;
+	}
+
+	var height = 0;
+	if (to.y>from.y) {
+		height = to.y-from.y;
+	} else {
+		height = from.y-to.y;
+	}
+
+	//double lineLength = Math.sqrt((width*width)+(height*height));
+	var positionAddition = lineWidth*2;
+	//if (lineLength <= 20) {
+	//	positionAddition = 2;
+	//}
+
+	var angleRads = Math.atan(height/width);
+	var newHeight = Math.sin(angleRads)*positionAddition;
+	var newWidth = Math.cos(angleRads)*positionAddition;
+
+	p1 = {"x":0, "y":0};
+
+	if (from.x < to.getX()) {
+		if (from.getY() > to.getY()) {
+			p1 = {"x":to.x-newWidth), "y":(to.y+newHeight)}; //Top-right quarter
+		} else {
+			p1 = {"x":(to.x-newWidth), "y":(to.y-newHeight)};   // Bottom-right quarter
+		}
+	} else {
+		if (from.getY() > to.getY()) {
+			p1 = {"x":(to.x+newWidth), "y":(to.y+newHeight)}; //Top-Left quarter
+		} else {
+			p1 = {"x":(to.x+newWidth), "y":(to.y-newHeight)}; // Bottom-Left quarter
+		}
+	}
+
+	return p1;
+}
+*/
+
+
+function drawArrow(context, a, b, width, orientation) {
+
+	var unitx;
+	var unity;
+
+	var xpts = new Array(3);
+	var ypts = new Array(3);
+
+	xpts[0]=b.x;
+	ypts[0]=b.y;
+
+	if (orientation == "HORIZONTAL") {
+		if ((b.x-a.x) > 0) {
+			unitx = width;
+		} else {
+			unitx = -width;
+		}
+
+		unity = (width/2);
+
+		xpts[1]=b.x-unitx;
+		ypts[1]=b.y-unity;
+		xpts[2]=b.x-unitx;
+		ypts[2]=b.y+unity;
+
+	} else if (orientation == "VERTICAL") {
+		unitx = (width/2);
+
+		if ((b.y-a.y) > 0)
+			unity = width;
+		else
+			unity = -width;
+
+		xpts[1]=b.x-unitx;
+		ypts[1]=b.y-unity;
+		xpts[2]=b.x+unitx;
+		ypts[2]=b.y-unity;
+
+	} else {
+		var hypo = Math.sqrt((a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y));
+		unitx = (width*(b.x-a.x)/hypo);
+		unity = (width*(b.y-a.y)/hypo);
+
+		xpts[1]=b.x-(unitx-unity/2);
+		ypts[1]=b.y-(unity+unitx/2);
+		xpts[2]=b.x-(unitx-unity/2+unity);
+		ypts[2]=b.y-(unity+unitx/2-unitx);
+	}
+
+	//console.log(xpts);
+	//console.log(ypts);
+
+	context.beginPath();
+	context.moveTo(xpts[0], ypts[0]);
+	context.lineTo(xpts[1], ypts[1]);
+	context.lineTo(xpts[2], ypts[2]);
+	context.closePath();
+	context.fill();
+}
+
+ /**
+  * Taken from: http://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
+  * Conserve aspect ratio of the orignal region. Useful when shrinking/enlarging
+  * images to fit into a certain area.
+  *
+  * @param {Number} srcWidth Source area width
+  * @param {Number} srcHeight Source area height
+  * @param {Number} maxWidth Fittable area maximum available width
+  * @param {Number} maxHeight Fittable area maximum available height
+  * @return {Object} { width, heigth }
+  */
+function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+    return { width: srcWidth*ratio, height: srcHeight*ratio };
+}
+
+/**
  * For breaking long words
  */
 function findSmallestString(word, maxWidth, context) {
@@ -474,6 +652,8 @@ function getBoundaries(graphview) {
 function printCanvas(graphview)  {
 	var canvas = graphview.canvas;
 	var size = canvas.getSize();
+	var newsize = size;
+
 	size.width = size.width;
 	size.height = size.height;
 
@@ -483,12 +663,13 @@ function printCanvas(graphview)  {
 	windowContent += '<body>';
 
 	if (canvas.canvases.length > 1) {
+		var rectangle = getBoundaries(graphview);
+
 		var printCanvas=document.createElement('canvas');
 		printCanvas.width=size.width;
 		printCanvas.height=size.height;
 		var printCtx=printCanvas.getContext('2d');
 
-		printCtx.drawImage(document.getElementById(graphview.config.injectInto+'-bkcanvas'),0,0,size.width,size.height);
 		printCtx.drawImage(document.getElementById(graphview.config.injectInto+'-canvas'),0,0,size.width,size.height);
 
 		// Get data for png image of map
@@ -496,12 +677,23 @@ function printCanvas(graphview)  {
 		windowContent += '<img src="' + dataUrl + '">';
 	} else {
 		var rectangle = getBoundaries(graphview);
-		var mapWidth = rectangle.width;
-		var mapHeight = rectangle.height;
+
+		var currentScale = canvas.scaleOffsetX;
+
+		// if the map is bigger than the canvas size we need to print all of it, so adjust the canvas size.
+		newsize.width = (rectangle.width * currentScale)+10;
+		newsize.height = (rectangle.height * currentScale)+10;
+
+		$(graphview.config.injectInto).style.width = newsize.width+"px";
+		$(graphview.config.injectInto).style.height = newsize.height+"px";
+		graphview.canvas.resize(newsize.width, newsize.height);
+		graphview.canvas.scale(currentScale, currentScale);
 
 		// Need to reposition the map to top corner so all map is printed
 		var nodePos = {x:rectangle.x, y:rectangle.y}
+
 		var	sx = canvas.scaleOffsetX;
+		console.log(canvas.scaleOffsetX);
 		var	sy = canvas.scaleOffsetY;
 		var	ox = canvas.translateOffsetX;
 		var oy = canvas.translateOffsetY;
@@ -513,38 +705,43 @@ function printCanvas(graphview)  {
 		var topY = 0 - (size.height/2);
 		var movementX = 0-(nodePos.x - topX);
 		var movementY = 0-(nodePos.y - topY);
+
 		canvas.translate(movementX*1/canvas.scaleOffsetX, movementY*1/canvas.scaleOffsetY);
 
 		// Get data for pn image of map
 		var dataUrl = document.getElementById(graphview.config.injectInto+'-canvas').toDataURL("image/png"); //get png of canvas
 		windowContent += '<img src="' + dataUrl + '">';
 
-		// Now restore previous location of map.
-		var reverseX = 0-movementX;
-		var reverseY = 0-movementY;
-		canvas.translate(reverseX*1/canvas.scaleOffsetX, reverseY*1/canvas.scaleOffsetY);
+		// adjust the map size back.
 
+		var correctedSize = newsize;
+		if (newsize.height< size.height) {
+			correctedSize.height - size.height;
+		}
+		if (newsize.width< size.width) {
+			correctedSize.width - size.width;
+		}
+
+		$(graphview.config.injectInto).style.width = correctedSize.width+"px";
+		$(graphview.config.injectInto).style.height = correctedSize.height+"px";
+		graphview.canvas.resize(correctedSize.width, correctedSize.height);
+		graphview.canvas.scale(currentScale, currentScale);
+
+		canvas.translate(movementX*1/canvas.scaleOffsetX, movementY*1/canvas.scaleOffsetY);
+
+		//var reverseX = movementX; // * currentScale; //0-(movementX/3); // * currentScale);
+		//var reverseY = movementY; // * currentScale; //0-(movementY/3); // * currentScale);
+		//canvas.translate(reverseX*1/canvas.scaleOffsetX, reverseY*1/canvas.scaleOffsetY);
+		//console.log("reverseX: "+reverseX);
+		//console.log("reverseY: "+reverseY);
 	}
-	/*windowContent += '<style type="text/css">';
-	windowContent += '@media print {';
-	windowContent += 'input#btnPrint {';
-	windowContent += 'display: none;';
-	windowContent += '}';
-	windowContent += '}';
-	windowContent += '</style>';
-	windowContent += '<input style="margin-left: 10px;" type="button" id="btnPrint" value=" <?php echo $LNG->FORM_BUTTON_PRINT_PAGE; ?> " onclick="window.print();return false;" />';
-	*/
 
 	windowContent += '</body>';
 	windowContent += '</html>';
-	var printWin = window.open('','','width='+size.width+',height='+size.height);
+	var printWin = window.open('','','width='+newsize.width+',height='+newsize.height);
 	printWin.document.open();
 	printWin.document.write(windowContent);
 	printWin.document.close();
-
-	//printWin.focus();
-	//printWin.print();
-	//printWin.close();
 }
 
 function computeMostConnectedNode(graphview) {

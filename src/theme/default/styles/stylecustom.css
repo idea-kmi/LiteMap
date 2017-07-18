@@ -867,10 +867,12 @@ hr.urldivider {
 
 .iconSelected {
     background:#D6D6D6;
+    border:  2px solid #80ba42;
 }
 
 .iconUnselected {
     background: transparent;
+    border: 2px solid transparent;
 }
 
 .search { position: relative; }

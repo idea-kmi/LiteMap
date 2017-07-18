@@ -331,11 +331,27 @@ if ($jsonld === FALSE) {
 
 				$group = getGroup($id);
 				if($group instanceof Error){
-					global $ERROR;
-					$ERROR = new error;
-					$ERROR->createGroupNotFoundError($id);
-					include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
-					die;
+					// Check if Users table has OriginalID field and if so check if this groupid is an old ID and adjust.
+					$params = array();
+					$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+					if ($resArray !== false) {
+						if (count($resArray) > 0) {
+							$array = $resArray[0];
+							if (isset($array['OriginalID'])) {
+								$params = array();
+								$params[0] = $id;
+								$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+								if ($resArray2 !== false) {
+									if (count($resArray2) > 0) {
+										$array2 = $resArray2[0];
+										$groupid = $array2['UserID'];
+										header("Location: ".$CFG->homeAddress."api/conversations/".$groupid);
+										die;
+									}
+								}
+							}
+						}
+					}
 				}
 
 				$group = getConversationData($id);

@@ -103,7 +103,7 @@ for ($i=0; $i<$count; $i++) {
 			$nodename = $array['Name'];
 			$nodetype = $array['NodeType'];
 
-			$as = getNodeActivity($nodeid, $followlastrun, false);
+			$as = getNodeActivity($nodeid, $followlastrun);
 			$activities = $as->activities;
 
 			if (count($activities) > 0) {
@@ -127,7 +127,7 @@ for ($i=0; $i<$count; $i++) {
 					$node['NodeType'] = $from->role->name;
 					$node['UserID'] = $from->users[0]->userid;
 
-					$as = getNodeActivity($from->nodeid, $followlastrun, false);
+					$as = getNodeActivity($from->nodeid, $followlastrun);
 					$activities = $as->activities;
 
 					if (count($activities) > 0) {

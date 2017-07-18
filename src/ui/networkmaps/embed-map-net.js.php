@@ -33,6 +33,8 @@ var DEBATE_TREE_OPEN_ARRAY = new Array();
 var DEBATE_TREE_SMALL = true;
 
 var positionedMap = null;
+var player = null;
+var baseSize = '';
 
 function loadExploreMapNet(){
 
@@ -82,6 +84,94 @@ function loadExploreMapNet(){
 	var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
 	$("network-map-div").insert(mapdetailsdiv);
 
+	// has to be added before it is used to put media player into
+	var outerDiv = new Element('div', {'id':'graphMapDiv-outer', 'style': 'display:block;border-top:1px solid gray;clear:both;float:left;width:100%;height100%;'});
+	$("network-map-div").insert(outerDiv);
+
+	var mediacontrol = null;
+	var mediaDiv = null
+
+	if (NODE_ARGS['media'] != "" || NODE_ARGS['youtubeid'] != "" || NODE_ARGS['vimeoid'] != "") {
+		if (NODE_ARGS['media'] && NODE_ARGS['media'] != "") {
+			var media = NODE_ARGS['media'];
+			var mimetype = NODE_ARGS['mimetype'];
+			//alert("mimetype"+mimetype);
+			var container = 'video';
+			if (mimetype.substring(0,5) == "audio") {
+				container = 'audio';
+			}
+			var supported = browserMediaSupport(mimetype, container);
+			NODE_ARGS['mediasupported'] = supported;
+			if (supported) {
+				var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color:black;margin:0 auto;width:500px;clear:both;float:left;overflow:hidden;display:none'});
+				if (container == 'video') {
+					player = new Element('video', {'id':'player', 'controls': 'true', 'width':NODE_ARGS['moviewidth'], 'height': NODE_ARGS['movieheight']});
+					var mediasource = new Element('source', {'src':media, 'type': mimetype});
+					mediasource.insert('<?php echo $LNG->MAP_MOVIE_ERROR; ?>');
+					player.insert(mediasource);
+					mediaDiv.insert(player);
+					NODE_ARGS['mediaplayer'] = player;
+				} else {
+					player = new Element('audio', {'style':'padding-top:10px;', 'id':'player', 'controls': 'true'});
+					var mediasource = new Element('source', {'src':media, 'type': mimetype});
+					mediasource.insert('<?php echo $LNG->MAP_AUDIO_ERROR; ?>');
+					player.insert(mediasource);
+					mediaDiv.insert(player);
+					NODE_ARGS['mediaplayer'] = player;
+				}
+
+				mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+				Event.observe(mediacontrol,"click", function(){
+					toggleMediaBar(false);
+				});
+
+				var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+				mediacontrol.insert(arrowimg);
+			}
+		} else if (NODE_ARGS['youtubeid'] != undefined && NODE_ARGS['youtubeid'] != "") {
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			outerDiv.insert(mediaDiv);
+
+			player = new YT.Player('mediaDiv', {
+				width: parseInt(NODE_ARGS['moviewidth']),
+				height: parseInt(NODE_ARGS['movieheight']),
+				videoId: NODE_ARGS['youtubeid'],
+				events: {
+					onReady: assignPlayer,
+				}
+			});
+
+			mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+			Event.observe(mediacontrol,"click", function(){
+				toggleMediaBar(false);
+			});
+
+			var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+			mediacontrol.insert(arrowimg);
+		} else if (NODE_ARGS['vimeoid'] != undefined && NODE_ARGS['vimeoid'] != "") {
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color: black; margin:0 auto; width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			outerDiv.insert(mediaDiv);
+
+			player = new Vimeo.Player('mediaDiv', {
+				width: parseInt(NODE_ARGS['moviewidth']),
+				height: parseInt(NODE_ARGS['movieheight']),
+				id: NODE_ARGS['vimeoid']
+			});
+
+			player.on('loaded', function() {
+				assignPlayer();
+			});
+
+			mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+			Event.observe(mediacontrol,"click", function(){
+				toggleMediaBar(false);
+			});
+
+			var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+			mediacontrol.insert(arrowimg);
+		}
+	}
+
 	/** ADD GRAPH **/
 	var graphDiv = new Element('div', {'id':'graphMapDiv', 'style': 'clear:both;float:left;overflow:hidden'});
 	var width = 4000;
@@ -92,11 +182,12 @@ function loadExploreMapNet(){
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerDiv = new Element('div', {'id':'graphMapDiv-outer', 'style': 'display:block;border-top:1px solid gray;clear:both;float:left;width:100%;height100%;'});
 	outerDiv.insert(messagearea);
+	if (mediaDiv && mediacontrol) {
+		outerDiv.insert(mediaDiv);
+		outerDiv.insert(mediacontrol);
+	}
 	outerDiv.insert(graphDiv);
-
-	$("network-map-div").insert(outerDiv);
 
 	var treeDiv = new Element('div', {'id':'treedata', 'style': 'float:left;height:100%;overflow:auto;background:white;display:none;border-top:1px solid gray;clear:both;float:left;'});
 	$("network-map-div").insert(treeDiv);
@@ -113,11 +204,81 @@ function loadExploreMapNet(){
 	toolbarDiv.insert(toolbar);
 	topBitDiv.insert({top: toolbarDiv});
 
+	baseSize = calulateInitialGraphViewport("network-map-div");
+ 	if ($('mediaDiv')) {
+ 		$('mediaDiv').style.width = baseSize.width+"px";
+ 		$('mediacontrolbar').style.width = baseSize.width+"px";
+ 	}
+
 	window.onresize = new function() {
 		setMapTreeSize();
 	};
 
 	loadMapData(positionedMap, toolbar, messagearea);
+
+	if (player) {
+		toggleMediaBar(true);
+		window.setInterval(refreshMapDrawing, 25);
+	}
+}
+
+var lasttime = 0;
+function refreshMapDrawing() {
+	if (player) {
+		var currenttime = mediaPlayerCurrentIndex();
+		if (currenttime != lasttime) {
+			lasttime = currenttime;
+			positionedMap.refresh();
+		}
+	}
+}
+
+function assignPlayer() {
+	NODE_ARGS['mediaplayer'] = player;
+	mediaPlayerPlay();
+    setTimeout(function () {
+		mediaPlayerSeek(0);
+    }, 1000);
+}
+
+function resizeMainArea(initial) {
+ 	var newwidth = baseSize.width-18;
+
+	if (newwidth == (baseSize.width-18)) {
+		newwidth = baseSize.width-14;
+	}
+
+	var width = newwidth;
+	var height = baseSize.height-44;
+	MAP_HEIGHT = height;
+
+ 	if ($('mediaDiv')) {
+ 		$('mediaDiv').style.width = width+"px";
+ 		$('mediacontrolbar').style.width = width+"px";
+ 	}
+
+	$('graphMapDiv-outer').style.width = width+"px";
+	$('graphMapDiv-outer').style.height = height+"px";
+
+	$('treedata').style.width = width+"px";
+	$('treedata').style.height = height+"px";
+
+	// important or all mouse events are off by the amount of the sidebar width.
+	if (positionedMap && !initial) {
+		relayoutMap(positionedMap);
+	}
+}
+
+function toggleMediaBar(openMe) {
+	if (openMe || $('mediaDiv').style.display == 'none') {
+		$('mediaDiv').style.display = 'block';
+		$('mediacontrolimage').src = '<?php echo $HUB_FLM->getImagePath("uparrowbig.gif"); ?>';
+		resizeMainArea(false);
+	} else if ($('mediaDiv').style.display == 'block') {
+		$('mediaDiv').style.display = 'none';
+		$('mediacontrolimage').src = '<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>';
+		resizeMainArea(false);
+	}
 }
 
 function setMapTreeSize() {

@@ -168,7 +168,8 @@ $LNG->MAP_CONNECTION_TEST_ERROR = 'NICHT ERLAUBT';
 $LNG->MAP_CHANGE_NODETYPE = 'wechseln';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE = 'Rollover -Titel';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT = 'Ein- und ausschalten , die die Post-Titel als Rollover- Hinweis angezeigt. Das ist gut für die Erkundung der Karte beim Verkleinern , aber vielleicht ärgerlich , wenn Sie eine '.$LNG->MAP_NAME.'.';
-$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Ein- und ausschalten, die die Link -Etiketten zeigen.';
+$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Ein- und Ausschalten mit den Link-Etiketten in dieser Karte';
+$LNG->MAP_LINK_CURVE_CHOICE_HINT = 'Ein- und Ausschalten mit gebogenen Links in dieser Karte';
 
 $LNG->FORM_MAP_ENTER_SUMMARY_ERROR = 'Bitte geben Sie einen '.$LNG->MAP_NAME.' titel ein, bevor Sie speichern anklicken';
 $LNG->LOADING_MAPS = '(Wird geladen'.$LNG->MAPS_NAME.'...)';
@@ -818,7 +819,8 @@ $LNG->HELP_BUILDER_WARNING = "HINWEIS: Aufgrund von Änderungen der Sicherheitse
 							Facebook und Twitter sind zwei Beispiele davon, die diese Richtlinie umgesetzt haben.
 							Auf diesen Seiten wird unser Bookmarklet nicht funktionieren. Das Bookmarklet wird dort geblockt und es kann daher der Eindruck enstehen, dass es nicht mehr funktioniert.
 							Die meisten Webseiten nutzen diese neue Einstellung nicht und das Bookmarklet wird dort nach wie vor funktionieren.
-							Wir sind derzeit schriftlich Browser spezifische Erweiterungen, mit diesem Problem zu helfen (siehe unten)";
+							Ihr Browser kann auch das Bookmarklet blockieren, so dass Sie Ihren Browser außer Kraft zu setzen Einstellung Mai haben, um es zu arbeiten.
+							Wir sind derzeit schriftlich Browser spezifische Erweiterungen, mit diesem Problem zu helfen (siehe unten).";
 
 /** MAIN TAB SCREENS - TABBERLIB **/
 $LNG->TAB_ADD_MAP_LINK = $LNG->MAP_NAME.' hinzufügen';
@@ -962,4 +964,46 @@ $LNG->TAB_PRINT_TITLE_COMMENT = 'LiteMap: '.$LNG->COMMENTS_NAME.' Liste';
 $LNG->TAB_PRINT_TITLE_EVIDENCE = 'LiteMap: '.$LNG->ARGUMENTS_NAME.' Liste';
 $LNG->TAB_PRINT_TITLE_MAP = 'LiteMap: '.$LNG->MAPS_NAME.' Liste';
 $LNG->TAB_PRINT_TITLE_RESOURCE = 'LiteMap: '.$LNG->RESOURCES_NAME.' Liste';
+
+/** MEDIA MAPPING **/
+$LNG->MAP_MEDIA_LABEL = "Medien Url";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL = "Oder YouTube-Film";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON = "Von YouTube importieren";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR = "Entfernen";
+
+$LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL = "Oder Vimeo Movie";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON = "Von Vimeo importieren";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR = "Entfernen";
+
+$LNG->MAP_MOVIE_WIDTH_LABEL = "Filmbreite";
+$LNG->MAP_MOVIE_HEIGHT_LABEL = "Filmhöhe";
+
+$LNG->MAP_MEDIA_HELP = "Fügen Sie der Karte eine Film- oder Tondateur-URL hinzu. Sie können dann Knoten als Zeiger auf Zeitstempel in diesem Medium kommentieren";
+$LNG->MAP_MOVIE_WIDTH_HELP = "Legen Sie die bevorzugte Breite fest, um den Film in der Karte anzuzeigen";
+$LNG->MAP_MOVIE_HEIGHT_HELP = "Legen Sie die bevorzugte Höhe fest, um den Film in der Karte anzuzeigen";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Klicken Sie auf die Schaltfläche \'Von YouTube importieren\', um Ihren YouTube-Film einzuschaden. Die Breite, die Höhe und die Film-ID werden extrahiert und verwendet, um den Film in die Karte zu laden.";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Füge deinen YouTube-Film \'Embed\' Code ein:";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Klicken Sie auf die Schaltfläche \'Von Vimeo importieren\', um Ihren Vimeo-Film einzuschaden. Die Breite, die Höhe und die Film-ID werden extrahiert und verwendet, um den Film in die Karte zu laden.";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Füge deinen Vimeo-Film \'Embed\' Code ein:";
+
+$LNG->MAP_MEDIA_NODE_JUMP_HINT = "Springe zur angegebenen Medienindexzeit";
+$LNG->MAP_MEDIA_NODE_JUMP = "Springen";
+$LNG->MAP_MEDIA_NODE_MEDIAINDEX = "Medienindex: ";
+$LNG->MAP_MEDIA_NODE_ASSIGN_HINT = "Zugeordnete Medienindexzeit dem Knoten zuordnen";
+$LNG->MAP_MEDIA_NODE_ASSIGN = "Index zuordnen: ";
+$LNG->MAP_MEDIA_NODE_REMOVE_HINT = "Entfernen Sie die Medienindexzeit von diesem Knoten";
+$LNG->MAP_MEDIA_NODE_REMOVE = "Index entfernen";
+$LNG->MAP_MEDIA_MODE_HINT = "Toggle Map Media Replay-Modus: Wenn auf, werden die Knoten nur nach ihrer Medien-Index-Zeit erscheinen.";
+
+// Map Replay
+$LNG->MAP_REPLAY_SPEED_UNITS = "ms";
+$LNG->MAP_REPLAY_SPEED_UNITS_HINT = "Bitte geben Sie die Wiedergabegeschwindigkeit in Millisekunden größer als Null an";
+$LNG->MAP_REPLAY_PLAY_HINT = "Wiederholen Sie die Karte auf der Grundlage von Erstellungsdaten";
+$LNG->MAP_REPLAY_PAUSE_HINT = "Pausieren Sie die Kartenwiedergabe";
+$LNG->MAP_REPLAY_BACK_HINT = "Zurück in die Wiederholung";
+$LNG->MAP_REPLAY_FORWARD_HINT = "Vorwärts bewegen in der Wiedergabe";
+$LNG->MAP_REPLAY_SPEED_ERROR  = "Bitte stellen Sie sicher, dass der Geschwindigkeitswert eine gültige Anzahl von Millisekunden größer als Null ist";
+$LNG->MAP_REPLAY_MODE_HINT = "Den Kartenwiedergabemodus umschalten: Wenn auf, werden die Knoten nach ihrem Erstellungsdatum sortiert und Sie erhalten Steuerelemente, um die Karte mit einer bestimmten Geschwindigkeit wiederzugeben.";
 ?>

@@ -35,16 +35,6 @@ function drawLineToPointer(fd, fromNode, e, pos, toNode, isCon) {
 	var from = computeIntersectionWithRectangle(fromNode, orifrom, pos);
 	var to = pos;
 
-	var dim = 14; //adj.getData('dim');
-	var vect = new $jit.Complex(to.x - from.x, to.y - from.y);
-	vect.$scale(dim / vect.norm());
-	var posVect = vect;
-	var intermediatePoint = new $jit.Complex(to.x - posVect.x, to.y - posVect.y);
-	var normal = new $jit.Complex(-vect.y / 2, vect.x / 2);
-	var endPoint = intermediatePoint.add(vect);
-	var v1 = intermediatePoint.add(normal);
-	var v2 = intermediatePoint.$add(normal.$scale(-1));
-
 	var context = fd.canvas.getCtx();
 
 	if (toNode && (toNode.id != fromNode.id) && !checkLinkNodes(fromNode, toNode)) {
@@ -87,13 +77,7 @@ function drawLineToPointer(fd, fromNode, e, pos, toNode, isCon) {
 	context.stroke();
 
 	// Arrow head
-	context.beginPath();
-	context.moveTo(v1.x, v1.y);
-	context.moveTo(v1.x, v1.y);
-	context.lineTo(v2.x, v2.y);
-	context.lineTo(endPoint.x, endPoint.y);
-	context.closePath();
-	context.fill();
+	drawArrow(context, from, to, 15, "FREE");
 }
 
 $jit.PositionedMapping.Plot.EdgeTypes.implement({
@@ -102,6 +86,27 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 		'render': function(adj, canvas) {
 			var orifrom = adj.nodeFrom.pos.getc(true);
 			var orito = adj.nodeTo.pos.getc(true);
+
+			var player = NODE_ARGS['mediaplayer'];
+			if (player) {
+				var fromoffset = parseFloat(adj.nodeFrom.getData('mediaindex'));
+				var tooffset = parseFloat(adj.nodeTo.getData('mediaindex'));
+
+				var currenttime = mediaPlayerCurrentIndex();
+				if (positionedMap.mediaReplayMode) {
+					if ((fromoffset >=0 && currenttime < fromoffset) || (tooffset >=0 && currenttime < tooffset)) {
+						return;
+					}
+				}
+			} else {
+				if (positionedMap.mapReplayMode) {
+					var fromIndex = parseInt(adj.nodeFrom.getData('index'));
+					var toIndex = parseInt(adj.nodeTo.getData('index'));
+					if ((fromIndex > positionedMap.mapReplayCurrentIndex) || (toIndex > positionedMap.mapReplayCurrentIndex)) {
+						return;
+					}
+				}
+			}
 
 			//alert("fromNode = "+adj.nodeTo.pos.getc(true));
 			//alert("toNode = "+adj.nodeFrom.pos.getc(true));
@@ -117,34 +122,24 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 				from = orifrom
 			}
 
-			var dim = adj.getData('dim');
+			var toEdge = computeSideOfRectangle(adj.nodeTo, orito, orifrom, to);
+			var fromEdge = computeSideOfRectangle(adj.nodeFrom, orifrom, orito, from);
+
 			var direction = adj.data.$direction;
 			var swap = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
 
 			var context = canvas.getCtx();
 			context.globalCompositeOperation='destination-over';
 
-			// invert edge direction
+			// invert edge direction and box side to edge
 			if (swap) {
 				var tmp = from;
+				var tmp2 = fromEdge;
+				fromEdge = toEdge;
 				from = to;
 				to = tmp;
+				toEdge = tmp2;
 			}
-
-			//var orifromrole = adj.nodeFrom.getData('orirole');
-			//var oritorole = adj.nodeTo.getData('orirole');
-
-			//alert("from="+orifromrole.name);
-			//alert("to="+oritorole.name);
-
-			var vect = new $jit.Complex(to.x - from.x, to.y - from.y);
-			vect.$scale(dim / vect.norm());
-			var posVect = vect;
-			var intermediatePoint = new $jit.Complex(to.x - posVect.x, to.y - posVect.y);
-			var normal = new $jit.Complex(-vect.y / 2, vect.x / 2);
-			var endPoint = intermediatePoint.add(vect);
-			var v1 = intermediatePoint.add(normal);
-			var v2 = intermediatePoint.$add(normal.$scale(-1));
 
 			var currentFill = context.fillStyle;
 
@@ -154,20 +149,82 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 				context.lineWidth = 3;
 			}
 
-			//line
-			context.beginPath();
-			context.moveTo(from.x, from.y);
-			context.lineTo(to.x, to.y);
-			context.stroke();
+			//draw line
+			var isReallyNonLinear = false;
+			if (positionedMap.linkCurveOn) {
+				isReallyNonLinear = true;
+			}
 
-			// Arrow head
-			context.beginPath();
-			context.moveTo(v1.x, v1.y);
-			context.moveTo(v1.x, v1.y);
-			context.lineTo(v2.x, v2.y);
-			context.lineTo(endPoint.x, endPoint.y);
-			context.closePath();
-			context.fill();
+			var deltaX = to.x - from.x;
+			var deltaY = to.y - from.y;
+			if ((Math.abs(deltaX) < 20) || (Math.abs(deltaY) < 20)) {
+				isReallyNonLinear = false; //under 10 pixels, ‘linear’ mode is always used
+			}
+
+			if (isReallyNonLinear) {
+
+				// Middle point
+				var middle = {"x":(from.x + to.x)/2, "y":(from.y + to.y)/2};
+				var arrowOrientation = "";
+
+				var x1 = 0, y1 = 0, x2 = 0, y2 = 0, x3 = 0, y3 = 0, x4 = 0, y4 = 0;
+
+				if (toEdge == "bottom" || toEdge == "top") {
+					arrowOrientation = "VERTICAL";
+					x1 = from.x; y1 = from.y;
+					x2 = from.x; y2 = middle.y;
+					x3 = to.x; 	y3 = middle.y;
+					x4 = to.x;
+					x5 = to.x;
+					y5 = to.y;
+					// Adjust for arrow
+					if (toEdge == "bottom") {
+						y4 = to.y+15;
+					} else {
+						y4 = to.y-15;
+					}
+				} else { //if (toEdge == "left" || toEdge == "right") { // edge does not come back empty anymore
+					arrowOrientation = "HORIZONTAL";
+					x1 = from.x; y1 = from.y;
+					x2 = middle.x; y2 = from.y;
+					x3 = middle.x; 	y3 = to.y;
+					x5 = to.x;
+					y5 = to.y
+					//adjust for arrow
+					if (toEdge == "left") {
+						x4 = to.x-15;
+					} else if (toEdge == "right") {
+						x4 = to.x+15;
+					} else {
+						x4 = to.x;
+					}
+					y4 = to.y;
+				}
+
+				//console.log("to edge:"+toEdge+" toNode="+adj.nodeTo.name+" y="+y4);
+				//console.log("from edge:"+fromEdge+" fromNode="+adj.nodeFrom.name+" y="+y1);
+
+				var newTo = {"x":x4, "y":y4};
+				var newToArrow = {"x":x5, "y":y5};
+				var newFrom = {"x":x1,"y":y1};
+
+				context.beginPath();
+				context.moveTo(x1, y1);
+				context.bezierCurveTo(x2, y2, x3, y3, x4, y4);
+				context.stroke();
+
+				// Arrow head
+				drawArrow(context, newFrom, newToArrow, 15, arrowOrientation);
+
+			} else {
+				context.beginPath();
+				context.moveTo(from.x, from.y);
+				context.lineTo(to.x, to.y);
+				context.stroke();
+
+				// Arrow head
+				drawArrow(context, from, to, 15, "FREE");
+			}
 
 			// Link Text
 			if (positionedMap.linkLabelTextOn) {
@@ -214,51 +271,45 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 $jit.PositionedMapping.Plot.NodeTypes.implement({
     'cohere': {
 		'render': function(node, canvas){
+
+			var player = NODE_ARGS['mediaplayer'];
+			var offset = parseFloat(node.getData('mediaindex'));
+			var currenttime = mediaPlayerCurrentIndex();
+			if (player) {
+				if (positionedMap.mediaReplayMode) {
+					if (offset >= 0 && currenttime < offset ) {
+						return;
+					}
+				}
+			} else {
+				if (positionedMap.mapReplayMode) {
+					var index = parseInt(node.getData('index'));
+					if (index > positionedMap.mapReplayCurrentIndex) {
+						return;
+					}
+				}
+			}
+
 			var context = canvas.getCtx();
 			context.globalCompositeOperation='source-over';
 
 			var width = node.getData('width');
-			var height = node.getData('height')+10;
+			var height = node.getData('height');
 			var finalpos = node.pos.getc(true);
 			var pos = { x: finalpos.x - width / 2, y: finalpos.y - height / 2};
 
 			var nodeFillStyle = context.fillStyle;
 
-			//context.fillStyle = '#cccccc';
-			//context.strokeStyle = '#cccccc';
-			// border around box
-
 			context.fillStyle = '#ffffff';
-			var nodeboxX = (finalpos.x - width / 2)+8;
-			var nodeboxY = (finalpos.y - height / 2)+4;
+			var nodeboxX = (finalpos.x - width / 2);
+			var nodeboxY = (finalpos.y - height / 2);
 
-			var nodeboxWidth = width-16;
-			var nodeboxHeight = height-12;
+			var nodeboxWidth = width;
+			var nodeboxHeight = height;
 
 			context['fill' + 'Rect'](nodeboxX, nodeboxY, nodeboxWidth, nodeboxHeight);
 			var mainRect = new mapRectangle(nodeboxX, nodeboxY, nodeboxWidth, nodeboxHeight);
 			node.setData('mainrec', mainRect);
-
-			if (node.id == NODE_ARGS['nodeid']) {
-				context.strokeStyle = '#606060';
-				context.lineWidth = 3;
-				context['stroke' + 'Rect']( (finalpos.x - width /  2)+6, (finalpos.y - height / 2)+2,
-					width-12, height);
-			} else {
-				context.lineWidth="1";
-				context.strokeStyle='#E8E8E8'//nodeFillStyle;
-				context.fillStyle = '#E8E8E8'//nodeFillStyle;
-				context['stroke' + 'Rect']( (finalpos.x - width / 2)+8, (finalpos.y - height / 2)+4,
-					width-16, height-4);
-			}
-
-			if (node.selected) {
-				context.strokeStyle = '#FFFF40';
-				context.lineWidth = 3;
-				context['stroke' + 'Rect']( (finalpos.x - width / 2)+6, (finalpos.y - height / 2)+2,
-					width-12, height);
-			}
-
 
 			context.fillStyle = context.strokeStyle = '#000000';
 			context.font = "12px Arial";
@@ -317,7 +368,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 						node.setData('iconrec', iconRect);
 					};
 				}
-			} else { */
+			} else {*/
 				var roleicon = "";
 				if (orirole.name == 'Issue' ) {
 					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue64px.png'); ?>');
@@ -378,6 +429,15 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 				}
 			}
 
+			// TOOLBAR
+
+			var oldfill = context.fillStyle;
+			context.fillStyle = nodeFillStyle; //'#E8E8E8';
+			context['fill' + 'Rect'](nodeboxX, pos.y+height-20, nodeboxWidth, 20);
+			context.fillStyle = oldfill;
+
+			var currentX = nodeboxX+3;
+
 			// PRIVATE PADLOCK
 			var private = orinode.private;
 			if (private == "Y") {
@@ -385,49 +445,43 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 				context.drawImage(padlockicon, nodeboxX+22, pos.y+42,18,18);
 			}
 
-			// TOOLBAR
-			var oldfill = context.fillStyle;
-			context.fillStyle = nodeFillStyle; //'#E8E8E8';
-			context['fill' + 'Rect'](nodeboxX, pos.y+height-18, nodeboxWidth, 18);
-			context.fillStyle = oldfill;
-
-			var currentX = nodeboxX+3;
-
 			// TRANSCLUSION NUMBER
 			var mapcount = orinode.mapcount;
 			if (mapcount > 1) {
 				var currentFont = context.font;
 				context.font = "bold 10pt Arial";
 				if(navigator.userAgent.indexOf("Firefox") != -1 ) {
-					context.fillText(mapcount, currentX, pos.y+height-13);
-					var viewRect = new mapRectangle(currentX, pos.y+height-13, 10, 12);
-				} else {
 					context.fillText(mapcount, currentX, pos.y+height-15);
 					var viewRect = new mapRectangle(currentX, pos.y+height-15, 10, 12);
+				} else {
+					context.fillText(mapcount, currentX, pos.y+height-17);
+					var viewRect = new mapRectangle(currentX, pos.y+height-17, 10, 12);
 				}
 				node.setData('viewrec', viewRect);
 				currentX = currentX+16;
 				context.font = currentFont;
 			}
 
+			// EXPLORE.
 			var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
-			context.drawImage(descicon, currentX, pos.y+height-16, 15, 15);
-			var descRect = new mapRectangle(currentX, pos.y+height-16, 15, 15);
+			context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+			var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
 			node.setData('descrec', descRect);
 			currentX = currentX+20;
 
 			// LINKS
 			if (orinode.urls && orinode.urls.length > 0) {
 				var	linkicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('link.png'); ?>');
-				context.drawImage(linkicon, currentX, pos.y+height-16,16,16);
-				var linkRect = new mapRectangle(currentX, pos.y+height-16, 16, 16);
+				context.drawImage(linkicon, currentX, pos.y+height-18,16,16);
+				var linkRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
 				node.setData('linkrec', linkRect);
 				currentX = currentX+20;
 			}
 
+			// NODE IN MAP URL
 			var	urlicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('link2.png'); ?>");
-			context.drawImage(urlicon, currentX, pos.y+height-17,16,16);
-			var urlRect = new mapRectangle(currentX, pos.y+height-17, 16, 16);
+			context.drawImage(urlicon, currentX, pos.y+height-19,16,16);
+			var urlRect = new mapRectangle(currentX, pos.y+height-19, 16, 16);
 			node.setData('urlrec', urlRect);
 			currentX = currentX+22;
 
@@ -468,16 +522,16 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 					if(USER && USER != "" && NODE_ARGS['caneditmap'] == 'true'){
 						if (orinode.uservotefor && orinode.uservotefor == 'Y') {
 							var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-up-filled-32.png'); ?>');
-							context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+							context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 						} else if (!orinode.uservotefor || orinode.uservotefor != 'Y') {
 							var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-up-empty-32.png'); ?>');
-							context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+							context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 						}
-						var voteRect = new mapRectangle(currentX, pos.y+height-17, 16, 16);
+						var voteRect = new mapRectangle(currentX, pos.y+height-19, 16, 16);
 						node.setData('voteforrec', voteRect);
 					} else {
 						var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-up-grey-32.png'); ?>');
-						context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+						context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 					}
 
 					currentX = currentX+17;
@@ -487,9 +541,9 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 						orinode.positivevotes = 0;
 					}
 					if(navigator.userAgent.indexOf("Firefox") != -1 ) {
-						context.fillText(orinode.positivevotes, currentX, pos.y+height-12);
-					} else {
 						context.fillText(orinode.positivevotes, currentX, pos.y+height-14);
+					} else {
+						context.fillText(orinode.positivevotes, currentX, pos.y+height-16);
 					}
 					currentX = currentX+13;
 
@@ -497,16 +551,16 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 					if(USER && USER != "" && NODE_ARGS['caneditmap'] == 'true'){
 						if (orinode.uservoteagainst && orinode.uservoteagainst == 'Y') {
 							var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-down-filled-32.png'); ?>');
-							context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+							context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 						} else if (!orinode.uservoteagainst || orinode.uservoteagainst != 'Y') {
 							var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-down-empty-32.png'); ?>');
-							context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+							context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 						}
-						var voteRect = new mapRectangle(currentX, pos.y+height-17, 16, 16);
+						var voteRect = new mapRectangle(currentX, pos.y+height-19, 16, 16);
 						node.setData('voteagainstrec', voteRect);
 					} else {
 						var	votehand = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('thumb-down-grey-32.png'); ?>');
-						context.drawImage(votehand, currentX, pos.y+height-17,16,16);
+						context.drawImage(votehand, currentX, pos.y+height-19,16,16);
 					}
 
 					currentX = currentX+17;
@@ -516,9 +570,9 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 						orinode.negativevotes = 0;
 					}
 					if(navigator.userAgent.indexOf("Firefox") != -1 ) {
-						context.fillText(orinode.negativevotes, currentX, pos.y+height-12);
-					} else {
 						context.fillText(orinode.negativevotes, currentX, pos.y+height-14);
+					} else {
+						context.fillText(orinode.negativevotes, currentX, pos.y+height-16);
 					}
 
 					currentX = currentX+15;
@@ -528,59 +582,72 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			// EDIT / REMOVE ICON - php determins if you can edit the map.
 			if (USER && USER != "" && NODE_ARGS['caneditmap'] == 'true' && USER == user.userid) {
 				var	editicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('edit-32.png'); ?>');
-				context.drawImage(editicon, currentX, pos.y+height-16,16,16);
-				var editRect = new mapRectangle(currentX, pos.y+height-16, 16, 16);
+				context.drawImage(editicon, currentX, pos.y+height-18,16,16);
+				var editRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
 				node.setData('editrec', editRect);
 				currentX = currentX+18;
 			}
 
 			if (USER && USER != "" && NODE_ARGS['caneditmap'] == 'true' && orirole.name != "Challenge") {
 				var	deleteicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('delete-32.png'); ?>');
-				context.drawImage(deleteicon, currentX, pos.y+height-16,16,16);
-				var deleteRect = new mapRectangle(currentX, pos.y+height-16, 16, 16);
+				context.drawImage(deleteicon, currentX, pos.y+height-18,16,16);
+				var deleteRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
 				node.setData('deleterec', deleteRect);
 				currentX = currentX+20;
 			}
 
 			// MENU ARROW
-			//var oldfill = context.fillStyle;
-			//context.fillStyle = '#E8E8E8';
-			//context['fill' + 'Rect'](nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
-			//context.fillStyle = oldfill;
-
-			if (USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') {
+			var mediaindex = node.getData('mediaindex');
+			var player = NODE_ARGS['mediaplayer'];
+			if ((USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') || (mediaindex >-1 && player)) {
 				var downarrowRect = new mapRectangle(nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
 				node.setData('downrec', downarrowRect);
 				var downarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
 				var downarrowicon = positionedMap.graph.getImage(downarrow);
 				if (downarrowicon.complete) {
-					context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-17, 16, 17);
+					context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-19, 16, 17);
 				} else {
 					downarrowicon.onload = function () {
-						context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-17, 16, 17);
+						context.drawImage(downarrowicon, nodeboxX+nodeboxWidth-17, pos.y+height-19, 16, 17);
 					};
 				}
-
-				/*
-				var rightarrow = '<?php echo $HUB_FLM->getImagePath('rightarrow.gif'); ?>';
-				var rightarrowicon = positionedMap.graph.getImage(rightarrow);
-				context.drawImage(rightarrowicon, pos.x+(width-8), pos.y+((height/2)-8), 8, 16);
-				var rightarrowRect = new mapRectangle(pos.x+(width-8), pos.y+((height/2)-8), 8, 16);
-				node.setData('rightrec', rightarrowRect);
-
-				var leftarrow = '<?php echo $HUB_FLM->getImagePath('leftarrow.gif'); ?>';
-				var leftarrowicon = positionedMap.graph.getImage(leftarrow);
-				context.drawImage(leftarrowicon, pos.x, pos.y+((height/2)-8), 8, 16);
-				var leftarrowRect = new mapRectangle(pos.x, pos.y+((height/2)-8), 8, 16);
-				node.setData('leftrec', leftarrowRect);
-
-				var uparrow = '<?php echo $HUB_FLM->getImagePath('uparrow.gif'); ?>';
-				var uparrowicon = positionedMap.graph.getImage(uparrow);
-				context.drawImage(uparrowicon, pos.x+((width/2)-8), pos.y, 16, 8);
-				var uparrowRect = new mapRectangle(pos.x+((width/2)-8), pos.y, 16, 8);
-				node.setData('uprec', uparrowRect);
-				*/
 			}
+
+			// End menu bar
+
+			// Draw Borders when required
+			if (node.id == NODE_ARGS['nodeid']) {
+				context.strokeStyle = '#606060';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width /  2), (finalpos.y - height / 2),
+					width2, height);
+			} else {
+				context.lineWidth="1";
+				context.strokeStyle='#E8E8E8'//nodeFillStyle;
+				context.fillStyle = '#E8E8E8'//nodeFillStyle;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			if (node.selected) {
+				context.strokeStyle = '#FFFF40';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			if ( (player && offset >=0 && currenttime >= offset && currenttime < (offset + 3.0))
+					|| (positionedMap.mapReplayMode && parseInt(node.getData('index')) == positionedMap.mapReplayCurrentIndex) ) {
+				context.strokeStyle = '#8080FF';
+				context.lineWidth = 3;
+				context['stroke' + 'Rect']( (finalpos.x - width / 2), (finalpos.y - height / 2),
+					width, height);
+			}
+
+			context.fillStyle = context.strokeStyle = '#000000';
+			context.font = "12px Arial";
+			context.textBaseline = 'top';
+
 
 			// add user image using nodebox position/size
 			/*var user = node.getData('oriuser');
@@ -631,7 +698,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 				if (roleicon.complete) {
 					var imgheight = roleicon.height;
 					var imgwidth = roleicon.width;
-					var imghid = nodeboxHeight-18;
+					var imghid = nodeboxHeight-30;
 					var imgwid = maxWidth;
 					var size = calculateAspectRatioFit(imgwidth,imgheight, imgwid, imghid);
 					context.drawImage(roleicon, nodeboxX+45, nodeboxY+5, size.width, size.height);
@@ -643,7 +710,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 					roleicon.onload = function () {
 						var imgheight = roleicon.height;
 						var imgwidth = roleicon.width;
-						var imghid = nodeboxHeight-18;
+						var imghid = nodeboxHeight-30;
 						var imgwid = maxWidth;
 						var size = calculateAspectRatioFit(imgwidth,imgheight, imgwid, imghid);
 						context.drawImage(roleicon, nodeboxX+45, nodeboxY+5, size.width, size.height);
@@ -676,22 +743,6 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 		}
 	}
 });
-
- /**
-  * Taken from: http://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
-  * Conserve aspect ratio of the orignal region. Useful when shrinking/enlarging
-  * images to fit into a certain area.
-  *
-  * @param {Number} srcWidth Source area width
-  * @param {Number} srcHeight Source area height
-  * @param {Number} maxWidth Fittable area maximum available width
-  * @param {Number} maxHeight Fittable area maximum available height
-  * @return {Object} { width, heigth }
-  */
-function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-    return { width: srcWidth*ratio, height: srcHeight*ratio };
-}
 
 function createNewMap(containername, rootNodeID, backgroundImagePath) {
 	var backgroundObject = false;
@@ -730,7 +781,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 		Node: {
 			overridable: true,
 			type: "cohere",
-			height: 75,
+			height: 85,
 			width: 216,
 			nodetype: "",
 			orinode: null,
@@ -743,6 +794,8 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 			connections:{},
 			xpos: 0,
 			ypos: 0,
+			mediaindex:-1,
+			index:-1,
 			leftrec:null,
 			rightrec:null,
 			uprec:null,
@@ -793,17 +846,13 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 				return;
 			},
 			onMouseMove: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 
 				var isLink = node.nodeFrom ? true : false;
 				if (!isLink) {
 					var pos = eventInfo.getPos();
-
-					//var leftarrowRec = node.getData('leftrec');
-					//var rightarrowRec = node.getData('rightrec');
-					//var uparrowRec = node.getData('uprec');
 
 					var downarrowRec = node.getData('downrec');
 					var mainRec = node.getData('mainrec');
@@ -889,7 +938,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 
 			onMouseLeave: function(node, eventInfo, e) {
 				fd.canvas.getElement().style.cursor = '';
-				if (!node) return;
+				if (!node || fd.mapReplayMode) return;
 
 				hideBox('maparrowdiv');
 				hideBox('maphintdiv');
@@ -898,7 +947,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 
 			onDragStart: function(node, eventInfo, e) {
 				//console.log("onDragStart:"+node.id);
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 				// Do not want right-click to activate a node drag
@@ -928,7 +977,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 
 			onDragMove: function(node, eventInfo, e) {
 				//alert("onDragMove");
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 				var isLink = node.nodeFrom ? true : false;
@@ -1012,7 +1061,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 
 			onDragEnd: function(node, eventInfo, e) {
 				//alert("onDragEnd");
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					return;
 				}
 
@@ -1111,8 +1160,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 			onRightClick: function(node, eventInfo, e) {
 				e.preventDefault();
 
-				//alert("fred");
-				//return false;
+				if (fd.mapReplayMode) { return; }
 
 				if (!node) {
 					var pos = eventInfo.getPos();
@@ -1140,7 +1188,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 			},
 
 			onClick: function(node, eventInfo, e) {
-				if (!node) {
+				if (!node || fd.mapReplayMode) {
 					clearSelectedMapLinks(fd);
 					clearSelectedMapNodes(fd);
 					hideBox('maparrowdiv');
@@ -1234,24 +1282,18 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 							var checkNodes = new Array();
 							selectNodeTree(checkNodes, fd, node.id);
 							fd.refresh();
+						} else if (e.shiftKey) {
+							if (toggleMediaBar) {
+								toggleMediaBar(true);
+							}
+							var mediaindex = node.getData('mediaindex');
+							if (mediaindex > -1) {
+								mediaPlayerSeek(mediaindex);
+							}
 						} else {
 							clearSelectedMapNodes(fd);
 							node.selected = true;
 							hideBox('maparrowdiv');
-
-							/*var nodeid = node.id;
-							var orirole = node.getData('orirole');
-							if (orirole.name == "Map") {
-								var width = getWindowWidth()-50;
-								var height = getWindowHeight()-50;
-								loadDialog('map', URL_ROOT+"map.php?id="+nodeid, width,height);
-							} else {
-								var orinode = node.getData('orinode');
-								var orirole = node.getData('orirole');
-								var position = getPosition($(fd.config.injectInto+'-outer'));
-								viewNodeDetailsDiv(nodeid, orirole.name, orinode, e, position.x+30, position.y+30);
-							}
-							*/
 							fd.refresh();
 						}
 
@@ -1296,28 +1338,16 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 
 	fd.rolloverTitles = true;
 	fd.linkLabelTextOn = true;
+	fd.linkCurveOn = false;
+
+	fd.mediaReplayMode = false;
+
+	fd.mapReplayMode = false;
+	fd.mapReplayCurrentIndex = -1;
+	fd.mapReplayInterval = getReplaySpeed(); // milliseconds;
+	fd.mapReplayMaxIndex = 0;
 
 	fd.graph = new $jit.Graph(fd.graphOptions, fd.config.Node, fd.config.Edge, fd.config.Label);
-
-	//var rightarrow = '<?php echo $HUB_FLM->getImagePath('rightarrow.gif'); ?>';
-	//var rightarrowicon = new Image();
-	//rightarrowicon.src = rightarrow;
-	//fd.graph.addImage(rightarrowicon);
-
-	//var leftarrow = '<?php echo $HUB_FLM->getImagePath('leftarrow.gif'); ?>';
-	//var leftarrowicon = new Image();
-	//leftarrowicon.src = leftarrow;
-	//fd.graph.addImage(leftarrowicon);
-
-	//var uparrow = '<?php echo $HUB_FLM->getImagePath('uparrow.gif'); ?>';
-	//var uparrowicon = new Image();
-	//uparrowicon.src = uparrow;
-	//fd.graph.addImage(uparrowicon);
-
-	//var downarrow = '<?php echo $HUB_FLM->getImagePath('downarrowbig.gif'); ?>';
-	//var downarrowicon = new Image();
-	//downarrowicon.src = downarrow;
-	//fd.graph.addImage(downarrowicon);
 
 	// PRELOAD TOOLBAR ICONS
 	var rightarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
@@ -1466,6 +1496,8 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 		e.stopPropagation();
 
 		//alert(nodeid);
+
+ 		if (fd.mapReplayMode) { return true; }
 
 		if (nodeid == 'Pro' || nodeid == 'Con' || nodeid == 'Issue' || nodeid == 'Solution' || nodeid == 'Argument' || nodeid == 'Idea') {
 			var pos = getMousePosition(fd, e);
@@ -1851,10 +1883,48 @@ function deleteConnectionFromMap(link) {
 			}
 		},
 		onFailure: function(transport) {
-			alert("FAILED");
+			alert("Failed to update position");
 		}
 	});
 }
+
+function updateNodeMediaIndex(node, mapid, nodeid, userid, mediaindex) {
+
+	// If no one is logged in, or they do not have permissions do not bother sending position move.
+	// it will just be rejected.
+	if (!USER || USER == "" || !NODE_ARGS['caneditmap'] == 'true') {
+		return;
+	}
+
+	var reqUrl = SERVICE_ROOT + "&method=editviewnodemediaindex";
+	reqUrl += "&viewid="+ encodeURIComponent(mapid);
+	reqUrl += "&nodeid="+ encodeURIComponent(nodeid);
+	reqUrl += "&userid="+ encodeURIComponent(userid);
+	reqUrl += "&mediaindex="+ encodeURIComponent(mediaindex);
+
+	//alert(reqUrl);
+
+	new Ajax.Request(reqUrl, { method:'post',
+		onSuccess: function(transport){
+
+			var json = transport.responseText.evalJSON();
+			//alert(transport.responseText);
+
+			if(json.error){
+				//alert(json.error[0].message);
+				return;
+			}
+
+			node.setData('mediaindex', mediaindex);
+			// repaint to show blue border
+			positionedMap.refresh();
+		},
+		onFailure: function(transport) {
+			alert("Failed to update MediaIndex");
+		}
+	});
+}
+
 
 function updateNodePosition(mapid, nodeid, userid, xpos, ypos) {
 
@@ -1864,7 +1934,7 @@ function updateNodePosition(mapid, nodeid, userid, xpos, ypos) {
 		return;
 	}
 
-	var reqUrl = SERVICE_ROOT + "&method=editviewnode";
+	var reqUrl = SERVICE_ROOT + "&method=editviewnodeposition";
 	reqUrl += "&viewid="+ encodeURIComponent(mapid);
 	reqUrl += "&nodeid="+ encodeURIComponent(nodeid);
 	reqUrl += "&userid="+ encodeURIComponent(userid);
@@ -1894,7 +1964,6 @@ function updateNodePosition(mapid, nodeid, userid, xpos, ypos) {
 	});
 }
 
-
 function addExistingNodeToMap(mapid, fromnodeid, tonodeid, linktypename, xpos, ypos) {
 
 	var reqUrl = SERVICE_ROOT + "&method=addnodetoviewandconnect";
@@ -1918,6 +1987,12 @@ function addExistingNodeToMap(mapid, fromnodeid, tonodeid, linktypename, xpos, y
 	}
 	if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "") {
 		reqUrl += "&groupid="+NODE_ARGS['groupid'];
+	}
+
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		var currenttime = mediaPlayerCurrentIndex();
+		reqUrl += "&mediaindex="+currenttime;
 	}
 
 	/** Needs this later to redraw the cnnection tree **/
@@ -2012,6 +2087,11 @@ function addBlankNodeToMapFloating(nodetype, position) {
 		reqUrl += "&private=N"; // get default from Map privacy setting.
 		reqUrl += "&xpos="+posx;
 		reqUrl += "&ypos="+posy;
+		var player = NODE_ARGS['mediaplayer'];
+		if (player) {
+			var currenttime = mediaPlayerCurrentIndex();
+			reqUrl += "&mediaindex="+currenttime;
+		}
 
 		if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "") {
 			reqUrl += "&groupid="+NODE_ARGS['groupid'];
@@ -2072,6 +2152,11 @@ function addSelectedNodeToMapFloating(newnodeid, nodeid, position, type) {
 		reqUrl += "&nodeid="+ encodeURIComponent(newnodeid);
 		reqUrl += "&xpos="+posx;
 		reqUrl += "&ypos="+posy;
+		var player = NODE_ARGS['mediaplayer'];
+		if (player) {
+			var currenttime = mediaPlayerCurrentIndex();
+			reqUrl += "&mediaindex="+currenttime;
+		}
 
 		if (NODE_ARGS['groupid'] && NODE_ARGS['groupid'] != "") {
 			reqUrl += "&groupid="+NODE_ARGS['groupid'];
@@ -2550,11 +2635,69 @@ function showMapMenu(graphview, type, node, evt) {
 
 	panel.innerHTML = "";
 
+	var mediaindex = node.getData('mediaindex');
+	var player = NODE_ARGS['mediaplayer'];
+
+	// pause player
+	mediaPlayerPause();
+	var currentindex = mediaPlayerCurrentIndex();
+
+	if (mediaindex >-1 && player && currentindex != mediaindex) {
+		var newnode = new Element("span", {'style':'cursor: pointer; margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_JUMP_HINT; ?>'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode.insert(nodeicon);
+		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
+		newnode.insert('<span class="active" style="padding-left:5px;"><?php echo $LNG->MAP_MEDIA_NODE_JUMP; ?></span>');
+		Event.observe(newnode,'click',function (){
+			hideBox('maparrowdiv');
+			if (toggleMediaBar) {
+				toggleMediaBar(true);
+			}
+			mediaPlayerSeek(mediaindex);
+		});
+
+		panel.insert(newnode);
+	} else if (mediaindex > -1 && player) {
+		var newnode = new Element("span", {'style':'margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode.insert(nodeicon);
+		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
+		panel.insert(newnode);
+	}
+
 	// To modify a map you need to be logged in and if the map is in a group, you need to be in the group
 	if (USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') { 		// && rolename != "Pro" && rolename != "Con") {
 
 		if (NODE_ARGS) {
 			NODE_ARGS['blockednodeids'] = getMapNodeString(positionedMap);
+		}
+
+		if (player) {
+			if (player && currentindex != mediaindex) {
+				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN_HINT; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN; ?>"+formatMovieTime(currentindex));
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, currentindex)
+				});
+				panel.insert(newnode);
+			}
+
+			if (mediaindex && mediaindex != -1 && mediaindex != "") {
+				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_REMOVE_HINT; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_REMOVE; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, -1);
+				});
+				panel.insert(newnode);
+			}
+
+			panel.insert(createMenuSpacerSoftCompact());
 		}
 
 		if (rolename == "Challenge") {
@@ -2690,7 +2833,6 @@ function showMapMenu(graphview, type, node, evt) {
 			connectSelectedNodesToMe(graphview, node);
 		});
 		panel.insert(connecttoselected);
-
 	}
 
 	adjustMenuPosition(panel, evt);
@@ -2700,7 +2842,6 @@ function showMapMenu(graphview, type, node, evt) {
 function showViewMenu(node, evt, graphview) {
 	var panel = $('maparrowdiv');
 	panel.innerHTML = "";
-
 	var fromnodeid = node.id;
 
 	var innerpanel = new Element("div", {'style':'float:left;width:100%;height:100%;'} );
@@ -2796,6 +2937,10 @@ function showURLMenu(node, evt) {
 }
 
 function showCanvasMenu(evt, graphview, pos) {
+
+	// pause player
+	mediaPlayerPause();
+
 	var panel = $('maparrowdiv');
 	panel.innerHTML = "";
 
@@ -3389,6 +3534,8 @@ function createMapNode(viewnode, node) {
 			"$connections":connections,
 			"$xpos":viewnode.xpos,
 			"$ypos":viewnode.ypos,
+			"$mediaindex":viewnode.mediaindex,
+			"$index":-1,
 			"$leftrec":new mapRectangle(0,0,0,0),
 			"$rightrec":new mapRectangle(0,0,0,0),
 			"$uprec":new mapRectangle(0,0,0,0),
@@ -3609,4 +3756,139 @@ function mapKeyPressed(evt) {
 			}
 		}
 	}
+}
+
+
+/** MAP PLAYER FUNCTION **/
+
+function mapcreationdatenodesortasc(a, b) {
+	var nodeA = a.getData('orinode');
+	var nodeB = b.getData('orinode');
+	var nameA = nodeA.creationdate;
+	var nameB = nodeB.creationdate;
+	if (nameA < nameB) {
+		return -1;
+	}
+	if (nameA > nameB) {
+		return 1;
+	}
+	return 0 ;
+}
+
+/**
+ * sort map nodes by creationdate and assign indexes ready for replay
+ */
+function addMapNodeReplayIndexes(graphview) {
+	var sortArray = new Array();
+    for(var i in graphview.graph.nodes) {
+    	sortArray.push(graphview.graph.nodes[i]);
+    }
+
+	sortArray.sort(mapcreationdatenodesortasc);
+	var count = sortArray.length;
+	graphview.mapReplayMaxIndex = count;
+    for(var i=0; i<count; i++) {
+    	var n = sortArray[i];
+    	n.setData('index', i+1);
+    }
+}
+
+/**
+ * clear map nodes replay indexes
+ */
+function clearMapNodeReplayIndexes(graphview) {
+	graphview.mapReplayMaxIndex = 0;
+    for(var i in graphview.graph.nodes) {
+    	var n = graphview.graph.nodes[i];
+    	n.index = -1;
+    }
+}
+
+/** MEDIA PLAYER FUNCTION **/
+
+function mediaPlayerPlay() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.playVideo()) {
+			player.playVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.play();
+		} else {
+			player.play();
+		}
+	}
+}
+
+function mediaPlayerSeek(mediaindex) {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.seekTo) {
+			player.seekTo(mediaindex);
+			player.playVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.setCurrentTime(mediaindex).then(function(seconds) {
+				player.play();
+			});
+		} else {
+			player.currentTime = mediaindex;
+			player.play();
+		}
+	}
+}
+
+/*async function resolvePausePlayer() {
+	await player.pause();
+}*/
+
+function mediaPlayerPause() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (player.pauseVideo) {
+			player.pauseVideo();
+		} else if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			player.pause()
+			//resolvePausePlayer();
+		} else {
+			player.pause();
+		}
+	}
+}
+
+/*
+var lastIndexFetched = 0.0;
+async function resolveCurrentIndex() {
+	lastIndexFetched = 0.0;
+	var player = NODE_ARGS['mediaplayer'];
+	try {
+		lastIndexFetched = await player.getCurrentTime();
+	}
+	catch (rejectedValue) {
+		console.log("rejectedValue: "+rejectedValue);
+	}
+}
+*/
+
+var currentindex = -1;
+
+function mediaPlayerCurrentIndex() {
+	var player = NODE_ARGS['mediaplayer'];
+	if (player) {
+		if (NODE_ARGS['vimeoid'] && NODE_ARGS['vimeoid'] != "") {
+			//resolveCurrentIndex();
+			player.getCurrentTime().then(function(seconds) {
+			    currentindex = seconds;
+			}).catch(function(error) {
+			    currentindex = 0.0;
+			});
+			if (currentindex == -1) {
+				// I do not like this!
+				setTimeout(mediaPlayerCurrentIndex, 20);
+			}
+		} else if (player.getCurrentTime) {
+			currentindex = player.getCurrentTime();
+		} else {
+			currentindex = player.currentTime;
+		}
+	}
+	return currentindex;
 }

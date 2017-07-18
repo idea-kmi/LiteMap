@@ -239,31 +239,31 @@ echo "</script>";
 	<div style="float: right; height:100%;width:195px; margin-left: -210px; padding: 5px;">
 		<div style="float:left;height:100%;">
 			<fieldset class="plainborder" style="clear:both;margin-bottom:35px;margin-top:5px;">
-			<legend><h2><?php echo $LNG->GROUP_MEMBERS_LABEL; ?></h2></legend>
+				<legend><h2><?php echo $LNG->GROUP_MEMBERS_LABEL; ?></h2></legend>
 				<div style="clear:both;float:left;width:100%;margin:0px;padding:0px;height:100px;overflow-y:auto">
 				<?php
 					foreach($members as $u){
 						echo "<a href='user.php?userid=".$u->userid."' title='".$u->name."'><img style='padding:5px;' border='0' src='".$u->thumb."'/></a>";
 					}
 				?>
-				<div>
-			<div style="float:left;width:100%;margin:0px;padding:px;margin-top:5px;margin-bottom:10px;">
-				<?php if (isset($USER->userid) && isGroupPendingMember($groupid,$USER->userid)) { ?>
-					<span><?php echo $LNG->GROUP_JOIN_PENDING_MESSAGE; ?><img style="margin-left:7px;" src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" onmouseover="showGlobalHint('PendingMember', event, 'hgrhint')" onmouseout="hideHints()" border="0" /></span>
-				<?php } else if (isset($USER->userid) && !isGroupMember($groupid,$USER->userid)) {
-					if ($group->isopenjoining == 'Y') { ?>
-						<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
-							<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-							<input class="submitleft" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup">
-						</form>
-					<?php } else if ($group->isopenjoining == 'N' && !isGroupRejectedMember($groupid,$USER->userid) && !isGroupReportedMember($groupid,$USER->userid)) {  ?>
-						<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
-							<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-							<input class="submitleft" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup">
-						</form>
+				</div>
+				<div style="float:left;width:100%;margin:0px;padding:px;margin-top:5px;margin-bottom:10px;">
+					<?php if (isset($USER->userid) && isGroupPendingMember($groupid,$USER->userid)) { ?>
+						<span><?php echo $LNG->GROUP_JOIN_PENDING_MESSAGE; ?><img style="margin-left:7px;" src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" onmouseover="showGlobalHint('PendingMember', event, 'hgrhint')" onmouseout="hideHints()" border="0" /></span>
+					<?php } else if (isset($USER->userid) && !isGroupMember($groupid,$USER->userid)) {
+						if ($group->isopenjoining == 'Y') { ?>
+							<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
+								<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+								<input class="submitleft" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup">
+							</form>
+						<?php } else if ($group->isopenjoining == 'N' && !isGroupRejectedMember($groupid,$USER->userid) && !isGroupReportedMember($groupid,$USER->userid)) {  ?>
+							<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
+								<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+								<input class="submitleft" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup">
+							</form>
+						<?php } ?>
 					<?php } ?>
-				<?php } ?>
-			</div>
+				</div>
 			</fieldset>
 
 			<fieldset class="plainborder">

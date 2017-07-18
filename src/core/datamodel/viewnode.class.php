@@ -37,6 +37,7 @@ class ViewNode {
     public $ypos = 0;
     public $creationdate;
     public $modificationdate;
+    public $mediaindex = -1;
 
     /**
      * Constructor
@@ -84,6 +85,7 @@ class ViewNode {
 					$this->ypos = $array['YPos'];
 					$this->creationdate = $array['CreationDate'];
 					$this->modificationdate = $array['ModificationDate'];
+					$this->mediaindex = $array['MediaIndex'];
 					$this->node = new CNode($this->nodeid);
 					$this->node = $this->node->load($style);
 				}
@@ -102,9 +104,10 @@ class ViewNode {
      * @param string $nodeid the id of the node this ViewNode instance refers to
      * @param string $xpos the x position of the node in this view (optional defaults to 0)
      * @param string $ypos the y position of the node in this view (optional defaults to 0).
+     * @param float $mediaindex and associated movie index (optional defaults to -1)
      * @return ViewNode object (this) (or Error object)
      */
-    function add($viewid, $nodeid, $xpos, $ypos){
+    function add($viewid, $nodeid, $xpos, $ypos, $mediaindex = -1){
         global $DB,$CFG,$USER,$HUB_SQL;
 
         try {
@@ -130,6 +133,7 @@ class ViewNode {
 		    	$this->userid = $resArray[0]["UserID"];
 		    	$this->xpos = $resArray[0]["XPos"];
 		    	$this->ypos = $resArray[0]["YPos"];
+		    	$this->mediaindex = $resArray[0]["MediaIndex"];
 			} else {
 				$dt = time();
 
@@ -141,6 +145,7 @@ class ViewNode {
 				$params[4] = $ypos;
 				$params[5] = $dt;
 				$params[6] = $dt;
+				$params[7] = $mediaindex;
 
 				$res = $DB->insert($HUB_SQL->DATAMODEL_VIEWNODE_ADD, $params);
 				if (!$res) {
@@ -151,7 +156,7 @@ class ViewNode {
 					$this->userid = $currentuser;
 					$this->load();
 
-					auditViewNode($USER->userid, $this->viewid, $this->nodeid, $xpos, $ypos, $CFG->actionAdd);
+					auditViewNode($USER->userid, $this->viewid, $this->nodeid, $xpos, $ypos, $CFG->actionAdd, $mediaindex);
 				}
 			}
 		} else {
@@ -162,14 +167,14 @@ class ViewNode {
     }
 
     /**
-     * Edit a viewnode record
+     * Edit a viewnode record for change of position
      *
      * @param string $xpos the x position of the node in this view (optional defaults to 0)
      * @param string $ypos the y position of the node in this view (optional defaults to 0).
      *
      * @return Node object (this) (or Error object)
      */
-    function edit($xpos=0, $ypos=0){
+    function editPosition($xpos=0, $ypos=0){
         global $CFG,$DB,$USER,$HUB_SQL;
 
         try {
@@ -192,7 +197,44 @@ class ViewNode {
 		if (!$res) {
 			return database_error();
 		} else {
-        	auditViewNode($USER->userid, $this->viewid, $this->nodeid, $xpos, $ypos, $CFG->actionEdit);
+        	auditViewNode($USER->userid, $this->viewid, $this->nodeid, $xpos, $ypos, $CFG->actionEdit, $this->mediaindex);
+		}
+
+		$this->load();
+
+        return $this;
+    }
+
+    /**
+     * Edit a viewnode record for change of media index
+     *
+     * @param float $mediaindex and associated movie index (optional defaults to -1)
+     *
+     * @return Node object (this) (or Error object)
+     */
+    function editMediaIndex($mediaindex = -1){
+        global $CFG,$DB,$USER,$HUB_SQL;
+
+        try {
+            $this->canedit();
+        } catch (Exception $e){
+            return access_denied_error();
+        }
+
+		$dt = time();
+
+		$params = array();
+		$params[0] = $dt;
+		$params[1] = $mediaindex;
+		$params[2] = $this->viewid;
+		$params[3] = $this->nodeid;
+		$params[4] = $this->userid;
+
+		$res = $DB->insert($HUB_SQL->DATAMODEL_VIEWNODE_MEDIAINDEX_EDIT, $params);
+		if (!$res) {
+			return database_error();
+		} else {
+        	auditViewNode($USER->userid, $this->viewid, $this->nodeid, $this->xpos, $this->ypos, $CFG->actionEdit, $mediaindex);
 		}
 
 		$this->load();
@@ -222,7 +264,7 @@ class ViewNode {
 		$params[2] = $this->userid;
 		$res = $DB->delete($HUB_SQL->DATAMODEL_VIEWNODE_DELETE, $params);
         if ($res) {
-            auditViewNode($USER->userid, $this->viewid, $this->nodeid, $this->xpos, $this->ypos, $CFG->actionDelete);
+            auditViewNode($USER->userid, $this->viewid, $this->nodeid, $this->xpos, $this->ypos, $CFG->actionDelete, $this->mediaindex);
         } else {
             return database_error();
         }

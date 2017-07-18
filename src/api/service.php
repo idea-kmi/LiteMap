@@ -635,7 +635,8 @@ switch($method) {
 		$xpos = required_param('xpos',PARAM_TEXT);
 		$ypos = required_param('ypos',PARAM_TEXT);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-        $response = addNodeToView($viewid,$nodeid,$xpos, $ypos, $groupid);
+        $mediaindex = optional_param('mediaindex',"-1.0",PARAM_NUMBER);
+        $response = addNodeToView($viewid,$nodeid,$xpos, $ypos, $mediaindex, $groupid);
 		break;
 	case "addnewnodetoview":
 		$viewid = required_param('viewid',PARAM_ALPHANUMEXT);
@@ -645,7 +646,8 @@ switch($method) {
 		$xpos = required_param('xpos',PARAM_TEXT);
 		$ypos = required_param('ypos',PARAM_TEXT);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-        $response = addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $groupid);
+        $mediaindex = optional_param('mediaindex',"-1.0",PARAM_NUMBER);
+        $response = addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $mediaindex, $groupid);
 		break;
 	case "addnodetoviewandconnect":
 		$viewid = required_param('viewid',PARAM_ALPHANUMEXT);
@@ -656,15 +658,24 @@ switch($method) {
         $linktypename = required_param('linktypename',PARAM_TEXT);
         $direction = optional_param('direction','from',PARAM_ALPHA);
         $groupid = optional_param('groupid',"",PARAM_ALPHANUMEXT);
-		$response = addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $groupid);
+        $mediaindex = optional_param('mediaindex',"-1.0",PARAM_NUMBER);
+		$response = addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $mediaindex, $groupid);
 		break;
-    case "editviewnode":
+    case "editviewnodeposition":
         $userid = required_param('userid',PARAM_ALPHANUMEXT);
         $viewid = required_param('viewid',PARAM_ALPHANUMEXT);
         $nodeid = required_param('nodeid',PARAM_ALPHANUMEXT);
 		$xpos = required_param('xpos',PARAM_TEXT);
 		$ypos = required_param('ypos',PARAM_TEXT);
-        $response = editViewNode($viewid,$nodeid,$userid,$xpos,$ypos);
+        $response = editViewNodePosition($viewid,$nodeid,$userid,$xpos,$ypos);
+        break;
+    case "editviewnodemediaindex":
+        $userid = required_param('userid',PARAM_ALPHANUMEXT);
+        $viewid = required_param('viewid',PARAM_ALPHANUMEXT);
+        $nodeid = required_param('nodeid',PARAM_ALPHANUMEXT);
+        $mediaindex = optional_param('mediaindex',"-1.0",PARAM_NUMBER);
+        error_log("sent:"+$mediaindex);
+        $response = editViewNodeMediaIndex($viewid,$nodeid,$userid,$mediaindex);
         break;
 	case "removenodefromview":
         $userid = required_param('userid',PARAM_ALPHANUMEXT);

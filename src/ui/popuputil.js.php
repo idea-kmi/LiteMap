@@ -100,7 +100,6 @@ function showFormHint(type, evt, panelName, extra) {
 	} else if (type == "CommentDesc") {
 		$("resourceMessage").insert('<?php echo $LNG->COMMENT_DESC_FORM_HINT; ?>');
 
-
 	// URLs
 	} else if (type == "URLs") {
 		$("resourceMessage").insert('<?php echo $LNG->RESOURCES_FORM_HINT; ?>');
@@ -122,6 +121,18 @@ function showFormHint(type, evt, panelName, extra) {
 		$("resourceMessage").insert('<?php echo $LNG->MAP_PRIVATE_FORM_HINT_GROUP; ?>');
  	} else if (type == "MapGroup") {
 		$("resourceMessage").insert('<?php echo $LNG->MAP_FORM_ADD_TO_GROUP_HINT; ?>');
+
+	// Movie Maps
+ 	} else if (type == "MapMedia") {
+		$("resourceMessage").insert('<?php echo $LNG->MAP_MEDIA_HELP; ?>');
+ 	} else if (type == "MapMovieWidth") {
+		$("resourceMessage").insert('<?php echo $LNG->MAP_MOVIE_WIDTH_HELP; ?>');
+ 	} else if (type == "MapMovieHeight") {
+		$("resourceMessage").insert('<?php echo $LNG->MAP_MOVIE_HEIGHT_HELP; ?>');
+ 	} else if (type == "MapImportYouTubeMedia") {
+ 		$("resourceMessage").insert('<?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP; ?>');
+ 	} else if (type == "MapImportVimeoMedia") {
+ 		$("resourceMessage").insert('<?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_HELP; ?>');
 
 	// REMOTE FORMS
  	} else if (type == "RemoteEvidenceSolution") {

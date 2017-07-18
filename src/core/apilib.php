@@ -4318,12 +4318,23 @@ function addView($name,$desc,$private="",$nodetypeid="",$groupid="", $xpos=0, $y
     return $view;
 }
 
-function editViewNode($viewid,$nodeid,$userid,$xpos,$ypos) {
+
+function editViewNodePosition($viewid,$nodeid,$userid,$xpos,$ypos) {
     global $USER;
 
 	$viewnode = new ViewNode($viewid,$nodeid,$userid);
 	if (isset($viewnode) && !$viewnode instanceof Error) {
-		$viewnode = $viewnode->edit($xpos,$ypos);
+		$viewnode = $viewnode->editPosition($xpos,$ypos);
+	}
+	return $viewnode;
+}
+
+function editViewNodeMediaIndex($viewid,$nodeid,$userid,$mediaindex=-1) {
+    global $USER;
+
+	$viewnode = new ViewNode($viewid,$nodeid,$userid);
+	if (isset($viewnode) && !$viewnode instanceof Error) {
+		$viewnode = $viewnode->editMediaIndex($mediaindex);
 	}
 	return $viewnode;
 }
@@ -4432,15 +4443,16 @@ function removeConnectionFromView($viewid,$connid,$userid) {
  * @param string $nodeid
  * @param string $xpos.
  * @param string $ypos.
+ * @param string $mediaindex (optional) a movie indec related to this node in this view, default -1.
  * @param string $groupid (optional) the id of the group to add the node to.
  *
  * @return ViewNode or Error
  */
-function addNodeToView($viewid,$nodeid,$xpos, $ypos, $groupid=""){
+function addNodeToView($viewid,$nodeid,$xpos, $ypos, $mediaindex=-1, $groupid=""){
     global $USER;
 
     $v = new View($viewid);
-    $viewnode = $v->addNode($nodeid, $xpos, $ypos);
+    $viewnode = $v->addNode($nodeid, $xpos, $ypos, $mediaindex);
 	if (!$viewnode instanceof Error) {
 		if (isset($groupid) && $groupid != "") {
 			$group = new Group($groupid);
@@ -4481,11 +4493,12 @@ function addNodeToView($viewid,$nodeid,$xpos, $ypos, $groupid=""){
  * @param string $private
  * @param int $xpos.
  * @param int $ypos.
+ * @param string $mediaindex (optional) a movie indec related to this node in this view, default -1.
  * @param string $groupid (optional) the id of the group to add the node to.
  *
  * @return ViewNode or Error
  */
-function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $groupid=""){
+function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $mediaindex=-1, $groupid=""){
     global $USER;
 
 	$r = getRoleByName($rolename);
@@ -4494,7 +4507,7 @@ function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $group
 
 	if (!$node instanceof Error) {
 	    $v = new View($viewid);
-		$viewnode = $v->addNode($node->nodeid, $xpos, $ypos);
+		$viewnode = $v->addNode($node->nodeid, $xpos, $ypos, $mediaindex);
 		if (!$viewnode instanceof Error) {
 			if (isset($groupid) && $groupid != "") {
 				$group = new Group($groupid);
@@ -4534,11 +4547,12 @@ function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $group
  * @param string $nodeid
  * @param string $xpos.
  * @param string $ypos.
+ * @param string $mediaindex (optional) a movie indec related to this node in this view, default -1.
  * @param string $groupid (optional) the id of the group to add the node to.
  *
  * @return View with new node and connection in or Error
  */
-function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $groupid=""){
+function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$linktypename,$direction, $mediaindex=-1, $groupid=""){
     global $USER;
 
 	// make sure current user in group, if group set.
@@ -4560,7 +4574,7 @@ function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$link
 		}
 
 		$view = new View($viewid);
-		$viewnode = $view->addNode($nodeid, $xpos, $ypos);
+		$viewnode = $view->addNode($nodeid, $xpos, $ypos, $mediaindex);
 		if (!$viewnode instanceof Error) {
 
 			// Connect to focal node

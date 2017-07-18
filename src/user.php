@@ -45,6 +45,29 @@
 	$userid = optional_param("userid",$USER->userid,PARAM_ALPHANUMEXT);
 	$user = getUser($userid,'long');
 	if($user instanceof Error){
+   		// Check if Users table has OriginalID field and if so check if this userid is an old ID and adjust.
+		$params = array();
+		$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
+		if ($resArray !== false) {
+			if (count($resArray) > 0) {
+				$array = $resArray[0];
+				if (isset($array['OriginalID'])) {
+					$params = array();
+					$params[0] = $userid;
+					$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
+					if ($resArray2 !== false) {
+						if (count($resArray2) > 0) {
+							$array2 = $resArray2[0];
+							$userid = $array2['UserID'];
+							header("Location: ".$CFG->homeAddress."user.php?userid=".$userid);
+							die;
+						}
+					}
+				}
+			}
+		}
+    }
+	if($user instanceof Error){
 		echo "<h1>".$LNG->ERROR_USER_NOT_FOUND_MESSAGE." : ".$userid."</h1>";
 		include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 		die;

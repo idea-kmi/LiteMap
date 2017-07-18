@@ -184,6 +184,33 @@ $args["groupid"] = $groupid;
 $args["nodetype"] = $nodetype;
 $args["title"] = $node->name;
 $args["backgroundImage"] = $node->getNodeProperty('background');
+
+$media = $node->getNodeProperty('media');
+if (isset($media) && $media != "") {
+	$args["media"] = $media;
+	$mimetype = $node->getNodeProperty('mediatype');
+	if (isset($mimetype)) {
+		$args["mimetype"] = $mimetype;
+	}
+} else {
+	$youtubeid = $node->getNodeProperty('youtubeid');
+	if (isset($youtubeid) && $youtubeid != "") {
+		$args["youtubeid"] = $youtubeid;
+	} else {
+		$vimeoid = $node->getNodeProperty('vimeoid');
+		if (isset($vimeoid) && $vimeoid != "") {
+			$args["vimeoid"] = $vimeoid;
+		}
+	}
+}
+
+$moviesize = $node->getNodeProperty('moviesize');
+if (isset($moviesize)) {
+	$size = explode(':', $moviesize);
+	$args["moviewidth"] = (int)$size[0];
+	$args["movieheight"] = (int)$size[1];
+}
+
 $args["start"] = $start;
 $args["max"] = $max;
 $args["mode"] = '';
@@ -285,12 +312,12 @@ Event.observe(window, 'load', function() {
 					<?php if ($group->isopenjoining == 'Y') {?>
 						<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
 							<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-							<input class="mainfont active submitleft" style="font-size:11pt; border: none; background: transparent;padding-right:5px;" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup"></input><?php echo $LNG->MAP_GROUP_JOIN_GROUP; ?>
+							<input class="mainfont active submitleft" style="font-size:11pt; border: none; background: transparent;padding-right:5px;" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup" /><?php echo $LNG->MAP_GROUP_JOIN_GROUP; ?>
 						</form>
 					<?php } else if ($group->isopenjoining == 'N' && !isGroupRejectedMember($groupid,$USER->userid) && !isGroupReportedMember($groupid,$USER->userid)) {  ?>
 						<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post">
 							<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-							<input class="mainfont active submitleft" style="font-size:11pt; border: none; background: transparent;padding-right:5px;" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup"></input><?php echo $LNG->MAP_GROUP_JOIN_GROUP; ?>
+							<input class="mainfont active submitleft" style="font-size:11pt; border: none; background: transparent;padding-right:5px;" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup" /><?php echo $LNG->MAP_GROUP_JOIN_GROUP; ?>
 						</form>
 					<?php } ?>
 				</div>
@@ -329,11 +356,11 @@ Event.observe(window, 'load', function() {
 
 							<div id="vistabs">
 								<ul id="tabs" class="tab2">
-									<li class="tab"><a class="tab" id="tab-vis-sunburst" href="#vis-sunburst"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_SUNBURST2; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-vis-circles" href="#vis-circles"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_CIRCLEPACKING; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-vis-treemap" href="#vis-treemap"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_TREEMAP; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-vis-treemaptd" href="#vis-treemaptd"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_TREEMAPTD; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-vis-network" href="#vis-network"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_NETWORK; ?></span></span></a></li>
+									<li class="tab"><a class="tab" id="tab-vis-sunburst" href="#vis-sunburst"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_SUNBURST2; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-vis-circles" href="#vis-circles"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_CIRCLEPACKING; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-vis-treemap" href="#vis-treemap"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_TREEMAP; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-vis-treemaptd" href="#vis-treemaptd"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_TREEMAPTD; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-vis-network" href="#vis-network"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_NETWORK; ?></span></a></li>
 								</ul>
 							</div>
 
@@ -367,12 +394,12 @@ Event.observe(window, 'load', function() {
 
 							<div id="analyticstabs">
 								<ul id="tabs" class="tab2">
-									<li class="tab"><a class="tab" id="tab-analytics-overview" href="#analytics-overview"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_OVERVIEW; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-analytics-social" href="#analytics-social"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_SOCIAL; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-analytics-ring" href="#analytics-ring"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_RING; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-analytics-activity" href="#analytics-activity"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_ACTIVITY_ANALYSIS; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-analytics-useractivity" href="#analytics-useractivity"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_USER_ACTIVITY_ANALYSIS; ?></span></span></a></li>
-									<li class="tab"><a class="tab" id="tab-analytics-stream" href="#analytics-stream"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_STREAMGRAPH; ?></span></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-overview" href="#analytics-overview"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_OVERVIEW; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-social" href="#analytics-social"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_SOCIAL; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-ring" href="#analytics-ring"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_RING; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-activity" href="#analytics-activity"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_ACTIVITY_ANALYSIS; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-useractivity" href="#analytics-useractivity"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_USER_ACTIVITY_ANALYSIS; ?></span></a></li>
+									<li class="tab"><a class="tab" id="tab-analytics-stream" href="#analytics-stream"><span class="tab tabuser"><?php echo $LNG->STATS_TAB_STREAMGRAPH; ?></span></a></li>
 								</ul>
 							</div>
 

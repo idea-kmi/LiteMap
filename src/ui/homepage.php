@@ -354,7 +354,7 @@ function loadrecentmaps(){
 
 		<!-- RECENT GROUPS AREA -->
 		<div id="tab-content-home-recent-group-div" style="clear:both;float:left;width:100%;margin-top:10px;display:none;">
-			<h2 style="font-size:14pt;padding:5px;padding-right:0px;background: linear-gradient(to bottom, #FFFFFF, #E8E8E8) repeat scroll 0 0 rgba(0, 0, 0, 0);width:100%;height:25px"><?php echo $LNG->HOMEPAGE_MOST_RECENT_GROUPS_TITLE ?>
+			<h2 style="font-size:14pt;padding:5px;padding-right:0px;width:100%;height:25px"><?php echo $LNG->HOMEPAGE_MOST_RECENT_GROUPS_TITLE ?>
 			<a style="margin-left:10px;font-size:10pt" href="index.php#group-list"><?php echo $LNG->HOMEPAGE_VIEW_ALL; ?></a>
 			<span style="margin-left:20px;font-size:10pt">(
 				<?php if (isset($USER->userid)) { ?>
@@ -393,7 +393,7 @@ function loadrecentmaps(){
 
 		<!-- RECENT MAPS AREA -->
 		<div id="tab-content-home-recent-debate-div" style="float:left;width:100%;margin-top:20px;display:none;">
-			<h2 style="font-size:14pt;padding:5px;padding-right:0px;width:100%;background: linear-gradient(to bottom, #FFFFFF, #E8E8E8) repeat scroll 0 0 rgba(0, 0, 0, 0);width:100%;height:25px"><?php echo $LNG->HOMEPAGE_MOST_RECENT_MAPS_TITLE ?>
+			<h2 style="font-size:14pt;padding:5px;padding-right:0px;width:100%;width:100%;height:25px"><?php echo $LNG->HOMEPAGE_MOST_RECENT_MAPS_TITLE ?>
 			<a style="margin-left:10px;font-size:10pt" href="index.php#map-list"><?php echo $LNG->HOMEPAGE_VIEW_ALL; ?></a>
 			<span style="margin-left:20px;font-size:10pt">(
 				<?php if (isset($USER->userid)) { ?>

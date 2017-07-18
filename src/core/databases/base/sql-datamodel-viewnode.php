@@ -25,10 +25,12 @@
 
 $HUB_SQL->DATAMODEL_VIEWNODE_SELECT = "SELECT t.* FROM ViewNode t WHERE t.ViewID=? AND t.NodeID=? AND t.UserID=?";
 
-$HUB_SQL->DATAMODEL_VIEWNODE_ADD = "INSERT into ViewNode (ViewID, NodeID, UserID, XPos, YPos, CreationDate, ModificationDate)
-									VALUES (?, ?, ?, ?, ?, ?, ?)";
+$HUB_SQL->DATAMODEL_VIEWNODE_ADD = "INSERT into ViewNode (ViewID, NodeID, UserID, XPos, YPos, CreationDate, ModificationDate, MediaIndex)
+									VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 $HUB_SQL->DATAMODEL_VIEWNODE_EDIT = "UPDATE ViewNode set ModificationDate=?, XPos=?, YPos=? WHERE ViewID=? AND NodeID=? AND UserID=?";
+
+$HUB_SQL->DATAMODEL_VIEWNODE_MEDIAINDEX_EDIT = "UPDATE ViewNode set ModificationDate=?, MediaIndex=? WHERE ViewID=? AND NodeID=? AND UserID=?";
 
 $HUB_SQL->DATAMODEL_VIEWNODE_DELETE = "DELETE FROM ViewNode WHERE ViewID=? AND NodeID=? AND UserID=?";
 

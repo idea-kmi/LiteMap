@@ -158,12 +158,20 @@ class DatabaseManager {
 	 * Modifiy the SQL statement passed to LIMIT the number of records returned
 	 *
 	 * @param string $sql the sql string being limited.
-	 * @param integer $start start row
-	 * @param integer $max max number of rows to return
+	 * @param integer $start start row (default 0)
+	 * @param integer $max max number of rows to return (default 20)
 	 * @return string the modified sql statement.
 	 */
 	function addLimitingResults($sql, $start, $max) {
 		$newsql = $sql;
+
+		if (!isset($start)) {
+			$start = 0;
+		}
+		if (!isset($max)) {
+			$start = 20;
+		}
+
 		if ($max > -1) {
 			if ($this->databasetype == $this->DATABASE_TYPE_MYSQL) {
 				$newsql .= " LIMIT ". $start.",".$max;

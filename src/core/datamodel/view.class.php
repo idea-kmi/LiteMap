@@ -224,7 +224,7 @@ class View {
      * @param string $nodeid the id of the node to add to this view
      * @return ViewNode object (this)
      */
-    function addNode($nodeid, $xpos, $ypos){
+    function addNode($nodeid, $xpos, $ypos, $mediaindex = -1){
         global $DB,$CFG,$USER,$HUB_SQL;
 
         try {
@@ -234,7 +234,7 @@ class View {
         }
 
 		$viewnode = new ViewNode();
-		$viewnode = $viewnode->add($this->nodeid, $nodeid, $xpos, $ypos);
+		$viewnode = $viewnode->add($this->nodeid, $nodeid, $xpos, $ypos, $mediaindex);
 		$viewnode = $viewnode->load();
 		if (!$viewnode instanceof Error) {
 			array_push($this->nodes, $viewnode);

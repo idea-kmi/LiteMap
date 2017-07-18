@@ -40,6 +40,7 @@ var ALERT_COUNT = 2;
 var positionedMap = null;
 var baseSize = '';
 var filternodetypes = 'Issue,Solution,Pro,Con,Map';
+var player = null;
 
 function loadExploreMapNet(){
 
@@ -131,12 +132,108 @@ function loadExploreMapNet(){
 	var centralcell = new Element('td', {'style':'width:70%;overflow:hidden;vertical-align:top;'});
 	row.insert(centralcell);
 
+	var mediacontrol = null;
+	var mediaDiv = null
+
+	if (NODE_ARGS['media'] != "" || NODE_ARGS['youtubeid'] != "" || NODE_ARGS['vimeoid'] != "") {
+		if (NODE_ARGS['media'] && NODE_ARGS['media'] != "") {
+			var media = NODE_ARGS['media'];
+			var mimetype = NODE_ARGS['mimetype'];
+			alert("mimetype"+mimetype);
+			var container = 'video';
+			if (mimetype.substring(0,5) == "audio") {
+				container = 'audio';
+			}
+			var supported = browserMediaSupport(mimetype, container);
+			NODE_ARGS['mediasupported'] = supported;
+			if (supported) {
+				var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color:black;margin:0 auto;width:500px;clear:both;float:left;overflow:hidden;display:none'});
+				centralcell.insert(mediaDiv);
+				if (container == 'video') {
+					player = new Element('video', {'id':'player', 'controls': 'true', 'width':NODE_ARGS['moviewidth'], 'height': NODE_ARGS['movieheight']});
+					var mediasource = new Element('source', {'src':media, 'type': mimetype});
+					mediasource.insert('<?php echo $LNG->MAP_MOVIE_ERROR; ?>');
+					player.insert(mediasource);
+					mediaDiv.insert(player);
+					NODE_ARGS['mediaplayer'] = player;
+				} else {
+					player = new Element('audio', {'style':'padding-top:10px;', 'id':'player', 'controls': 'true'});
+					var mediasource = new Element('source', {'src':media, 'type': mimetype});
+					mediasource.insert('<?php echo $LNG->MAP_AUDIO_ERROR; ?>');
+					player.insert(mediasource);
+					mediaDiv.insert(player);
+					NODE_ARGS['mediaplayer'] = player;
+				}
+
+				mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+				centralcell.insert(mediacontrol);
+				Event.observe(mediacontrol,"click", function(){
+					toggleMediaBar(false);
+				});
+
+				var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+				mediacontrol.insert(arrowimg);
+			}
+
+		} else if (NODE_ARGS['youtubeid'] != undefined && NODE_ARGS['youtubeid'] != "") {
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			centralcell.insert(mediaDiv);
+
+			player = new YT.Player('mediaDiv', {
+				width: parseInt(NODE_ARGS['moviewidth']),
+				height: parseInt(NODE_ARGS['movieheight']),
+				videoId: NODE_ARGS['youtubeid'],
+				events: {
+					onReady: assignPlayer,
+				}
+			});
+
+			mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+			centralcell.insert(mediacontrol);
+			Event.observe(mediacontrol,"click", function(){
+				toggleMediaBar(false);
+			});
+
+			var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+			mediacontrol.insert(arrowimg);
+
+		} else if (NODE_ARGS['vimeoid'] != undefined && NODE_ARGS['vimeoid'] != "") {
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style':'background-color: black; margin:0 auto; width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			centralcell.insert(mediaDiv);
+
+			player = new Vimeo.Player('mediaDiv', {
+				width: parseInt(NODE_ARGS['moviewidth']),
+				height: parseInt(NODE_ARGS['movieheight']),
+				id: NODE_ARGS['vimeoid']
+			});
+
+			player.on('loaded', function() {
+				assignPlayer();
+			});
+
+			mediacontrol = new Element('div', {'id':'mediacontrolbar', 'style':'float:left;clear:both;background-image:url(\'<?php echo $HUB_FLM->getImagePath("absurdidad.png"); ?>\');width:100%;height:10px;background-repeat:repeat;background-position:left;'});
+			centralcell.insert(mediacontrol);
+			Event.observe(mediacontrol,"click", function(){
+				toggleMediaBar(false);
+			});
+
+			var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
+			mediacontrol.insert(arrowimg);
+		}
+	}
+
 	/** GRAPH AREA **/
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
 	var outerGraphDiv = new Element('div', {'id':'graphMapDiv-outer', 'style': 'display:block;clear:both;float:left;overflow:hidden'});
 	outerGraphDiv.insert(messagearea);
+
+	if (mediaDiv & mediacontrol) {
+		outerGraphDiv.insert(mediaDiv);
+		outerGraphDiv.insert(mediacontrol);
+	}
+
 	outerGraphDiv.insert(graphDiv);
 
 	var leftDiv = new Element('div', {'id':'mainInnerDiv', 'style': 'float:left;width:100%;height:100%;overflow:hidden'});
@@ -209,6 +306,31 @@ function loadExploreMapNet(){
 	<?php if ($CFG->HAS_ALERTS) { ?>
 		loadAlertsData(positionedMap, useralertDiv, useralertDiv, alertmessagearea);
 	<?php } ?>
+
+	if (player) {
+		toggleMediaBar(true);
+		window.setInterval(refreshMapDrawing, 25);
+	}
+}
+
+var lasttime = 0;
+function refreshMapDrawing() {
+	if (player) {
+		var currenttime = mediaPlayerCurrentIndex();
+		if (currenttime != lasttime) {
+			lasttime = currenttime;
+			positionedMap.refresh();
+		}
+	}
+}
+
+
+function assignPlayer() {
+	NODE_ARGS['mediaplayer'] = player;
+	mediaPlayerPlay();
+    setTimeout(function () {
+		mediaPlayerSeek(0);
+    }, 1000);
 }
 
 function removeAlertBar(){
@@ -237,6 +359,18 @@ function showEditBar(){
 		if ($('editbarmenulink')) {
 			$('editbarmenulink').style.display = 'block';
 		}
+		resizeMainArea(false);
+	}
+}
+
+function toggleMediaBar(openMe) {
+	if (openMe || $('mediaDiv').style.display == 'none') {
+		$('mediaDiv').style.display = 'block';
+		$('mediacontrolimage').src = '<?php echo $HUB_FLM->getImagePath("uparrowbig.gif"); ?>';
+		resizeMainArea(false);
+	} else if ($('mediaDiv').style.display == 'block') {
+		$('mediaDiv').style.display = 'none';
+		$('mediacontrolimage').src = '<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>';
 		resizeMainArea(false);
 	}
 }
@@ -290,6 +424,11 @@ function resizeMainArea(initial) {
 	var width = newwidth;
 	var height = baseSize.height-44;
 	MAP_HEIGHT = height;
+
+ 	if ($('mediaDiv')) {
+ 		$('mediaDiv').style.width = width+"px";
+ 		$('mediacontrolbar').style.width = width+"px";
+ 	}
 
 	$('graphMapDiv-outer').style.width = width+"px";
 	$('graphMapDiv-outer').style.height = height+"px";

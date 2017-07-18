@@ -127,6 +127,34 @@ $args["groupid"] = $groupid;
 $args["nodetype"] = $nodetype;
 $args["title"] = $node->name;
 $args["backgroundImage"] = $node->getNodeProperty('background');
+
+
+$media = $node->getNodeProperty('media');
+if (isset($media) && $media != "") {
+	$args["media"] = $media;
+	$mimetype = $node->getNodeProperty('mediatype');
+	if (isset($mimetype)) {
+		$args["mimetype"] = $mimetype;
+	}
+} else {
+	$youtubeid = $node->getNodeProperty('youtubeid');
+	if (isset($youtubeid) && $youtubeid != "") {
+		$args["youtubeid"] = $youtubeid;
+	} else {
+		$vimeoid = $node->getNodeProperty('vimeoid');
+		if (isset($vimeoid) && $vimeoid != "") {
+			$args["vimeoid"] = $vimeoid;
+		}
+	}
+}
+
+$moviesize = $node->getNodeProperty('moviesize');
+if (isset($moviesize)) {
+	$size = explode(':', $moviesize);
+	$args["moviewidth"] = (int)$size[0];
+	$args["movieheight"] = (int)$size[1];
+}
+
 $args["start"] = 0;
 $args["max"] = -1;
 $args["mode"] = '';

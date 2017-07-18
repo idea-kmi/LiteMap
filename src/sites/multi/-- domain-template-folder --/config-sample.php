@@ -71,7 +71,7 @@ $CFG->defaultRoleGroupID = "";
 // e.g. http://litemapdev.kmi.open.ac.uk/
 $CFG->homeAddress = "";
 
-// The url of the analytics service being used - including trailing '/'
+// The url of the analytics service being used.
 // Sepcifically this is the one developed by Mark Klein on the Catalyst FP7 project (http://catalyst-fp7.eu/)
 // https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2962524
 $CFG->analyticsServiceUrl = "";
@@ -185,7 +185,7 @@ $CFG->signupstatus = $CFG->SIGNUP_CLOSED;
 $CFG->signuprequestemail = '';
 
 /**
- * These are the background colours used in visualisations.
+ * These are the background colours used in the Network Applet
  * They have the same names as styles in the styles.css file,
  * but we found we needed slightly darker shades than their stylesheet equivalents.
  */
@@ -205,7 +205,7 @@ $CFG->plainbackpale = '#D0D0D0';
 $CFG->argumentbackpale = '#F0F1AD';
 $CFG->ideabackpale = '#D0D0D0';
 $CFG->commentbackpale = '#FAB8DA';
-$CFG->mapbackpale = '#E9B9D6'; //'#C83089'
+$CFG->mapbackpale = '#C83089';
 
 /**
  * These are the background colours used in Analytics graphs
@@ -302,8 +302,6 @@ $CFG->GOOGLE_ANALYTICS_ON = false;
 $CFG->GOOGLE_ANALYTICS_KEY = "";
 $CFG->GOOGLE_ANALYTICS_DOMAIN = "";
 
-// Google Maps server key - https://developers.google.com/maps/documentation/geocoding/start#get-a-key
-$CFG->GOOGLE_MAPS_KEY = "";
 
 /**
  * urls that are allowed in IFrame and Object embeds in formatted descriptions

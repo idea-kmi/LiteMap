@@ -299,10 +299,11 @@ function auditVote($userid, $itemid, $votetype, $changeType) {
  * @param string $nodeid The unique id of the node being affected in the view.
  * @param string $xpos the x position of the node
  * @param string $ypos the y position of the node
+ * @param string $mediaIndex the media index associated with this node in this view - optional, default -1
  * @param string $changeType The type of the change to the record (delete, edit, add)
  * @return booelan
  */
-function auditViewNode($userid, $viewid, $nodeid, $xpos, $ypos, $changetype) {
+function auditViewNode($userid, $viewid, $nodeid, $xpos, $ypos, $changetype, $mediaindex=-1) {
     global $DB,$HUB_SQL;
 
     $wentOK = true;
@@ -316,6 +317,7 @@ function auditViewNode($userid, $viewid, $nodeid, $xpos, $ypos, $changetype) {
 	$params[4] = $xpos;
 	$params[5] = $ypos;
 	$params[6] = $changetype;
+	$params[7] = $mediaindex;
 
     $res = $DB->insert($HUB_SQL->AUDIT_VIEW_NODE_INSERT, $params);
 

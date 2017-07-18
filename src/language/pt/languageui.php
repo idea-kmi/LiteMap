@@ -171,7 +171,8 @@ $LNG->MAP_CONNECTION_TEST_ERROR = 'NÃO PERMITIDO';
 $LNG->MAP_CHANGE_NODETYPE = 'modificação';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE = 'Rollover Títulos';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT = 'Ativar e desativar com os títulos das entradas que aparecem como una pista de vuelco . Isto é bom para explorar o mapa quando está em zoom, mas talvez não adequado quando da criação de um '.$LNG->MAP_NAME.'.';
-$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Ligar e desligar ter os rótulos link mostrando.';
+$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Ligue e desligue as etiquetas dos links que aparecem neste mapa';
+$LNG->MAP_LINK_CURVE_CHOICE_HINT = 'Ligue e desligue usando links curvos neste mapa';
 
 $LNG->FORM_MAP_ENTER_SUMMARY_ERROR = 'Por favor introduza um '.$LNG->MAP_NAME.' título antes de guardar';
 $LNG->LOADING_MAPS = '(Cargando '.$LNG->MAPS_NAME.'...)';
@@ -821,6 +822,7 @@ $LNG->HELP_BUILDER_WARNING = "NOTA: Devido as mudanças na política de seguran�
 					Facebook y Twitter son dois exemplos de sites com esta política.
 					Nestes sites, clique em acceso direto ao bookmarklet atualmente não fará nada, pois o que pode parecer nada, mas é apenas um bloqueio.
 					Este bookmarklet seguirá funcionando na maioria de sites web, já que não esta em prática esta nova política de segurança.
+					Seu navegador pode, portanto, bloquear o bookmarklet, assim você pode ter que substituir o seu navegador para fazê-lo funcionar.
 					Atualmente estamos escrevendo extensões específicas do navegador para ajudar com este tema (veras mais adiante).";
 
 /** MAIN TAB SCREENS - TABBERLIB **/
@@ -967,4 +969,46 @@ $LNG->TAB_PRINT_TITLE_COMMENT = 'LiteMap: '.$LNG->COMMENTS_NAME;
 $LNG->TAB_PRINT_TITLE_EVIDENCE = 'LiteMap: '.$LNG->ARGUMENTS_NAME;
 $LNG->TAB_PRINT_TITLE_MAP = 'LiteMap: '.$LNG->MAPS_NAME;
 $LNG->TAB_PRINT_TITLE_RESOURCE = 'LiteMap: '.$LNG->RESOURCES_NAME;
+
+/** MEDIA MAPPING **/
+$LNG->MAP_MEDIA_LABEL = "URL da mídia";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL = "Ou filme do YouTube";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON = "Importação do YouTube";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR = "Limpar filme do YouTube";
+
+$LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL = "Ou filme do Vimeo";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON = "Importação do Vimeo";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR = "Limpar filme do Vimeo";
+
+$LNG->MAP_MOVIE_WIDTH_LABEL = "Largura do filme";
+$LNG->MAP_MOVIE_HEIGHT_LABEL = "Altura do filme";
+
+$LNG->MAP_MEDIA_HELP = "Adicione um URL de arquivo de filme ou de som ao mapa. Você pode então anotar nós como ponteiros para timestamps nessa mídia";
+$LNG->MAP_MOVIE_WIDTH_HELP = "Defina a largura preferida para mostrar o filme no mapa";
+$LNG->MAP_MOVIE_HEIGHT_HELP = "Defina a altura preferida para mostrar o filme no mapa";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Clique no botão \'Importação do YouTube\' para adicionar o seu filme do YouTube \'Incorporar\' código. A largura, altura e identificação do filme serão extraídas e usadas para carregar o filme no mapa.";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Cole o seu filme do YouTube \'Incorporar\' código aqui:";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Clique no botão \'Importação do Vimeo\' para adicionar o seu filme do Vimeo \'Incorporar\' código. A largura, altura e identificação do filme serão extraídas e usadas para carregar o filme no mapa.";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Cole o seu filme do Vimeo \'Incorporar\' código aqui:";
+
+$LNG->MAP_MEDIA_NODE_JUMP_HINT = "Ir para tempo de índice de mídia fornecido";
+$LNG->MAP_MEDIA_NODE_JUMP = "Saltar";
+$LNG->MAP_MEDIA_NODE_MEDIAINDEX = "Índice de mídia: ";
+$LNG->MAP_MEDIA_NODE_ASSIGN_HINT = "Atribua tempo de indexação de mídia para o nó";
+$LNG->MAP_MEDIA_NODE_ASSIGN = "Atribuir índice: ";
+$LNG->MAP_MEDIA_NODE_REMOVE_HINT = "Remova o tempo de índice de mídia desse nó";
+$LNG->MAP_MEDIA_NODE_REMOVE = "Remover índice";
+$LNG->MAP_MEDIA_MODE_HINT = "Alternar modo de reprodução de mídia de mapa: quando ativado, os nós só aparecerão após o tempo de indexação da mídia.";
+
+// Map Replay
+$LNG->MAP_REPLAY_SPEED_UNITS = "ms";
+$LNG->MAP_REPLAY_SPEED_UNITS_HINT = "Especifique a velocidade de repetição em milissegundos maior que zero";
+$LNG->MAP_REPLAY_PLAY_HINT = "Reproduzir o mapa com base nas datas de criação";
+$LNG->MAP_REPLAY_PAUSE_HINT = "Pausar a repetição do mapa";
+$LNG->MAP_REPLAY_BACK_HINT = "Volte para a repetição";
+$LNG->MAP_REPLAY_FORWARD_HINT = "Avance na repetição";
+$LNG->MAP_REPLAY_SPEED_ERROR  = "Certifique-se de que o valor da velocidade seja um número válido de milissegundos maior que zero";
+$LNG->MAP_REPLAY_MODE_HINT = "Alternar o modo de repetição do mapa: quando ativado, os nós serão ordenados pela data de criação e você receberá controles para reproduzir o mapa a uma velocidade especificada.";
 ?>

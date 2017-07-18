@@ -42,6 +42,12 @@
 	$maptitle = optional_param("maptitle","",PARAM_TEXT);
 	$desc = optional_param("desc","",PARAM_HTML);
 
+	$media = optional_param("media","",PARAM_URL);
+	$youtubeid = optional_param("youtubeid","",PARAM_ALPHANUMEXT);
+	$vimeoid = optional_param("vimeoid","",PARAM_ALPHANUMEXT);
+	$moviewidth = optional_param("moviewidth","480",PARAM_INT);
+	$movieheight = optional_param("movieheight","320",PARAM_INT);
+
 	$handler = optional_param("handler","", PARAM_TEXT);
 	//convert any possible brackets
 	$handler = parseToJSON($handler);
@@ -90,6 +96,23 @@
 					}
 				}
 
+				if ($media != "") {
+					$mapnode->updateNodeProperty('media', $media);
+					$mimetype = getMimeType($media);
+					$mapnode->updateNodeProperty('mediatype', $mimetype);
+					if ($mimetype != "" && substr ($mimetype, 0, 5) == "video") {
+						$mapnode->updateNodeProperty('moviesize', $moviewidth.":".$movieheight);
+					}
+				} else if ($youtubeid != "") {
+					$mapnode->updateNodeProperty('youtubeid', $youtubeid);
+					$mapnode->updateNodeProperty('mediatype', '');
+					$mapnode->updateNodeProperty('moviesize', $moviewidth.":".$movieheight);
+				} else if ($vimeoid != "") {
+					$mapnode->updateNodeProperty('vimeoid', $vimeoid);
+					$mapnode->updateNodeProperty('mediatype', '');
+					$mapnode->updateNodeProperty('moviesize', $moviewidth.":".$movieheight);
+				}
+
 				if (empty($errors)) {
 					echo '<script type=\'text/javascript\'>';
 					if (isset($handler) && $handler != "") {
@@ -134,6 +157,123 @@ function init() {
    	$('dialogheader').insert('<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>');
 }
 
+
+function clearVimeoElements() {
+	$('media').value = '';
+	$('media').disabled = false;
+	$('vimeoid').value = '';
+	$('moviewidth').value = '';
+	$('movieheight').value = '';
+	return false;
+}
+
+function extractVimeoElements() {
+	var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT; ?>");
+	if (text != null) {
+
+		var ID = '';
+		var width = 0;
+		var height= 0;
+
+		var striptags = text.replace(/(>|<)/gi,'');
+
+		// Get ID
+		var firstsplit = striptags.split(/(vi\/|v=|\/v\/|vimeo\.be\/|\/video\/)/);
+		if(firstsplit[2] !== undefined) {
+			ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
+			ID = ID[0];
+		} else {
+			ID = firstsplit;
+		}
+		if (ID != "") {
+			$('media').value = '';
+			$('media').disabled = true;
+			$('vimeoid').value = ID;
+		}
+
+		// Get width / height
+		var widthsplit = striptags.split(/width=/);
+		if (widthsplit[1] !== undefined) {
+			var end = widthsplit[1].indexOf('"', 1);
+			width = widthsplit[1].substr(1,end-1);
+		}
+		var heightsplit = striptags.split(/height=/);
+		if (heightsplit[1] !== undefined) {
+			var end = heightsplit[1].indexOf('"', 1);
+			height = heightsplit[1].substr(1,end-1);
+		}
+
+		if (width > 0) {
+			$('moviewidth').value = width;
+		}
+		if (height > 0) {
+			$('movieheight').value = height;
+		}
+		if (width == 0 && height == 0) {
+			alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
+		}
+	}
+	return false;
+}
+
+function clearYouTubeElements() {
+	$('media').value = '';
+	$('media').disabled = false;
+	$('youtubeid').value = '';
+	$('moviewidth').value = '';
+	$('movieheight').value = '';
+	return false;
+}
+
+function extractYouTubeElements() {
+	var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT; ?>");
+	if (text != null) {
+
+		var ID = '';
+		var width = 0;
+		var height= 0;
+
+		var striptags = text.replace(/(>|<)/gi,'');
+
+		// Get ID
+		var firstsplit = striptags.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+		if(firstsplit[2] !== undefined) {
+			ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
+			ID = ID[0];
+		} else {
+			ID = firstsplit;
+		}
+		if (ID != "") {
+			$('media').value = '';
+			$('media').disabled = true;
+			$('youtubeid').value = ID;
+		}
+
+		// Get width / height
+		var widthsplit = striptags.split(/width=/);
+		if (widthsplit[1] !== undefined) {
+			var end = widthsplit[1].indexOf('"', 1);
+			width = widthsplit[1].substr(1,end-1);
+		}
+		var heightsplit = striptags.split(/height=/);
+		if (heightsplit[1] !== undefined) {
+			var end = heightsplit[1].indexOf('"', 1);
+			height = heightsplit[1].substr(1,end-1);
+		}
+
+		if (width > 0) {
+			$('moviewidth').value = width;
+		}
+		if (height > 0) {
+			$('movieheight').value = height;
+		}
+		if (width == 0 && height == 0) {
+			alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
+		}
+	}
+	return false;
+}
+
 function checkForm() {
 	var checkname = ($('maptitle').value).trim();
 	if (checkname == ""){
@@ -156,7 +296,7 @@ window.onload = init;
 
 	<div class="formrow">
 		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_IMAGE_LABEL; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
 		</label>
 		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
 	</div>
@@ -177,7 +317,7 @@ window.onload = init;
 
 	<div class="formrow">
 		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_BACKGROUND_LABEL; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
 		</label>
 		<input class="hgrinput forminput" type="file" id="background" name="background" size="40">
 	</div>
@@ -185,6 +325,53 @@ window.onload = init;
 		<label class="formlabelbig">&nbsp;</label>
 		<div style="float:left;margin-left:5px;width:500px;"><?php echo $LNG->MAP_BACKGROUND_HELP; ?></div>
 	</div>
+
+	<hr style="clear:both;float:left; width:100%;border: 0;color: #E8E8E8; background-color:#E8E8E8; height: 1px;" />
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_LABEL; ?>
+			<span class="active" onMouseOver="showFormHint('MapMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
+		</label>
+		<input class="hgrinput forminput" id="media" name="media" size="40">
+	</div>
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL; ?>
+			<span class="active" onMouseOver="showFormHint('MapImportYouTubeMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
+		</label>
+		<button class="forminput" onclick="extractYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON; ?></button>
+		<input class="forminput" id="youtubeid" name="youtubeid" size="20" value="<?php echo $youtubeid; ?>">
+		<button class="forminput" onclick="clearYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR; ?></button>
+	</div>
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL; ?>
+			<span class="active" onMouseOver="showFormHint('MapImportVimeoMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
+		</label>
+		<button class="forminput" onclick="extractVimeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON; ?></button>
+		<input class="forminput" id="vimeoid" name="vimeoid" size="20" value="<?php echo $vimeoid; ?>">
+		<button class="forminput" onclick="clearVomeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR; ?></button>
+	</div>
+
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MOVIE_WIDTH_LABEL; ?>
+			<span class="active" onMouseOver="showFormHint('MapMovieWidth', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
+		</label>
+		<input class="forminput" id="moviewidth" name="moviewidth" size="10">
+	</div>
+	<div class="formrow">
+		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MOVIE_HEIGHT_LABEL; ?>
+			<span class="active" onMouseOver="showFormHint('MapMovieHeight', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
+			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
+		</label>
+		<input class="forminput" id="movieheight" name="movieheight" size="10">
+	</div>
+
+	<hr style="clear:both;float:left; width:100%;border: 0;color: #E8E8E8; background-color:#E8E8E8; height: 1px;" />
 
 	<?php
 		if (isset($groupid) && $groupid != "") {
@@ -213,7 +400,6 @@ window.onload = init;
 		</select>
 	</div>
 
-    <br>
     <div class="hgrformrow">
 		<label class="formlabelbig" style="height:30px;">&nbsp;</label>
         <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addmap" name="addmap">

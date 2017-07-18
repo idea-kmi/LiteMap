@@ -1366,4 +1366,17 @@ function processActivityList($activities, $node, $user) {
 	}
 	return $report;
 }
+
+/**
+ * http://justinvincent.com/page/1087/how-to-get-the-mime-type-of-a-remote-file-in-php-with-redirects
+ */
+function getMimeType($url) {
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_HEADER, 1);
+	curl_setopt($ch, CURLOPT_NOBODY, 1);
+	curl_exec($ch);
+	return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+}
 ?>

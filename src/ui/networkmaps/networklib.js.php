@@ -31,6 +31,47 @@ var SELECTED_GRAPH_NODE = "";
 
 var MAP_ROLLOVER_COOKIE_NAME = 'litemaprollovertext';
 var MAP_LINKTEXT_COOKIE_NAME = 'litemaplinktext';
+var MAP_CURVED_LINKS_NAME = 'litemapcurvedlinks';
+var MAP_REPLAY_SPEED_NAME = 'litemapreplayspeedtext';
+
+var mapPlayer = undefined;
+
+/**
+ * Set in cookie map replay speed
+ */
+function setReplaySpeed(newspeed) {
+	var speed = 1000;
+	if (parseInt(newspeed)) {
+		speed = parseInt(newspeed);
+	}
+	var date = new Date();
+	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
+	document.cookie = MAP_REPLAY_SPEED_NAME + "=" + speed + "; expires=" + date.toGMTString();
+}
+
+/**
+ * if set in cookie return map replay speed
+ */
+function getReplaySpeed() {
+
+	var speed = 1000;
+
+	var allcookies = document.cookie;
+	if (allcookies != null) {
+		var cookiearray  = allcookies.split(';');
+
+		for(var i=0; i<cookiearray.length; i++){
+			var param = cookiearray[i].split('=')
+			var name = param[0];
+			var value = param[1];
+			if (name.trim() == MAP_REPLAY_SPEED_NAME) {
+				speed = parseInt(value);
+			}
+		}
+	}
+
+	return speed;
+}
 
 /**
  * if set in cookie return
@@ -69,6 +110,8 @@ function getNodeRollover() {
 	return rollover;
 }
 
+
+
 /**
  * if set in cookie return
  */
@@ -79,7 +122,7 @@ function setLinkText(linktextron) {
 	}
 	var date = new Date();
 	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-	document.cookie = MAP_LINKTEXT_COOKIE_NAME + "=" + linktext + "; expires=" + date.toGMTString();
+	document.cookie = (MAP_LINKTEXT_COOKIE_NAME+NODE_ARGS['nodeid'])+ "=" + linktext + "; expires=" + date.toGMTString();
 }
 
 /**
@@ -97,7 +140,7 @@ function getLinkText() {
 			var param = cookiearray[i].split('=')
 			var name = param[0];
 			var value = param[1];
-			if (name.trim() == MAP_LINKTEXT_COOKIE_NAME) {
+			if (name.trim() == (MAP_LINKTEXT_COOKIE_NAME+NODE_ARGS['nodeid'])) {
 				linktext = value;
 			}
 		}
@@ -105,6 +148,44 @@ function getLinkText() {
 
 	return linktext;
 }
+
+/**
+ * if set in cookie return
+ */
+function setLinkCurve(linkcurveon) {
+	var linkcurve = 'false';
+	if (linkcurveon == true) {
+		linkcurve = 'true'
+	}
+	var date = new Date();
+	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
+	document.cookie = (MAP_CURVED_LINKS_NAME+NODE_ARGS['nodeid']) + "=" + linkcurve + "; expires=" + date.toGMTString();
+}
+
+/**
+ * if set in cookie return rollover
+ */
+function getLinkCurve() {
+
+	var linkcurve = 'false';
+
+	var allcookies = document.cookie;
+	if (allcookies != null) {
+		var cookiearray  = allcookies.split(';');
+
+		for(var i=0; i<cookiearray.length; i++){
+			var param = cookiearray[i].split('=')
+			var name = param[0];
+			var value = param[1];
+			if (name.trim() == (MAP_CURVED_LINKS_NAME+NODE_ARGS['nodeid'])) {
+				linkcurve = value;
+			}
+		}
+	}
+
+	return linkcurve;
+}
+
 
 function createSocialNetworkGraphKey() {
 	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow', 'style':'width:100%;margin-top:5px;'});
@@ -1017,66 +1098,90 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	tb2.insert(zoomFit);
 
 	var noderollover = getNodeRollover();
-	var rolloverTitlesChoiceDiv = new Element("div", {'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
-	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover-hi-light.png'); ?>", 'border':'0'});
+	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:15px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	rolloverTitlesChoiceIcon.chosen = true;
 	if (noderollover == 'false') {
 		rolloverTitlesChoiceDiv.className = "active iconUnselected";
-		rolloverTitlesChoiceIcon.src = "<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>";
-		rolloverTitlesChoiceIcon.chosen = false;
-		positionedMap.rolloverTitles = false;
+		rolloverTitlesChoiceDiv.chosen = false;
+		forcedirectedGraph.rolloverTitles = false;
 	}
-	Event.observe(rolloverTitlesChoiceIcon,"click", function(event) {
+	Event.observe(rolloverTitlesChoiceDiv,"click", function(event) {
 		if (this.chosen) {
-			positionedMap.rolloverTitles = false;
+			forcedirectedGraph.rolloverTitles = false;
 			this.chosen = false;
 			setNodeRollover(false);
-			this.src = "<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>";
-			$('rolloverTitlesChoiceDiv').className = "active iconUnselected";
+			this.className = "active iconUnselected";
 		} else {
-			positionedMap.rolloverTitles = true;
+			forcedirectedGraph.rolloverTitles = true;
 			this.chosen = true;
 			setNodeRollover(true);
-			this.src = "<?php echo $HUB_FLM->getImagePath('mag-glass-rollover-hi-light.png'); ?>";
-			$('rolloverTitlesChoiceDiv').className = "active iconSelected";
+			this.className = "active iconSelected";
 		}
 	});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	tb2.insert(rolloverTitlesChoiceDiv);
 
 	var linktext = getLinkText();
-	var linktextChoiceDiv = new Element("div", {'id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
-	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktexton.png'); ?>", 'border':'0'});
+	var linktextChoiceDiv = new Element("div", {'chosen':'true','id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
+	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'border':'0'});
 	linktextChoiceIcon.chosen = true;
 	if (linktext == 'false') {
 		linktextChoiceDiv.className = "active iconUnselected";
-		linktextChoiceIcon.src = "<?php echo $HUB_FLM->getImagePath('linktextoff.png'); ?>";
-		linktextChoiceIcon.chosen = false;
-		positionedMap.linkLabelTextOn = false;
+		linktextChoiceDiv.chosen = false;
+		forcedirectedGraph.linkLabelTextOn = false;
 	}
 	linktextChoiceDiv.insert(linktextChoiceIcon);
-	Event.observe(linktextChoiceIcon,"click", function(event) {
+	Event.observe(linktextChoiceDiv,"click", function(event) {
 		if (this.chosen) {
-			positionedMap.linkLabelTextOn = false;
+			forcedirectedGraph.linkLabelTextOn = false;
 			this.chosen = false;
 			setLinkText(false);
-			this.src = "<?php echo $HUB_FLM->getImagePath('linktextoff.png'); ?>";
-			$('linktextChoiceDiv').className = "active iconUnselected";
+			this.className = "active iconUnselected";
 			forcedirectedGraph.refresh();
 		} else {
-			positionedMap.linkLabelTextOn = true;
+			forcedirectedGraph.linkLabelTextOn = true;
 			this.chosen = true;
 			setLinkText(true);
-			this.src = "<?php echo $HUB_FLM->getImagePath('linktexton.png'); ?>";
-			$('linktextChoiceDiv').className = "active iconSelected";
+			this.className = "active iconSelected";
 			forcedirectedGraph.refresh();
 		}
 	});
 	linktextChoiceDiv.insert(linktextChoiceIcon);
 	tb2.insert(linktextChoiceDiv);
 
-	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 25px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
+	var linkcurveChoiceDiv = new Element("div", {'id':'linkcurveChoiceDiv', 'class':'active iconUnselected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_CURVE_CHOICE_HINT;?>'});
+	var linkcurveChoiceIcon = new Element("img", {'style':'vertical-align:middle;height:20px','src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'border':'0'});
+	linkcurveChoiceIcon.chosen = false;
+	var linkcurve = getLinkCurve();
+	if (linkcurve == 'true') {
+		forcedirectedGraph.linkCurveOn = true;
+		linkcurveChoiceDiv.chosen = false;
+		linkcurveChoiceDiv.className = "active iconSelected";
+		forcedirectedGraph.refresh();
+	}
+
+	linkcurveChoiceDiv.insert(linkcurveChoiceIcon);
+	Event.observe(linkcurveChoiceDiv,"click", function(event) {
+		if (this.chosen) {
+			forcedirectedGraph.linkCurveOn = false;
+			this.chosen = false;
+			setLinkCurve(false);
+			this.className = "active iconUnselected";
+			forcedirectedGraph.refresh();
+		} else {
+			forcedirectedGraph.linkCurveOn = true;
+			this.chosen = true;
+			setLinkCurve(true);
+			this.className = "active iconSelected";
+			forcedirectedGraph.refresh();
+		}
+	});
+	linkcurveChoiceDiv.insert(linkcurveChoiceIcon);
+	tb2.insert(linkcurveChoiceDiv);
+
+	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 20px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
 	var printButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
@@ -1119,7 +1224,7 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	/** SEARCH BOX **/
 	var searchdiv = new Element("div", {'id':'searchmap', 'style':'float:left;margin-left: 25px;'});
 
-	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:200px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
+	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:160px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
 	searchdiv.insert(searchfield);
 	Event.observe(searchfield,"keyup", function(event) {
 		if(checkKeyPressed(event)) {
@@ -1127,7 +1232,17 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 		}
 	});
 
-	var gobutton = new Element("button", {
+	var buttondiv = new Element('div', {'style': 'float:left;'});
+	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'style': 'float:left;padding-left:3px; padding-right:10px;', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
+	searchbutton.src = "<?php echo $HUB_FLM->getImagePath('search.png'); ?>";
+	Event.observe(searchbutton,"click", function(event){
+		var query = $('qmap').value;
+		searchMap(query);
+	});
+	buttondiv.insert(searchbutton);
+	searchdiv.insert(buttondiv);
+
+	/*var gobutton = new Element("button", {
 					'class':'active',
 					'id':'map-go-button',
 					'class':'searchborder',
@@ -1140,6 +1255,7 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	}
 	Event.observe(gobutton,"click", handleMapSearch);
 	searchdiv.insert(gobutton);
+	*/
 
 	var clearbutton = new Element("img", {
 					'class':'active',
@@ -1154,8 +1270,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	var clearhandler = function(event) {
 		$('qmap').value='';
 		// Map
-		clearSelectedMapNodes(positionedMap);
-		positionedMap.refresh();
+		clearSelectedMapNodes(forcedirectedGraph);
+		forcedirectedGraph.refresh();
 
 		//Tree
 		clearKnowledgeTreeSelections();
@@ -1181,117 +1297,70 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(toggleview,"click", toggleviewhandler);
 	tb2.insert(toggleview);
 
+	var movieModeButton = new Element("div", {'chosen':'false', 'id':'mediamodebuttondiv', 'class':'active iconUnselected','style':'float:left;margin-left: 20px;margin-top:0px;padding:0px;'});
+	if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
+		movieModeButton.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
+	} else {
+		movieModeButton.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
+	}
+	var movieModeIcon = new Element("img", {'style':'vertical-align:top;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>", 'border':'0'});
+	movieModeButton.insert(movieModeIcon);
+	var movieModeButtonhandler = function(event) {
+		if (this.chosen) {
+			this.className  = "active iconUnSelected";
+		} else {
+			this.className = "active iconSelected";
+		}
+
+		if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
+			if (this.chosen) {
+				this.chosen = false;
+				forcedirectedGraph.mediaReplayMode = false;
+				forcedirectedGraph.refresh();
+			} else {
+				this.chosen = true;
+				forcedirectedGraph.mediaReplayMode = true;
+				forcedirectedGraph.refresh();
+			}
+		} else {
+			if (this.chosen) {
+				if (mapPlayer) {
+					clearInterval(mapPlayer);
+				}
+				clearMapNodeReplayIndexes(forcedirectedGraph);
+				this.chosen = false;
+				forcedirectedGraph.mapReplayMode = false;
+				forcedirectedGraph.mapReplayCurrentIndex = -1;
+				$('mapreplayslider').value = 0;
+				$('mapreplayslider').max = 0;
+				$('moviemaptoolbar').style.display = "none";
+				forcedirectedGraph.refresh();
+			} else {
+				addMapNodeReplayIndexes(forcedirectedGraph);
+				this.chosen = true;
+				forcedirectedGraph.mapReplayMode = true;
+				forcedirectedGraph.mapReplayCurrentIndex = 0;
+				$('mapreplayslider').value = 0;
+				$('mapreplayslider').max = forcedirectedGraph.mapReplayMaxIndex;
+				$('moviemaptoolbar').style.display = "block";
+				forcedirectedGraph.refresh();
+			}
+		}
+	};
+	Event.observe(movieModeButton,"click", movieModeButtonhandler);
+	tb2.insert(movieModeButton);
+
+	tb2.insert(createMapMovieBar(forcedirectedGraph));
+
+	// EMBED BUTTONS
 	if (!fromEmbed) {
-		// EMBED BUTTONS
-
-		var jsonldButton = new Element("div", {'style':'float:right;margin-left:10px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
-		var jsonldButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0'});
-		jsonldButton.insert(jsonldButtonicon);
-		var jsonldButtonhandler = function() {
-			var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
-			textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE; ?>', code, "", "", "");
-		};
-		Event.observe(jsonldButton,"click", jsonldButtonhandler);
-		tb2.insert(jsonldButton);
-
-		var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left:10px;', 'title':'<?php echo $LNG->GRAPH_EMBEDEDIT_HINT;?>'});
-		var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embededit.png'); ?>", 'border':'0'});
-		embedButton.insert(embedButtonicon);
-		var embedButtonhandler = function() {
-			var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/editmap.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
-			textAreaPrompt('<?php echo $LNG->GRAPH_EMBEDEDIT_MESSAGE; ?>', code, "", "", "", 400, 300);
-		};
-		Event.observe(embedButton,"click", embedButtonhandler);
-		tb2.insert(embedButton);
-
-		var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_EMBED_HINT;?>'});
-		var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embed.png'); ?>", 'border':'0'});
-		embedButton.insert(embedButtonicon);
-		var embedButtonhandler = function() {
-			var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/map.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
-			textAreaPrompt('<?php echo $LNG->GRAPH_EMBED_MESSAGE; ?>', code, "", "", "");
-		};
-		Event.observe(embedButton,"click", embedButtonhandler);
-		tb2.insert(embedButton);
-
+		addEmbedButtons($('tabs'));
 	}
 
 	// CONNECTION COUNT
 	//var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left:20px;margin-top:7px;'});
 	//count.insert('<span style="font-size:10pt;color:black;float:left;"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> 0</span>');
 	//tb2.insert(count);
-
-	// KEY / ADD BUTTONS
-	/*if(USER && USER != "" && NODE_ARGS['caneditmap'] == 'true'){
-		var key = new Element("div", {'id':'keydiv', 'style':'float:left;margin-top:10px;'});
-		tb2.insert(key);
-
-		var challangekey = '<div class="toolbarkey" style="margin-left:0px;border:1px solid #C0C0C0;padding-top:3px;padding-bottom:3px;background: '+challengebackpale+';"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></div>';
-		key.insert(challangekey);
-
-		var addIssueButton = new Element("div", {'class':'active mainfont toolbarbutton','style':'color:black;background:'+issuebackpale+';', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>'});
-		var addIssueButtonicon = new Element("img", {'style':'width:14px;height:14px;vertical-align:middle;padding-right:3px;','src':"<?php echo $HUB_FLM->getImagePath('add.png'); ?>", 'border':'0'});
-		addIssueButton.insert(addIssueButtonicon);
-		addIssueButton.insert('<span style="vertical-align:middle"><?php echo $LNG->ISSUE_NAME; ?></span>');
-		var addIssueButtonhandler = function() {
-			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position=0:0&filternodetypes=Issue", 410, 730);
-		};
-		Event.observe(addIssueButton,"click", addIssueButtonhandler);
-		key.insert(addIssueButton);
-
-		var addIdeaButton = new Element("div", {'class':'active mainfont toolbarbutton','style':'color:black;background:'+solutionbackpale+';', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>'});
-		var addIdeaButtonicon = new Element("img", {'style':'width:14px;height:14px;vertical-align:middle;padding-right:3px;','src':"<?php echo $HUB_FLM->getImagePath('add.png'); ?>", 'border':'0'});
-		addIdeaButton.insert(addIdeaButtonicon);
-		addIdeaButton.insert('<span style="vertical-align:middle"><?php echo $LNG->SOLUTION_NAME; ?></span>');
-		var addIdeaButtonhandler = function() {
-			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position=0:0&filternodetypes=Solution", 410, 730);
-		};
-		Event.observe(addIdeaButton,"click", addIdeaButtonhandler);
-		key.insert(addIdeaButton);
-
-		var addProButton = new Element("div", {'class':'active mainfont toolbarbutton','style':'color:black;background:'+probackpale+';', 'title':'<?php echo $LNG->FORM_EVIDENCE_PRO_TITLE_ADD; ?>'});
-		var addProButtonicon = new Element("img", {'style':'width:14px;height:14px;vertical-align:middle;padding-right:3px;','src':"<?php echo $HUB_FLM->getImagePath('add.png'); ?>", 'border':'0'});
-		addProButton.insert(addProButtonicon);
-		addProButton.insert('<span style="vertical-align:middle"><?php echo $LNG->PRO_NAME; ?></span>');
-		var addProButtonhandler = function() {
-			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position=0:0&filternodetypes=Pro", 410, 730);
-		};
-		Event.observe(addProButton,"click", addProButtonhandler);
-		key.insert(addProButton);
-
-		var addConButton = new Element("div", {'class':'active mainfont toolbarbutton','style':'color:black;background:'+conbackpale+';', 'title':'<?php echo $LNG->FORM_EVIDENCE_CON_TITLE_ADD; ?>'});
-		var addConButtonicon = new Element("img", {'style':'width:14px;height:14px;vertical-align:middle;padding-right:3px;','src':"<?php echo $HUB_FLM->getImagePath('add.png'); ?>", 'border':'0'});
-		addConButton.insert(addConButtonicon);
-		addConButton.insert('<span style="vertical-align:middle"><?php echo $LNG->CON_NAME; ?></span>');
-		var addConButtonhandler = function() {
-			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position=0:0&filternodetypes=Con", 410, 730);
-		};
-		Event.observe(addConButton,"click", addConButtonhandler);
-		key.insert(addConButton);
-
-		var addMapButton = new Element("div", {'class':'active mainfont toolbarbutton','style':'color:black;background:'+plainbackpale+';', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>'});
-		var addMapButtonicon = new Element("img", {'style':'width:14px;height:14px;vertical-align:middle;padding-right:3px;','src':"<?php echo $HUB_FLM->getImagePath('add.png'); ?>", 'border':'0'});
-		addMapButton.insert(addMapButtonicon);
-		addMapButton.insert('<span style="vertical-align:middle"><?php echo $LNG->MAP_NAME; ?></span>');
-		var addMapButtonhandler = function() {
-			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position=0:0&filternodetypes=Map&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
-		};
-		Event.observe(addMapButton,"click", addMapButtonhandler);
-		key.insert(addMapButton);
-	} else {
-		var key = new Element("div", {'id':'keydiv', 'style':'float:left;margin-top:10px;'});
-		tb2.insert(key);
-
-		var challangekey = '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+challengebackpale+'; color: black; font-size:10pt;font-weight:bold"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
-		key.insert(challangekey);
-		var text = '<div style="float:left;margin-right:5px;"><span style="font-size:10pt;padding:3px;background:'+issuebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ISSUE_NAME_SHORT; ?></span></div>';
-		text += '<div style="float:left;margin-right:5px;"><span style="font-size:10pt;padding:3px;background: '+solutionbackpale+'; color: black; font-weight:bold"><?php echo $LNG->SOLUTION_NAME_SHORT; ?></span></div>';
-		text += '<div style="float:left;margin-right:5px;"><span style="font-size:10pt;padding:3px;background: '+probackpale+'; color: black; font-weight:bold"><?php echo $LNG->PRO_NAME; ?></span></div>';
-		text += '<div style="float:left;margin-right:5px;"><span style="font-size:10pt;padding:3px;background: '+conbackpale+'; color: black; font-weight:bold"><?php echo $LNG->CON_NAME; ?></span></div>';
-		text += '<div style="float:left;"><span style="font-size:10pt;padding:3px;background: '+plainbackpale+'; color: black; font-weight:bold"><?php echo $LNG->MAP_NAME; ?></span></div>';
-
-		key.insert(text);
-	}*/
 
 	tb1.insert(tb2);
 
@@ -1307,9 +1376,45 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 }
 
 /**
+ * Add the buttons to get the Embed code and JSONLD output
+ */
+function addEmbedButtons(contentarea) {
+
+	var jsonldButton = new Element("div", {'style':'float:right;margin-left:10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
+	var jsonldButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0'});
+	jsonldButton.insert(jsonldButtonicon);
+	var jsonldButtonhandler = function() {
+		var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
+		textAreaPrompt('<?php echo $LNG->GRAPH_JSONLD_MESSAGE; ?>', code, "", "", "");
+	};
+	Event.observe(jsonldButton,"click", jsonldButtonhandler);
+	contentarea.insert(jsonldButton);
+
+	var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left:10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_EMBEDEDIT_HINT;?>'});
+	var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embededit.png'); ?>", 'border':'0'});
+	embedButton.insert(embedButtonicon);
+	var embedButtonhandler = function() {
+		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/editmap.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
+		textAreaPrompt('<?php echo $LNG->GRAPH_EMBEDEDIT_MESSAGE; ?>', code, "", "", "", 400, 300);
+	};
+	Event.observe(embedButton,"click", embedButtonhandler);
+	contentarea.insert(embedButton);
+
+	var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left: 10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_EMBED_HINT;?>'});
+	var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embed.png'); ?>", 'border':'0'});
+	embedButton.insert(embedButtonicon);
+	var embedButtonhandler = function() {
+		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/map.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
+		textAreaPrompt('<?php echo $LNG->GRAPH_EMBED_MESSAGE; ?>', code, "", "", "");
+	};
+	Event.observe(embedButton,"click", embedButtonhandler);
+	contentarea.insert(embedButton);
+}
+
+/**
  * Create the graph toolbar for all embedded network graphs
  */
-function createEmbedMapGraphToolbar(positionedMap, contentarea) {
+function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 
 	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding-top:5px;display:block;'});
 
@@ -1317,7 +1422,7 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
 	zoomOut.insert(zoomOuticon);
 	var zoomOuthandler = function() {
-		zoomFD(positionedMap, 5.0);
+		zoomFD(forcedirectedGraph, 5.0);
 	};
 	Event.observe(zoomOut,"click", zoomOuthandler);
 	tb2.insert(zoomOut);
@@ -1326,7 +1431,7 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
 	zoomIn.insert(zoomInicon);
 	var zoomInhandler = function() {
-		zoomFD(positionedMap, -5.0);
+		zoomFD(forcedirectedGraph, -5.0);
 	};
 	Event.observe(zoomIn,"click", zoomInhandler);
 	tb2.insert(zoomIn);
@@ -1335,7 +1440,7 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
 	zoom1to1.insert(zoom1to1icon);
 	var zoom1to1handler = function() {
-		zoomFDFull(positionedMap);
+		zoomFDFull(forcedirectedGraph);
 	};
 	Event.observe(zoom1to1,"click", zoom1to1handler);
 	tb2.insert(zoom1to1);
@@ -1344,36 +1449,126 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
 	zoomFit.insert(zoomFiticon);
 	var zoomFithandler = function() {
-		zoomFDFit(positionedMap);
+		zoomFDFit(forcedirectedGraph);
 	};
 	Event.observe(zoomFit,"click", zoomFithandler);
 	tb2.insert(zoomFit);
 
-	var rolloverTitlesChoiceDiv = new Element("div", {'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
-	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover-hi-light.png'); ?>", 'border':'0'});
+	var noderollover = getNodeRollover();
+	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	rolloverTitlesChoiceIcon.chosen = true;
-	Event.observe(rolloverTitlesChoiceIcon,"click", function(event) {
+	if (noderollover == 'false') {
+		rolloverTitlesChoiceDiv.className = "active iconUnselected";
+		rolloverTitlesChoiceDiv.chosen = false;
+		forcedirectedGraph.rolloverTitles = false;
+	}
+	Event.observe(rolloverTitlesChoiceDiv,"click", function(event) {
 		if (this.chosen) {
-			positionedMap.rolloverTitles = false;
+			forcedirectedGraph.rolloverTitles = false;
 			this.chosen = false;
-			this.src = "<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>";
-			$('rolloverTitlesChoiceDiv').className = "active iconUnselected";
+			setNodeRollover(false);
+			this.className = "active iconUnselected";
 		} else {
-			positionedMap.rolloverTitles = true;
+			forcedirectedGraph.rolloverTitles = true;
 			this.chosen = true;
-			this.src = "<?php echo $HUB_FLM->getImagePath('mag-glass-rollover-hi-light.png'); ?>";
-			$('rolloverTitlesChoiceDiv').className = "active iconSelected";
+			setNodeRollover(true);
+			this.className = "active iconSelected";
 		}
 	});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	tb2.insert(rolloverTitlesChoiceDiv);
 
-	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 25px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
+	var noderollover = getNodeRollover();
+	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:20px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
+	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
+	rolloverTitlesChoiceIcon.chosen = true;
+	if (noderollover == 'false') {
+		rolloverTitlesChoiceDiv.className = "active iconUnselected";
+		rolloverTitlesChoiceDiv.chosen = false;
+		forcedirectedGraph.rolloverTitles = false;
+	}
+	Event.observe(rolloverTitlesChoiceDiv,"click", function(event) {
+		if (this.chosen) {
+			forcedirectedGraph.rolloverTitles = false;
+			this.chosen = false;
+			setNodeRollover(false);
+			this.className = "active iconUnselected";
+		} else {
+			forcedirectedGraph.rolloverTitles = true;
+			this.chosen = true;
+			setNodeRollover(true);
+			this.className = "active iconSelected";
+		}
+	});
+	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
+	tb2.insert(rolloverTitlesChoiceDiv);
+
+	var linktext = getLinkText();
+	var linktextChoiceDiv = new Element("div", {'chosen':'true','id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
+	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'border':'0'});
+	linktextChoiceIcon.chosen = true;
+	if (linktext == 'false') {
+		linktextChoiceDiv.className = "active iconUnselected";
+		linktextChoiceDiv.chosen = false;
+		forcedirectedGraph.linkLabelTextOn = false;
+	}
+	linktextChoiceDiv.insert(linktextChoiceIcon);
+	Event.observe(linktextChoiceDiv,"click", function(event) {
+		if (this.chosen) {
+			forcedirectedGraph.linkLabelTextOn = false;
+			this.chosen = false;
+			setLinkText(false);
+			this.className = "active iconUnselected";
+			forcedirectedGraph.refresh();
+		} else {
+			forcedirectedGraph.linkLabelTextOn = true;
+			this.chosen = true;
+			setLinkText(true);
+			this.className = "active iconSelected";
+			forcedirectedGraph.refresh();
+		}
+	});
+	linktextChoiceDiv.insert(linktextChoiceIcon);
+	tb2.insert(linktextChoiceDiv);
+
+	var linkcurveChoiceDiv = new Element("div", {'id':'linkcurveChoiceDiv', 'class':'active iconUnselected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_CURVE_CHOICE_HINT;?>'});
+	var linkcurveChoiceIcon = new Element("img", {'style':'vertical-align:middle;height:20px','src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'border':'0'});
+	linkcurveChoiceIcon.chosen = false;
+	var linkcurve = getLinkCurve();
+	if (linkcurve == 'true') {
+		forcedirectedGraph.linkCurveOn = true;
+		linkcurveChoiceDiv.chosen = false;
+		linkcurveChoiceDiv.className = "active iconSelected";
+		forcedirectedGraph.refresh();
+	}
+
+	linkcurveChoiceDiv.insert(linkcurveChoiceIcon);
+	Event.observe(linkcurveChoiceDiv,"click", function(event) {
+		if (this.chosen) {
+			forcedirectedGraph.linkCurveOn = false;
+			this.chosen = false;
+			setLinkCurve(false);
+			this.className = "active iconUnselected";
+			forcedirectedGraph.refresh();
+		} else {
+			forcedirectedGraph.linkCurveOn = true;
+			this.chosen = true;
+			setLinkCurve(true);
+			this.className = "active iconSelected";
+			forcedirectedGraph.refresh();
+		}
+	});
+	linkcurveChoiceDiv.insert(linkcurveChoiceIcon);
+	tb2.insert(linkcurveChoiceDiv);
+
+	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 20px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
 	var printButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
-		printCanvas(positionedMap);
+		printCanvas(forcedirectedGraph);
 	};
 	Event.observe(printButton,"click", printButtonhandler);
 	tb2.insert(printButton);
@@ -1400,7 +1595,7 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	//searchfielddiv.insert(searchicon)
 	//searchdiv.insert(searchfielddiv);
 
-	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:200px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
+	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:160px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
 	searchdiv.insert(searchfield);
 	Event.observe(searchfield,"keyup", function(event) {
 		if(checkKeyPressed(event)) {
@@ -1408,7 +1603,17 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 		}
 	});
 
-	var gobutton = new Element("button", {
+	var buttondiv = new Element('div', {'style': 'float:left;'});
+	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'style': 'float:left;padding-left:3px; padding-right:10px;', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
+	searchbutton.src = "<?php echo $HUB_FLM->getImagePath('search.png'); ?>";
+	Event.observe(searchbutton,"click", function(event){
+		var query = $('qmap').value;
+		searchMap(query);
+	});
+	buttondiv.insert(searchbutton);
+	searchdiv.insert(buttondiv);
+
+	/*var gobutton = new Element("button", {
 					'class':'active',
 					'id':'map-go-button',
 					'class':'searchborder',
@@ -1421,6 +1626,7 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	}
 	Event.observe(gobutton,"click", handleMapSearch);
 	searchdiv.insert(gobutton);
+	*/
 
 	var clearbutton = new Element("img", {
 					'class':'active',
@@ -1434,8 +1640,8 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	var clearhandler = function(event) {
 		$('qmap').value='';
 		// Map
-		clearSelectedMapNodes(positionedMap);
-		positionedMap.refresh();
+		clearSelectedMapNodes(forcedirectedGraph);
+		forcedirectedGraph.refresh();
 
 		//Tree
 		clearKnowledgeTreeSelections();
@@ -1461,9 +1667,171 @@ function createEmbedMapGraphToolbar(positionedMap, contentarea) {
 	Event.observe(toggleview,"click", toggleviewhandler);
 	tb2.insert(toggleview);
 
+	var movieModeButton = new Element("div", {'id':'mediamodebuttondiv', 'class':'active','style':'float:left;margin-left: 20px;margin-top:0px;padding:0px;'});
+	if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
+		movieModeButton.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
+	} else {
+		movieModeButton.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
+	}
+
+	var movieModeIcon = new Element("img", {'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>", 'border':'0'});
+	movieModeButton.insert(movieModeIcon);
+	var movieModeButtonhandler = function(event) {
+		if (this.chosen) {
+			this.style.border = "3px solid transparent";
+		} else {
+			this.style.border = "3px solid #80ba42";
+		}
+
+		if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
+			if (this.chosen) {
+				this.chosen = false;
+				forcedirectedGraph.mediaReplayMode = false;
+				forcedirectedGraph.refresh();
+			} else {
+				this.chosen = true;
+				forcedirectedGraph.mediaReplayMode = true;
+				forcedirectedGraph.refresh();
+			}
+		} else {
+			if (this.chosen) {
+				if (mapPlayer) {
+					clearInterval(mapPlayer);
+				}
+				//forcedirectedGraph.Events.enable = true;
+				//forcedirectedGraph.Events.enableForEdges = true;
+				clearMapNodeReplayIndexes(forcedirectedGraph);
+				this.chosen = false;
+				forcedirectedGraph.mapReplayMode = false;
+				forcedirectedGraph.mapReplayCurrentIndex = -1;
+				$('mapreplayslider').value = 0;
+				$('mapreplayslider').max = 0;
+				$('moviemaptoolbar').style.display = "none";
+				forcedirectedGraph.refresh();
+			} else {
+				//forcedirectedGraph.Events.enable = false;
+				//forcedirectedGraph.Events.enableForEdges = false;
+				addMapNodeReplayIndexes(forcedirectedGraph);
+				this.chosen = true;
+				forcedirectedGraph.mapReplayMode = true;
+				forcedirectedGraph.mapReplayCurrentIndex = 0;
+				$('mapreplayslider').value = 0;
+				$('mapreplayslider').max = forcedirectedGraph.mapReplayMaxIndex;
+				$('moviemaptoolbar').style.display = "block";
+				forcedirectedGraph.refresh();
+			}
+		}
+	};
+	Event.observe(movieModeIcon,"click", movieModeButtonhandler);
+	tb2.insert(movieModeButton);
+
+	tb2.insert(createMapMovieBar(forcedirectedGraph));
+
 	return tb2;
 }
 
+function playMap(forcedirectedGraph) {
+	var currentIndex = parseInt(forcedirectedGraph.mapReplayCurrentIndex);
+	if (currentIndex >= forcedirectedGraph.mapReplayMaxIndex) {
+		$('mapplaybutton').src = "<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>";
+		$('mapplaybutton').title = "Replay the map based on creationdates";
+		$('mapplaybutton').mode = "pause";
+		clearInterval(mapPlayer);
+	} else {
+		$('mapreplayslider').value = currentIndex+1;
+		forcedirectedGraph.mapReplayCurrentIndex = $('mapreplayslider').value;
+		forcedirectedGraph.refresh();
+	}
+}
+
+function createMapMovieBar(forcedirectedGraph) {
+	var tb = new Element("div", {'id':'moviemaptoolbar', 'style':'float:left;margin-left:10px;padding:0px;display:none;'});
+	var tbspeed = new Element("div", {'style':'float:left;padding:0px;padding-top:2px;'});
+	var tbinner = new Element("div", {'class':'curvedBorder', 'style':'float:left;background-color: #E8E8E8;padding:0px;'});
+	tb.insert(tbspeed);
+	tb.insert(tbinner);
+
+	var mapReplayInterval = new Element("input", {'id':'mapreplayspeed', 'type':'text', 'value':'', 'style':'width:40px;','title':'<?php echo $LNG->MAP_REPLAY_SPEED_UNITS_HINT; ?>'});
+	mapReplayInterval.value = forcedirectedGraph.mapReplayInterval;
+	tbspeed.insert(mapReplayInterval);
+	var mapReplayIntervalHandler = function(event) {
+		try {
+			var replayInterval = parseInt(this.value);
+			setReplaySpeed(replayInterval);
+			forcedirectedGraph.mapReplayInterval = replayInterval;
+		} catch(e) {
+			alert("<?php echo $LNG->MAP_REPLAY_SPEED_ERROR; ?>");
+		}
+	};
+	Event.observe(mapReplayInterval,"change", mapReplayIntervalHandler);
+
+	var mapReplayIntervalType = new Element("label", {'style':'font-size:9pt;padding-left:5px;padding-right:10px;','title':'<?php echo $LNG->MAP_REPLAY_SPEED_UNITS_HINT; ?>'});
+	mapReplayIntervalType.innerHTML = "<?php echo $LNG->MAP_REPLAY_SPEED_UNITS; ?>";
+	tbspeed.insert(mapReplayIntervalType);
+
+	var mapPlayIcon = new Element("img", {'id':'mapplaybutton', 'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_PLAY_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>", 'border':'0'});
+	var mapPlayButtonhandler = function(event) {
+		// is it play or pause mode
+		if (this.mode == "play") {
+			// pause
+			this.src = "<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>";
+			this.title = "<?php echo $LNG->MAP_REPLAY_HINT; ?>";
+			this.mode = "pause";
+			clearInterval(mapPlayer);
+		} else {
+			// play
+			if (forcedirectedGraph.mapReplayCurrentIndex == forcedirectedGraph.mapReplayMaxIndex) {
+				$('mapreplayslider').value = 0;
+				forcedirectedGraph.mapReplayCurrentIndex = 0;
+				forcedirectedGraph.refresh();
+			}
+			this.src = "<?php echo $HUB_FLM->getImagePath('video-pause-white.png'); ?>";
+			this.title = "<?php echo $LNG->MAP_REPLAY_PAUSE_HINT; ?>";
+			this.mode = "play";
+			if (mapPlayer) {
+				clearInterval(mapPlayer);
+			}
+			mapPlayer = setInterval(function(){ playMap(forcedirectedGraph) }, (forcedirectedGraph.mapReplayInterval));
+		}
+	};
+	Event.observe(mapPlayIcon,"click", mapPlayButtonhandler);
+	tbinner.insert(mapPlayIcon);
+
+	var mapBackIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_BACK_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-back-white.png'); ?>", 'border':'0'});
+	var mapBackButtonhandler = function(event) {
+		var currentIndex = parseInt($('mapreplayslider').value);
+		if (currentIndex > 0) {
+			$('mapreplayslider').value = currentIndex-1;
+			forcedirectedGraph.mapReplayCurrentIndex = $('mapreplayslider').value;
+			forcedirectedGraph.refresh();
+		}
+	};
+	Event.observe(mapBackIcon,"click", mapBackButtonhandler);
+	tbinner.insert(mapBackIcon);
+
+	var mapslider = new Element("input", {'id':'mapreplayslider', 'type':'range', 'min':'0', 'max':0, 'value':'0', 'steps':'1', 'style':'width:160px;height:18px; margin-top:2px'});
+	var mapSliderHandler = function(event) {
+			forcedirectedGraph.mapReplayCurrentIndex = parseInt(this.value);
+			forcedirectedGraph.refresh();
+	};
+	Event.observe(mapslider,"change", mapSliderHandler);
+	tbinner.insert(mapslider);
+
+	var mapForwardIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_FORWARD_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-forward-white.png'); ?>", 'border':'0'});
+	var mapForwardButtonhandler = function(event) {
+		var currentIndex = parseInt($('mapreplayslider').value);
+		if (currentIndex < forcedirectedGraph.mapReplayMaxIndex) {
+			$('mapreplayslider').value = currentIndex+1;
+			forcedirectedGraph.mapReplayCurrentIndex = $('mapreplayslider').value;
+			forcedirectedGraph.refresh();
+		}
+	};
+	Event.observe(mapForwardIcon,"click", mapForwardButtonhandler);
+	tbinner.insert(mapForwardIcon);
+
+
+	return tb;
+}
 
 /**
  * Called by the map to go to the given map
@@ -1485,12 +1853,18 @@ function viewMapDetails(mapid) {
 
 /*** MAP EDIT SIDEBAR AND ITS FUNCTIONS ***/
 
-var editPositionedMap = "";
-function createEditSidebar(container, positionedMap) {
+function pauseMediaPlayer() {
+	if (mediaPlayerPause) {
+		mediaPlayerPause();
+	}
+}
+
+var editforcedirectedGraph = "";
+function createEditSidebar(container, forcedirectedGraph) {
 
 	container.innerHTML = "";
 
-	editPositionedMap = positionedMap;
+	editforcedirectedGraph = forcedirectedGraph;
 
 	var mainwidth = 240;
 	if (EDIT_WIDTH) {
@@ -1517,6 +1891,7 @@ function createEditSidebar(container, positionedMap) {
 	var issueaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->ISSUE_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	issueaddbutton.setAttribute('draggable', 'true');
 	Event.observe(issueaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Issue');
 	});
@@ -1529,6 +1904,7 @@ function createEditSidebar(container, positionedMap) {
 	var solutionaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->SOLUTION_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	solutionaddbutton.setAttribute('draggable', 'true');
 	Event.observe(solutionaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Solution');
 	});
@@ -1541,6 +1917,7 @@ function createEditSidebar(container, positionedMap) {
 	var proaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->PRO_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	proaddbutton.setAttribute('draggable', 'true');
 	Event.observe(proaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Pro');
 	});
@@ -1553,6 +1930,7 @@ function createEditSidebar(container, positionedMap) {
 	var conaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->CON_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	conaddbutton.setAttribute('draggable', 'true');
 	Event.observe(conaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Con');
 	});
@@ -1565,6 +1943,7 @@ function createEditSidebar(container, positionedMap) {
 	var argumentaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->ARGUMENT_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	argumentaddbutton.setAttribute('draggable', 'true');
 	Event.observe(argumentaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Argument');
 	});
@@ -1577,6 +1956,7 @@ function createEditSidebar(container, positionedMap) {
 	var commentaddbutton = new Element('img', {'style':'margin-right:10px;width:28px;height:28px;-webkit-user-drag:element', 'class':'active', 'title':'<?php echo $LNG->COMMENT_NAME.": ".$LNG->MAP_EDITOR_NEW_NODE_HINT; ?>'});
 	commentaddbutton.setAttribute('draggable', 'true');
 	Event.observe(commentaddbutton,"dragstart", function(e){
+		pauseMediaPlayer();
 		e.dataTransfer.effectAllowed = "copy";
 		e.dataTransfer.setData('text', 'Idea');
 	});
@@ -1724,11 +2104,11 @@ function runEditBarSearch(start, max, orderby, sort) {
 				if(json.nodeset[0].nodes.length > 0){
 					var nodes = json.nodeset[0].nodes;
 
-					if (editPositionedMap != "") {
+					if (editforcedirectedGraph != "") {
 						var count = nodes.length;
 						for (var i=0; i<count; i++) {
 							var node = nodes[i].cnode;
-							var mapnode = editPositionedMap.graph.getNode(node.nodeid);
+							var mapnode = editforcedirectedGraph.graph.getNode(node.nodeid);
 							if (mapnode) {
 								node.inmap = true;
 							}
@@ -1748,8 +2128,8 @@ function runEditBarSearch(start, max, orderby, sort) {
 					$("item-editbar-search-list").innerHTML = "<div style='margin-top:5px;'><?php echo $LNG->MAP_EDITOR_SEARCH_NO_RESULTS; ?></div>";
 				}
 
-				if (editPositionedMap != "" && NODE_ARGS) {
-					NODE_ARGS['blockednodeids'] = getMapNodeString(editPositionedMap);
+				if (editforcedirectedGraph != "" && NODE_ARGS) {
+					NODE_ARGS['blockednodeids'] = getMapNodeString(editforcedirectedGraph);
 				}
 
 				viewEditBarSearch();
@@ -1791,11 +2171,11 @@ function loadEditBarNodes(userid, start, max, orderby, sort){
 			if(json.nodeset[0].nodes.length > 0){
 				var nodes = json.nodeset[0].nodes;
 
-				if (editPositionedMap != "") {
+				if (editforcedirectedGraph != "") {
 					var count = nodes.length;
 					for (var i=0; i<count; i++) {
 						var node = nodes[i].cnode;
-						var mapnode = editPositionedMap.graph.getNode(node.nodeid);
+						var mapnode = editforcedirectedGraph.graph.getNode(node.nodeid);
 						if (mapnode) {
 							node.inmap = true;
 						}
@@ -1815,8 +2195,8 @@ function loadEditBarNodes(userid, start, max, orderby, sort){
 				$("item-editbar-idea-list").insert("<?php echo $LNG->FORM_SELECTOR_NOT_ITEMS; ?>");
 			}
 
-			if (editPositionedMap != "" && NODE_ARGS) {
-				NODE_ARGS['blockednodeids'] = getMapNodeString(editPositionedMap);
+			if (editforcedirectedGraph != "" && NODE_ARGS) {
+				NODE_ARGS['blockednodeids'] = getMapNodeString(editforcedirectedGraph);
 			}
 		}
 	});
@@ -2223,10 +2603,10 @@ function createAlertNodeLink(alerttype, postid, node, container, display) {
 		auditAlertClicked(this.postid, this.alerttype);
 		clearKnowledgeTreeSelections();
 		selectKnowledgeTreeItem(this.postid);
-		clearSelectedMapNodes(positionedMap)
-		setSelectedMapNode(positionedMap, this.postid);
-		panToNodeFD(positionedMap, this.postid);
-		positionedMap.refresh();
+		clearSelectedMapNodes(forcedirectedGraph)
+		setSelectedMapNode(forcedirectedGraph, this.postid);
+		panToNodeFD(forcedirectedGraph, this.postid);
+		forcedirectedGraph.refresh();
 	});
 	nodespan.insert(nodespantext);
 	container.insert(nodespan);

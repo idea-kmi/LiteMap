@@ -167,7 +167,8 @@ $LNG->MAP_CONNECTION_TEST_ERROR = 'NOT ALLOWED';
 $LNG->MAP_CHANGE_NODETYPE = 'change';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE = 'Rollover Titles';
 $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT = 'Turn on and off having the post titles appear as a rollover hint. This is good for exploring the map when zoomed out, but perhaps annoying when creating a map.';
-$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Turn on and off having the link labels showing';
+$LNG->MAP_LINK_TEXT_CHOICE_HINT = 'Turn on and off having the link labels showing in this map';
+$LNG->MAP_LINK_CURVE_CHOICE_HINT = 'Turn on and off using curved links in this map';
 
 $LNG->FORM_MAP_ENTER_SUMMARY_ERROR = 'Please enter an '.$LNG->MAP_NAME.' title before trying to save';
 $LNG->LOADING_MAPS = '(Loading '.$LNG->MAPS_NAME.'...)';
@@ -816,9 +817,10 @@ $LNG->HELP_BUILDER_EXTENSION_IE_MESSAGE = 'This IE extension needs to run a dll 
 
 $LNG->HELP_BUILDER_WARNING = "NOTE: Due to changes in security policies on browsers it is now possible for websites to block bookmarklets like ours that load content from a another website from working on their web pages.
 					Facebook and Twitter are two examples of sites that have implemented this policy.
-					On these sites, clicking our bookmarklet shortcut will currently do nothing, so it may appear broken, but it is just block.
+					On these sites, clicking our bookmarklet shortcut will currently do nothing, so it may appear broken, but it is just blocked.
 					This bookmarklet will still work on the majority of websites as they have not implemented this new security policy.
-					We are currently writing browser specific extentions to help with this issue (see below).";
+					Your browser may also block the bookmarklet, so you may have to override your browser setting to get it to work.
+					We are currently writing new browser specific extentions to help with this issue (see below).";
 
 /** MAIN TAB SCREENS - TABBERLIB **/
 $LNG->TAB_ADD_MAP_LINK = 'Add '.$LNG->MAP_NAME;
@@ -964,4 +966,50 @@ $LNG->TAB_PRINT_TITLE_COMMENT = 'LiteMap: '.$LNG->COMMENTS_NAME.' Listing';
 $LNG->TAB_PRINT_TITLE_EVIDENCE = 'LiteMap: '.$LNG->ARGUMENTS_NAME.' Listing';
 $LNG->TAB_PRINT_TITLE_MAP = 'LiteMap: '.$LNG->MAPS_NAME.' Listing';
 $LNG->TAB_PRINT_TITLE_RESOURCE = 'LiteMap: '.$LNG->RESOURCES_NAME.' Listing';
+
+/** MEDIA MAPPING **/
+$LNG->MAP_MEDIA_LABEL = "Media Url";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL = "or YouTube Movie";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON = "Import from YouTube";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR = "Clear YouTube Movie";
+
+$LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL = "or Vimeo Movie";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON = "Import from Vimeo";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR = "Clear Vimeo Movie";
+
+$LNG->MAP_MOVIE_WIDTH_LABEL = "Movie Width";
+$LNG->MAP_MOVIE_HEIGHT_LABEL = "Movie Height";
+
+$LNG->MAP_MEDIA_HELP = "Add a movie or sound file url to the map. You can then annotate nodes as pointers to timestamps in that media";
+$LNG->MAP_MOVIE_WIDTH_HELP = "Set the preferred width to show the movie in the map";
+$LNG->MAP_MOVIE_HEIGHT_HELP = "Set the preferred height to show the movie in the map";
+
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Click the \'Import from YouTube\' button to add your YouTube movie \'Embed\' code. The width, height and movie id will be extracted and used to load the movie in the map.";
+$LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Paste your YouTube movie \'Embed\' code here:";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Click the \'Import from Vimeo\' button to add your Vimeo movie \'Embed\' code. The width, height and movie id will be extracted and used to load the movie in the map.";
+$LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Paste your Vimeo movie \'Embed\' code here:";
+
+$LNG->MAP_MEDIA_NODE_JUMP_HINT = "Jump To given media index time";
+$LNG->MAP_MEDIA_NODE_JUMP = "Jump";
+$LNG->MAP_MEDIA_NODE_MEDIAINDEX = "Media Index: ";
+$LNG->MAP_MEDIA_NODE_ASSIGN_HINT = "Assign given media index time to node";
+$LNG->MAP_MEDIA_NODE_ASSIGN = "Assign index: ";
+$LNG->MAP_MEDIA_NODE_REMOVE_HINT = "Remove media index time from this node";
+$LNG->MAP_MEDIA_NODE_REMOVE = "Remove index";
+$LNG->MAP_MEDIA_MODE_HINT = "Toggle Map media replay mode: when on, nodes will only appear after their media index time.";
+
+ // not sure what these should be
+$LNG->MAP_MOVIE_ERROR = "Error loading movie";
+$LNG->MAP_AUDIO_ERROR = "Error loading audio";
+
+// Map Replay
+$LNG->MAP_REPLAY_SPEED_UNITS = "ms";
+$LNG->MAP_REPLAY_SPEED_UNITS_HINT = "Please specify the replay speed in milliseconds greater than zero";
+$LNG->MAP_REPLAY_PLAY_HINT = "Replay the map based on creationdates";
+$LNG->MAP_REPLAY_PAUSE_HINT = "Pause the map replay";
+$LNG->MAP_REPLAY_BACK_HINT = "Move back in the replay";
+$LNG->MAP_REPLAY_FORWARD_HINT = "Move forward in the replay";
+$LNG->MAP_REPLAY_SPEED_ERROR  = "Please make sure the speed value is a valid number of milliseconds greater than zero";
+$LNG->MAP_REPLAY_MODE_HINT = "Toggle Map replay mode: when on, nodes will be sorted by their creation date and you will get controls to replay the map at a specified speed.";
 ?>

@@ -579,6 +579,10 @@ function renderMapPickerNode(node, role,includeUser){
 		itDiv.setAttribute('draggable', 'true');
 		itDiv.setAttribute('style', '-webkit-user-drag:element'); // For Safari
 		Event.observe(itDiv,"dragstart", function(e){
+			if (mediaPlayerPause) {
+				mediaPlayerPause();
+			}
+
 			e.dataTransfer.effectAllowed = "copy";
 			e.dataTransfer.setData('text', node.nodeid);
 		});
@@ -4542,6 +4546,14 @@ function printNodeExplore(nodeargs, title, nodeid){
 	var urlcall =  URL_ROOT+"ui/popups/printexplore.php?context="+CONTEXT+"&title="+encodeURIComponent(title)+"&nodeid="+nodeid+"&url="+encodeURIComponent(reqUrl);
 
 	loadDialog('printexplore', urlcall, 800, 700);
+}
+
+/**
+ * Print current linear view in new popup window
+ */
+function printMapKnowledgeTree(nodeid, title){
+	var urlcall =  URL_ROOT+"ui/popups/printknowledgetree.php?title="+encodeURIComponent(title)+"&nodeid="+nodeid;
+	loadDialog('printlinearview', urlcall, 800, 700);
 }
 
 // NODE CONNECTION FUNCTIONS

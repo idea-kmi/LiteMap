@@ -668,6 +668,7 @@ CREATE TABLE `ViewNode` (
   `ModificationDate` double NOT NULL DEFAULT '0',
   `XPos` float NOT NULL DEFAULT '0',
   `YPos` float NOT NULL DEFAULT '0',
+  `MediaIndex` double NOT NULL DEFAULT '-1',
   PRIMARY KEY (`ViewID`,`NodeID`,`UserID`),
   KEY `UserID` (`UserID`),
   KEY `ViewNode_ibfk_3` (`NodeID`),

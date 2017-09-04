@@ -96,8 +96,8 @@ function loginExternal($provider, &$errors) {
 
     clearSession();
 
-	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth-2.6.0/hybridauth/config.php';
-	require_once( $CFG->dirAddress.'core/lib/hybridauth-2.6.0/hybridauth/Hybrid/Auth.php' );
+	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth/config.php';
+	require_once( $CFG->dirAddress.'core/lib/hybridauth/Hybrid/Auth.php' );
 
 	try{
 		// create an instance for Hybridauth with the configuration file path as parameter
@@ -145,8 +145,8 @@ function loginExternal($provider, &$errors) {
 function logoutExternal() {
     global $CFG;
 
-	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth-2.6.0/hybridauth/config.php';
-	require_once( $CFG->dirAddress.'core/lib/hybridauth-2.6.0/hybridauth/Hybrid/Auth.php' );
+	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth/config.php';
+	require_once( $CFG->dirAddress.'core/lib/hybridauth/Hybrid/Auth.php' );
 
 	try{
 		$hybridauth = new Hybrid_Auth( $hybridauth_config );

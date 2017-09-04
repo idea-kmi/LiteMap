@@ -367,8 +367,8 @@ $CFG->SOCIAL_SIGNON_YAHOO_SECRET = "";
  * 6. Then select '(more options)'.
  * 7. In the section 'Authorized Redirect URIs' you need to add a callback URL for your application:
  *	  The URL should start with the URL you have entered into $CFG->homeAddress
- *    followed by 'core/lib/hybridauth-2.6.0/hybridauth/?hauth.done=Google'
- * 	  e.g. https://test.evidence-hub.net/core/lib/hybridauth-2.6.0/hybridauth/?hauth.done=Google
+ *    followed by 'core/lib/hybridauth/?hauth.done=Google'
+ * 	  e.g. https://litemap.net/core/lib/hybridauth/?hauth.done=Google
  * 	  Then press 'Create Client ID'
  * 8. Once you have done this, copy and paste the 'Client ID' as the $CFG-SOCIAL_SIGNON_GOOGLE_ID
  *    and the 'Client Secret' as the $CFG->SOCIAL_SIGNON_GOOGLE_SECRET below

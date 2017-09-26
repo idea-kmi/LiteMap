@@ -1775,7 +1775,7 @@ function createMapMovieBar(forcedirectedGraph) {
 		if (this.mode == "play") {
 			// pause
 			this.src = "<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>";
-			this.title = "<?php echo $LNG->MAP_REPLAY_HINT; ?>";
+			this.title = "<?php echo $LNG->MAP_REPLAY_PLAY_HINT; ?>";
 			this.mode = "pause";
 			clearInterval(mapPlayer);
 		} else {

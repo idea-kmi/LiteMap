@@ -27,7 +27,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 require_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
-$nodeSet = getNodesByGlobal(0,-1,'date','ASC', 'Map,Challenge,Issue,Solution,Pro,Con', 'shortactivity');
+$nodeSet = getNodesByGlobal(0,-1,'date','ASC', 'Map,Challenge,Issue,Solution,Pro,Con,Argument,Idea', 'shortactivity');
 $nodes = $nodeSet->nodes;
 $data = getUserActivityAnalysisData($nodes);
 ?>

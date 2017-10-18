@@ -29,13 +29,17 @@ require_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 $groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 
-$nodeset = getNodesByGroup($groupid,0,-1,'date','DESC', '', 'Map', 'mini');
+$nodeset = getNodesByGroup($groupid,0,-1,'date','DESC', '', 'Map', 'shortactivity');
 $mapnodes = $nodeset->nodes;
 $count = count($mapnodes);
 $nodesCheck = array();
 $nodes = array();
 for ($i=0; $i<$count; $i++) {
 	$next = $mapnodes[$i];
+
+	array_push($nodesCheck, $next->nodeid);
+	array_push($nodes, $next);
+
 	$nextnodeset = getViewNodes($next->nodeid,'shortactivity');
 	$nextnodes = $nextnodeset->nodes;
 	$countk = count($nextnodes);

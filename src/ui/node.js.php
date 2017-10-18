@@ -247,6 +247,29 @@ function displayReportConnectionNodes(objDiv, nodes,start,includeUser,uniqueid, 
 	objDiv.insert(lOL);
 }
 
+
+/**
+ * Render a list of nodes for the Connectedness stats boxes
+ */
+function displayConnectionStatNodes(objDiv,nodes,start,includeUser,uniqueid){
+	if (uniqueid == undefined) {
+		uniqueid = 'idea-list';
+	}
+	var lOL = new Element("ol", {'start':start, 'class':'idea-list-ol'});
+	for(var i=0; i< nodes.length; i++){
+		if(nodes[i].cnode){
+			var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li'});
+			lOL.insert(iUL);
+			var blobDiv = new Element("div", {'class':'idea-blob-list', 'style':'clear:both;float:left;margin-bottom:2px;'});
+			var blobNode = renderWidgetListNode(nodes[i].cnode, uniqueid+i+start,nodes[i].cnode.role[0].role,includeUser,'active', "", true);
+			blobDiv.insert(blobNode);
+			iUL.insert(blobDiv);
+		}
+	}
+	objDiv.insert(lOL);
+}
+
+
 /**
  * Render the given node.
  * Used for Activities, Multi connection Viewer, Stats pages etc. where the node is drawn as a Cohere style box.
@@ -3068,7 +3091,7 @@ function renderWidgetListNode(node, uniQ, role, includeUser, type){
 	var title = node.name;
 	//textCell.insert("<a class='itemtext' style='line-height:1.8em;font-weight:normal' id='desctoggle"+uniQ+"' href='<?php echo $CFG->homeAddress; ?>explore.php?id="+node.nodeid+"'>"+title+"</a>");
 
-	var exploreButton = new Element('a', {'class':'itemtext', 'id':'desctoggle'+uniQ, 'style':'line-height:1.8em;font-weight:normal'});
+	var exploreButton = new Element('a', {'target':'_blank', 'class':'itemtext', 'id':'desctoggle'+uniQ, 'style':'line-height:1.8em;font-weight:normal'});
 	if (role.name == "Map") {
 		if (node.searchid && node.searchid != "") {
 			exploreButton.href= "<?php echo $CFG->homeAddress; ?>map.php?id="+node.nodeid+"&sid="+node.searchid;

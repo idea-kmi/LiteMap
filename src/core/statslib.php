@@ -1732,8 +1732,8 @@ function getTotalUsersCount() {
 	$count = 0;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
-		for ($i=0; $i<$count; $i++) {
+		$counti = count($resArray);
+		for ($i=0; $i<$counti; $i++) {
 			$array = $resArray[$i];
 			$count = $array['num'];
 		}

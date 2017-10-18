@@ -45,8 +45,6 @@ $nodeid = required_param("id",PARAM_ALPHANUMEXT);
 $focusid = optional_param("focusid","",PARAM_ALPHANUMEXT);
 if ($focusid != "") {
 	$selectednodeid = $focusid;
-} else {
-	$selectednodeid = $nodeid;
 }
 
 $searchid = optional_param("sid","",PARAM_ALPHANUMEXT);
@@ -66,53 +64,6 @@ if($node instanceof Error){
 		$userid = $USER->userid;
 	}
 	auditView($userid, $nodeid, 'explore');
-}
-
-$nodetype = $node->role->name;
-if ($nodetype != "Issue") {
-	//get the Issue for this node.
-	if ($nodetype == "Solution") {
-		$connSet = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all','','Issue');
-		$con = $connSet->connections[0];
-		$node = $con->to;
-		if($node instanceof Error){
-			include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
-			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-			die;
-		} else {
-			$nodeid = $node->nodeid;
-			$node = getNode($nodeid);
-			if($node instanceof Error){
-				include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
-				echo "<h1>".$LNG->ISSUE_NAME." ".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-				die;
-			}
-		}
-	} else if ($nodetype == "Pro" || $nodetype == "Con" || $nodetype == "Comment"){
-		$conSetSol = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all', '', 'Solution');
-		$consol = $conSetSol->connections[0];
-		$nodesol = $consol->to;
-		$consSet = getConnectionsByNode($nodesol->nodeid,0,1,'date','ASC', 'all', '', 'Issue');
-		$con = $consSet->connections[0];
-		$node = $con->to;
-		if($node instanceof Error){
-			include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
-			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-			die;
-		} else {
-			$nodeid = $node->nodeid;
-			$node = getNode($nodeid);
-			if($node instanceof Error){
-				include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
-				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
-				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
-				die;
-			}
-		}
-	}
 }
 
 $groupid = optional_param("groupid", "", PARAM_ALPHANUMEXT);

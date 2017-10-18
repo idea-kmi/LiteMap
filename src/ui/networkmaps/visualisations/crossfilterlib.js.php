@@ -186,6 +186,8 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.xAxis().ticks(4);
 
 	/*** NODE TYPES ***/
+	var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>','<?php echo $CFG->issueback; ?>', '<?php echo $CFG->solutionback; ?>', '<?php echo $CFG->proback; ?>', '<?php echo $CFG->conback; ?>', '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#F9B257", "#E1E353"];
+
 	var nodetype = activities.dimension(function(d) {
 		var type = d.nodetype;
 		switch (type) {
@@ -195,7 +197,9 @@ function displayActivityCrossFilterD3Vis(data, width) {
 			case "Solution": return "3."+getNodeTitleAntecedence(d.nodetype, false);
 			case "Pro": return "4."+getNodeTitleAntecedence(d.nodetype, false);
 			case "Con": return "5."+getNodeTitleAntecedence(d.nodetype, false);
-			default: return "6."+type;
+			case "Argument": return "6."+getNodeTitleAntecedence(d.nodetype, false);
+			case "Idea": return "7."+getNodeTitleAntecedence(d.nodetype, false);
+			default: return "8."+type;
 		}
 	});
 	var nodetypeGroup = nodetype.group();
@@ -207,7 +211,11 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(nodetypeGroup)
 		.dimension(nodetype)
-		.colors(['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A"])
+		.colors(colorChoice)
+		.colorAccessor(function(d) {
+			 var key = parseInt(d.key.split(".")[0]);
+			 return key;
+         })
 		.label(function (d) { return d.key.split(".")[1];  })
 		.labelOffsetX(5)
 		.labelOffsetY(20)
@@ -334,6 +342,8 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	var formatDate = d3.time.format("%B %d, %Y");
 	var formatTime = d3.time.format("%a %d %Y %I:%M %p");
 
+	var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>','<?php echo $CFG->issueback; ?>', '<?php echo $CFG->solutionback; ?>', '<?php echo $CFG->proback; ?>', '<?php echo $CFG->conback; ?>', '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#F9B257", "#E1E353"];
+
 	data.forEach(function(d, i) {
 		d.index = i;
 		d.date = new Date(d.date*1000);
@@ -353,8 +363,12 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 				d.color = "<?php echo $CFG->challengebackpale; ?>";
 			} else if (d.nodetype == "Map") {
 				d.color = "<?php echo $CFG->claimbackpale; ?>";
-			} else if (d.nodetype == "Topic") {
-				d.color = "<?php echo $CFG->claimbackpale; ?>";
+			} else if (d.nodetype == "Idea") {
+				d.color = "<?php echo $CFG->commentbackpale; ?>";
+			} else if (d.nodetype == "Challenge") {
+				d.color = "<?php echo $CFG->challengebackpale; ?>";
+			} else if (d.nodetype == "Argument") {
+				d.color = "<?php echo $CFG->argumentbackpale; ?>";
 			} else {
 				d.color = d.children ? color(d.depth) : null;
 			}
@@ -384,12 +398,12 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 				p.totalPro++;
 			} else if (v.nodetype == "Con") {
 				p.totalCon++;
+			} else if (v.nodetype == "Argument") {
+				p.totalArguement++;
+			} else if (v.nodetype == "Idea") {
+				p.totalComment++;
 			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>") {
 				p.totalVote++;
-			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>") {
-				p.totalVoteFor++;
-			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>") {
-				p.totalVoteAgainst++;
 			}
 			return p;
 		},
@@ -407,12 +421,12 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 				p.totalPro--;
 			} else if (v.nodetype == "Con") {
 				p.totalCon--;
+			} else if (v.nodetype == "Argument") {
+				p.totalArguement--;
+			} else if (v.nodetype == "Idea") {
+				p.totalComment--;
 			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>") {
 				p.totalVote--;
-			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>") {
-				p.totalVoteFor--;
-			} else if (v.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>") {
-				p.totalVoteAgainst--;
 			}
 			return p;
 		},
@@ -425,15 +439,12 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 				totalIdea:0,
 				totalPro:0,
 				totalCon:0,
+				totalArguement:0,
+				totalComment:0,
 				totalVote:0,
-				totalVoteFor:0,
-				totalVoteAgainst:0
 			};
 		}
 	);
-
-	//	.stack(usersGrouped, "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>", function(d){return d.value.totalVoteFor;})
-	//	.stack(usersGrouped, "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>", function(d){return d.value.totalVoteAgainst;})
 
 	var widtha = 0;
 	var usercount = users.size();
@@ -455,8 +466,10 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.stack(usersGrouped, getNodeTitleAntecedence("Solution", false), function(d){return d.value.totalIdea;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Pro", false), function(d){return d.value.totalPro;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Con", false), function(d){return d.value.totalCon;})
+		.stack(usersGrouped, getNodeTitleAntecedence("Argument", false), function(d){return d.value.totalArguement;})
+		.stack(usersGrouped, getNodeTitleAntecedence("Idea", false), function(d){return d.value.totalComment;})
 		.stack(usersGrouped, "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>", function(d){return d.value.totalVote;})
-		.colors(['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
+		.colors(colorChoice)
 		.dimension(user)
 		.elasticY(false)
 		.yAxisPadding(0)
@@ -468,35 +481,33 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.renderHorizontalGridLines(true)
 		.renderVerticalGridLines(false)
 		.ordering(function(d){ return -d.value.totalAll; })
-		.title(function(d){ return "";})
-		.renderTitle(false);
+		.title(function(d) {
 
-		//.legend(dc.legend().x(10).y(10).itemHeight(13).gap(5));
-
-		/*.title(function(d) {
-			//alert(d.toSource());
-			var title=d.data.value.y;
-			if (d.data.y == d.data.value.totalIssue) {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalIssue;
-			} else if (d.data.value.nodetype == "Solution") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalIdea;
-			} else if (d.data.value.nodetype == "Pro") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalPro;
-			} else if (d.data.value.nodetype == "Con") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalCon;
-			} else if (d.data.value.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalVote;
-			} else if (d.data.value.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalVoteFor;
-			} else if (d.data.value.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>") {
-				title=getNodeTitleAntecedence(d.data.value.nodetype, true)+" "+d.data.value.totalVoteAgainst;
+			if (d.layer == 0 && d.data.value.totalMap != 0) {
+				return d.data.value.totalMap +" of "+d.data.value.totalAll;
+			} else if (d.layer == 1 && d.data.value.totalChallenge != 0) {
+				return d.data.value.totalChallenge +" of "+d.data.value.totalAll;
+			} else if (d.layer == 2 && d.data.value.totalIssue != 0) {
+				return d.data.value.totalIssue +" of "+d.data.value.totalAll;
+			} else if (d.layer == 3 && d.data.value.totalIdea != 0) {
+				return d.data.value.totalIdea +" of "+d.data.value.totalAll;
+			} else if (d.layer == 4 && d.data.value.totalPro != 0) {
+				return d.data.value.totalPro +" of "+d.data.value.totalAll;
+			} else if (d.layer == 5 && d.data.value.totalCon != 0) {
+				return d.data.value.totalPro +" of "+d.data.value.totalAll;
+			} else if (d.layer == 6 && d.data.value.totalArguement != 0) {
+				return d.data.value.totalArguement +" of "+d.data.value.totalAll;
+			} else if (d.layer == 7 && d.data.value.totalComment != 0) {
+				return d.data.value.totalComment +" of "+d.data.value.totalAll;
+			} else if (d.layer == 8 && d.data.value.totalVote != 0) {
+				return d.data.value.totalVote +" of "+d.data.value.totalAll;
+			} else {
+				return "";
 			}
-
-			return title;
-
 		})
 		.renderTitle(true);
-		*/
+
+		//.legend(dc.legend().x(10).y(10).itemHeight(13).gap(5));
 
 	// Hide labels.
 	//userChart.xAxis().tickFormat(function(v) { return ""; });
@@ -519,17 +530,15 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 			case "Solution": return "3.Added "+getNodeTitleAntecedence(d.nodetype, false);
 			case "Pro": return "4.Added "+getNodeTitleAntecedence(d.nodetype, false);
 			case "Con": return "5.Added "+getNodeTitleAntecedence(d.nodetype, false);
-			case "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>": return "6."+d.nodetype;
-			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return "7."+d.nodetype;
-			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return "8."+d.nodetype;
-			default: return "9."+type;
+			case "Argument": return "6."+getNodeTitleAntecedence(d.nodetype, false);
+			case "Idea": return "7."+getNodeTitleAntecedence(d.nodetype, false);
+			case "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>": return "8."+d.nodetype;
+			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return "9."+d.nodetype;
+			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return "10."+d.nodetype;
+			default: return "11."+type;
 		}
 	});
 	var nodetypeGroup = nodetype.group();
-
-	//	.colors(["#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"])
-	var colorChoice = d3.scale.ordinal().domain([0,1,2,3,4,5])
-          .range(['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", "#F9B257", "#E1E353"]);
 
 	dc.rowChart("#nodetype-chart")
 		.width(350)
@@ -571,6 +580,8 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 					case "Solution": return "Added "+getNodeTitleAntecedence(type, false);
 					case "Pro": return "Added "+getNodeTitleAntecedence(type, false);
 					case "Con": return "Added "+getNodeTitleAntecedence(type, false);
+					case "Argument": return "Added "+getNodeTitleAntecedence(type, false);
+					case "Idea": return "Added "+getNodeTitleAntecedence(type, false);
 					case "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>": return type;
 					case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return type;
 					case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return type;

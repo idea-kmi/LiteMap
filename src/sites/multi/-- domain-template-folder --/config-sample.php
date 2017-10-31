@@ -287,7 +287,7 @@ $CFG->PROXY_PORT = "";
 $CFG->CAPTCHA_ON = true;
 
 // captcha public/private keys.
-// You can get these from the Captcha website (http://www.captcha.net/)
+// You can get these from the Captcha website (https://www.google.com/recaptcha/admin)
 $CFG->CAPTCHA_PUBLIC = "";
 $CFG->CAPTCHA_PRIVATE = "";
 

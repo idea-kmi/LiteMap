@@ -34,16 +34,20 @@
 	// check if user already logged in
     if(isset($USER->userid)){
         header('Location: '.$CFG->homeAddress.'index.php');
-		exit();
+        return;
     }
 
     if ($CFG->signupstatus != $CFG->SIGNUP_REQUEST) {
 	    header('Location: '.$CFG->homeAddress.'index.php');
-		exit();
+	  	return;
+	}
+
+    if($CFG->CAPTCHA_ON) {
+		array_push($HEADER,'<script src="https://www.google.com/recaptcha/api.js" type="text/javascript"></script>');
 	}
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
-    require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha-php-1.11/recaptchalib.php"));
+    require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/recaptchalib.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
     $errors = array();
@@ -61,8 +65,7 @@
 
     $homepage = trim(optional_param("homepage","http://",PARAM_URL));
 
-    $recaptcha_challenge_field = optional_param("recaptcha_challenge_field","",PARAM_TEXT);
-    $recaptcha_response_field = optional_param("recaptcha_response_field","",PARAM_TEXT);
+    $recaptcha_response_field = optional_param("g-recaptcha-response","",PARAM_TEXT);
 
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
     $recentactivitiesemail = optional_param("recentactivitiesemail",$CFG->RECENT_EMAIL_SENDING_SELECTED,PARAM_TEXT);
@@ -120,13 +123,13 @@
 						array_push($errors, $LNG->FORM_ERROR_EMAIL_USED);
 					} else {
 						if($CFG->CAPTCHA_ON) {
-							//check recaptcha is valid
-							$resp = recaptcha_check_answer ($CFG->CAPTCHA_PRIVATE,
-													$_SERVER["REMOTE_ADDR"],
-													$recaptcha_challenge_field,
-													$recaptcha_response_field);
+							$reCaptcha = new ReCaptcha($CFG->CAPTCHA_PRIVATE);
+							$response = $reCaptcha->verifyResponse(
+								$_SERVER["REMOTE_ADDR"],
+								$recaptcha_response_field
+							);
 
-							if ($recaptcha_response_field == "" || !$resp->is_valid) {
+							if ($recaptcha_response_field == "" || $response == null || !$response->success) {
 								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
 							}
 						}
@@ -245,37 +248,37 @@ function checkForm() {
 <form name="register" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
 
     <div class="formrow">
-        <label class="formlabel" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
+        <label class="formlabelbig" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
 		<span class="required">*</span></label>
         <input class="forminput" id="email" name="email" size="40" value="<?php print $email; ?>">
     </div>
     <div class="formrow">
-        <label class="formlabel" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?>
+        <label class="formlabelbig" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?>
 		<span class="required">*</span></label>
         <input class="forminput" id="password" name="password" type="password"  size="30" value="<?php print $password; ?>">
     </div>
     <div class="formrow">
-        <label class="formlabel" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?>
+        <label class="formlabelbig" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?>
         <span class="required">*</span></label>
         <input class="forminput" id="confirmpassword" name="confirmpassword" type="password" size="30" value="<?php print $confirmpassword; ?>">
     </div>
     <div class="formrow">
-        <label class="formlabel" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?>
+        <label class="formlabelbig" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?>
         <span class="required">*</span></label>
         <input class="forminput" type="text" id="fullname" name="fullname" size="40" value="<?php print $fullname; ?>">
     </div>
     <div class="formrow">
-        <label class="formlabel" for="description"><?php echo $LNG->FORM_REGISTER_REQUEST_DESC; ?></label>
+        <label class="formlabelbig" for="description"><?php echo $LNG->FORM_REGISTER_REQUEST_DESC; ?></label>
         <textarea class="forminput" id="description" name="description" cols="40" rows="3"><?php print $description; ?></textarea>
     </div>
     <div class="formrow">
-        <label class="formlabel" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?>
+        <label class="formlabelbig" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?>
 		<span class="required">*</span></label>
         <textarea class="forminput" id="interest" name="interest" cols="40" rows="3"><?php print $interest; ?></textarea>
     </div>
 
     <div class="formrow">
-		<label class="formlabel" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
+		<label class="formlabelbig" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
 		<input class="forminput" id="location" name="location" style="width:160px;" value="<?php echo $location; ?>">
 		<select id="loccountry" name="loccountry" style="margin-left: 5px;width:160px;">
 	        <option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
@@ -293,27 +296,27 @@ function checkForm() {
 
 	<?php if ($CFG->hasUserHomePageOption) { ?>
 	<div class="formrow">
-        <label class="formlabel" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
+        <label class="formlabelbig" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
         <input class="forminput" type="text" id="homepage" name="homepage" size="40" value="<?php print $homepage; ?>">
     </div>
     <?php } ?>
 
     <div class="formrow">
-        <label class="formlabel" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
+        <label class="formlabelbig" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
         <input class="forminput" type="file" id="photo" name="photo" size="40">
     </div>
 
 	<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
 		<div class="formrow">
-			<label class="formlabel" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
+			<label class="formlabelbig" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
 			<input class="forminput" type="checkbox" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" /> <?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?>
 		</div>
 	<?php } ?>
 
 	<?php if($CFG->CAPTCHA_ON) { ?>
-		<div class="formrow">
-			<label class="formlabel" for="recaptcha_challenge_field"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?></label>
-			<?php echo recaptcha_get_html($CFG->CAPTCHA_PUBLIC, null, true); ?>
+		<div class="formrow" style="width:800px;">
+			<label class="formlabelbig" for="g-recaptcha"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?></label>
+			<div class="g-recaptcha" data-sitekey="<?php echo $CFG->CAPTCHA_PUBLIC; ?>" style="float:left;margin-left:5px;"></div>
 		</div>
 	<?php } ?>
 
@@ -325,14 +328,13 @@ function checkForm() {
 		</div>
 
 		<div class="formrow" style="margin-left:10px;margin-top:10px;">
-			<input type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
+			<label class="formlabelbig" for="register">&nbsp;</label>
+			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
 		</div>
     <?php } else { ?>
-		<div class="formrow" style="margin-left:10px;margin-top:10px;">
-			<p><?php echo $LNG->CONDITIONS_REGISTER_FORM_MESSAGE; ?></p>
-		</div>
 		<div class="formrow">
-			<input class="formsubmit" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
+			<label class="formlabelbig" for="register">&nbsp;</label>
+			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
 		</div>
     <?php }?>
 

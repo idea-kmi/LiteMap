@@ -10,7 +10,7 @@
 // ----------------------------------------------------------------------------------------
 
 /**
- * This code was Modified by M Bachler to connect to our LiteMap website Config to pull settings
+ * This code was Modified by M Bachler to connect to our website Config to pull settings
  */
 //chdir( dirname ( realpath ( __FILE__ ) ) );
 
@@ -28,7 +28,7 @@ $settings  = array(
 			"Yahoo" => array (
 				"enabled" => $CFG->SOCIAL_SIGNON_YAHOO_ON,
 				"keys"    => array ( "id" => $CFG->SOCIAL_SIGNON_YAHOO_ID, "secret" => $CFG->SOCIAL_SIGNON_YAHOO_SECRET ),
-				"scope"   => ['sdps-r']
+				"scope"   => array ('sdps-r')
 			),
 			"LinkedIn" => array (
 				"enabled" => $CFG->SOCIAL_SIGNON_LINKEDIN_ON,
@@ -70,7 +70,7 @@ $settings  = array(
 );
 
 if ($CFG->PROXY_HOST != "") {
-	$settings["curl_options"] = [CURLOPT_PROXY   => $CFG->PROXY_HOST.":".$CFG->PROXY_PORT];
+	$settings["curl_options"] = array ("CURLOPT_PROXY" => $CFG->PROXY_HOST.":".$CFG->PROXY_PORT);
 }
 
 return $settings;

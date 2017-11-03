@@ -389,11 +389,20 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			}
 
 			// EXPLORE.
-			var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
-			context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
-			var descRect = new mapRectangle(currentX, pos.y+height-18, 16, 16);
-			node.setData('descrec', descRect);
-			currentX = currentX+20;
+
+			if (orirole.name == 'Map') {
+				var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>");
+				context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+				var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
+				node.setData('descrec', descRect);
+				currentX = currentX+20;
+			} else {
+				var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
+				context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+				var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
+				node.setData('descrec', descRect);
+				currentX = currentX+20;
+			}
 
 			// LINKS
 			if (orinode.urls && orinode.urls.length > 0) {

@@ -463,11 +463,19 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			}
 
 			// EXPLORE.
-			var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
-			context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
-			var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
-			node.setData('descrec', descRect);
-			currentX = currentX+20;
+			if (orirole.name == 'Map') {
+				var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>");
+				context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+				var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
+				node.setData('descrec', descRect);
+				currentX = currentX+20;
+			} else {
+				var descicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('desc-gray.png'); ?>");
+				context.drawImage(descicon, currentX, pos.y+height-18, 15, 15);
+				var descRect = new mapRectangle(currentX, pos.y+height-18, 15, 15);
+				node.setData('descrec', descRect);
+				currentX = currentX+20;
+			}
 
 			// LINKS
 			if (orinode.urls && orinode.urls.length > 0) {
@@ -1363,6 +1371,10 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 	var	padlockicon = new Image();
 	padlockicon.src = '<?php echo $HUB_FLM->getImagePath('lock-32.png'); ?>';
 	fd.graph.addImage(padlockicon);
+
+	var	viewmapicon = new Image();
+	viewmapicon.src = '<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>';
+	fd.graph.addImage(viewmapicon);
 
 	var	voteupgrey = new Image();
 	voteupgrey.src = '<?php echo $HUB_FLM->getImagePath('thumb-up-grey-32.png'); ?>';

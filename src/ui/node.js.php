@@ -585,6 +585,18 @@ function renderMapPickerNode(node, role,includeUser){
 		iconCell.insert(alttext+": ");
 	}
 
+	if (role.name == "Map") {
+		var viewicon = new Element('img',{'alt':'<?php echo $LNG->MAP_VIEW; ?>', 'title':'<?php echo $LNG->MAP_VIEW; ?>', 'style':'padding-right:5px;padding-top:4px;width:12px;height:12px','align':'left','border':'0'});
+		viewicon.src = '<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>';
+		viewicon.onclick = function () {
+			var width = getWindowWidth()-50;
+			var height = getWindowHeight()-50;
+			loadDialog('map', URL_ROOT+"map.php?id="+node.nodeid, width,height);
+		}
+		iconCell.insert(viewicon);
+	}
+
+
 	if (!node.inmap) {
 		textspan.insert("<span name='dndnodeitem"+node.nodeid+"' class='itemtext' style='float:left;' title='<?php echo $LNG->MAP_EDITOR_DND_HINT; ?>'>"+node.name+"</span>");
 		itDiv.style.cursor = 'pointer';

@@ -142,14 +142,14 @@ but then all accounts would need to be setup and validated by hand.
 <br>
 <h3 style="font-style:italic;font-size:12pt;text-decoration:underline">Crons</h3>
 To send out the digest emails you will need to setup some cron jobs. An example is shown below.
-To use the lines below you need to add the file system path to your LiteMap code where indicated
-and the domain name to run then against (as LiteMap can be multi domain):
+To use the lines below you need to add the file system path to your LiteMap code where indicated,
+the domain name to run then against (as LiteMap can be multi domain) and the cron key as put in the CRON_KEY in the config:
 
-<br><br>0 1 * * 4 php <code>path to code</code>/core/cron/cron-follow-weekly.php <code>domain name</code>
-<br><br>0 1 25 * * php <code>path to code</code>/core/cron/cron-follow-monthly.php <code>domain name</code>
-<br><br>0 2 * * * php <code>path to code</code>/core/cron/cron-follow-daily.php <code>domain name</code>
-<br><br>0 * * * *  php <code>path to code</code>/core/cron/cron-follow-hourly.php <code>domain name</code>
-<br><br>0 0 15 * * php <code>path to code</code>/core/cron/cron-recent-activity.php <code>domain name</code>
+<br><br>0 1 * * 4 php <code>path to code</code>/core/cron/cron-follow-weekly.php <code>domain name</code> <code>cron key</code>
+<br><br>0 1 25 * * php <code>path to code</code>/core/cron/cron-follow-monthly.php <code>domain name</code> <code>cron key</code>
+<br><br>0 2 * * * php <code>path to code</code>/core/cron/cron-follow-daily.php <code>domain name</code> <code>cron key</code>
+<br><br>0 * * * *  php <code>path to code</code>/core/cron/cron-follow-hourly.php <code>domain name</code> <code>cron key</code>
+<br><br>0 0 15 * * php <code>path to code</code>/core/cron/cron-recent-activity.php <code>domain name</code> <code>cron key</code>
 
 <p>
 
@@ -322,6 +322,9 @@ just edit the last three number month, date, year).
 
 <br/><br/><b><span style="color:red">$CFG-&gt;SITE_TITLE = &quot;The title of your instance of LiteMap&quot;;</span></b>
 <br/>( This is used in the header title as well as being displayed to the user in various places. )
+
+<br/><br/><b><span style="color:red">$CFG->CRON_KEY =  = &quot;a secret key to pass from Cron jobs to cron code&quot;;</span></b>;
+<br/>( This should be at least 32 char long and complex like a hash number. )
 
 <br/><br/><b><span style="color:red">$CFG-&gt;ADMIN_USERID = &quot;the database user id number of your System administrator&quot;;</span></b>
 <br/>( This person is the owner of the News nodes in the system and you have to log in as them to manage themes. You will have been given this id as output from the install process.

@@ -51,6 +51,11 @@ $CFG->START_DATE = 	mktime(0, 0, 0, 01, 01, 2013);
  */
 $CFG->SITE_TITLE = "LiteMap";
 
+/** SECRET KEY PASSED BY CRON TO ACTIVATE CRON CODE - To protect code being called from a browser
+ * This should be at least 32 char long and complex like a hash
+ */
+$CFG->CRON_KEY = "";
+
 /**
  * You can get the following three ids from the adddefaultdata.php script output, or
  * from the Users and NodeTypeGroup tables in the database after the script has run

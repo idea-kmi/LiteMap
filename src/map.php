@@ -157,7 +157,7 @@ if (isset($media) && $media != "") {
 }
 
 $moviesize = $node->getNodeProperty('moviesize');
-if (isset($moviesize)) {
+if (isset($moviesize) && $moviesize != "") {
 	$size = explode(':', $moviesize);
 	$args["moviewidth"] = (int)$size[0];
 	$args["movieheight"] = (int)$size[1];

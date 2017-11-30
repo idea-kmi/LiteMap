@@ -36,12 +36,17 @@ if (!empty($_SERVER['REMOTE_ADDR'])) {
 }
 
 $domain = $argv[1];
+if ($domain == "") {
+	return;
+}
+
 include_once("../../config.php");
 
 global $CFG,$USER,$LNG,$HUB_FLM;
 
-include_once($HUB_FLM->getCodeDirPath("core/apilib.php"));
-include_once($HUB_FLM->getCodeDirPath("core/utillib.php"));
+if ($argv[2] != $CFG->CRON_KEY) {
+	return;
+}
 
 // Check if emails should be sent out from this installation first.
 if (!$CFG->send_mail) {
@@ -52,6 +57,9 @@ if (!$CFG->send_mail) {
 if (!$CFG->RECENT_EMAIL_SENDING_ON) {
 	return;
 }
+
+include_once($HUB_FLM->getCodeDirPath("core/apilib.php"));
+include_once($HUB_FLM->getCodeDirPath("core/utillib.php"));
 
 header("Content-Type: text/plain");
 

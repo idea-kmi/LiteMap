@@ -45,6 +45,8 @@ $nodeid = required_param("id",PARAM_ALPHANUMEXT);
 $focusid = optional_param("focusid","",PARAM_ALPHANUMEXT);
 if ($focusid != "") {
 	$selectednodeid = $focusid;
+} else {
+	$selectednodeid = "";
 }
 
 $searchid = optional_param("sid","",PARAM_ALPHANUMEXT);

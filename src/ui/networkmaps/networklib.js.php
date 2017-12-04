@@ -475,6 +475,7 @@ function createImportGraphToolbar(forcedirectedGraph) {
 	// VIEWS
 	var toggleview = new Element("div", {'style':'float:left;margin-top:3px;'});
 	var toggleviewicon = new Element("img", {
+					'id':'toggle-map-view',
 					'class':'active',
 					'style':'width:20px; height: 20px;',
 					'src':"<?php echo $HUB_FLM->getImagePath('knowledge-tree.png'); ?>",
@@ -1284,6 +1285,7 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	// VIEWS
 	var toggleview = new Element("div", {'style':'float:left;margin-left: 20px;'});
 	var toggleviewicon = new Element("img", {
+					'id':'toggle-map-view',
 					'class':'active',
 					'style':'width:20px; height: 20px;',
 					'src':"<?php echo $HUB_FLM->getImagePath('knowledge-tree.png'); ?>",
@@ -1654,6 +1656,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	// VIEWS
 	var toggleview = new Element("div", {'style':'float:left;margin-left: 20px;'});
 	var toggleviewicon = new Element("img", {
+					'id':'toggle-map-view',
 					'class':'active',
 					'style':'width:20px; height: 20px;',
 					'src':"<?php echo $HUB_FLM->getImagePath('knowledge-tree.png'); ?>",
@@ -2229,7 +2232,7 @@ function displayEditBarNodes(objDiv,nodes,start, includeUser, total, type){
 	var lOL = new Element("ol", {'id':'editbarlist','start':start, 'class':'idea-list-ol', 'style':'background:white;margin:0px;padding:0px;overflow-y: auto; overflow-x: hidden; height: '+height+'px;'});
 	lOL.oriheight = height;
 	for(var i=0; i< nodes.length; i++){
-		if(nodes[i].cnode){
+		if(nodes[i].cnode && nodes[i].cnode.nodeid != NODE_ARGS['nodeid']){
 			var iUL = new Element("li", {'id':'editbar-'+nodes[i].cnode.nodeid, 'class':'idea-list-li', 'style':'padding-bottom: 5px;'});
 			lOL.insert(iUL);
 			var blobDiv = new Element("div", {'style':'width:'+(mainwidth-5)+'px'});

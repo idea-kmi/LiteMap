@@ -68,4 +68,5 @@ $LNG->HEADER_MY_HUB_LINK = 'My LiteMap';
 $LNG->FOOTER_TERMS_LINK = 'Terms of Use';
 $LNG->FOOTER_PRIVACY_LINK = 'Privacy';
 $LNG->FOOTER_CONTACT_LINK = 'Contact';
+$LNG->FOOTER_COOKIES_LINK = 'Cookies';
 ?>

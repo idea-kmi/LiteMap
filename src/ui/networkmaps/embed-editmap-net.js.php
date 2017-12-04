@@ -444,6 +444,7 @@ function resizeMainArea(initial) {
 
 function toggleMapTree(button) {
 	if ($('treedata').style.display == 'none') {
+		document.location.hash = "map-linear";
 		$('treedata').style.display = 'block';
 		$('graphMapDiv-outer').style.display = 'none';
 		button.src = "<?php echo $HUB_FLM->getImagePath('network-graph.png'); ?>";
@@ -453,6 +454,7 @@ function toggleMapTree(button) {
 		//	$('keydiv').style.visibility = 'hidden';
 		//}
 	} else {
+		document.location.hash = "map-map";
 		$('graphMapDiv-outer').style.display = 'block';
 		$('treedata').style.display = 'none';
 		button.src = "<?php echo $HUB_FLM->getImagePath('knowledge-tree.png'); ?>";
@@ -527,7 +529,7 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 
 	messagearea.update(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
 
-	var reqUrl = SERVICE_ROOT + "&method=getview&viewid=" + encodeURIComponent(NODE_ARGS['nodeid']);
+	var reqUrl = SERVICE_ROOT + "&method=getview&style=map&viewid=" + encodeURIComponent(NODE_ARGS['nodeid']);
 
 	//alert(reqUrl);
 
@@ -609,9 +611,13 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 				layoutMap(positionedMap, messagearea);
 				toolbar.style.display = 'block';
 
-				if (challengenodeid != "" && allConnections.length > 0) {
-					drawTree(allConnections, challengenodeid);
+				if (document.location.hash == "#map-linear") {
+					toggleMapTree($('toggle-map-view'));
 				}
+
+				//if (challengenodeid != "" && allConnections.length > 0) {
+					drawTree(allConnections, challengenodeid);
+				//}
 				setMapTreeSize();
 			} else {
 				messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
@@ -753,6 +759,10 @@ function recurseNextTreeDepth(toNode, checkNodes, toNodeConnections, challengeno
 					recurseNextTreeDepth(fromNode, checkNodes, toNodeConnections, challengenodeid)
 				}
 			}
+		}
+
+		if (toNode.cnode.children && toNode.cnode.children.length > 1) {
+			toNode.cnode.children.sort(alphanodesort);
 		}
 	}
 }

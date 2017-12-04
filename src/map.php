@@ -132,9 +132,7 @@ if (isset($USER->userid) && isset($groupid) && isGroupMember($groupid,$USER->use
 $args = array();
 
 $args["nodeid"] = $nodeid;
-if (isset($selectednodeid)) {
-	$args["selectednodeid"] = $selectednodeid;
-}
+$args["selectednodeid"] = $selectednodeid;
 $args["groupid"] = $groupid;
 $args["title"] = $node->name;
 $args["backgroundImage"] = $node->getNodeProperty('background');

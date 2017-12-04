@@ -96,9 +96,10 @@ class CNode {
     /**
      * Loads the data for the node from the database
      *
-     * @param String $style (optional - default 'long') may be 'short' or 'long' or 'mini' or 'full' or 'shortactivity' (mini used for graphs)
+     * @param String $style (optional - default 'long') may be 'short' or 'long' or 'mini' or 'full' or 'shortactivity' or 'cif' (mini used for graphs)
      * 'mini' include the base information like name, description, role, user, private, creation and modifications dates, connectedness, image, thumb.
 	 * 'short' includes 'mini' plus address information, start and end date, otherconnections, userfollow.
+	 * 'map' includes 'mini' plus voting, websites.
      * 'long' includes 'short' and associated website objects, tag objects, group onjects, votes, view counts and extra properties.
      * 'full' includes 'long' and all activity and voting data. This is likely to be very heavy. Use wisely.
      * 'shortactivity' includes 'short' plus the activity and voting data.
@@ -187,7 +188,7 @@ class CNode {
 						//    $this->thum = $array['ImageThumbnail'];
 						//}
 
-						if ($style != 'mini') {
+						if ($style != 'mini' && $style != 'map') {
 							if(isset($array['StartDate']) && $array['StartDate'] != 0){
 								$this->startdatetime = $array['StartDate'];
 							}
@@ -240,7 +241,7 @@ class CNode {
 			$currentuser = $USER->userid;
 		}
 
-		if ($style != 'mini' && $style != 'cif') {
+		if ($style != 'mini' && $style != 'cif' && $style != 'map') {
 			$params = array();
 			$params[0] = $this->nodeid;
 			$params[1] = $this->nodeid;
@@ -267,16 +268,19 @@ class CNode {
 			}
 		}
 
-        if ($style == 'long' || $style == 'full' || $style == 'cif'){
+        if ($style == 'map' || $style == 'long' || $style == 'full' || $style == 'cif'){
 	       	$this->loadWebsites($style);
 		}
 
         if ($style == 'long' || $style == 'full'){
 	        $this->loadTags();
 	        $this->loadGroups();
-	        $this->loadVotes();
         	$this->loadProperties();
 			$this->loadViewCount();
+        }
+
+        if ($style == 'map' || $style == 'long' || $style == 'full'){
+	        $this->loadVotes();
         }
 
 		if ($style == 'full' || $style == 'shortactivity') {

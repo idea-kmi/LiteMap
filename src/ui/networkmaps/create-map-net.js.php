@@ -463,6 +463,8 @@ function resizeMainArea(initial) {
 
 function toggleMapTree(button) {
 	if ($('treedata').style.display == 'none') {
+		document.location.hash = "map-linear";
+
 		$('treedata').style.display = 'block';
 		$('graphMapDiv-outer').style.display = 'none';
 		button.src = "<?php echo $HUB_FLM->getImagePath('network-graph.png'); ?>";
@@ -473,6 +475,8 @@ function toggleMapTree(button) {
 		//	$('keydiv').style.visibility = 'hidden';
 		//}
 	} else {
+		document.location.hash = "map-map";
+
 		$('graphMapDiv-outer').style.display = 'block';
 		$('treedata').style.display = 'none';
 		button.src = "<?php echo $HUB_FLM->getImagePath('knowledge-tree.png'); ?>";
@@ -548,7 +552,7 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 
 	messagearea.update(getLoadingLine("<?php echo $LNG->NETWORKMAPS_LOADING_MESSAGE; ?>"));
 
-	var reqUrl = SERVICE_ROOT + "&method=getview&viewid=" + encodeURIComponent(NODE_ARGS['nodeid']);
+	var reqUrl = SERVICE_ROOT + "&method=getview&style=map&viewid=" + encodeURIComponent(NODE_ARGS['nodeid']);
 
 	//alert(reqUrl);
 
@@ -623,17 +627,25 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 			//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+concount+'</span>');
 
 			if (conns.length > 0 || nodes.length > 0) {
-				if (NODE_ARGS['selectednodeid'] != "") {
-					setSelectedMapNode(positionedMap, NODE_ARGS['selectednodeid']);
-				}
-
 				// Graph needs a root node to be declared or nothing will draw
 				if (!positionedMap.root || positionedMap.root == "") {
 					computeMostConnectedNode(positionedMap);
 				}
 
+				if (NODE_ARGS['selectednodeid'] != "") {
+					setSelectedMapNode(positionedMap, NODE_ARGS['selectednodeid']);
+				}
 				layoutMap(positionedMap, messagearea);
+
+				if (NODE_ARGS['selectednodeid'] != "") {
+					zoomFDFull(positionedMap);
+					panToNodeFD(positionedMap, NODE_ARGS['selectednodeid']);
+				}
 				toolbar.style.display = 'block';
+				if (document.location.hash == "#map-linear") {
+					toggleMapTree($('toggle-map-view'));
+				}
+
 				//if (challengenodeid != "" && allConnections.length > 0) {
 					drawTree(allConnections, challengenodeid);
 				//}
@@ -745,6 +757,7 @@ function drawTree(allConnections, challengenodeid) {
 	}
 
 	treeTopNodes.sort(alphanodesort);
+
 	if (treeTopNodes.length > 0){
 		displayConnectionNodes($('treedata'), treeTopNodes, parseInt(0), true, "mapnarrow");
 	}
@@ -776,6 +789,10 @@ function recurseNextTreeDepth(toNode, checkNodes, toNodeConnections, challengeno
 					recurseNextTreeDepth(fromNode, checkNodes, toNodeConnections, challengenodeid)
 				}
 			}
+		}
+
+		if (toNode.cnode.children && toNode.cnode.children.length > 1) {
+			toNode.cnode.children.sort(alphanodesort);
 		}
 	}
 }

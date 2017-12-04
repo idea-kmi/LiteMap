@@ -1432,63 +1432,29 @@ function onNodeDetailsDivMouseUp(e) {
  * Display explore page in a popup (called by maps).
  */
 function viewNodeDetailsDiv(nodeid, nodetype, orinode, evt, x, y) {
-	nodeObj = orinode;
-
 	if (nodetype == "Map") {
 		loadDialog('map', URL_ROOT+"map.php?id="+nodeid, width,height);
 	} else {
 		var panel = $('mapdetailsdiv');
 		if (panel) {
-			auditNodeView(nodeid, 'exploreslim');
-
-			exploreutils = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/exploreutils.js.php"); ?>');
-			exploreutils.buildScriptTag();
-			exploreutils.addScriptTag();
-
-			var reqUrl = URL_ROOT + "explore-slim.php?nodetype="+nodetype;
+			var reqUrl = SERVICE_ROOT + "&method=getnode&style=long&nodeid=" + encodeURIComponent(nodeid);
 			//alert(reqUrl);
 			new Ajax.Request(reqUrl, { method:'post',
 				onSuccess: function(transport){
-					var data =  transport.responseText;
-					//console.log(data);
-					panel.innerHTML = data;
-
-					// only use as initial position. After that stay where is it as can be dragged.
-					if (x && y && panel.style.left == "-1px" && panel.style.top == "-1px") {
-						panel.style.left = x+"px";
-						panel.style.top = y+"px";
+					var json = null;
+					try {
+						json = transport.responseText.evalJSON();
+						//alert(transport.responseText);
+					} catch(e) {
+						alert(e);
 					}
-					$('mapdetailsdiv').style.display='block';
-
-					if (nodetype == 'Challenge') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/challengenode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Issue') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/issuenode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Solution') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/solutionnode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Pro') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/pronode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Con') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/connode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Argument') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/evidencenode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
-					} else if (nodetype == 'Idea') {
-						scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/commentnode.js.php"); ?>');
-						scriptLoaded.buildScriptTag();
-						scriptLoaded.addScriptTag();
+					if(json.error){
+						alert(json.error[0].message);
+						return;
 					}
+
+					var node = json.cnode[0];
+					loadSlimExplorePanel(nodeid, nodetype, node, evt, x, y);
 				}
 			});
 		} else {
@@ -1497,6 +1463,67 @@ function viewNodeDetailsDiv(nodeid, nodetype, orinode, evt, x, y) {
 			viewNodeDetails(nodeid, nodetype, width, height);
 		}
 	}
+}
+
+/**
+ * Display the in-map slim explore page.
+ */
+function loadSlimExplorePanel(nodeid, nodetype, node, evt, x, y) {
+	nodeObj = node;
+	var panel = $('mapdetailsdiv');
+
+	auditNodeView(nodeid, 'exploreslim');
+
+	exploreutils = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/exploreutils.js.php"); ?>');
+	exploreutils.buildScriptTag();
+	exploreutils.addScriptTag();
+
+	var reqUrl = URL_ROOT + "explore-slim.php?nodetype="+nodetype+"&nodeid="+nodeid;
+	//alert(reqUrl);
+	new Ajax.Request(reqUrl, { method:'post',
+		onSuccess: function(transport){
+			var data =  transport.responseText;
+			//console.log(data);
+			panel.innerHTML = data;
+
+			// only use as initial position. After that stay where is it as can be dragged.
+			if (x && y && panel.style.left == "-1px" && panel.style.top == "-1px") {
+				panel.style.left = x+"px";
+				panel.style.top = y+"px";
+			}
+			$('mapdetailsdiv').style.display='block';
+
+			if (nodetype == 'Challenge') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/challengenode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Issue') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/issuenode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Solution') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/solutionnode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Pro') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/pronode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Con') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/connode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Argument') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/evidencenode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			} else if (nodetype == 'Idea') {
+				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/commentnode.js.php"); ?>');
+				scriptLoaded.buildScriptTag();
+				scriptLoaded.addScriptTag();
+			}
+		}
+	});
 }
 
 /**

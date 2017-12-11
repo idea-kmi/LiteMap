@@ -260,9 +260,11 @@ class View {
 
 		$viewconn = new ViewConnection();
 		$viewconn = $viewconn->add($this->nodeid, $connid);
-		$viewconn = $viewconn->load();
 		if (!$viewconn instanceof Error) {
-			array_push($this->connections, $viewconn);
+			$viewconn = $viewconn->load();
+			if (!$viewconn instanceof Error) {
+				array_push($this->connections, $viewconn);
+			}
 		}
 
 		return $viewconn;

@@ -5068,6 +5068,7 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
  *
  */
 function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $private) {
+
 	global $USER, $HUB_FLM, $CFG, $ERROR;
 	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
@@ -5226,10 +5227,14 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 							$connection->addGroup($groupid);
 						}
 
-						$viewcon = $view->addConnection($connection->connid);
-						//error_log(print_r($viewcon,true));
+						if (isset($view) && isset($connection)) {
+							$viewcon = $view->addConnection($connection->connid);
+							//error_log(print_r($viewcon,true));
+						} else {
+							//error_log(print_r($view, true));
+						}
 					} else {
-						error_log(print_r($connection, true));
+						//error_log(print_r($connection, true));
 					}
 				} else {
 					error_log("for label:".$linklabelname.":".print_r($lt, true));

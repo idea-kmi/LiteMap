@@ -57,9 +57,9 @@ class format_jsonld extends format_base {
 		'ConSolution' => 'ArgumentOpposesIdea',
 		'ConPro' => 'ArgumentOpposesIdea',
 		'ConCon' => 'ArgumentOpposesIdea',
-		'IssueIssue' => 'DirectedIdeaRelation',
-		'SolutionSolution' => 'InclusionRelation',
-		'IssueSolution' => 'InclusionRelation',
+		'IssueIssue' => 'InclusionRelation',
+		'SolutionSolution' => 'DirectedIdeaRelation',
+		'IssueSolution' => 'IssueAppliesTo',
 		'IdeaIdea' => 'DirectedIdeaRelation',
 	);
 

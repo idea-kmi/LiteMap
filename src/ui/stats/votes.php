@@ -327,19 +327,20 @@ $allNodeVotes = getAllVoting($direction, $sort, $oldsort);
 					$count = $allNodeVotes->count;
 					for ($i=0; $i<$count; $i++) {
 						$n = $allNodeVotes->nodes[$i];
-						$nodetype = $n->role->name;
-						$title = $n->name;
-						?>
-						<tr>
-							<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-							<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-							<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-							<td align="right"><b><?php echo $n->vote ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Error) {
+							$nodetype = $n->role->name;
+							$title = $n->name;
+							?>
+							<tr>
+								<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+								<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+								<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+								<td align="right"><b><?php echo $n->vote ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 	</tr>

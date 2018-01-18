@@ -580,6 +580,7 @@ class format_jsonld extends format_base {
 				}
 		} else {
 			// Add everything
+			$justnodes = array();
 
 			// Add Map node
 			$viewnode = $view->viewnode;
@@ -598,7 +599,6 @@ class format_jsonld extends format_base {
 
 			//add nodes
 			$nodes = $view->nodes;
-			$justnodes = array();
 			$count = count($nodes);
 			for ($i=0; $i<$count; $i++) {
 				$viewnode = $nodes[$i];

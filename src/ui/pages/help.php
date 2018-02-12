@@ -94,7 +94,7 @@
 	</video>
 	</div>
 
-	<div style="clear:both;float:left;margin-top:20px;"><p><?php echo $LNG->PAGE_HELP_PARA2_A; ?> <a href="mailto:'.$CFG->EMAIL_REPLY_TO.'"><?php echo $LNG->PAGE_HELP_PARA2_B; ?></a>.</p></div>
+	<div style="clear:both;float:left;margin-top:20px;"><p><?php echo $LNG->PAGE_HELP_PARA2_A; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->PAGE_HELP_PARA2_B; ?></a>.</p></div>
 
 </div>
 <?php

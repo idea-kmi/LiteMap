@@ -223,7 +223,7 @@ function checkForm() {
 
 <p><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
 
-<form name="register" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
+<form name="register" action="" style="width:650px;" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
 
     <div class="formrow">
         <label class="formlabelbig" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
@@ -319,7 +319,7 @@ function checkForm() {
 </div>
 
 <?php if ($CFG->SOCIAL_SIGNON_ON) {?>
-	<div style="clear:both;float:left;margin-left:10px;margin-top:50px;">
+	<div style="float:left;margin-left:5px;margin-top:50px;">
 		<fieldset>
 			<legend><?php echo $LNG->LOGIN_SOCIAL_SIGNON; ?></legend>
 			<?php if ($CFG->SOCIAL_SIGNON_GOOGLE_ON) {?>

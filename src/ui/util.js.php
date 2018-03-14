@@ -1307,11 +1307,12 @@ function htmlspecialchars_decode (string, quote_style) {
  * @return string
  */
 function parseToXML(xmlStr) {
-    xmlStr = xmlStr.replace("&",'&amp;');
-    xmlStr = xmlStr.replace('<','&lt;');
-    xmlStr = xmlStr.replace('>','&gt;');
-    xmlStr = xmlStr.replace('"','&quot;');
-    xmlStr = xmlStr.replace("'",'&#39;');
+
+    xmlStr = xmlStr.replace(/&/g,'&amp;');
+    xmlStr = xmlStr.replace(/</g,'&lt;');
+    xmlStr = xmlStr.replace(/>/g,'&gt;');
+    xmlStr = xmlStr.replace(/"/g,'&quot;');
+    xmlStr = xmlStr.replace(/'/g,'&#39;');
     return xmlStr;
 }
 

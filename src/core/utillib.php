@@ -821,8 +821,6 @@ function geoCodeAddress($address1, $address2, $postcode, $loc, $cc) {
 
 function callGeoURL($url) {
 
-	$ch = curl_init();
-
 	$curl = curl_init();
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_URL, $url);

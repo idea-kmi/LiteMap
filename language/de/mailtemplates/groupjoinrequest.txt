@@ -1,0 +1,7 @@
+<h3>Administration</h3>
+<p>Folgende Person hat Angefragt sich der Gruppe <b>%s</b>, für die Sie ein Administrator sind, anzuschließen: 
+<b><a href="%suser.php?userid=%s">%s</a></b></p>
+<p><a href="%sui/popups/groupedit.php?groupid=%s">Öffnen Sie den Gruppen Manager</a></p>
+<p>HINWEIS: Alle Gruppenadministratoren für diese Gruppe wird mit dieser neuen Beitrittsanfrage eine E-Mail gesendet.
+Jedoch stellen Sie bitte sicher, dass Sie den Antrag auf Beitritt zur Gruppe zeitnah bearbeiten. </p>
+<br>

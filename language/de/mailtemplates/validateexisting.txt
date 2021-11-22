@@ -1,0 +1,4 @@
+<p>Liebe %r,</p>
+<p>Vielen Dank für die Bestätigung Ihrer Email-Adresse auf %s</p>
+<p><b>Bitte <a href="%sui/pages/validatecomplete.php?id=%s&key=%s">klicken Sie hier</a></b> um den Validierungs-Vorgang abzuschließen.</p>
+<br>

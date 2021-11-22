@@ -1,0 +1,8 @@
+<h3>Group Management</h3>
+<p>The following person has requested to join the group <b>%s</b> for which you are an administrator: 
+<b><a href="%suser.php?userid=%s">%s</a></b></p>
+<p><a href="%sui/popups/groupedit.php?groupid=%s">Open Group Manager</a></p>
+<p>NOTE: All group administrators for this group will have been emailed with this new join request. 
+However, please make sure you check the request to join the group has been dealt with, and if not, 
+please deal with it in a timely fashion.</p>
+<br>

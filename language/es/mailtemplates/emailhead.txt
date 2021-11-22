@@ -1,0 +1,17 @@
+<html>
+<encabezado>
+<stilo>
+cuerpo {
+	fuentes-usadas: "Lucida Grande", Verdana, Arial, Helvetica, sans-serif; 
+	margen: 10px;
+	fuente-tamaño: 90%%; /*deben ser dos persona que piensen que es un parámetro Rango*/
+	color: DimGrey; 
+}
+
+a {
+ 	color: #e80074;
+}
+</stilo>
+</encabezado>
+<cuerpo>
+<img src="%s" alt="LiteMap logo"/>

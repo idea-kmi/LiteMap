@@ -1,0 +1,9 @@
+<p>Prezada(o) %s,</p>
+<h3>Bem-vindo a %s</h3>
+<p>Você já foi cadastrado em nosso Hub.</p>
+<p><b>Por favor <a href="%sui/pages/registercomplete.php?id=%s&key=%s">click aqui</a></b> para verificar seu endereço de e-mail e completar seu registro.</p>
+<p>Por favor, acesse com seu endereço de e-mail e senha inicial: <b>%s</b><br>
+<br>Uma vez conectado, recomendamos ir a seu perfil e trocar a senha inicial para uma mais pessoal.
+<br>Também recomendamos que você insira uma imagem de perfil em sua conta.
+</p>
+<br>

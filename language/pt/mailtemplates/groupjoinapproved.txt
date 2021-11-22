@@ -1,0 +1,4 @@
+<p>Prezada(o) %s,</p>
+<p>Sua solicitação para se juntar ao grupo <b><a href="%sgroup.php?groupid=%s">%s</a></b> oenn %s foi aprovada.</p>
+<p>Esperamos vê-lo ativo neste grupo. Agradecemos seu interesse.</p>
+<br>

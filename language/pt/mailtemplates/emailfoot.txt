@@ -1,0 +1,5 @@
+<p>Prezada(o) %s,</p>
+<h3>Abaixo se apresenta o %s LiteMap informe de atividades</h3>
+
+<p>%s</p>
+<br>

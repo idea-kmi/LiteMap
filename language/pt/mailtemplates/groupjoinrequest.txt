@@ -1,0 +1,7 @@
+<h3>Direção do Grupo</h3>
+<p>Esta pessoa solicitou entrada no grupo <b>%s</b> que você é um administrador: 
+<b><a href="%suser.php?userid=%s">%s</a></b></p>
+<p><a href="%sui/popups/groupedit.php?groupid=%s">Open Grupo Gestor</a></p>
+<p>NOTE: Todos os administradores deste grupo receberão por correio eletrônico esta nova solicitação de entrada.
+Contudo, por favor, esteja certo em verificar se a solicitação de entrada no grupo já tenha sido feita, e se não, por favor, tratar no momento oportuno.</p>
+<br>

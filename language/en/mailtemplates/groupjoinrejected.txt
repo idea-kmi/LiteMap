@@ -1,0 +1,4 @@
+<p>Dear %s,</p>
+<p>Unfortunately your request to join the group <b><a href="%sgroup.php?groupid=%s">%s</a></b> on %s has been not approved.</p>
+<p>We thank you for your interest.</p>
+<br>

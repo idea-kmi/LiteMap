@@ -1,0 +1,227 @@
+#tabber {
+	width:100%;
+}
+
+#tabber ul.tab {
+	clear:both;
+	float:left;
+	width:100%;
+	
+	/*border-top:1px solid #E8E8E8;*/
+
+	font-size: 12pt;
+			
+	background: #E8E8E8;
+	background: -o-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -moz-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -webkit-gradient(linear,
+                left top, left bottom, from(#ffffff), to(#E8E8E8));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#ffffff  ', EndColorStr='#E8E8E8', GradientType=0);
+	background: linear-gradient(to bottom, #ffffff, #E8E8E8);
+
+	margin:0;
+	padding:0px 0px 0px 0px;
+	list-style:none;
+}
+
+#tabber ul.tab2 {
+	clear:both;
+	float:left;
+	width:100%;
+	
+	/*border-top:1px solid #E8E8E8;*/
+
+	font-size: 10pt;
+			
+	background: #E8E8E8;
+	background: -o-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -moz-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -webkit-gradient(linear,
+                left top, left bottom, from(#ffffff), to(#E8E8E8));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#ffffff  ', EndColorStr='#E8E8E8', GradientType=0);
+	background: linear-gradient(to bottom, #ffffff, #E8E8E8);
+
+	margin:0;
+	padding:0px 0px 0px 0px;
+	list-style:none;
+}
+
+#tabber li.tab {
+	font-weight: bold;
+	display:inline;
+	padding:0;
+	margin:0px;
+}
+
+#tabber a.tab {
+	padding: 0px;
+}
+
+#tabber span.tab {
+	float: left;
+	display:block;
+
+	padding:6px;
+	padding-left:10px;
+	padding-right:10px;
+	
+	background: #E8E8E8;
+	background: -o-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -moz-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -webkit-gradient(linear,
+                left top, left bottom, from(#ffffff), to(#E8E8E8));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#ffffff  ', EndColorStr='#E8E8E8', GradientType=0);
+	background: linear-gradient(to bottom, #ffffff, #E8E8E8);
+		
+	cursor:pointer;
+}
+
+#tabber span.tab2 {
+	float: left;
+	display:block;
+
+	padding:6px;
+	padding-left:10px;
+	padding-right:10px;
+
+	background: #E8E8E8;
+	background: -o-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -moz-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -webkit-gradient(linear,
+                left top, left bottom, from(#ffffff), to(#E8E8E8));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#ffffff  ', EndColorStr='#E8E8E8', GradientType=0);	
+	background: linear-gradient(to bottom, #ffffff, #E8E8E8);
+
+	cursor:pointer;
+}
+
+#tabber span.tab3 {
+	float: left;
+	display:block;
+
+	padding:6px;
+	background: #E8E8E8; 
+	margin-top:5px;
+
+	border-top-style:solid;
+	border-right-style:solid;
+	border-left-style:solid;
+	border-width:1px;
+	border-color: #E8E8E8; 
+	
+	cursor:pointer;
+}
+
+#tabber a.unselected span.tab3 {
+	color: DimGrey; 
+	border-top-style:solid;
+	border-right-style:solid;
+	border-left-style:solid;
+	border-color: #E8E8E8; 
+}
+
+#tabber a.unselected {
+	color: DimGrey;	
+}
+
+#tabber a.unselected span.tab {
+	color: DimGrey; 
+	background: #ffffff;
+	background: -o-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -moz-linear-gradient(top, #ffffff, #E8E8E8);
+	background: -webkit-gradient(linear,
+                left top, left bottom, from(#ffffff), to(#E8E8E8));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#ffffff  ', EndColorStr='#E8E8E8', GradientType=0);
+	background: linear-gradient(to bottom, #ffffff, #E8E8E8);
+}
+
+#tabber .tabcontenthome{
+	clear: both;
+	padding: 5px;
+	padding-top: 8px;
+	overflow:hidden;
+	height: 100%;	
+	min-height:400px;
+	margin: 0px;
+	width:100%; 
+	background: white;
+}
+
+#tabber .tabcontentouter{
+	clear: both;
+	padding: 5px;
+	padding-top: 8px;
+	overflow:hidden;
+	height: 100%;	
+	min-height:400px;
+	margin: 0px;
+	width:100%; 
+	background: #F4F5F7;
+}
+
+#tabber .tabcontent{
+	clear: both;
+	padding-top: 8px;
+	overflow:hidden;
+	height: 100%;	
+	min-height:400px;
+	margin: 0px;
+	width:100%; 
+}
+
+#tabber .tabcontentinner {
+	background:#F4F5F7; 
+	clear:both; 
+	float:left; 
+	width:100%;
+}
+
+#tabber .tabcontentuser {
+	float:left;
+	width:100%;
+	display:none;
+	padding:0px;
+	margin:0px;
+	display:block;
+}
+
+#tabber .tabcontentsearchuser {
+	margin:5px;
+	padding-top:5px;
+	clear:both; 
+	float:left; 
+	height:28px;
+	width: 100%;
+}
+
+#tabber .tabcontentexplore{
+	clear: both;
+	float:left;
+	overflow:hidden;
+	background:white;
+	margin:0px;
+	padding:0px;	
+	width:100%; 
+	height: 100%;
+}
+
+#tabber #nav-previous{
+	margin-right:0px;
+}
+
+#tabber #nav-next{
+	margin-left:0px;
+}
+
+#tabber .nav-page{
+	margin: 0px 4px;	
+}
+
+.nav-page{
+	margin: 0px 3px;	
+}

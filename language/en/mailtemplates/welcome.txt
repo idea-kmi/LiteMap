@@ -1,0 +1,3 @@
+<p>Dear %s,</p>
+<h3>Welcome to the %s</h3>
+<p>%s</p>

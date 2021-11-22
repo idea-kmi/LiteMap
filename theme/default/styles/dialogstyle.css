@@ -1,0 +1,382 @@
+body {
+	font-family: Arial, Helvetica, sans-serif; 
+	margin: 0px;
+	font-size: 10pt;
+	color: DimGray;
+	background:#F4F5F7;
+}
+
+a.form {
+	font-size:90%;
+}
+
+.hrline {
+	border: 0;
+	color: #C0C0C0; 
+	background-color:#C0C0C0; 
+	height: 2px;
+}
+
+#header {
+	width:98%;
+	margin: 0px;
+	padding: 0px;
+	border: 1px solid transparent; 
+	margin-bottom:10px;	
+}
+
+#menu {
+	float:right;
+	margin-right: 10px;
+}
+
+#main {
+	clear:both;
+	width:100%
+	margin: 0px;
+}
+
+#content {
+	margin-left: 5px;
+	float:left;
+	width:99%
+}
+
+
+#footer {
+	clear: both;
+	float: right;
+	margin-right: 10px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+#contextimage {
+	float: left;
+	margin-left:0px;
+	padding:0px;
+	margin-bottom:10px;
+}
+
+#contextimage img{
+	border:0px;	
+}
+
+#contextinfo {
+	margin-bottom:10px;
+}
+
+#link {
+	width:387px;
+	text-align:left;	
+	border-left:2px solid #B2B2B2;
+	border-right:2px solid #B2B2B2;
+	padding-left: 4px;
+}
+
+#linktype {
+	background:lightyellow; 
+	width: 250px;
+}
+
+.titles {
+	font-weight:bold;
+	color: #4e247b; 
+	font-size:11pt;
+}
+
+img.toolbar {
+	vertical-align:middle;
+	border: 0px;
+	margin: 0px;
+	padding-bottom:1px;
+	padding-right:5px;
+}
+span.nav {
+	background: white;
+	padding-left:2px;
+	padding-top:2px;
+	padding-right:20px;
+	margin: 0px;
+	font-weight: bold;
+}
+span.toolbar {
+	float:left;
+	border-radius: 8px; 
+	-o-border-radius: 8px; 
+	-icab-border-radius: 8px; 
+	-khtml-border-radius: 8px; 
+    	-moz-border-radius: 8px;
+    	-webkit-border-radius: 8px;		
+	border: 1px solid #FACEE3;
+	background: #FFF5FF;
+	height: 29px;
+	margin-right: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-weight: bold;
+	position:relative
+}
+
+div.toolbarrow {
+	float:left;
+	clear: both;
+	padding:6px;
+	padding-top:0px;
+	margin: 0px;
+	width: 99%;
+}
+
+.errors {
+	color:red;
+	clear:both;	
+}
+
+.required {
+	color: red;
+	font-weight: bold;
+}
+
+.help {
+	color: #001;
+	font-weight: bold;
+}
+
+/* for the scriptaculous auto complete box */
+
+div.autocomplete {
+   position:absolute;
+   width:250px;
+   background-color:white;
+   border:1px solid #888;
+   margin:0px;
+   padding:0px;
+}
+
+ div.autocomplete ul {
+   list-style-type:none;
+   margin:0px;
+   padding:0px;
+ }
+ div.autocomplete ul li.selected { background-color: #ffb;}
+ div.autocomplete ul li {
+   list-style-type:none;
+   display:block;
+   margin:0;
+   padding:2px;
+   /*height:32px;*/
+   cursor:pointer;
+ }
+
+/* for tables */
+.table {
+    border-color : #ccc;
+    border-style : solid;
+    border-width : 1px 1px 0px 1px;
+}
+.table .c1, fieldset .c1 {
+    width : 30%;
+}
+.table TH, .table TD {
+    padding : 6px;
+}
+.table TH TH, .table TD TD {
+    padding : 0px;
+}
+.table TD.icon {
+    padding : 0 5px 0 3px;
+}
+.table TH {
+    background-color : #f3f7fa;
+    border-bottom : 1px #ccc solid;
+    text-align : left;
+    font-family : verdana, arial, helvetica, sans-serif;
+    font-size : 8pt;
+    font-weight : bold;
+}
+.table TH TABLE TH {
+    border-right : none;
+    border-bottom : none;
+}
+.table TH TABLE TH a {
+    text-decoration : none;
+    color: #000;
+}
+
+.table TR TD {
+    border-bottom : 1px #e3e3e3 solid;
+}
+.table TD {
+    font-family : arial, helvetica, sans-serif;
+    font-size : 10pt;
+}
+.table TD TD {
+    border-width : 0px;
+}
+.table INPUT, .table SELECT {
+    font-family : verdana;
+    font-size : 8pt;
+}
+
+/**** Form styles ****/
+
+.labelinput {
+	border: none;
+	color: #40B5B2;
+}
+
+.dateinput {
+	width: 130px;
+	font-size:90%;	
+}
+
+div.formrow {
+	padding: 5px;
+	clear: both;
+	
+}
+
+.formlabelbig {
+	float: left;
+	margin-left:0px;
+	width: 175px;
+	padding:0px;
+	text-align: right;
+	font-weight: bold;
+}
+
+.formlabelmid {
+	float: left;
+	margin-left:0px;
+	width: 120px;
+	padding:0px;
+	text-align: right;
+	font-weight: bold;
+} 
+ 
+.formlabel {
+	float: left;
+	margin-left:0px;
+	width: 100px;
+	padding:0px;
+	text-align: right;
+	font-weight: bold;
+}
+
+.forminput {
+	margin-left: 5px;
+}
+
+.forminputmust {
+	margin-left: 5px;
+	background-color: lightyellow;
+}
+ 
+.formsubmit {
+	margin-top:0px;
+	margin-left: 105px;	
+}
+
+.input {
+	width: 400px;	
+}
+
+.inputshort {
+	width: 360px;	
+}
+
+.subformconnect {
+	margin-left:5px;
+	margin-bottom:10px;
+	padding:5px;
+	border:1px solid #C0C0C0
+}
+
+div.subformrow {
+	padding: 0px 3px 3px 3px;
+	clear: both;
+	text-align:left;
+}
+
+.subformlabel {
+	float: left;
+	margin-left:0px;
+	width: 70px;
+	padding:0px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 90%;
+} 
+ 
+.subforminput {
+	margin-left: 5px;
+	font-size: 90%;
+}
+ 
+.subformsubmit {
+	margin-left: 75px;
+	font-size: 90%;	
+}
+
+.subformbutton {
+	font-size: 90%;	
+}
+
+div.hgrformrow {
+	padding: 5px;
+	clear: both;
+	padding-top: 15px;
+}
+
+div.hgrsubformrow {
+	padding: 5px 3px 3px 3px;
+	clear: both;
+	text-align:left;
+}
+
+.hgrinput {
+	width: 350px;
+		
+}
+.hgrinputbig {
+	width: 500px;	
+}
+
+.hgrwide {
+	width: 499px;
+}
+
+.hgrselect {
+	float: left; 
+	width:190px; 
+	margin-left: 5px;
+	height: 23px;
+	font-size: 100%;
+}
+
+.hgrsubformlabel {
+	float: left;
+	margin-left:0px;
+	width: 75px;
+	padding:0px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 90%;
+}
+
+.messagediv2 {
+	margin-left:10px;
+	width:500px;
+}
+
+.likeabutton {
+    appearance: button;
+    -moz-appearance: button;
+    -webkit-appearance: button;
+    text-decoration: none; font: menu; color: ButtonText;
+    display: inline-block; padding: 2px 8px;
+}
+
+.plainborder {
+	border: 2px solid #D0D0D0;
+}

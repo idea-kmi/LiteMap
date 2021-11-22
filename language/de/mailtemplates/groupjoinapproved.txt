@@ -1,0 +1,4 @@
+<p>Hallo %s,</p>
+<p>Ihre Anfrage der Gruppe <b><a href="%sgroup.php?groupid=%s">%s</a></b> auf %s beizutreten, wurde genehmigt.</p>
+<p>Wir freuen uns auf Ihren Besuch dieser Gruppe in Kürze. Vielen Dank für Ihr Interesse.</p>
+<br>

@@ -1,0 +1,3 @@
+<p>Prezada(o) %s,</p>
+<h3>Bem-vindo a %s</h3>
+<p><b>Por favor <a href="%sui/pages/registercomplete.php?id=%s&key=%s">click aqui</a></b> para completar seu registro.</p>

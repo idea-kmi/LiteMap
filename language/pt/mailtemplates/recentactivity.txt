@@ -1,0 +1,5 @@
+<p>Prezada(o) %s,</p>
+<p>%s</p>
+<p>%s</p>
+<p stilo="fuente-tamaño:8pt">Para deixar de receber este e-mail resumo, por favor, desmarque 'e-mail resumo' em sus <a href="%s">página de perfil de usuário</a>.
+<br>

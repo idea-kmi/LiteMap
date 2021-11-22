@@ -1,0 +1,7 @@
+<p>Liebe %s,</p>
+<h3>Unten sehen Sie eine Zusammenfassung Ihrer %s LiteMap-AktivitÃ¤ten</h3>
+
+<p>%s</p>
+<br>
+
+

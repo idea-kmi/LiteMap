@@ -312,7 +312,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 			function(d) { return getNodeTitleAntecedence(d.nodetype, false); },
 			function(d) { return d.type }
 		])
-		.sortBy(function(d){ return d.date; })
+		.sortBy(function(d){  return -d.date;  })
 		.order(d3.ascending);
 
 	dc.dataCount("#data-count")
@@ -603,7 +603,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 			},
 			function(d) { return d.title; }
 		])
-		.sortBy(function(d){ return d.userid; })
+		.sortBy(function(d){ return -d.date; })
 		.order(d3.ascending);
 
 	dc.dataCount("#data-count")

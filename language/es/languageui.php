@@ -443,6 +443,7 @@ $LNG->SORT_MODDATE = 'FEcha de modificación';
 $LNG->SORT_TITLE = 'Título';
 $LNG->SORT_URL = 'Website';
 $LNG->SORT_NAME = 'Nombre';
+$LNG->SORT_MEMBERS = 'Cuenta de Miembro';
 $LNG->SORT_CONNECTIONS = 'Conexiones';
 $LNG->SORT_VOTES = 'Votos';
 $LNG->SORT_LAST_LOGIN = 'Última sesión';

@@ -45,7 +45,8 @@ function getStreamGraphData($nodes) {
 	$typeArray = array();
 	for ($i=0; $i<$count; $i++) {
 		$node = $nodes[$i];
-		if (!in_array($node->role->name, $typeArray)) {
+		if (!$node instanceof Hub_Error 
+				&& !in_array($node->role->name, $typeArray)) {
 			array_push($typeArray, $node->role->name);
 		}
 	}
@@ -53,22 +54,24 @@ function getStreamGraphData($nodes) {
 	$dateArray = array();
 	for ($i=0; $i<$count; $i++) {
 		$node = $nodes[$i];
-		$datekey = date('d/m/y', $node->creationdate);
-		if (!array_key_exists($datekey, $dateArray)) {
-			$typearray = array();
-			foreach($typeArray as $type) {
-				$typearray[$type] = 0;
-			}
-			$typearray[$node->role->name] = 1;
-			$dateArray[$datekey] = $typearray;
-		} else {
-			$typearray = $dateArray[$datekey];
-			if (!isset($typearray[$node->role->name])) {
+		if (!$node instanceof Hub_Error) {
+			$datekey = date('d/m/y', $node->creationdate);
+			if (!array_key_exists($datekey, $dateArray)) {
+				$typearray = array();
+				foreach($typeArray as $type) {
+					$typearray[$type] = 0;
+				}
 				$typearray[$node->role->name] = 1;
+				$dateArray[$datekey] = $typearray;
 			} else {
-				$typearray[$node->role->name] = $typearray[$node->role->name]+1;
+				$typearray = $dateArray[$datekey];
+				if (!isset($typearray[$node->role->name])) {
+					$typearray[$node->role->name] = 1;
+				} else {
+					$typearray[$node->role->name] = $typearray[$node->role->name]+1;
+				}
+				$dateArray[$datekey] = $typearray;
 			}
-			$dateArray[$datekey] = $typearray;
 		}
 	}
 
@@ -135,25 +138,27 @@ function getStackedAreaData($nodes) {
 
 	for ($i=0; $i<$count; $i++) {
 		$node = $nodes[$i];
-		$datekey = date('d / m / y', $node->creationdate);
-		$nodetype = getNodeTypeText($node->role->name, false);
-		if (in_array($nodetype, $typeArray)) {
-			if (!array_key_exists($datekey, $dateArray)) {
-				$typearray = array();
-				$typearray[$LNG->MAP_NAME] = 0;
-				$typearray[$LNG->CHALLENGE_NAME] = 0;
-				$typearray[$LNG->ISSUE_NAME] = 0;
-				$typearray[$LNG->SOLUTION_NAME] = 0;
-				$typearray[$LNG->PRO_NAME] = 0;
-				$typearray[$LNG->CON_NAME] = 0;
-				$typearray[$LNG->ARGUMENT_NAME] = 0;
-				$typearray[$LNG->COMMENT_NAME] = 0;
-				$typearray[$nodetype] = 1;
-				$dateArray[$datekey] = $typearray;
-			} else {
-				$typearray = $dateArray[$datekey];
-				$typearray[$nodetype] = $typearray[$nodetype]+1;
-				$dateArray[$datekey] = $typearray;
+		if (!$node instanceof Hub_Error) {
+			$datekey = date('d / m / y', $node->creationdate);
+			$nodetype = getNodeTypeText($node->role->name, false);
+			if (in_array($nodetype, $typeArray)) {
+				if (!array_key_exists($datekey, $dateArray)) {
+					$typearray = array();
+					$typearray[$LNG->MAP_NAME] = 0;
+					$typearray[$LNG->CHALLENGE_NAME] = 0;
+					$typearray[$LNG->ISSUE_NAME] = 0;
+					$typearray[$LNG->SOLUTION_NAME] = 0;
+					$typearray[$LNG->PRO_NAME] = 0;
+					$typearray[$LNG->CON_NAME] = 0;
+					$typearray[$LNG->ARGUMENT_NAME] = 0;
+					$typearray[$LNG->COMMENT_NAME] = 0;
+					$typearray[$nodetype] = 1;
+					$dateArray[$datekey] = $typearray;
+				} else {
+					$typearray = $dateArray[$datekey];
+					$typearray[$nodetype] = $typearray[$nodetype]+1;
+					$dateArray[$datekey] = $typearray;
+				}
 			}
 		}
 	}
@@ -306,8 +311,9 @@ function getCirclePackingData($nodes, $cons, $groupname='Group') {
 	$treeArray = array();
 
 	for ($i=0; $i<$countnodes; $i++) {
-		$node = $nodes[$i];
-		if (!array_key_exists($node->nodeid, $treeArray)) {
+		$node = $nodes[$i];		
+		if (!$node instanceof Hub_Error 
+				&& !array_key_exists($node->nodeid, $treeArray)) {
 			$nodem = array();
 			$nodem["to"] = 0;
 			$nodem["from"] = 0;
@@ -390,9 +396,11 @@ function getCirclePackingData($nodes, $cons, $groupname='Group') {
 		$json .=  ',"children": [';
 		for ($i=0; $i<$count; $i++) {
 			$node = $topNodes[$i];
-			$json = addNextCirclePackingDepth($json, $node, 1, $treeArray, $checkArray);
-			if ($i<$count-1) {
-				$json .=  ',';
+			if (!$node instanceof Hub_Error) {
+				$json = addNextCirclePackingDepth($json, $node, 1, $treeArray, $checkArray);
+				if ($i<$count-1) {
+					$json .=  ',';
+				}
 			}
 		}
 		$json .=  "]";
@@ -424,7 +432,9 @@ function getActivityAnalysisData($nodes) {
 	}
 	for ($i=0; $i<$count; $i++) {
 		$node = $nodes[$i];
-		if (isset($node->activity)) {
+		if (!$node instanceof Hub_Error 
+					&& isset($node->activity)) {
+
 			$activityset = $node->activity;
 			$activities = $activityset->activities;
 
@@ -481,10 +491,13 @@ function getUserActivityAnalysisData($nodes) {
 
 	$countUsers = 1;
 
+	//error_log("Node Count");
+	//error_log($count);
+
 	for ($i=0; $i<$count; $i++) {
 		$node = $nodes[$i];
 
-		if (isset($node->activity)) {
+		if (!$node instanceof Hub_Error && isset($node->activity)) {
 			$activityset = $node->activity;
 			$activities = $activityset->activities;
 

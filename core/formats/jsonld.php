@@ -861,7 +861,7 @@ class format_jsonld extends format_base {
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
 			if (!$node instanceof Hub_Error) {
-				$as = getAllNodeActivity($node->nodeid, 0, 0, -1, 'cif');
+				$as = getAllNodeActivity($node->nodeid);
 				$activities = $as->activities;
 				foreach($activities as $activity) {
 					$this->addNodeHistoryItem($activity);

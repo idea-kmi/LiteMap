@@ -219,8 +219,12 @@ class DatabaseManager {
 	}
 
 	function insertIntoMySQL($sql, $params) {
+		//error_log(print_r($params, true));
+		//error_log($sql);
+
 		$pos = 0;
 		$i = 0;
+
 		while( ($nextpos = strpos($sql, '?', $pos)) !== false) {
 			$next = $params[$i];
 			if (is_string($next)) {
@@ -230,10 +234,12 @@ class DatabaseManager {
 			$pos = $nextpos+strlen($next);
 			$i++;
 		}
-    	//echo $sql;
+
+		//error_log($sql);
 
     	$results = $this->conn->query($sql);
     	if (!$results) {
+	    	error_log(print_r($params, true));
 	    	error_log(print_r($sql, true));
 	    	error_log(print_r($results, true));
 			error_log("Errno: " . $this->conn->errno);
@@ -271,9 +277,10 @@ class DatabaseManager {
 
 	function selectFromMySQL($sql, $params) {
 		//error_log(print_r($params, true));
+		//error_log($sql);
+
 		$pos = 0;
 		$i = 0;
-		//error_log(print_r($sql, true));
 		while( ($nextpos = strpos($sql, '?', $pos)) !== false) {
 			//error_log($pos);
 
@@ -295,6 +302,7 @@ class DatabaseManager {
 			if (!isset($next)) {
 				$next = "''";
 			}
+
 			$sql = substr_replace ($sql, $next, $nextpos, 1);
 			$pos = $nextpos+strlen($next);
 			$i++;
@@ -305,6 +313,7 @@ class DatabaseManager {
     	$results = $this->conn->query($sql);
 
 		if (!$results) {
+	    	error_log(print_r($params, true));
 	    	error_log(print_r($sql, true));
 	    	error_log(print_r($results, true));
 			error_log("Errno: " . $this->conn->errno);

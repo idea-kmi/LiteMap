@@ -95,8 +95,11 @@ $max = optional_param("max",20,PARAM_INT);
 $orderby = optional_param("orderby","",PARAM_ALPHA);
 $sort = optional_param("sort","DESC",PARAM_ALPHA);
 
+$members = array();
 $userset = $group->members;
-$members = $userset->users;
+if (!$userset instanceof Hub_Error && isset($userset)) {
+	$members = $userset->users;
+}
 
 $memberscount = 0;
 if (is_countable($members)) {

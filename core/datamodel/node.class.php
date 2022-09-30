@@ -299,7 +299,7 @@ class CNode {
         }
 
 		if ($style == 'full' || $style == 'shortactivity') {
-			$this->activity = getAllNodeActivity($this->nodeid, 0, 0, -1);
+			$this->activity = getAllNodeActivity($this->nodeid);
 			$this->votes = getVotes($this->nodeid);
 		}
 

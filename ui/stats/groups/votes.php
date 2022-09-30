@@ -102,25 +102,26 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedNodes->nodes[$i];
-			$nodetype = "";
-			$title="";
-			if (isset($n)) {
-				$title = $n->name;
-				if (isset($n->role)) {
-					$nodetype = $n->role->name;
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
 				}
-			}
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-				<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+					<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="votingfor"></a>
@@ -140,23 +141,24 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedForNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedForNodes->nodes[$i];
-			$nodetype = "";
-			$title="";
-			if (isset($n)) {
-				$title = $n->name;
-				if (isset($n->role)) {
-					$nodetype = $n->role->name;
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
 				}
-			}
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-				<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+					<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="votingagainst"></a>
@@ -176,24 +178,25 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedAgainstNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedAgainstNodes->nodes[$i];
-			$nodetype = "";
-			$title="";
-			if (isset($n)) {
-				$title = $n->name;
-				if (isset($n->role)) {
-					$nodetype = $n->role->name;
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
 				}
-			}
 
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="voters"></a>
@@ -217,14 +220,15 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 						$count = count($topVoters);
 					}
 					for ($i=0; $i<$count; $i++) {
-						$n = $topVoters[$i]; ?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $n['Name']; ?></a></td>
-							<td align="right"><span style="color: green"><?php echo $n['up'] ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n['down'] ?></span></td>
-							<td align="right"><b><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						$n = $topVoters[$i];
+						if (!$n instanceof Hub_Error) { ?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $n['Name']; ?></a></td>
+								<td align="right"><span style="color: green"><?php echo $n['up'] ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n['down'] ?></span></td>
+								<td align="right"><b><?php echo $n['vote'] ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 
@@ -242,13 +246,14 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersFor[$i];
-						$title = $n['Name'];
-						?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><b style="color: green"><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Hub_Error) {
+							$title = $n['Name'];
+							?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><b style="color: green"><?php echo $n['vote'] ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 
@@ -266,13 +271,14 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersAgainst[$i];
-						$title = $n['Name'];
-						?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><b style="color: red"><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Hub_Error) {
+							$title = $n['Name'];
+							?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><b style="color: red"><?php echo $n['vote'] ?></b></td>
+							</tr>
+					<?php } } ?>
 			</table>
 		</td>
 	</tr>
@@ -357,27 +363,28 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					$count = $allNodeVotes->count;
 					for ($i=0; $i<$count; $i++) {
 						$n = $allNodeVotes->nodes[$i];
-						$title = "Unknown";
-						$nodetype = "Unknown";
-						if (isset($n)) {
-							if (isset($n->role)) {
-								$nodetype = $n->role->name;
+						if (!$n instanceof Hub_Error) {
+							$title = "Unknown";
+							$nodetype = "Unknown";
+							if (isset($n)) {
+								if (isset($n->role)) {
+									$nodetype = $n->role->name;
+								}
+								if (isset($n->name)) {
+									$title = $n->name;
+								}
 							}
-							if (isset($n->name)) {
-								$title = $n->name;
-							}
-						}
-						?>
-						<tr>
-							<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-							<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-							<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-							<td align="right"><b><?php echo $n->vote ?></b></td>
-						</tr>
-				<?php } ?>
+							?>
+							<tr>
+								<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+								<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+								<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+								<td align="right"><b><?php echo $n->vote ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 	</tr>

@@ -445,6 +445,7 @@ $LNG->SORT_MODDATE = 'Veränderungsdatum';
 $LNG->SORT_TITLE = 'Titel';
 $LNG->SORT_URL = 'Website';
 $LNG->SORT_NAME = 'Name';
+$LNG->SORT_MEMBERS = 'Mitgliederzahl';
 $LNG->SORT_CONNECTIONS = 'Verbindungen';
 $LNG->SORT_VOTES = 'Votes';
 $LNG->SORT_LAST_LOGIN = 'Letzter Log-In';

@@ -1119,6 +1119,10 @@ function getUserBrowser() {
  * Sort objects by name value. Same as nameSortASC
  */
 function nameSort($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
+
 	return strcmp($a->name, $b->name);
 }
 
@@ -1126,6 +1130,10 @@ function nameSort($a,$b) {
  * Sort objects by name value Ascending
  */
 function nameSortASC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
+
 	return strcmp($a->name, $b->name);
 }
 
@@ -1133,6 +1141,11 @@ function nameSortASC($a,$b) {
  * Sort objects by name value Descending
  */
 function nameSortDESC($a,$b) {
+
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
+
 	$results = strcmp($a->name, $b->name);
 	if ($results < 0) {
 		return 1;
@@ -1147,6 +1160,10 @@ function nameSortDESC($a,$b) {
  * Sort objects by role name value Ascending after sending through getNodeTypeText(role, false)
  */
 function roleTextSortASC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
+
 	$role1 = getNodeTypeText($a->role->name, false);
 	$role2 = getNodeTypeText($b->role->name, false);
 	return strcmp($role1, $role2);
@@ -1156,6 +1173,9 @@ function roleTextSortASC($a,$b) {
  * Sort objects by role name value Descending after sending through getNodeTypeText(role, false)
  */
 function roleTextSortDESC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 
 	if (isset($a->role) && isset($b->role)) {
 		$role1 = getNodeTypeText($a->role->name, false);
@@ -1177,6 +1197,9 @@ function roleTextSortDESC($a,$b) {
  * Sort objects by name value
  */
 function nameArraySortASC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	return strcmp($a['Name'], $b['Name']);
 }
 
@@ -1184,6 +1207,9 @@ function nameArraySortASC($a,$b) {
  * Sort objects by name value
  */
 function nameArraySortDESC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	$results = strcmp($a['Name'], $b['Name']);
 	if ($results < 0) {
 		return 1;
@@ -1198,6 +1224,9 @@ function nameArraySortDESC($a,$b) {
  * Sort objects by name value
  */
 function descArraySortASC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	return strcmp($a['Description'], $b['Description']);
 }
 
@@ -1205,6 +1234,9 @@ function descArraySortASC($a,$b) {
  * Sort objects by name value
  */
 function descArraySortDESC($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	$result = strcmp($a['Description'], $b['Description']);
 	if ($results < 0) {
 		return 1;
@@ -1219,6 +1251,9 @@ function descArraySortDESC($a,$b) {
  * Sort objects by creation date value
  */
 function creationdateSort($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	if (isset($a->creationdate) && isset($b->creationdate)) {
 		return strcmp($a->creationdate, $b->creationdate);
 	} else {
@@ -1230,6 +1265,9 @@ function creationdateSort($a,$b) {
  * Sort objects by description value
  */
 function descSort($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	if (isset($a->description) && isset($b->description)) {
 		return strcmp($a->description, $b->description);
 	} else {
@@ -1241,6 +1279,9 @@ function descSort($a,$b) {
  * Sort objects by title value
  */
 function titleSort($a,$b) {
+	if ($a instanceof Hub_Error || $b instanceof Hub_Error) {
+		return 0;
+	}
 	if (isset($a->title) && isset($b->title)) {
 		return strcmp($a->title, $b->title);
 	} else {

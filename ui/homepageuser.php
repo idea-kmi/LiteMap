@@ -47,14 +47,18 @@
 
 	echo '<h3 style="margin-top:5px;padding-top:0px;">'.$LNG->USER_HOME_PROFILE_HEADING.'</h3>';
 
-	if($user->location != ""){
-		echo "<p>".$LNG->USER_HOME_LOCATION_LABEL." ".$user->location.", ".$user->country."</p>";
+	if(isset($user->location) && $user->location != ""){
+		echo "<p>".$LNG->USER_HOME_LOCATION_LABEL." ".$user->location;
+		if (isset($user->country)) {
+			echo ",".$user->country;
+		}
+		echo "</p>";
 	}
 
-	if($user->website != ""){
+	if(isset($user->website) && $user->website != ""){
 		echo "<p>".$LNG->PROFILE_HOMEPAGE." <a href='".$user->website."'>".$user->website."</a></p>";
 	}
-	if($user->description != ""){
+	if(isset($user->description) && $user->description != ""){
 		echo "<p>".$LNG->PROFILE_DESC_LABEL." ".$user->description."</p>";
 	}
 	?>
@@ -338,7 +342,10 @@
 			if ($userSet->count > 0) {
 				for ($j=0; $j < $userSet->count; $j++) {
 					$nextuser = $userSet->users[$j];
-					$i++;
+					if ($nextuser instanceof Hub_Error) {
+						$i++; // just skip it
+					} else {
+						$i++;
 					?>
 					<tr>
 						<td style="color: #666666 ">
@@ -351,7 +358,7 @@
 							<a class="active" href="<?php echo $CFG->homeAddress; ?>user.php?userid=<?php echo $nextuser->userid; ?>">Explore</a>
 						</td>
 					</tr>
-				<?php
+				<?php }
 				}
 			}
 

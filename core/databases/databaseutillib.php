@@ -1883,11 +1883,10 @@ function getGroupTagsForCloud($GroupID, $limit, $orderby="Name", $dir="ASC"){
 /**
  * Return the Activity objects that represent the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
- * @param integer $start (optional - default: 0)
- * @param integer $max (optional - default: 20), -1 means all
+ * @param integer $from (optional - default: 0)
  * @return ActivitySet or Error
  */
-function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
+function getAllNodeActivity($nodeid, $from = 0) {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -1902,10 +1901,11 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 		$now = time();
 		$startime = $now - $timeback;
 	}*/
-
+	/*
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1;
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1914,6 +1914,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 
 	$params[count($params)] = $nodeid;
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1921,6 +1922,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1928,6 +1930,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1935,6 +1938,7 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6_UNION;
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1943,11 +1947,65 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 
 	$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART7;
 
-    if ($max > -1) {
-		// ADD LIMITING
-		$sql = $DB->addLimitingResults($sql, $start, $max);
-	}
+	$as->load($sql, $params);
+	*/
 
+	// make as separate calls to reduce database load
+
+	// load AuditNode records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load AuditTriple records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load AuditVoting records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load Following records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE_FOLLOWING;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+	$as->load($sql, $params);
+
+	// load AuditNodeView records
+	$params = array();
+	$params[count($params)] = $nodeid;
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+	}
+	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
 	$as->load($sql, $params);
 
     return $as;
@@ -1956,11 +2014,12 @@ function getAllNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 /**
  * Return the Activity objects that represent the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
- * @param integer $start (optional - default: 0)
- * @param integer $max (optional - default: 20), -1 means all
+ * @param integer $from a given modification date, (optional - default: 0)
+ * @param integer $start (optional - default: 0) // not used
+ * @param integer $max (optional - default: 20), -1 means all // not used
  * @return ActivitySet or Error
  */
-function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
+function getNodeActivity($nodeid, $from = 0, $start = 0, $max = 20) {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -1979,6 +2038,7 @@ function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART1;
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1987,6 +2047,7 @@ function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 
 	$params[count($params)] = $nodeid;
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -1994,6 +2055,7 @@ function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4_UNION;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2001,6 +2063,7 @@ function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5_UNION;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2008,6 +2071,7 @@ function getNodeActivity($nodeid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6_UNION;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2050,8 +2114,10 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 		$startime = $now - $timeback;
 	}*/
 
+	// Full call with UINIONs
 	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART1;
 	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2059,6 +2125,7 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2066,6 +2133,7 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4_UNION;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2073,6 +2141,7 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5_UNION;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2080,6 +2149,7 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6_UNION;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2088,12 +2158,58 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART7;
 
+	// how do we do this when it is seprate calls?
     if ($max > -1) {
 		// ADD LIMITING
 		$sql = $DB->addLimitingResults($sql, $start, $max);
 	}
 
 	$as->load($sql, $params);
+
+
+	// make seprate calls to reduce database load and then join up
+	/*
+	$params = array();
+	$params[count($params)] = $userid;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+	}
+
+	// load AuditNode records
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2;
+	if ($from > 0) {
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
+	}
+	$as->load($sql, $params);
+
+	// load AuditTriple records
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3;
+	if ($from > 0) {
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
+	}
+	$as->load($sql, $params);
+
+	// load AuditVoting records
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4;
+	if ($from > 0) {
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
+	}
+	$as->load($sql, $params);
+
+	// load Following records
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5;
+	if ($from > 0) {
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING;
+	}
+	$as->load($sql, $params);
+
+	// load AuditNodeView records
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
+	if ($from > 0) {
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
+	}
+	$as->load($sql, $params);
+	*/
 
     return $as;
 }

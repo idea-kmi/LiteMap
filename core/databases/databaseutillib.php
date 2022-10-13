@@ -1879,28 +1879,118 @@ function getGroupTagsForCloud($GroupID, $limit, $orderby="Name", $dir="ASC"){
 	return $array;
 }
 
+/**
+ * Get the activity date ranges from Audit tables (node, nodeview, triple, voting, following).
+ * For Activity and user activity stats views
+ * @param itemids, a comma separated list of strings of nodeids or itemids
+ */
+function getActivityDateRange($itemids="") {
+	global $DB, $HUB_SQL;
+
+
+	$obj = new stdClass();
+	$obj->max = 0;
+	$obj->min = 0;
+
+	$WHERE_STRING = "";
+
+	$params = array();
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODEVIEW;
+	if ($itemids !="") {
+		$sql .= " WHERE NodeID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		$obj->max = $resArray[0]['max'];
+		$obj->min = $resArray[0]['min'];
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_VOTING;
+	if ($itemids !="") {
+		$sql .= " WHERE ItemID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_TRIPLE;
+	if ($itemids !="") {
+		$sql .= " WHERE (FromID IN (".$itemids.") || ToID IN (".$itemids."))";
+	}
+
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODE;
+	if ($itemids !="") {
+		$sql .= " WHERE NodeID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_FOLLOWING;
+	if ($itemids !="") {
+		$sql .= " WHERE ItemID IN (".$itemids.")";
+	}
+	$resArray = $DB->select($sql, $params);
+	if ($resArray !== false) {
+		if ($resArray[0]['max'] > $obj->max) {
+			$obj->max = $resArray[0]['max'];
+		}
+		if ($resArray[0]['min'] != null && $resArray[0]['min'] != "" && $resArray[0]['min'] < $obj->min) {
+			$obj->min = $resArray[0]['min'];
+		}
+    }
+
+	return $obj;
+}
 
 /**
  * Return the Activity objects that represent the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
- * @param integer $from (optional - default: 0)
+ * @param integer $from (optional - default: 0) only get records from the given timestamp
+ * @param integer $to (optional - default: 0 - do not apply) only get records to from the given timestamp
  * @return ActivitySet or Error
  */
-function getAllNodeActivity($nodeid, $from = 0) {
+function getAllNodeActivity($nodeid, $from = 0, $to = 0) {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
 
     $as = new ActivitySet();
 
-   	//"month"  => 2419200,  // seconds in a month  (4 weeks)
+   	//"year"  => 2419200,  // seconds in a month  (52 weeks)
+  	//"month"  => 2419200,  // seconds in a month  (4 weeks)
    	// "week"   => 604800,  // seconds in a week   (7 days)
    	//"day"    => 86400,    // seconds in a day    (24 hours)
-	/*if ($NoDays > 0) {
-		$timeback = $NoDays * 86400; //86400 = 24 hours or 1 Day
+	/*
+	if ($numDays > 0) {
+		$timeback = $numDays * 86400; //86400 = 24 hours or 1 Day
 		$now = time();
-		$startime = $now - $timeback;
-	}*/
+		$from = $now - $timeback;
+	}
+	*/
+
 	/*
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1;
 
@@ -1958,9 +2048,14 @@ function getAllNodeActivity($nodeid, $from = 0) {
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
 	}
 	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
+
 	$as->load($sql, $params);
 
 	// load AuditTriple records
@@ -1970,7 +2065,11 @@ function getAllNodeActivity($nodeid, $from = 0) {
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3;
 	if ($from > 0) {
 		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
 	}
 	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
 	$as->load($sql, $params);
@@ -1981,7 +2080,11 @@ function getAllNodeActivity($nodeid, $from = 0) {
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4;
 	if ($from > 0) {
 		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
 	}
 	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
 	$as->load($sql, $params);
@@ -1992,7 +2095,11 @@ function getAllNodeActivity($nodeid, $from = 0) {
 	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5;
 	if ($from > 0) {
 		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE_FOLLOWING;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_TO;
 	}
 	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
 	$as->load($sql, $params);
@@ -2003,7 +2110,11 @@ function getAllNodeActivity($nodeid, $from = 0) {
 	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;
+	}
+	if ($to > 0) {
+		$params[count($params)] = $to;
+		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO;
 	}
 	//$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE;
 	$as->load($sql, $params);

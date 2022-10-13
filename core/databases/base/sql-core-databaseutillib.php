@@ -157,8 +157,10 @@ $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1 = "Select ItemID, UserID, Type, Modifi
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2_BRACKET = "(";
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2 = "SELECT DISTINCT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
     									FROM AuditNode a WHERE a.NodeID=?";
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM = " AND a.ModificationDate >= ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO = " AND a.ModificationDate < ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_FROM = " AND a.CreationDate >= ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_TO = " AND a.CreationDate < ?";
 
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3_UNION = ") UNION (";
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3 = "SELECT DISTINCT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
@@ -259,6 +261,15 @@ $HUB_SQL->UTILLIB_USER_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.
 
 // for if called as individual statements
 $HUB_SQL->UTILLIB_USER_ACTIVITY_ORDERBY_MODDATE = " order by ModificationDate DESC";
+
+
+/** Get Activity date ranges **/
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODEVIEW = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditNodeView";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_VOTING = "SELECT MAX(`ModificationDate`)as max, MIN(`ModificationDate`) as min FROM AuditVoting";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_TRIPLE = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditTriple";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODE = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditNode";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_FOLLOWING = "SELECT MAX(`CreationDate`) as max, MIN(`CreationDate`) as min FROM Following";
+
 
 /** Get Countries For Cloud By Type **/
 

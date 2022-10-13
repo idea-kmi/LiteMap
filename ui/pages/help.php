@@ -36,7 +36,7 @@
 <div style="margin-top:20px; margin-left:10px;">
 	<h1><?php echo $LNG->PAGE_HELP_TITLE; ?></h1>
 
-	<div><p><?php echo $LNG->PAGE_HELP_PARA1_A; ?> <a href="'.$CFG->homeAddress.'ui/pages/about.php"><?php echo $LNG->PAGE_HELP_PARA1_B; ?></a> <?php echo $LNG->PAGE_HELP_PARA1_C; ?></p></div>
+	<div><p><?php echo $LNG->PAGE_HELP_PARA1_A; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/about.php"><?php echo $LNG->PAGE_HELP_PARA1_B; ?></a> <?php echo $LNG->PAGE_HELP_PARA1_C; ?></p></div>
 
 	<div style="clear:both;float:left; margin-top:20px;width:480px">
 	<h2><?php echo $LNG->PAGE_HELP_MOVIE_INTRO; ?> <span style="font-size:9pt;padding-left:5px;color:gray">(5m 28s)</span></h2>

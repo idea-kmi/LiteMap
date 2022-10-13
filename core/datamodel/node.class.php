@@ -103,12 +103,16 @@ class CNode {
 	 * 'map' includes 'mini' plus voting, websites.
      * 'long' includes 'short' and associated website objects, tag objects, group onjects, votes, view counts and extra properties.
      * 'full' includes 'long' and all activity and voting data. This is likely to be very heavy. Use wisely.
-     * 'shortactivity' includes 'short' plus the activity and voting data.
+     * 'shortactivity' includes 'short' plus the activity and voting data. It can have a colon separated start and end date appended to reduce data pulled
      * 'cif' just what is needed for cif.
      * @return Node object (this)
      */
     function load($style = 'long') {
         global $DB,$CFG, $USER,$ERROR,$HUB_FLM,$HUB_SQL;
+
+		// for shortactivity you can append from and to timestamps
+		$styleArray = explode(':', $style);
+		$style = $styleArray[0];
 
         try {
             $this->canview();
@@ -299,7 +303,15 @@ class CNode {
         }
 
 		if ($style == 'full' || $style == 'shortactivity') {
-			$this->activity = getAllNodeActivity($this->nodeid);
+
+			$startActivityDate = 0;
+			$endActivityDate = 0;
+			if (is_countable($styleArray) && count($styleArray) > 2) {
+				$startActivityDate = intval($styleArray[1]);
+				$endActivityDate = intval($styleArray[2]);
+			}
+	
+			$this->activity = getAllNodeActivity($this->nodeid, $startActivityDate, $endActivityDate);
 			$this->votes = getVotes($this->nodeid);
 		}
 

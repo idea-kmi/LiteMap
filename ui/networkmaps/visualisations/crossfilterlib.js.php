@@ -323,20 +323,17 @@ function displayActivityCrossFilterD3Vis(data, width) {
 
 	// Want the labels to be black not white in the node type graph or you can't read them for small quantities.
 	var labels = document.getElementById("nodetype-chart").getElementsByTagName("text");
-	console.log(labels);
 	for (var i=0; i<labels.length; i++) {
 	    labels[i].style.fill = "black";
  	}
 
 	var labels = document.getElementById("days-of-week-chart").getElementsByTagName("text");
-	console.log(labels);
 	for (var i=0; i<labels.length; i++) {
 	    labels[i].style.fill = "black";
  	}
 
 
 	var labels = document.getElementById("type-chart").getElementsByTagName("text");
-	console.log(labels);
 	for (var i=0; i<labels.length; i++) {
 	    labels[i].style.fill = "black";
  	}
@@ -363,8 +360,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	data.forEach(function(d, i) {
 		d.index = i;
 		d.date = new Date(d.date*1000);
-
-		//console.log(d.userid);
 
 		if (!d.color) {
 			if (d.nodetype == "Pro") {
@@ -469,9 +464,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	//var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>','<?php echo $CFG->issueback; ?>', '<?php echo $CFG->solutionback; ?>', '<?php echo $CFG->proback; ?>', '<?php echo $CFG->conback; ?>', '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#F9B257", "#E1E353"];
 	var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#E1E353"];
-	//console.log(colorChoice);
-
-	console.log(user);
 
 	dc.barChart("#user-chart")
 		.width(width)
@@ -547,7 +539,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	var nodetypeGroup = nodetype.group();
 
 	//var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#E1E353"];
-	console.log(colorChoice);
 
 	// it was calling but no applying colorAccessor below so added ordering function so this made the colours correct even if the orderding was no longer highest count at the top.
 	dc.rowChart("#nodetype-chart")
@@ -614,7 +605,6 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	// Want the labels to be black not white in the node type graph or you can not read them for small quantities.
 	var labels = document.getElementById("nodetype-chart").getElementsByTagName("text");
-	console.log(labels);
 	for (var i=0; i<labels.length; i++) {
 	    labels[i].style.fill = "black";
  	}

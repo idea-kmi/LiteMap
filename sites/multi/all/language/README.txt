@@ -12,7 +12,7 @@ The current language system allows you to do two important things:
 ** Adding another language **
 *****************************
 
-If you want to add a new language set to the Evidence Hub you need to:
+If you want to add a new language set to LiteMap you need to:
 
 1. Create a new folder inside the 'language' folder whose name the two letter abbreviation 
 for the language you are providing a translation for. These codes are specified by the ISO 639 standard 
@@ -26,14 +26,16 @@ fr	French
 it	Italian
 de	German
 
-2. Copy the language files from inside the default 'en' language folder into you new folder.
+2. Copy the language files from inside the default 'en' language folder into your new folder.
 
 3. Inside any given language file, each item is set up as a key/value pair, in the form key='value'.
 You must translate/change only the values on the right hand side, NEVER change the key name on the left.
 
-4.Change the language variables in the config file: $CFG->language = 'en'; 
-and $CFG->defaultcountry = "United Kingdom"; to reflect your new language of choice.
-The $CFG->language setting must match the folder name for your new language.
+4.Either change the language variables in the config file: $CFG->language = 'en' to a new default. 
+The $CFG->language setting must match the folder name for your new language; 
+Or add a new flag to the interface to allow user's to switch languages to your new language. 
+There is a flags sub-folder in the images folder with many flag options. The value of the new
+flag must be the two letter folder name for your new language options.
 
 NB: Some HTML is mixed up in the language files especially in the language heavy areas like 
 the About and the Help pages. The languagecore.php file contains the node and link names 
@@ -66,10 +68,10 @@ All files in the 'custom' folder are loaded after the ones outside, and provided
 the same keys, the text will be replaced with your version when the language files are loaded.
 
 NOTE: If what you want to change any of the core terms, the names of the categories or links,
-for example, if you wish to call 'Themes' say 'Topics' instead on your Hub, you can just create a 
+for example, if you wish to call 'Issues' say 'Problems' instead on your version of the site, you can just create a 
 custom languagecore.php file and change the text in that. These terms will ripple through the 
 rest of the interface text as all the rest of the text should reference those terms through their keys.
-This makes it easy to change the basic terminology for a given Hub community without editing lots of interface text.
+This makes it easy to change the basic terminology for a given litemap instance without editing lots of interface text.
 
 IMPORTANT: There are two none-standard items in the language folder that are not handled
 in the same way as the other language files:

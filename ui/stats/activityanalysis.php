@@ -31,6 +31,7 @@ $sdt = trim(optional_param("startdate","",PARAM_TEXT));
 $edt = trim(optional_param("enddate","",PARAM_TEXT));
 
 $data = [];
+$nodes = array();
 
 if ($sdt != "" && $edt != "") {
 

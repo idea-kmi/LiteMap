@@ -42,7 +42,6 @@ if ($sdt != "" && $edt != "") {
 	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
 	$node = getNode($nodeid, $style);
 
-	$nodes = array();
 	array_push($nodes, $node);
 
 	$view = getView($nodeid, $style);

@@ -2107,7 +2107,7 @@ function getAllNodeActivity($nodeid, $from = 0, $to = 0) {
 	// load AuditNodeView records
 	$params = array();
 	$params[count($params)] = $nodeid;
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
+	$sql = $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
 		$sql .= $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM;

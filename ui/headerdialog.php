@@ -31,6 +31,12 @@ if ($CFG->privateSite) {
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
 <head>
+<?php
+	if ($CFG->GOOGLE_ANALYTICS_ON) {
+		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
+	}
+?>
+
 <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title><?php echo $CFG->SITE_TITLE; ?></title>
@@ -66,11 +72,6 @@ if (file_exists($custom)) {
             echo $header;
         }
     }
-?>
-<?php
-	if ($CFG->GOOGLE_ANALYTICS_ON) {
-		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
-	}
 ?>
 </head>
 

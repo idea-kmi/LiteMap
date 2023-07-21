@@ -157,7 +157,7 @@ $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1 = "Select ItemID, UserID, Type, Modifi
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2_BRACKET = "(";
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2 = "SELECT DISTINCT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
     									FROM AuditNode a WHERE a.NodeID=?";
-										
+
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM = " AND a.ModificationDate >= ?";
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO = " AND a.ModificationDate < ?";
 

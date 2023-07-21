@@ -4803,8 +4803,12 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
    			return $data;
    		}
 
-		$results = $replyObj->responses;
-
+		if (isset($replyObj->responses)) {
+			$results = $replyObj->responses;
+		} else {
+			$results = [];
+		}
+		
 		if (!isset($results[0]->error) && isset($results[0]->data)) {
 			$replydata = $results[0]->data;
 

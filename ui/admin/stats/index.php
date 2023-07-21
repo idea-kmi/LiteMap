@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2013 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -65,20 +65,19 @@ for ($i=0; $i<$count; $i++) {
 	$grandtotal += $monthlytotal;
 }
 
-
-echo '<div style="clear: both; float: left;margin-top:10px;">';
-echo '<span style="float: left">'.$LNG->USERS_NAME.' = '.$grandtotal.'</span>';
+echo '<div class="my-3">';
+echo '<p>'.$LNG->USERS_NAME.' = '.$grandtotal.'</p>';
 echo '</div>';
 
 $allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-echo '<div style="clear: both; float: left;margin-top:20px;">';
+echo '<div class="my-3">';
 
-$count = 0;
+$countgroups = 0;
 if (is_countable($allGroups->groups)) {
-	$count = count($allGroups->groups);
+	$countgroups = count($allGroups->groups);
 }
 
-echo '<span style="float: left">'.$LNG->GROUPS_NAME.' = '.$count.'</span>';
+echo '<p>'.$LNG->GROUPS_NAME.' = '.$countgroups.'</p>';
 echo '</div>';
 
 $grandtotal1 = 0;
@@ -116,15 +115,16 @@ $icount = getNodeCreationCount('Comment',$startdate);
 $categoryArray[$LNG->CHAT_NAME] = $icount;
 $grandtotal1 += $icount;
 
-echo '<div style="clear: both; float: left;margin-right:50px;margin-top:10px;"><table cellpadding="3">';
-echo '<h4>'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
+echo '<div class="mt-3">';
+echo '<h4 class="fw-bold">'.$LNG->ADMIN_STATS_TAB_IDEAS.'</h4>';
+echo '<table cellpadding="3" class="table table-sm table-borderless">';
 
 foreach( $categoryArray as $key => $value) {
-	echo '<tr><td><span>'.$key.'</span></td><td><span> = '.$value.'</span</td></tr>';
+	echo '<tr><td><span>'.$key.'</span></td><td class="text-end"><span>'.$value.'</span</td></tr>';
 }
 
 echo '<tr><td colspan="2"><hr class="hrline" /></td></tr>';
-echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td><span class="hometext"> = '.$grandtotal1.'</span</td></tr>';
+echo '<tr><td><span class="hometext">'.$LNG->ADMIN_STATS_IDEAS_TOTAL_LABEL.'</span></td><td class="text-end"><span class="hometext">'.$grandtotal1.'</span</td></tr>';
 echo '</table></div>';
 
 ?>

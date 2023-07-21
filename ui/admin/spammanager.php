@@ -223,7 +223,7 @@ if(!empty($errors)){
    </div>
 
     <div class="formrow">
-    <input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>

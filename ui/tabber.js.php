@@ -217,11 +217,13 @@ function loadmaps(context,args){
       			//$('issuebuttons').innerHTML = "";
 
 				//display nav
+
 				var total = json.nodeset[0].totalno;
 				if (CURRENT_VIZ == 'list') {
 					var currentPage = (json.nodeset[0].start/args["max"]) + 1;
 					window.location.hash = CURRENT_TAB+"-"+CURRENT_VIZ+"-"+currentPage;
 				}
+
 				$("tab-content-map-list").update(createNav(total,json.nodeset[0].start,json.nodeset[0].count,args,context,"maps"));
 
 				//alert(json.nodeset[0].nodes.length);
@@ -239,8 +241,6 @@ function loadmaps(context,args){
 						}
 					}
 					var tb3 = new Element("div", {'class':'toolbarrow'});
-
-					//var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>'};
 
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>'};
 					tb3.insert(displaySortForm(sortOpts,args,'map',reorderMaps));
@@ -280,6 +280,7 @@ function loadgroups(context,args){
       				alert(json.error[0].message);
       				return;
       			}
+
 				$("tab-content-group-list").innerHTML = "";
 
 				var tb1 = new Element("div", {'class':'toolbarrow'});
@@ -293,7 +294,6 @@ function loadgroups(context,args){
 				}
 
 				$("tab-content-group-list").update(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
-				$("tab-content-group-list").insert('<div style="clear: both; margin:0px; padding: 0px;"></div>');
 
 				if(json.groupset[0].count > 0){
 					//preprosses nodes to add searchid if it is there
@@ -310,8 +310,6 @@ function loadgroups(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', members: '<?php echo $LNG->SORT_MEMBERS; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
 					$("tab-content-group-list").insert(tb2);
-
-					$("tab-content-group-list").insert("<br><br>");
 					displayGroups($("tab-content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, 466,180, false, true);
 				}
 
@@ -424,8 +422,9 @@ function displaySortForm(sortOpts,args,tab,handler){
     var selOrd = new Element("select");
  	Event.observe(selOrd,'change',handler);
     selOrd.id = "select-orderby-"+tab;
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
+    selOrd.setAttribute("aria-label","Sort by");
     sbTool.insert(selOrd);
     for(var key in sortOpts){
         var opt = new Element("option");
@@ -441,8 +440,9 @@ function displaySortForm(sortOpts,args,tab,handler){
     var sortBy = new Element("select");
  	Event.observe(sortBy,'change',handler);
     sortBy.id = "select-sort-"+tab;
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
+    sortBy.setAttribute("aria-label","Order by");
     sbTool.insert(sortBy);
     for(var key in sortBys){
         var opt = new Element("option");
@@ -462,16 +462,19 @@ function displaySortForm(sortOpts,args,tab,handler){
  */
 function createNav(total, start, count, argArray, context, type){
 
-	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow', 'style':'padding-top: 8px; padding-bottom: 8px;'});
+	var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow pb-3' });
 
 	var header = createNavCounter(total, start, count, type);
 	nav.insert(header);
 
+	var pageNav = new Element ("nav",{'aria-label':'Page navigation example' }); 
+	var pageUL = new Element ("ul",{'class':'pagination' }); 
+
 	if (total > parseInt( argArray["max"] )) {
 		//previous
-	    var prevSpan = new Element("span", {'id':"nav-previous"});
+	    var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link"});
 	    if(start > 0){
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("active");
 	        Event.observe(prevSpan,"click", function(){
 	            var newArr = argArray;
@@ -479,35 +482,32 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context,newArr)");
 	        });
 	    } else {
-			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' disabled src='<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
+			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
 	        prevSpan.addClassName("inactive");
 	    }
+		
+		pageUL.insert(prevSpan)
 
 	    //pages
-	    var pageSpan = new Element("span", {'id':"nav-pages"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i<totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    	var page = new Element("li", {'class':"page-link"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);
-		    	newArr["start"] = newArr["max"] * (i-1);
-		    	page.newArr = newArr;
-		        Event.observe(page,"click", function(){
-		            var newArr = this.newArr;
-		            eval("load"+type+"(context,newArr)");
-		        });
+		    	newArr["start"] = newArr["max"] * (i-1) ;
+		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,context,newArr));
 	    	} else {
 	    		page.addClassName("currentpage");
 	    	}
-	    	pageSpan.insert(page);
+	    	pageUL.insert(page);
 	    }
 
 	    //next
-	    var nextSpan = new Element("span", {'id':"nav-next"});
+	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link"});
 	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("active");
 	        Event.observe(nextSpan,"click", function(){
 	            var newArr = argArray;
@@ -515,12 +515,15 @@ function createNav(total, start, count, argArray, context, type){
 	            eval("load"+type+"(context, newArr)");
 	        });
 	    } else {
-		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath('arrow-right2-disabled.png'); ?>' class='toolbar' style='padding-right: 0px;' />");
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
 	        nextSpan.addClassName("inactive");
 	    }
 
+		pageUL.insert(nextSpan);
+
 	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-	    	nav.insert(prevSpan).insert(pageSpan).insert(nextSpan);
+			pageNav.insert(pageUL);
+			nav.insert(pageNav);
 	    }
 	}
 
@@ -535,10 +538,17 @@ function createNavCounter(total, start, count, type){
     	var objH = new Element("span",{'class':'nav'});
     	var s1 = parseInt(start)+1;
     	var s2 = parseInt(start)+parseInt(count);
-        objH.insert("<b>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</b>");
+        objH.insert("<strong>" + s1 + " <?php echo $LNG->LIST_NAV_TO; ?> " + s2 + " (" + total + ")</strong>");
     } else {
     	var objH = new Element("span");
-		objH.insert("<b><?php echo $LNG->LIST_NAV_NO_ITEMS; ?></b>");
+		objH.insert("<strong><?php echo $LNG->LIST_NAV_NO_ITEMS; ?></strong>");
     }
     return objH;
 }
+
+var Pages = {
+	next: function(e){
+		var data = $A(arguments);
+		eval("load"+data[1]+"(data[2],data[3])");
+	}
+};

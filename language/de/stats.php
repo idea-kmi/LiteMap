@@ -31,6 +31,8 @@
 $LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Laden einer Live Visualisierung von <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 $LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Laden Live Visual Analytics von <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 
+$LNG->STATS_GO_BACK = "Geh zurück";
+
 $LNG->STATS_AVAILABLE_FROM = "Verfügbarer Datumsbereich von";
 $LNG->STATS_AVAILABLE_TO = "an";
 $LNG->STATS_START_DATE = "Daten anzeigen von";

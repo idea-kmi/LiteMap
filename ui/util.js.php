@@ -248,6 +248,11 @@ function loadDialog(windowName, url, width, height){
         height = 510;
     }
 
+	// to not trigger the Boostrap mobile threshold of 768.
+	if (width < 770) {
+		width = 770
+	}
+
     var left = parseInt((screen.availWidth/2) - (width/2));
     var top  = parseInt((screen.availHeight/2) - (height/2));
     var props = "width="+width+",height="+height+",left="+left+",top="+top+",menubar=no,toolbar=no,scrollbars=yes,location=no,status=no,resizable=yes";
@@ -726,48 +731,56 @@ function hideBoxes() {
 function textAreaCancel() {
 	$('prompttext').style.display = "none";
 	$('prompttext').update("");
+					
+	var backDrop = document.getElementById("backDrop");
+	backDrop.remove(); 
 }
 
 function textAreaPrompt(messageStr, text, connid, handler, refresher, width, height) {
 
 	$('prompttext').innerHTML="";
-	if (width == undefined) {
-		width = 400;
-	}
-	if (height == undefined) {
-		height = 250;
-	}
-	$('prompttext').style.width = width+"px";
-	$('prompttext').style.height = height+"px";
 
 	var viewportHeight = getWindowHeight();
 	var viewportWidth = getWindowWidth();
-	var x = (viewportWidth-width)/2;
-	var y = (viewportHeight-height)/2;
-	$('prompttext').style.left = x+getPageOffsetX()+"px";
-	$('prompttext').style.top = y+getPageOffsetY()+"px";
+	var x = (viewportWidth-400)/2;
+	var y = (viewportHeight-200)/2;
+	
+	var innerPromptDiv = new Element('div', {'class':'prompttext-inner'});
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'7','style':'color: black; width:390px; border: 1px solid gray; padding: 3px; overflow:hidden'});
+	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'form-control'});
 	textarea1.value=text;
 
 	if (connid != "") {
-		var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
+		var buttonOK = new Element('input', { 'class':'btn btn-primary', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
 		Event.observe(buttonOK,'click', function() {
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+	var buttonCancel = new Element('input', { 'class':'btn btn-secondary', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});	
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert('<h2>'+messageStr+'</h2>');
-	$('prompttext').insert(textarea1);
+
+	var footerPromptDiv = new Element('div', {'class':'prompttext-footer'});
+
 	if (connid != "") {
-		$('prompttext').insert(buttonOK);
+		footerPromptDiv.insert(buttonOK);
 	}
-	$('prompttext').insert(buttonCancel);
+	footerPromptDiv.insert(buttonCancel);
+	
+	innerPromptDiv.insert('<h2>'+messageStr+'</h2>');
+	innerPromptDiv.insert(textarea1);
+	innerPromptDiv.insert(footerPromptDiv);
+	$('prompttext').insert(innerPromptDiv);
 	$('prompttext').style.display = "block";
+
+	document.body.classList.add("modal-open");
+
+	var backDrop = new Element('div', {'class':'modal-backdrop fade show', 'id':'backDrop'});
+	document.body.insert(backDrop);
+
+	textarea1.focus();
 }
 
 function fadeMessage(messageStr) {

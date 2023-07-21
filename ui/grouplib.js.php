@@ -134,7 +134,7 @@ function refreshGroupSearch() {
 
 	ISSUE_ARGS['q'] = $('qmap').value;
 	SOLUTION_ARGS['q'] = $('qmap').value;
-	PRO_ARGS['q'] = $('qmap'.value);
+	PRO_ARGS['q'] = $('qmap').value;
 	CON_ARGS['q'] = $('qmap').value;
 	ARGUMENT_ARGS['q'] = $('qmap').value;
 	MAP_ARGS['q'] = $('qmap').value;

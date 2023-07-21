@@ -25,83 +25,73 @@
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
-<head>
-<?php
-	if ($CFG->GOOGLE_ANALYTICS_ON) {
-		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
-	}
-?>
+	<head>
+		<?php
+			if ($CFG->GOOGLE_ANALYTICS_ON) {
+				include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
+			}
+		?>
 
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title><?php echo $CFG->SITE_TITLE; ?></title>
+        <meta http-equiv="Content-Type" content="text/html" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("style.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
+		<title><?php echo $CFG->SITE_TITLE; ?></title>
 
-<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
+		<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
 
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/popuputil.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
+        <link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("bootstrap.css"); ?>" type="text/css" />
+        <link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("all.css"); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("style.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
 
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 
-<?php
-$custom = $HUB_FLM->getCodeDirPath("ui/headerloginCustom.php");
-if (file_exists($custom)) {
-    include_once($custom);
-}
-?>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/popuputil.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
 
-<?php
-    global $HEADER,$BODY_ATT, $CFG;
-    if(is_array($HEADER)){
-        foreach($HEADER as $header){
-            echo $header;
-        }
-    }
-?>
-</head>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor/ckeditor.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 
-<body>
+        <script src="<?php echo $HUB_FLM->getCodeWebPath('ui/lib/bootstrap/bootstrap.bundle.min.js'); ?>" type="text/javascript"></script>
 
-<!-- div id="maincenter" style="margin:0 auto;width:1024px; max-width:1024px;" -->
+		<?php
+			$custom = $HUB_FLM->getCodeDirPath("ui/headerloginCustom.php");
+			if (file_exists($custom)) {
+				include_once($custom);
+			}
+			global $HEADER,$BODY_ATT, $CFG;
+			if(is_array($HEADER)){
+				foreach($HEADER as $header){
+					echo $header;
+				}
+			}
+		?>
+	</head>
+	<body>
+        <header class="py-3 mb-0 border-bottom" id="header">
+			<div class="container-fluid d-flex flex-wrap justify-content-center">
+				<div id="dialoglogo" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+					<a href="<?php print($CFG->homeAddress);?>" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" class="text-decoration-none">
+						<img alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
+					</a>
+				</div>
+			</div>
+		</header>
+		<div id="message" class="messagediv"></div>
+		<div id="prompttext" class="prompttext"></div>
+		<div id="hgrhint" class="hintRollover">
+			<span id="globalMessage"></span>
+		</div>
 
-<div id="header" class="headerback">
-	<table style="border-collapse: collapse;padding:0px;margin:0px;width:90%">
-	<tr>
-	<td width="20%">
-    	<a id="dialoglogo" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" href="<?php print($CFG->homeAddress);?>">
-        <img border="0" alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
-		</a>
-   </td>
-   <td width="80%">
-		<h1 style="text-align:center; margin: 0px; padding: 0px;margin-top:10px;" id="dialogheader"></h1>
-   </td>
-   </tr>
-   </table>
-</div>
+        <div id="main" class="main">
+			<div id="contentwrapper" class="contentwrapper">
+				<div id="content" class="content">
+					<div class="c_innertube">
 
-<div id="message" class="messagediv"></div>
-<div id="prompttext" class="promptbox"></div>
-<div id="hgrhint" class="hintRollover" style="position: absolute; visibility:hidden; border: 1px solid gray;overflow:hidden">
-	<table width="400" border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFED9">
-		<tr width="350">
-			<td width="350" align="left">
-				<span id="globalMessage"></span>
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="main">
-<div id="contentwrapper">
-<div id="content">
-<div class="c_innertube">

@@ -118,7 +118,7 @@ function loadMapData(forcedirectedGraph, toolbar, messagearea) {
 			}
 
 			$('graphConnectionCount').innerHTML = "";
-			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+concount+'</span>');
+			$('graphConnectionCount').insert('<span><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+concount+'</span>');
 
 			if (views.length > 0) {
 				// Graph needs a root node to be declared or nothing will draw

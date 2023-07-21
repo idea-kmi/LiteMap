@@ -333,7 +333,7 @@
 
 	<label style="clear:both; float: left; margin-bottom:15px;width:100%"><?php echo $LNG->FORM_SELECTOR_SEARCH_MESSAGE; ?></label>
 
-	<div id="tabber" style="clear:both;float:left;width:380px;">
+	<div id="tabber" style="clear:both;float:left;width:380px;" role="navigation">
 		<div style="float:left;">
 			<ul id="tabs" class="tab2">
 				<li class="tab"><a class="tab current" id="tab-item-node" href="javascript:void(0)" onclick="javascript: viewNodes();"><span class="tab"><?php echo $LNG->FORM_SELECTOR_TAB_MINE; ?> <span id="catheading"></span> (<span id="node-item-list-count">0</span>)</span></a></li>

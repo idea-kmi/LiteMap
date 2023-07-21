@@ -993,6 +993,7 @@ $LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Klicken Sie auf die Schaltfläche \'Von Y
 $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Füge deinen YouTube-Film \'Embed\' Code ein:";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Klicken Sie auf die Schaltfläche \'Von Vimeo importieren\', um Ihren Vimeo-Film einzuschaden. Die Breite, die Höhe und die Film-ID werden extrahiert und verwendet, um den Film in die Karte zu laden.";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Füge deinen Vimeo-Film \'Embed\' Code ein:";
+$LNG->MAP_MOVIE_SIZE_MESSAGE = "Für Ihren YouTube-Film können keine Höhen- und Breitenangaben ermittelt werden";
 
 $LNG->MAP_MEDIA_NODE_JUMP_HINT = "Springe zur angegebenen Medienindexzeit";
 $LNG->MAP_MEDIA_NODE_JUMP = "Springen";

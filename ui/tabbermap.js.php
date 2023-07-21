@@ -114,16 +114,16 @@ function setTabPushed(e) {
 		if ($("tab-"+i)) {
 			if(tab == i){
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("unselected");
-					$("tab-"+i).addClassName("current");
+					// $("tab-"+i).removeClassName("unselected");
+					$("tab-"+i).addClassName("active");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").show();
 					}
 				}
 			} else {
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("current");
-					$("tab-"+i).addClassName("unselected");
+					$("tab-"+i).removeClassName("active");
+					// $("tab-"+i).addClassName("unselected");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").hide();
 					}
@@ -140,14 +140,14 @@ function setTabPushed(e) {
 		for (i in DATAVIZ){
 			if(viz == i){
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("unselected");
-					$("tab-"+tab+"-"+i).addClassName("current");
+					// $("tab-"+tab+"-"+i).removeClassName("unselected");
+					$("tab-"+tab+"-"+i).addClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").show();
 				}
 			} else {
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("current");
-					$("tab-"+tab+"-"+i).addClassName("unselected");
+					$("tab-"+tab+"-"+i).removeClassName("active");
+					// $("tab-"+tab+"-"+i).addClassName("unselected");
 					$("tab-content-"+tab+"-"+i+"-div").hide();
 				}
 			}
@@ -162,14 +162,14 @@ function setTabPushed(e) {
 		for (i in DATAANALYTICS){
 			if(viz == i){
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("unselected");
-					$("tab-"+tab+"-"+i).addClassName("current");
+					// $("tab-"+tab+"-"+i).removeClassName("unselected");
+					$("tab-"+tab+"-"+i).addClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").show();
 				}
 			} else {
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("current");
-					$("tab-"+tab+"-"+i).addClassName("unselected");
+					$("tab-"+tab+"-"+i).removeClassName("active");
+					// $("tab-"+tab+"-"+i).addClassName("unselected");
 					$("tab-content-"+tab+"-"+i+"-div").hide();
 				}
 			}

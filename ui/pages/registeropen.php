@@ -181,7 +181,7 @@
 							$u->updatePhoto($photofilename);
 
 							if(empty($errors)){
-								echo "<h1>".$LNG->REGISTRATION_SUCCESSFUL_TITLE."</h1><p>".$LNG->REGISTRATION_SUCCESSFUL_MESSAGE."</p>";
+								echo "<div class=\"container-fluid\"><div class=\"row p-4 justify-content-center\"><div class=\"col-sm-12\"><h1>".$LNG->REGISTRATION_SUCCESSFUL_TITLE."</h1><p>".$LNG->REGISTRATION_SUCCESSFUL_MESSAGE."</p></div></div></div>";
 								include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 								die;
 							}
@@ -194,157 +194,174 @@
 
     $countries = getCountryList();
 ?>
-<h1><?php echo $LNG->FORM_REGISTER_OPEN_TITLE; ?></h1>
 
-<?php
-    if(!empty($errors)){
-        echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE_REGISTRATION."<ul>";
-        foreach ($errors as $error){
-            echo "<li>".$error."</li>";
-        }
-        echo "</ul></div>";
-    }
-?>
+<div class="container-fluid">
+	<div class="row p-4 justify-content-center">	
+		<div class="col-sm-12 col-lg-8">
+			<h1><?php echo $LNG->FORM_REGISTER_OPEN_TITLE; ?></h1>
+			<?php
+				if(!empty($errors)){
+					echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE_REGISTRATION."<ul>";
+					foreach ($errors as $error){
+						echo "<li>".$error."</li>";
+					}
+					echo "</ul></div>";
+				}
+			?>
+			<script type="text/javascript">
+				function checkForm() {
+					if ($('agreeconditions') && $('agreeconditions').checked == false){
+						alert("<?php echo $LNG->CONDITIONS_AGREE_FAILED_MESSAGE; ?>");
+						return false;
+					}
+					$('register').style.cursor = 'wait';
+					return true;
+				}
+			</script>
+			<p class="text-end"><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
+		</div>
 
-<script type="text/javascript">
-function checkForm() {
 
-	if ($('agreeconditions') && $('agreeconditions').checked == false){
-	   alert("<?php echo $LNG->CONDITIONS_AGREE_FAILED_MESSAGE; ?>");
-	   return false;
-    }
+		<form name="register" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();" class="col-sm-12 col-lg-8">
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?> <span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="email" name="email" value="<?php print $email; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?> <span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="password" name="password" type="password" value="<?php print $password; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?><span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="confirmpassword" name="confirmpassword" type="password" value="<?php print $confirmpassword; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?> <span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" type="text" id="fullname" name="fullname" value="<?php print $fullname; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="description"><?php echo $LNG->PROFILE_DESC_LABEL; ?></label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="description" name="description" rows="3"><?php print $description; ?></textarea>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?> <span class="required">*</span></label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="interest" name="interest" rows="3"><?php print $interest; ?></textarea>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
+				<div class="col-sm-5">
+					<input class="form-control" id="location" name="location" value="<?php echo $location; ?>">
+				</div>
+				<div class="col-sm-4">
+					<select id="loccountry" name="loccountry" class="form-select" aria-label="Select country" >
+						<option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
+						<?php
+							foreach($countries as $code=>$c){
+								echo "<option value='".$code."'";
+								if($code == $loccountry){
+									echo " selected='true'";
+								}
+								echo ">".$c."</option>";
+							}
+						?>
+					</select>
+				</div>
+			</div>	
 
-    $('register').style.cursor = 'wait';
+			<?php if ($CFG->hasUserHomePageOption) { ?>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" id="homepage" name="homepage" value="<?php print $homepage; ?>">
+					</div>
+				</div>
+			<?php } ?>
 
-	return true;
-}
-</script>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
+				<div class="col-sm-9">
+					<input class="form-control" type="file" id="photo" name="photo">
+				</div>
+			</div>
 
-<div style="clear:both;float:left;margin-top:0px;">
+			<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
+					<div class="col-sm-9">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="recentactivitiesemail" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" />
+							<label class="form-check-label" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?></label>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
 
-<p><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
+			<?php if($CFG->CAPTCHA_ON) { ?>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="g-recaptcha"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?> <span class="required">*</span></label>
+					<div class="col-sm-9">
+						<div class="g-recaptcha" data-sitekey="<?php echo $CFG->CAPTCHA_PUBLIC; ?>"></div>
+					</div>
+				</div>
+			<?php } ?>
 
-<form name="register" action="" style="width:650px;" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
+			<div class="mb-3 row">
+				<hr />
+				<?php if ($CFG->hasConditionsOfUseAgreement) { ?>
+					<div class="col">
+						<h2><?php echo $LNG->CONDITIONS_REGISTER_FORM_TITLE; ?></h2>
+						<p><?php echo $LNG->CONDITIONS_REGISTER_FORM_MESSAGE; ?></p>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="agreeconditions" id="agreeconditions" value="Y" />
+							<label class="form-check-label" for="agreeconditions"><span class="required">*</span> <?php echo $LNG->CONDITIONS_AGREE_FORM_REGISTER_MESSAGE; ?></label>
+						</div>
+					</div>
+				<?php } else { ?>
+					<div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register" />
+					</div>
+				<?php }?>
+				</div>
+			</div>
+		</form>
 
-    <div class="formrow">
-        <label class="formlabelbig" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
-		<span class="required">*</span></label>
-        <input class="forminput" id="email" name="email" size="40" value="<?php print $email; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?>
-		<span class="required">*</span></label>
-        <input class="forminput" id="password" name="password" type="password"  size="30" value="<?php print $password; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?>
-        <span class="required">*</span></label>
-        <input class="forminput" id="confirmpassword" name="confirmpassword" type="password" size="30" value="<?php print $confirmpassword; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?>
-		<span class="required">*</span></label>
-        <input class="forminput" type="text" id="fullname" name="fullname" size="40" value="<?php print $fullname; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="description"><?php echo $LNG->PROFILE_DESC_LABEL; ?></label>
-        <textarea class="forminput" id="description" name="description" cols="40" rows="5"><?php print $description; ?></textarea>
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?>
-		<span class="required">*</span></label>
-        <textarea class="forminput" id="interest" name="interest" cols="40" rows="3"><?php print $interest; ?></textarea>
-    </div>
-    <div class="formrow">
-		<label class="formlabelbig" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
-		<input class="forminput" id="location" name="location" style="width:160px;" value="<?php echo $location; ?>">
-		<select id="loccountry" name="loccountry" style="margin-left: 5px;width:160px;">
-	        <option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
-	        <?php
-	            foreach($countries as $code=>$c){
-	                echo "<option value='".$code."'";
-	                if($code == $loccountry){
-	                    echo " selected='true'";
-	                }
-	                echo ">".$c."</option>";
-	            }
-	        ?>
-	    </select>
+		<?php if ($CFG->SOCIAL_SIGNON_ON) {?>
+			<div class="mt-4 col-sm-12 col-lg-8">
+				<hr />
+				<fieldset class="row justify-content-center">					
+					<legend class="d-block text-center mb-3"><div>Or use another service</div></legend>
+					<?php if ($CFG->SOCIAL_SIGNON_GOOGLE_ON) {?>
+						<div class="col-auto"><a title="Sign-in with Google" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=google&referrer=<?php echo urlencode( $ref ); ?>"><i class="fab fa-google fa-2x" title="Google"></i><span class="sr-only">Sign-in with Google</span></a></div>
+					<?php } ?>
+					<?php if ($CFG->SOCIAL_SIGNON_YAHOO_ON) {?>
+						<div class="col-auto"><a title="Sign-in with Yahoo" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=yahoo&referrer=<?php echo urlencode( $ref ); ?>"><i class="fab fa-yahoo fa-2x" title="Yahoo"></i><span class="sr-only">Sign-in with Yahoo</span></a></div>
+					<?php } ?>
+					<?php if ($CFG->SOCIAL_SIGNON_FACEBOOK_ON) {?>
+						<div class="col-auto"><a title="Sign-in with Facebook" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=facebook&referrer=<?php echo urlencode( $ref ); ?>"><i class="fab fa-facebook-f fa-2x" title="Facebook"></i><span class="sr-only">Sign-in with Facebook</span></a></div>
+					<?php } ?>
+					<?php if ($CFG->SOCIAL_SIGNON_TWITTER_ON) {?>
+						<div class="col-auto"><a title="Sign-in with Twitter" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=twitter&referrer=<?php echo urlencode( $ref ); ?>"><i class="fab fa-twitter fa-2x" title="Twitter"></i><span class="sr-only">Sign-in with Twitter</span></a></div>
+					<?php } ?>
+					<?php if ($CFG->SOCIAL_SIGNON_LINKEDIN_ON) {?>
+						<div class="col-auto"><a title="Sign-in with LinkedIn" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=linkedin&referrer=<?php echo urlencode( $ref ); ?>"><i class="fab fa-linkedin-in fa-2x" title="LinkedIn"></i><span class="sr-only">Sign-in with LinkedIn</span></a></div>
+					<?php } ?>
+				</fieldset>
+			</div>
+		<?php } ?>
 	</div>
-
-	<?php if ($CFG->hasUserHomePageOption) { ?>
-	<div class="formrow">
-        <label class="formlabelbig" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
-        <input class="forminput" type="text" id="homepage" name="homepage" size="40" value="<?php print $homepage; ?>">
-    </div>
-    <?php } ?>
-
-    <div class="formrow">
-        <label class="formlabelbig" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
-        <input class="forminput" type="file" id="photo" name="photo" size="40">
-    </div>
-
-	<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
-		<div class="formrow">
-			<label class="formlabelbig" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
-			<input class="forminput" type="checkbox" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" /> <?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?>
-		</div>
-	<?php } ?>
-
-	<?php if($CFG->CAPTCHA_ON) { ?>
-		<div class="formrow" style="width:800px;">
-			<label class="formlabelbig" for="g-recaptcha"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?></label>
-			<div class="g-recaptcha" data-sitekey="<?php echo $CFG->CAPTCHA_PUBLIC; ?>" style="float:left;margin-left:5px;"></div>
-		</div>
-	<?php } ?>
-
-	<?php if ($CFG->hasConditionsOfUseAgreement) { ?>
-		<div class="formrow" style="margin-left:10px;">
-			<h2><?php echo $LNG->CONDITIONS_REGISTER_FORM_TITLE; ?><span class="required">*</span></h2>
-			<p><?php echo $LNG->CONDITIONS_REGISTER_FORM_MESSAGE; ?></p>
-			<input class="forminput" style="margin-right:10px;" type="checkbox" name="agreeconditions" id="agreeconditions" value="Y" /> <?php echo $LNG->CONDITIONS_AGREE_FORM_REGISTER_MESSAGE; ?>
-		</div>
-
-		<div class="formrow" style="margin-left:10px;margin-top:10px;">
-			<label class="formlabelbig" for="register">&nbsp;</label>
-			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
-		</div>
-    <?php } else { ?>
-		<div class="formrow">
-			<label class="formlabelbig" for="register">&nbsp;</label>
-			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
-		</div>
-    <?php }?>
-
-</form>
 </div>
-
-<?php if ($CFG->SOCIAL_SIGNON_ON) {?>
-	<div style="float:left;margin-left:5px;margin-top:50px;">
-		<fieldset>
-			<legend><?php echo $LNG->LOGIN_SOCIAL_SIGNON; ?></legend>
-			<?php if ($CFG->SOCIAL_SIGNON_GOOGLE_ON) {?>
-				<div style="float:left;margin:10px;"><a title="Sign-in with Google" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=google&referrer=<?php echo urlencode( $ref ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/google.png'); ?>" /></a></div>
-			<?php } ?>
-
-			<?php if ($CFG->SOCIAL_SIGNON_YAHOO_ON) {?>
-				<div style="float:left;margin:10px;"><a title="Sign-in with Yahoo" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=yahoo&referrer=<?php echo urlencode( $ref ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/yahoo.png'); ?>" /></a></div>
-			<?php } ?>
-
-			<?php if ($CFG->SOCIAL_SIGNON_FACEBOOK_ON) {?>
-				<div style="float:left;margin:10px;"><a title="Sign-in with Facebook" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=facebook&referrer=<?php echo urlencode( $ref ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/facebook.png'); ?>" /></a></div>
-			<?php } ?>
-
-			<?php if ($CFG->SOCIAL_SIGNON_TWITTER_ON) {?>
-				<div style="float:left;margin:10px;"><a title="Sign-in with Twitter" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=twitter&referrer=<?php echo urlencode( $ref ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/twitter.png'); ?>" /></a></div>
-			<?php } ?>
-
-			<?php if ($CFG->SOCIAL_SIGNON_LINKEDIN_ON) {?>
-				<div style="float:left;margin:10px;"><a title="Sign-in with LinkedIn" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=linkedin&referrer=<?php echo urlencode( $ref ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/linkedin.png'); ?>" /></a></div>
-			<?php } ?>
-		</fieldset>
-	</div>
-<?php } ?>
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

@@ -208,28 +208,32 @@ function addResource(noResources) {
 	    $('resourceform').insert('<hr id="resourcehr'+noResources+'" class="urldivider"/>');
 	}
 
-	var newitem = '<div id="resourcefield'+noResources+'" class="subformrow">';
+	var newitem = '<div id="resourcefield'+noResources+'">';
 
     newitem += '<input type="hidden" id="resourcenodeidsarray-'+noResources+'" name="resourcenodeidsarray[]" value="" />';
 
-	newitem += '<div class="hgrsubformrow" id="resourceurldiv-'+noResources+'">';
-	newitem += '<label  class="hgrsubformlabel" for="resourceurl-'+noResources+'"><?php echo $LNG->FORM_LABEL_URL; ?>';
-	newitem += '<a href="javascript:void(0)" onMouseOver="showFormHint(\'ResourceURL\', event, \'hgrhint\'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></a>';
-	newitem += '<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>';
+	newitem += '<div class="mb-3 row" id="resourceurldiv-'+noResources+'">';
+	newitem += '<label  class="col-sm-2 col-form-label" for="resourceurl-'+noResources+'"><?php echo $LNG->FORM_LABEL_URL; ?>';
+	newitem += '<a href="javascript:void(0)" onMouseOver="showFormHint(\'ResourceURL\', event, \'hgrhint\'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"> <i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i><span class="sr-only">More info</span></a>';
+	newitem += '<span class="required">*</span>';
 	newitem += '</label>';
-	newitem += '<input class="subforminput forminputmust" style="width: 320px;" id="resourceurl-'+noResources+'" name="resourceurlarray[]" value="http://">';
-	newitem += '<img class="active" style="vertical-align: middle; padding-bottom: 2px; margin-left:4px;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(\''+noResources+'\')" onkeypress="enterKeyPressed(event)" />';
+	newitem += '<div class="col-sm-10 d-flex flex-row align-items-center">';
+	newitem += '<input class="form-control" id="resourceurl-'+noResources+'" name="resourceurlarray[]" value="http://" />';
+	newitem += '<img class="active" style="vertical-align: middle; padding-bottom: 2px; margin-left:4px; height: 19px; width: auto;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(\''+noResources+'\')" onkeypress="enterKeyPressed(event)" />';
+	newitem += '</div>';
 	newitem += '</div>';
 
-	newitem += '<div class="hgrsubformrow">';
-	newitem += '<label  class="hgrsubformlabel" for="resourcetitle-'+noResources+'"><?php echo $LNG->FORM_LABEL_TITLE; ?>';
-	newitem += '<a href="javascript:void(0)" onMouseOver="showFormHint(\'ResourceTitle\', event, \'hgrhint\'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></a>';
-	newitem += '<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>';
+	newitem += '<div class="mb-3 row">';
+	newitem += '<label  class="col-sm-2 col-form-label" for="resourcetitle-'+noResources+'"><?php echo $LNG->FORM_LABEL_TITLE; ?>';
+	newitem += '<a href="javascript:void(0)" onMouseOver="showFormHint(\'ResourceTitle\', event, \'hgrhint\'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"> <i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i><span class="sr-only">More info</span></a>';
+	newitem += '<span class="required">*</span>';
 	newitem += '</label>';
-	newitem += '<input class="subforminput forminputmust" style="width: 350px;" id="resourcetitle-'+noResources+'" name="resourcetitlearray[]" value="">';
+	newitem += '<div class="col-sm-10">';
+	newitem += '<input class="form-control" id="resourcetitle-'+noResources+'" name="resourcetitlearray[]" value="">';
+	newitem += '</div>';
 	newitem += '</div>';
 
-	newitem += '<div class="hgrsubformrow" id="resourcedescdiv-'+noResources+'">';
+	newitem += '<div class="mb-3 row" id="resourcedescdiv-'+noResources+'">';
 	newitem += '<input type="hidden" id="resourcecliparray-'+noResources+'" name="resourcecliparray[]" value="" />';
 	newitem += '<a id="resourceremovebutton-'+noResources+'" href="javascript:void(0)" onclick="javascript:removeMultiple(\'resource\', \''+noResources+'\')" class="form" style="clear:both;float:right"><?php echo $LNG->FORM_BUTTON_REMOVE; ?></a><br>';
 	newitem += '</div>';

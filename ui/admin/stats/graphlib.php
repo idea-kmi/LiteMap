@@ -1063,7 +1063,7 @@ function init_x_axis() {
 
   	$count = 0;
   	if ( is_countable($this->x_data) ){
-  		$count = count($this->x_data);
+  		$count = sizeof($this->x_data);
   	}
 
     $this->calculated['x_axis']['num_ticks'] = $count;
@@ -1127,7 +1127,7 @@ function find_range($data, $min, $max, $resolution) {
 
 	$count = 0;
 	if ( is_countable($data) ){
-		$count = count($data);
+		$count = sizeof($data);
 	}
 	if ($count == 0 ) return array('min' => 0, 'max' => 0);
 

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -178,6 +178,7 @@ if(!empty($errors)){
     <div class="formrow">
         <div id="users" class="forminput">
         <?php
+
 			$count = 0;
 			if (is_countable($users)) {
 				$count = count($users);
@@ -251,11 +252,12 @@ if(!empty($errors)){
         <div id="suspendedusers" class="forminput">
 
         <?php
-			$count2 = 0;
+
+			$countu = 0;
 			if (is_countable($userssuspended)) {
-				$count2 = count($userssuspended);
+				$countu = count($userssuspended);
 			}
-        	if ($count2 == 0) {
+        	if ($countu == 0) {
 				echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
         	} else {
 				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
@@ -303,7 +305,7 @@ if(!empty($errors)){
    </div>
 
     <div class="formrow" style="margin-top:20px;">
-    <input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>

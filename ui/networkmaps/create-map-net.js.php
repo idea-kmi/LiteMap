@@ -93,17 +93,17 @@ function loadExploreMapNet(){
 	$("network-map-div").insert(mapvotediv);
 
 	/** USED BY THE VISUALISATION FOR THE NODE EXPLORE POPUP **/
-	var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
+	var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:390px;height:580px;'} );
 	$("network-map-div").insert(mapdetailsdiv);
 
 	/** FOR THE TOOLBAR AREA **/
-	var topBitDiv = new Element("div", {'id':'topbit', 'style':'float:left;width:100%;height:100%'} );
+	var topBitDiv = new Element("div", {'id':'topbit', 'class':'d-block'} );
 	$("network-map-div").insert(topBitDiv);
 
 	var messagearea = new Element("div", {'id':'netmapmessage','class':'toolbitem','style':'float:left;clear:both;font-weight:bold'});
 
 	/** Yes, I know, table bad - TABLE IS EASIEST FOR COLLAPSING SIDE ALERT PANEL WHERE WIDTH IS UNKNOWN **/
-	var mainTable = new Element('table', {'cellspacing':'0', 'id':'mainDiv','style': 'border:1px solid #C0C0C0;padding:0px;border:collapse:collpase;clear:both;float:left;width:100%;height:100%'});
+	var mainTable = new Element('table', {'cellspacing':'0', 'id':'mainDiv','style': 'border:1px solid #C0C0C0;padding:0px;border:collapse:collpase;width:100%;height:100%'});
 	$("network-map-div").insert(mainTable);
 
 	var row = new Element('tr', {'style': 'height:100%'});
@@ -120,7 +120,7 @@ function loadExploreMapNet(){
 		Event.observe(editcontrol,"click", function(){
 			toggleEditBar(false);
 		});
-		var arrowimg = new Element('img', {'id':'editcontrolimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("leftarrowbig.gif"); ?>'});
+		var arrowimg = new Element('img', {'id':'editcontrolimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("leftarrowbig.gif"); ?>', 'alt':''});
 		editcontrol.insert(arrowimg);
 	}
 
@@ -144,7 +144,7 @@ function loadExploreMapNet(){
 			var supported = browserMediaSupport(mimetype, container);
 			NODE_ARGS['mediasupported'] = supported;
 			if (supported) {
-				var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color:black;margin:0 auto;width:500px;clear:both;float:left;overflow:hidden;display:none'});
+				var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color:black;margin:0 auto;width:500px;overflow:hidden;display:none'});
 				centralcell.insert(mediaDiv);
 				if (container == 'video') {
 					player = new Element('video', {'id':'player', 'controls': 'true', 'width':NODE_ARGS['moviewidth'], 'height': NODE_ARGS['movieheight']});
@@ -172,7 +172,7 @@ function loadExploreMapNet(){
 				mediacontrol.insert(arrowimg);
 			}
 		} else if (NODE_ARGS['youtubeid'] != undefined && NODE_ARGS['youtubeid'] != "") {
-			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'width:500px;overflow:hidden;display:none'});
 			centralcell.insert(mediaDiv);
 
 			player = new YT.Player('mediaDiv', {
@@ -193,7 +193,7 @@ function loadExploreMapNet(){
 			var arrowimg = new Element('img', {'id':'mediacontrolimage', 'style':'margin-left: auto; margin-right: auto;height:8px;display:block;width:16px;', 'src':'<?php echo $HUB_FLM->getImagePath("downarrowbig.gif"); ?>'});
 			mediacontrol.insert(arrowimg);
 		} else if (NODE_ARGS['vimeoid'] != undefined && NODE_ARGS['vimeoid'] != "") {
-			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color: black; margin: 0 auto; width:500px;clear:both;float:left;overflow:hidden;display:none'});
+			var mediaDiv = new Element('div', {'id':'mediaDiv', 'style': 'background-color: black; margin: 0 auto; width:500px;overflow:hidden;display:none'});
 			centralcell.insert(mediaDiv);
 
 			player = new Vimeo.Player('mediaDiv', {
@@ -218,21 +218,21 @@ function loadExploreMapNet(){
 	}
 
 	/** GRAPH AREA **/
-	var graphDiv = new Element('div', {'id':'graphMapDiv', 'style': 'clear:both;float:left;overflow:hidden;'});
+	var graphDiv = new Element('div', {'id':'graphMapDiv', 'style': 'overflow:hidden;'});
 	var width = 4000;
 	var height = 4000;
 	graphDiv.style.width = width+"px";
 	graphDiv.style.height = height+"px";
 
-	var outerGraphDiv = new Element('div', {'id':'graphMapDiv-outer', 'style': 'clear:both;float:left;margin-left:0px;margin-bottom:0px;overflow:hidden;'});
+	var outerGraphDiv = new Element('div', {'id':'graphMapDiv-outer', 'style': 'margin-left:0px;margin-bottom:0px;overflow:hidden;'});
 	outerGraphDiv.insert(messagearea);
 	outerGraphDiv.insert(graphDiv);
 
-	var leftDiv = new Element('div', {'id':'mainInnerDiv', 'style': 'clear:both;float:left;width:100%;height:100%;overflow:hidden;'});
+	var leftDiv = new Element('div', {'id':'mainInnerDiv', 'style': 'width:100%;height:100%;overflow:hidden;'});
 	leftDiv.insert(outerGraphDiv);
 
 	// TREE AREA
-	var treeDiv = new Element('div', {'id':'treedata', 'style': 'clear:both;float:left;background:white;display:none;margin-left:0px;margin-bottom:5px;overflow:auto;'});
+	var treeDiv = new Element('div', {'id':'treedata', 'style': 'background:white;display:none;margin-left:0px;margin-bottom:5px;overflow:auto;'});
 	leftDiv.insert(treeDiv);
 	centralcell.insert(leftDiv);
 
@@ -245,7 +245,7 @@ function loadExploreMapNet(){
 			toggleAlertBar(false);
 		});
 
-		var arrowimg = new Element('img', {'id':'controlimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("rightarrowbig.gif"); ?>'});
+		var arrowimg = new Element('img', {'id':'controlimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("rightarrowbig.gif"); ?>', 'alt':''});
 		alertcontrol.insert(arrowimg);
 
 		// ALERT AREA
@@ -264,8 +264,8 @@ function loadExploreMapNet(){
 
 		var alertdivinner = new Element('div', {'id':'alertsdivinner', 'style': 'float:left;width:'+ALERT_WIDTH+'px;height:'+(MAP_HEIGHT_MINIMUM-30)+'px;overflow:auto;'});
 		alertdivinner.oriheight = (MAP_HEIGHT_MINIMUM-30);
-		var useralertDiv = new Element('div', {'id':'useralertdiv', 'style': 'clear:both;float:left;'});
-		var nodealertDiv = new Element('div', {'id':'nodealertdiv', 'style': 'clear:both;float:left;'});
+		var useralertDiv = new Element('div', {'id':'useralertdiv', 'style': ''});
+		var nodealertDiv = new Element('div', {'id':'nodealertdiv', 'style': ''});
 		alertdivinner.insert(useralertDiv);
 		alertdivinner.insert(nodealertDiv);
 		alertDiv.insert(alertdivinner);
@@ -281,7 +281,7 @@ function loadExploreMapNet(){
 
 	// THE TOOLBAR
 	var toolbar = createMapGraphToolbar(positionedMap, "network-map-div");
-	var toolbarDiv = new Element('div', {'id':'toolbardiv','style': 'float:left;width:100%'});
+	var toolbarDiv = new Element('div', {'id':'toolbardiv','class': 'd-block'});
 	toolbarDiv.insert(toolbar);
 	topBitDiv.insert({top: toolbarDiv});
 

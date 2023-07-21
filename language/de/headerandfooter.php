@@ -56,6 +56,8 @@ $LNG->HEADER_ABOUT_PAGE_LINK_HINT = 'Gehe zur Über-Uns-Seite';
 $LNG->HEADER_ADMIN_PAGE_LINK_TEXT = 'Admin';
 $LNG->HEADER_ADMIN_PAGE_LINK_HINT = 'Gehe zur Adminseite';
 
+$LNG->HEADER_SEARCH_BOX_LABEL = 'Suchen';
+$LNG->DEFAULT_SEARCH_TEXT = 'Geben Sie „Phrasensuche“ oder einzelne Wörter ein';
 $LNG->HEADER_SEARCH_RUN_ICON_HINT = 'Suche starten';
 $LNG->HEADER_SEARCH_RUN_ICON_ALT = 'Start';
 $LNG->HEADER_SEARCH_INFO_HINT = "<div  style='padding:10px;'>Die Standard-Suche separiert mit der Space-Taste getrennte Wörter und führt eine ODER-Suche aus, z.B <b>'nachhaltig einkaufen'</b> wird nach Einträgen mit den Worten <b>'nachhaltig' ODER 'einkaufen'</b> suchen - entweder in der Kopfzeile, einer Artikel-Beschreibung, Artikelzusätzen oder verknüpften Videos.";

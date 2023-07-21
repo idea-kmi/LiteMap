@@ -217,6 +217,8 @@ function loadpros(context,args){
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
+	console.log(reqUrl);
+
 	new Ajax.Request(reqUrl, { method:'get',
 		onSuccess: function(transport){
 
@@ -300,6 +302,8 @@ function loadcons(context,args) {
 	$("content-con-list").update(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
+
+	console.log(reqUrl);
 
 	new Ajax.Request(reqUrl, { method:'get',
 		onSuccess: function(transport){

@@ -124,3 +124,14 @@
 	width:100%;
 	height:100%;
 }
+
+/* Fix box-sizing messing up graphs */
+.statsgraph {
+	box-sizing: unset;
+}
+
+.statsgraph * {
+	box-sizing: unset;
+	width:revert-layer;
+}
+

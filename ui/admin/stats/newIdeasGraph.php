@@ -161,11 +161,7 @@ $graph->parameter['x_axis_angle']       =  90;            // rotation of axis te
 $graph->offset_relation = null;
 
 $evtypes = "";
-$count = 0;
-if (is_countable($CFG->EVIDENCE_TYPES)) {
-	$count = count($CFG->EVIDENCE_TYPES);
-}
-
+$count = count($CFG->EVIDENCE_TYPES);
 for($i=0; $i<$count; $i++){
 	if ($i == 0) {
 		$evtypes .= "'".$CFG->EVIDENCE_TYPES[$i]."'";
@@ -218,8 +214,8 @@ for ($i=0; $i<$count; $i++) {
 		$maxtime = strtotime( '+1 month', $mintime);
 	}
 
-	//$num1 = getNodeCreationCount("Challenge",$mintime, $maxtime);
-	//$graph->y_data['bar1'][$i] = $num1;
+	$num1 = getNodeCreationCount("Challenge",$mintime, $maxtime);
+	$graph->y_data['bar1'][$i] = $num1;
 
 	$num2 = getNodeCreationCount("Issue",$mintime, $maxtime);
 	$graph->y_data['bar2'][$i] = $num2;
@@ -255,10 +251,10 @@ for ($i=0; $i<$count; $i++) {
 $graph->parameter['x_max']  = $count;            	// 0 - only used if x axis is numeric.
 
 $barsarray = array();
-//array_push($barsarray,'bar1');
-array_push($barsarray,'bar4');
+array_push($barsarray,'bar1');
 array_push($barsarray,'bar2');
 array_push($barsarray,'bar3');
+array_push($barsarray,'bar4');
 array_push($barsarray,'bar5');
 array_push($barsarray,'bar6');
 array_push($barsarray,'bar7');
@@ -267,8 +263,7 @@ array_push($barsarray,'bar9');
 
 $graph->y_order = $barsarray;
 
-//$graph->y_format['bar1'] = array('colour' => 'challenge', 'bar' => 'fill', 'legend' => $LNG->CHALLENGES_NAME);
-$graph->y_format['bar4'] = array('colour' => 'map', 'bar' => 'fill', 'legend' => $LNG->MAPS_NAME);
+$graph->y_format['bar1'] = array('colour' => 'challenge', 'bar' => 'fill', 'legend' => $LNG->CHALLENGES_NAME);
 $graph->y_format['bar2'] = array('colour' => 'issue', 'bar' => 'fill', 'legend' => $LNG->ISSUES_NAME);
 $graph->y_format['bar3'] = array('colour' => 'solution', 'bar' => 'fill', 'legend' => $LNG->SOLUTIONS_NAME);
 $graph->y_format['bar4'] = array('colour' => 'map', 'bar' => 'fill', 'legend' => $LNG->MAPS_NAME);

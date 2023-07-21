@@ -34,6 +34,9 @@ $LNG->HEADER_LOGO_ALT = $CFG->SITE_TITLE.' Logo';
 $LNG->HEADER_HOME_ICON_HINT = 'Go back to Home Page';
 $LNG->HEADER_HOME_ICON_ALT = 'Home icon';
 
+$LNG->HEADER_HOME_PAGE_LINK_TEXT = 'Home';
+$LNG->HEADER_HOME_PAGE_LINK_HINT = 'Go to home page';
+
 $LNG->HEADER_RSS_FEED_ICON_HINT = 'Get an RSS feed for the '.$CFG->SITE_TITLE;
 $LNG->HEADER_RSS_FEED_ICON_ALT = 'RSS Icon';
 $LNG->HEADER_USER_HOME_LINK_HINT = 'Go to your home page';
@@ -56,6 +59,8 @@ $LNG->HEADER_ABOUT_PAGE_LINK_HINT = 'Go to the About page';
 $LNG->HEADER_ADMIN_PAGE_LINK_TEXT = 'Admin';
 $LNG->HEADER_ADMIN_PAGE_LINK_HINT = 'Go to the Admin page';
 
+$LNG->HEADER_SEARCH_BOX_LABEL = 'Search';
+$LNG->DEFAULT_SEARCH_TEXT = 'Enter "phrase search" or separate words';
 $LNG->HEADER_SEARCH_RUN_ICON_HINT = 'Run Search';
 $LNG->HEADER_SEARCH_RUN_ICON_ALT = 'Run';
 $LNG->HEADER_SEARCH_INFO_HINT = "<div  style='padding:10px;'>The default search will separate words using the spaces and perform an OR search, e.g. <b>'school system'</b> will search for the words <b>'school' OR 'system'</b> in either the item title, item description or any associated web clip texts.";

@@ -994,7 +994,7 @@ function d3LegendInactive() {
 
 function sparklineDateNVD3(container, data, width, height) {
 
-	var margin = {top: 15, right: 50, bottom: 10, left: 60};
+	var margin = {top: 15, right: 80, bottom: 10, left: 60};
 	var width = width - (margin.left+margin.right);
 
 	var formatDate = d3.time.format("%e %b %y");
@@ -1005,11 +1005,10 @@ function sparklineDateNVD3(container, data, width, height) {
 	  .y(function(d) { return d.y })
 	  .width(width)
 	  .height(height)
-	  ;
-
-  	chart.xTickFormat(function(d) {
+	  .showLastValue(true)
+	  .xTickFormat(function(d) {
           return formatDate(new Date(d));
-    });
+      });
 
 	var svg = d3.select(container).append("svg");
 	svg.datum(data)

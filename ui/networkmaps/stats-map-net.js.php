@@ -60,7 +60,7 @@ function loadExploreMapNet(){
 	// THE KEY
 	var keybar = createNetworkGraphKey();
 	// THE TOOLBAR
-	var toolbar = createGraphToolbar(forcedirectedGraph, "network-map-div");
+	var toolbar = createBasicGraphToolbar(forcedirectedGraph, "network-map-div");
 
 	$("network-map-div").insert({top: toolbar});
 	$("network-map-div").insert({top: keybar});

@@ -193,108 +193,133 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
 
 <script type="text/javascript">
-var noResources = <?php if (is_countable($resourceurlarray)) { echo count($resourceurlarray);} else {echo 0;}?>;
+	var noResources = <?php if (is_countable($resourceurlarray)) { echo count($resourceurlarray);} else {echo 0;}?>;
 
-function init() {
-    $('dialogheader').insert('<?php echo $LNG->FORM_SOLUTION_TITLE_EDIT; ?>');
-}
-
-function addSelectedResource(node, num) {
-	$('resource'+num+'label').value=node.role[0].role.name;
-
-	$('resourcetitle-'+num).value = node.name;
-	$('resourcetitle-'+num).disabled = true;
-	$('resourcenodeidsarray-'+num).value = node.nodeid;
-
-	if ($('identifierdiv-'+num)) {
-		$('identifierdiv-'+num).style.display="none";
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->FORM_SOLUTION_TITLE_EDIT; ?>');
 	}
 
-	$('typehiddendiv-'+num).style.display="block";
-	$('typediv-'+num).style.display="none";
-	$('resourceurldiv-'+num).style.display="none";
-	$('resourcedescdiv-'+num).style.display="none";
-}
+	function addSelectedResource(node, num) {
+		$('resource'+num+'label').value=node.role[0].role.name;
 
-function removeSelectedResource(num) {
-	$('resourcetitle-'+num).value = "";
-	$('resourcetitle-'+num).disabled = false;
-	$('resourcedesc-'+num).value = "";
-	$('resourcenodeidsarray-'+num).value = "";
+		$('resourcetitle-'+num).value = node.name;
+		$('resourcetitle-'+num).disabled = true;
+		$('resourcenodeidsarray-'+num).value = node.nodeid;
 
-	$('typehiddendiv-'+num).style.display="none";
-	$('typediv-'+num).style.display="block";
-	$('resourceurldiv-'+num).style.display="block";
-	$('resourcedescdiv-'+num).style.display="block";
-}
+		if ($('identifierdiv-'+num)) {
+			$('identifierdiv-'+num).style.display="none";
+		}
 
-function checkForm() {
-	var checkname = ($('solution').value).trim();
-	if (checkname == ""){
-		alert("<?php echo $LNG->FORM_SOLUTION_ENTER_SUMMARY_ERROR; ?>");
-		return false;
+		$('typehiddendiv-'+num).style.display="block";
+		$('typediv-'+num).style.display="none";
+		$('resourceurldiv-'+num).style.display="none";
+		$('resourcedescdiv-'+num).style.display="none";
 	}
 
-    $('solutionform').style.cursor = 'wait';
-	return true;
-}
+	function removeSelectedResource(num) {
+		$('resourcetitle-'+num).value = "";
+		$('resourcetitle-'+num).disabled = false;
+		$('resourcedesc-'+num).value = "";
+		$('resourcenodeidsarray-'+num).value = "";
 
-window.onload = init;
+		$('typehiddendiv-'+num).style.display="none";
+		$('typediv-'+num).style.display="block";
+		$('resourceurldiv-'+num).style.display="block";
+		$('resourcedescdiv-'+num).style.display="block";
+	}
+
+	function checkForm() {
+		var checkname = ($('solution').value).trim();
+		if (checkname == ""){
+			alert("<?php echo $LNG->FORM_SOLUTION_ENTER_SUMMARY_ERROR; ?>");
+			return false;
+		}
+
+		$('solutionform').style.cursor = 'wait';
+		return true;
+	}
+
+	window.onload = init;
 
 </script>
 
-<?php insertFormHeaderMessage(); ?>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+			<?php
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
+			<?php } ?>
+			<?php insertFormHeaderMessage(); ?>
 
-<form id="solutionform" name="solutionform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-	<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
-	<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
-	<input type="hidden" id="imagefilename" name="imagefilename" value="<?php echo $imagefilename; ?>" />
+			<form id="solutionform" name="solutionform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
+				<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
+				<input type="hidden" id="imagefilename" name="imagefilename" value="<?php echo $imagefilename; ?>" />
 
-    <div class="hgrformrow">
-		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
-		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;overflow:auto">
-			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>					
+					<div class="col-sm-9">
+						<div style="max-height: 120px; max-width: 150px; border:1px solid gray; overflow: hidden">
+							<img class="img-fluid" src="<?php print $node->image; ?>"/>
+						</div>
+					</div>					
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
+					<div class="col-sm-9">
+						<div class="d-flex flex-wrap">
+							<input class="form-control" type="file" id="image" name="image" />
+						</div>					
+						<div class="form-check mt-2 d-flex align-items-center gap-2">
+							<input class="form-check-input" type="checkbox" value="Y" id="imagedelete"  name="imagedelete">
+							<label class="form-check-label" for="imagedelete">
+								<?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="solution">
+						<span><?php echo $LNG->FORM_SOLUTION_LABEL_SUMMARY; ?></span>
+						<span class="active" onMouseOver="showFormHint('SolutionSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">						
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input class="form-control" id="solution" name="solution" value="<?php echo( $solution ); ?>" />
+					</div>
+				</div>
+
+				<?php insertDescription('SolutionDesc'); ?>
+				<?php insertPrivate('Private', $private); ?>
+				<?php insertResourceForm('URLs'); ?>
+
+				<div class="mb-3 row">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                        <input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+                        <input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editsolution" name="editsolution" />
+					</div>
+				</div>
+			</form>
 		</div>
-    </div>
-    <div class="hgrformrow">
-		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
-		<input class="forminput" type="file" id="image" name="image" size="40">
-		<input id="imagedelete" class="forminput" type="checkbox" name="imagedelete" value="Y" /><?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
-    </div>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="solution"><span style="vertical-align:top"><?php echo $LNG->FORM_SOLUTION_LABEL_SUMMARY; ?></span>
-			<span class="active" onMouseOver="showFormHint('SolutionSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="solution" name="solution" value="<?php echo( $solution ); ?>" />
 	</div>
-
-	<?php insertDescription('SolutionDesc'); ?>
-
-	<?php insertPrivate('Private', $private); ?>
-
-	<?php insertResourceForm('URLs'); ?>
-
-    <br>
-
-    <div class="hgrformrow">
-		<label class="formlabelbig">&nbsp;</label>
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editsolution" name="editsolution">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

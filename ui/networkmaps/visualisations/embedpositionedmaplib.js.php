@@ -109,7 +109,7 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 			var deltaX = to.x - from.x;
 			var deltaY = to.y - from.y;
 			if ((Math.abs(deltaX) < 20) || (Math.abs(deltaY) < 20)) {
-				isReallyNonLinear = false; //under 10 pixels, ‘linear’ mode is always used
+				isReallyNonLinear = false; //under 10 pixels, ï¿½linearï¿½ mode is always used
 			}
 
 			if (isReallyNonLinear) {
@@ -151,9 +151,6 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 					}
 					y4 = to.y;
 				}
-
-				//console.log("to edge:"+toEdge+" toNode="+adj.nodeTo.name+" y="+y4);
-				//console.log("from edge:"+fromEdge+" fromNode="+adj.nodeFrom.name+" y="+y1);
 
 				var newTo = {"x":x4, "y":y4};
 				var newToArrow = {"x":x5, "y":y5};
@@ -274,78 +271,41 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			node.setData('linkrec', null);
 			node.setData('urlrec', null);
 			node.setData('rolechangerec', null);
-			//leftrec:null,
-			//rightrec:null,
-			//uprec:null,
-			//downrec:null,
-			//mainrec:null,
-			//userrec:null,
-			//iconrec:null,
-			//textrec:null,
-			//descrec:null,
 
 			var orirole = node.getData('orirole');
 			var user = node.getData('oriuser');
 
 			// ROLE ICON
 
-			// Does the node have its own image?
-			/*
-			if (orinode.image && orirole.name == 'Map') {
-				var roleicon = positionedMap.graph.getImage(orinode.image);
-				if (roleicon.complete) {
-					var imgheight = roleicon.height;
-					var imgwidth = roleicon.width;
-					var imgwid = <?php echo $CFG->IMAGE_THUMB_WIDTH; ?>;
-					var imghid = imgheight * (imgwid/imgwidth);
-					context.drawImage(roleicon, nodeboxX+5, nodeboxY+5, imgwid, imghid);
-					var iconRect = new mapRectangle(nodeboxX+5, nodeboxY+5, imgwid, imghid);
-					node.setData('iconrec', iconRect);
-				} else {
-					var roleimage = orinode.image;
-					var	roleicon = new Image();
-					roleicon.src = roleimage;
-					positionedMap.graph.addImage(roleicon);
-					roleicon.onload = function () {
-						var imgheight = roleicon.height;
-						var imgwidth = roleicon.width;
-						var imgwid = <?php echo $CFG->IMAGE_THUMB_WIDTH; ?>;
-						var imghid = imgheight * (imgwid/imgwidth);
-						context.drawImage(roleicon, nodeboxX+5, nodeboxY+5, imgwid, imghid);
-						var iconRect = new mapRectangle(nodeboxX+5, nodeboxY+5, imgwid, imghid);
-						node.setData('iconrec', iconRect);
-					};
-				}
-			} else {*/
-				var roleicon = "";
-				if (orirole.name == 'Issue' ) {
-					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue64px.png'); ?>');
-				} else if (orirole.name == 'Solution') {
-					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution64px.png'); ?>');
-				} else if (orirole.name == 'Map') {
-					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map-64.png'); ?>');
-				} else if (orirole.name == 'Pro') {
-					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-64.png'); ?>');
-				} else if (orirole.name == 'Con') {
-					roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-64.png'); ?>');
-				} else {
-					var roleimage = URL_ROOT + orirole.image;
-					var	roleicon = new Image();
-					roleicon.src = roleimage;
-					//positionedMap.graph.addImage(roleicon);
-				}
-				if (roleicon.complete) {
+			var roleicon = "";
+			if (orirole.name == 'Issue' ) {
+				roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue64px.png'); ?>');
+			} else if (orirole.name == 'Solution') {
+				roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution64px.png'); ?>');
+			} else if (orirole.name == 'Map') {
+				roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map-64.png'); ?>');
+			} else if (orirole.name == 'Pro') {
+				roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-64.png'); ?>');
+			} else if (orirole.name == 'Con') {
+				roleicon = positionedMap.graph.getImage('<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-64.png'); ?>');
+			} else {
+				var roleimage = URL_ROOT + orirole.image;
+				var	roleicon = new Image();
+				roleicon.src = roleimage;
+				//positionedMap.graph.addImage(roleicon);
+			}
+			if (roleicon.complete) {
+				context.drawImage(roleicon, nodeboxX+5, nodeboxY+5, 32, 32);
+				var iconRect = new mapRectangle(nodeboxX+5, nodeboxY+5, 32, 32);
+				node.setData('iconrec', iconRect);
+			} else {
+				roleicon.onload = function () {
 					context.drawImage(roleicon, nodeboxX+5, nodeboxY+5, 32, 32);
 					var iconRect = new mapRectangle(nodeboxX+5, nodeboxY+5, 32, 32);
 					node.setData('iconrec', iconRect);
-				} else {
-					roleicon.onload = function () {
-						context.drawImage(roleicon, nodeboxX+5, nodeboxY+5, 32, 32);
-						var iconRect = new mapRectangle(nodeboxX+5, nodeboxY+5, 32, 32);
-						node.setData('iconrec', iconRect);
-					};
-				}
-			//}
+				};
+			}
+
 
 			// Challenge node network graph view
 			if (orirole.name == 'Challenge') {
@@ -355,15 +315,7 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 				node.setData('networkrec', networkRect);
 			}
 
-			// PRIVATE PADLOCK - uneditable embedded map won't draw private nodes?
-			//var private = orinode.private;
-			//if (private == "Y") {
-			//	var	padlockicon = positionedMap.graph.getImage("<?php echo $HUB_FLM->getImagePath('lock-32.png'); ?>");
-			//	context.drawImage(padlockicon, nodeboxX+22, pos.y+42,18,18);
-			//}
-
 			// TOOLBAR
-
 			var oldfill = context.fillStyle;
 			context.fillStyle = nodeFillStyle; //'#E8E8E8';
 			context['fill' + 'Rect'](nodeboxX, pos.y+height-20, nodeboxWidth, 20);
@@ -1095,53 +1047,6 @@ function showMapMenu(type, node, evt) {
 		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
 		panel.insert(newnode);
 	}
-
-	/*
-	var viewdetails = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_HINT; ?>'} );
-	viewdetails.insert("<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_LINK; ?>");
-	Event.observe(viewdetails,'click',function (evt){
-		hideBox('maparrowdiv');
-		var nodeid = node.id;
-		viewNodeDetailsDiv(nodeid, rolename, orinode, evt);
-	});
-	panel.insert(viewdetails);
-
-	var viewuser = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>'} );
-	viewuser.insert("<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_LINK; ?>");
-	Event.observe(viewuser,'click',function (){
-		hideBox('maparrowdiv');
-		var userid = node.getData('oriuser').userid;
-		viewUserHome(userid);
-	});
-	panel.insert(viewuser);
-	*/
-
-	/*var orinode = node.getData('orinode');
-	if (orinode.urls && orinode.urls.length > 0) {
-		panel.insert(createMenuSpacerSoft());
-		var count = orinode.urls.length;
-
-		panel.insert('<span style="clear:both;float:left;font-size:10pt;font-weight:bold"><?php echo $LNG->MAP_LINKS_TITLE; ?></span>');
-
-		for (var i=0; i<count; i++) {
-			var urlobj = orinode.urls[i].url;
-			var url = urlobj.url;
-			var urltitle = urlobj.title;
-			var urlnode = new Element("a", {
-				'class':'active',
-				'target':'_blank',
-				'style':'margin-bottom:5px;clear:both;float:left;font-size:10pt',
-				'title':'<?php echo $LNG->NODE_URL_LINK_TEXT; ?>: '+urltitle,
-			});
-			if (urltitle && urltitle.length > 20) {
-				urltitle = urltitle.substr(0,20)+"...";
-			}
-			urlnode.insert(urltitle);
-			urlnode.href = url;
-			panel.insert(urlnode);
-
-		}
-	}*/
 
 	adjustMenuPosition(panel, evt);
 	showBox('maparrowdiv');

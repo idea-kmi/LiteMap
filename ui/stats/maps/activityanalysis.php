@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -44,7 +44,6 @@ if ($sdt != "" && $edt != "") {
 
 	$node = getNode($nodeid);
 
-	$nodes = array();
 	array_push($nodes, $node);
 
 	$view = getView($nodeid,$style);
@@ -149,6 +148,10 @@ function checkForm() {
 }
 </script>
 
+<div>
+	<h1><?php echo $dashboarddata[$pageindex][0]; ?></h1>
+</div>
+
 <form id="dateform" name="dateform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
 	<div id="datediv" class="formrow" style="display: block;padding-top:5px;">
 		<label class="formlabelbig" for="startdate"><?php echo $LNG->STATS_START_DATE; ?></label>
@@ -165,63 +168,50 @@ function checkForm() {
 	<span><?php echo $LNG->STATS_ACTIVITY_WARNING; ?></span>
 </form>
 
-<div id="messagearea" style="padding-top:20px;"></div>
+<div id="allStatsArea" style="visibility:hidden;margin-top:10px">
 
-<div id="allStatsArea" style="visibility:hidden;">
-	<div class="vishelpdiv">
-		<h1 class="vishelpheading"><?php echo $dashboarddata[$pageindex][0]; ?>
-			<span><img class="vishelparrow" title="<?php echo $LNG->STATS_DASHBOARD_HELP_HINT; ?>" onclick="if($('vishelp').style.display == 'none') { this.src='<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>'; $('vishelp').style.display='block'; } else {this.src='<?php echo $HUB_FLM->getImagePath('rightarrowbig.gif'); ?>'; $('vishelp').style.display='none'; }" src="<?php echo $HUB_FLM->getImagePath('uparrowbig.gif'); ?>"/></span>
-		</h1>
-		<div class="boxshadowsquare" id="vishelp" class="vishelpmessage"><?php echo $dashboarddata[$pageindex][5]; ?></div>
-	</div>
+	<p><?php echo $dashboarddata[$pageindex][5]; ?></p>
 
-	<div style="clear:both;float:left;padding:5px;">
-		<div style="clear:both;float:left;">
-			<div style="clear:both;float:left;height:250px;" id="date-chart">
+	<div class="d-flex flex-column">
+		<div id="messagearea"></div>
+
+		<div class="d-flex flex-column">
+			<div id="date-chart" class="statsgraph">
 				<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_DATE_TITLE; ?></div>
 			</div>
-			<!-- div style="clear:both;float:left;width:100%;height:60px;" id="date-selector-chart"></div -->
 
-			<div style="clear:both;float:left;margin-top:20px;width:100%;">
-				<!-- div style="clear:both;float:left;height:200px;" id="month-chart">
-					<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_MONTH_TITLE; ?></div>
-				</div -->
-				<div style="float:left;height:200px;width:200px;" id="days-of-week-chart">
+			<div class="d-flex flex-row justify-content-left gap-2 mt-5">
+				<div id="days-of-week-chart" class="statsgraph">
 					<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_DAYS_TITLE; ?></div>
 				</div>
-				<div style="float:left;height:200px;width:200px;margin-left:20px;" id="nodetype-chart">
+				<div id="nodetype-chart" class="statsgraph">
 					<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_ITEM_TYPES_TITLE; ?></div>
 				</div>
-				<div style="float:left;height:200px;width:200px;margin-left:20px;" id="type-chart">
+				<div id="type-chart" class="statsgraph">
 					<div class="title"><?php echo $LNG->STATS_ACTIVITY_FILTER_TYPES_TITLE; ?></div>
 				</div>
-				<!-- div style="float:left;height:200px;margin-left:20px;" id="nodetype-nut-chart">
-					<div class="title">Item Types (doughnut)</div>
-				</div -->
-				<!--div style="clear:both;float:left;height:200px;margin-left:20px;margin-top:20px;" id="nodetype-pie-chart">
-					<div class="title">Item Types (pie)</div>
-				</div -->
 			</div>
 		</div>
 
-		<div style="clear:both;float:left;margin-top:30px;">
+		<div class="d-flex flex-column mt-5">
 			<div id="data-count">
 				<span class="filter-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART1; ?> <span class="total-count"></span> <?php echo $LNG->STATS_ACTIVITY_SELECTED_COUNT_MESSAGE_PART2; ?> | <a
 					href="javascript:dc.filterAll(); dc.renderAll();"><?php echo $LNG->STATS_ACTIVITY_RESET_ALL_BUTTON; ?></a>
 			</div>
-			<table id="data-table" class="table table-hover dc-data-table" style="clear:both;float:left;width:980px">
+			<table id="data-table" class="table table-hover dc-data-table">
 				<thead>
-				<tr class="header">
-					<th width="20%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_DATE; ?></th>
-					<th width="50%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_TITLE; ?></th>
-					<th width="15%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_ITEM_TYPE; ?></th>
-					<th width="15%"><?php echo $LNG->STATS_ACTIVITY_COLUMN_TYPE; ?></th>
-				</tr>
+					<tr class="header">
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_DATE; ?></th>
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_TITLE; ?></th>
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_ITEM_TYPE; ?></th>
+						<th><?php echo $LNG->STATS_ACTIVITY_COLUMN_TYPE; ?></th>
+					</tr>
 				</thead>
 			</table>
 		</div>
 	</div>
 </div>
+
 <?php
 include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
 ?>

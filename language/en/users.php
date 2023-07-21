@@ -132,8 +132,8 @@ $LNG->PROFILE_EMAIL_VALIDATE_MESSAGE = 'You have been sent an email to validate 
 $LNG->PROFILE_EMAIL_VALIDATE_COMPLETE = 'This email address has been validated.';
 $LNG->PROFILE_EMAIL_CHANGE_CONFIRM = 'You have changed your email address.\nThis new email address will need to be verified.\n\nYour user account will now be locked, you will be logged out and you will be sent a new account validation email.\nPlease click on the link in the email to complete the change of email address.\n\nAre you sure you want to proceed?';
 $LNG->PROFILE_PRIVACY_MESSAGE = 'By default keep my data:';
-$LNG->PROFILE_PRIVACY_YES = '>Private';
-$LNG->PROFILE_PRIVACY_NO = '>Public';
+$LNG->PROFILE_PRIVACY_YES = 'Private';
+$LNG->PROFILE_PRIVACY_NO = 'Public';
 
 /** ACTIVITY POPUP PAGES **/
 $LNG->FORM_ACTIVITY_HEADING = 'Recent Activity For';

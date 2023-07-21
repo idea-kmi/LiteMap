@@ -25,6 +25,73 @@
 
 	include_once("config.php");
 
+	//use random_bytes library
+
+
+    /*if (function_exists('com_create_guid') === true) {
+        echo trim(com_create_guid(), '{}');
+	} else if (function_exists(random_bytes)) {
+		//https://paragonie.com/blog/2015/07/common-uses-for-csprngs-cryptographically-secure-pseudo-random-number-generators
+		/**
+		 * Note that version 4 follows the format:
+		 *     xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+		 * where y is one of: [8, 9, A, B]
+		 *
+		 * We use (random_bytes(1) & 0x0F) | 0x40 to force
+		 * the first character of hex value to always be 4
+		 * in the appropriate position.
+		 *
+		 * For 4: http://3v4l.org/q2JN9
+		 * For Y: http://3v4l.org/EsGSU
+		 * For the whole shebang: http://3v4l.org/BkjBc
+		 *
+		 * @link https://paragonie.com/b/JvICXzh_jhLyt4y3
+		 *
+		 */
+		 echo implode('-', [
+			bin2hex(random_bytes(4)),
+			bin2hex(random_bytes(2)),
+			bin2hex(chr((ord(random_bytes(1)) & 0x0F) | 0x40)) . bin2hex(random_bytes(1)),
+			bin2hex(chr((ord(random_bytes(1)) & 0x3F) | 0x80)) . bin2hex(random_bytes(1)),
+			bin2hex(random_bytes(6))
+		]);
+
+
+		//http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
+		$data = random_bytes(16)
+		$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+		$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+		echo vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+	} else if (function_exists(openssl_random_pseudo_bytes)) {
+		//http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
+		$data = openssl_random_pseudo_bytes(16);
+		$data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+		$data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+		echo vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+	} else {
+		//http://www.php.net/manual/en/function.uniqid.php#94959
+		echo sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			// 32 bits for "time_low"
+			mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+			// 16 bits for "time_mid"
+			mt_rand(0, 0xffff),
+			// 16 bits for "time_hi_and_version",
+			// four most significant bits holds version number 4
+			mt_rand(0, 0x0fff) | 0x4000,
+			// 16 bits, 8 bits for "clk_seq_hi_res",
+			// 8 bits for "clk_seq_low",
+			// two most significant bits holds zero and one for variant DCE1.1
+			mt_rand(0, 0x3fff) | 0x8000,
+			// 48 bits for "node"
+			mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+		);
+	}*/
+
+
+	//https://paragonie.com/blog/2015/07/how-safely-generate-random-strings-and-integers-in-php
+
+	//$token = hash('sha256', rand() . microtime() . $_SERVER['REMOTE_ADDR'])
+
 	include_once($HUB_FLM->getCodeDirPath("ui/headerreport.php"));
 
 ?>

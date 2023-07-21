@@ -59,7 +59,7 @@ function loadExploreGroupNet(){
 	// THE KEY
 	var keybar = createGroupNetworkGraphKey();
 	// THE TOOLBAR
-	var toolbar = createGraphToolbar(forcedirectedGraph, "network-group-div");
+	var toolbar = createBasicGraphToolbar(forcedirectedGraph, "network-group-div");
 
 	$("network-group-div").insert({top: toolbar});
 	$("network-group-div").insert({top: keybar});

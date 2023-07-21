@@ -115,197 +115,186 @@
 	echo "</script>";
 ?>
 
-<script type='text/javascript'>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col mt-3">
+			<script type='text/javascript'>
+				Event.observe(window, 'load', function() {
+					if (NODE_ARGS['nodetype'] == 'Challenge') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/challengenode.js.php"); ?>', 'explorechallenge');
+					} else if (NODE_ARGS['nodetype'] == 'Issue') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/issuenode.js.php"); ?>', 'exploreissue');
+					} else if (NODE_ARGS['nodetype'] == 'Solution') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/solutionnode.js.php"); ?>', 'exploresolution');
+					} else if (NODE_ARGS['nodetype'] == 'Pro') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/pronode.js.php"); ?>', 'explorepro');
+					} else if (NODE_ARGS['nodetype'] == 'Con') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/connode.js.php"); ?>', 'explorecon');
+					} else if (NODE_ARGS['nodetype'] == 'News') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/newsnode.js.php"); ?>', 'explorenews');
+					} else if (NODE_ARGS['nodetype'] == 'Idea') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/commentnode.js.php"); ?>', 'explorecomment');
+					} else if (NODE_ARGS['nodetype'] == 'Argument') {
+						addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/evidencenode.js.php"); ?>', 'exploreevidence');
+					}
+				});
 
-Event.observe(window, 'load', function() {
-	if (NODE_ARGS['nodetype'] == 'Challenge') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/challengenode.js.php"); ?>', 'explorechallenge');
-	} else if (NODE_ARGS['nodetype'] == 'Issue') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/issuenode.js.php"); ?>', 'exploreissue');
-	} else if (NODE_ARGS['nodetype'] == 'Solution') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/solutionnode.js.php"); ?>', 'exploresolution');
-	} else if (NODE_ARGS['nodetype'] == 'Pro') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/pronode.js.php"); ?>', 'explorepro');
-	} else if (NODE_ARGS['nodetype'] == 'Con') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/connode.js.php"); ?>', 'explorecon');
-	} else if (NODE_ARGS['nodetype'] == 'News') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/newsnode.js.php"); ?>', 'explorenews');
-	} else if (NODE_ARGS['nodetype'] == 'Idea') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/commentnode.js.php"); ?>', 'explorecomment');
-	} else if (NODE_ARGS['nodetype'] == 'Argument') {
-		addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/evidencenode.js.php"); ?>', 'exploreevidence');
-	}
-});
+				/**
+				 * Refresh widget Challenges sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreChallenges(nodetofocusid) {
+					refreshWidgetChallenges(nodetofocusid);
+				}
 
-/**
- * Refresh widget Challenges sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreChallenges(nodetofocusid) {
-	refreshWidgetChallenges(nodetofocusid);
-}
+				/**
+				 * Refresh widget Issues sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreIssues(nodetofocusid) {
+					refreshWidgetIssues(nodetofocusid);
+				}
 
-/**
- * Refresh widget Issues sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreIssues(nodetofocusid) {
-	refreshWidgetIssues(nodetofocusid);
-}
+				/**
+				 * Refresh widget Solutions sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreSolutions(nodetofocusid) {
+					refreshWidgetSolutions(nodetofocusid);
+				}
 
-/**
- * Refresh widget Solutions sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreSolutions(nodetofocusid) {
-	refreshWidgetSolutions(nodetofocusid);
-}
+				/**
+				 * Refresh widget Evidence sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreEvidence(nodetofocusid, type) {
+					refreshWidgetEvidence(nodetofocusid, type);
+				}
 
-/**
- * Refresh widget Evidence sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreEvidence(nodetofocusid, type) {
-	refreshWidgetEvidence(nodetofocusid, type);
-}
+				/**
+				 * Refresh widget Comments sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreComments() {
+					refreshWidgetComments();
+				}
 
-/**
- * Refresh widget Comments sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreComments() {
-	refreshWidgetComments();
-}
+				/**
+				 * Refresh linear and widget Followers sections after update.
+				 * @param nodetofocusid the id of a node in the results list to focus on.
+				 */
+				function refreshExploreFollowers() {
+					refreshWidgetFollowers();
+				}
+			</script>
+		
+			<div id="toolbardiv" style="left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:140px;border:1px solid gray;background:white'"></div>
 
-/**
- * Refresh linear and widget Followers sections after update.
- * @param nodetofocusid the id of a node in the results list to focus on.
- */
-function refreshExploreFollowers() {
-	refreshWidgetFollowers();
-}
+			<div id="tabber" role="navigation">
+				<div id="tabs-content" class="tabcontentexplore " style="min-height:400px;">
+				
+					<!-- WIDGET PAGES -->
+					<div id='tab-content-explore-widget' class='explorepagesection'>
 
-</script>
-
-<div id="toolbardiv" style="left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:140px;border:1px solid gray;background:white'"></div>
-
-<div id="tabber" style="clear:both;float:left;width:100%">
-    <div id="tabs-content" class="tabcontentexplore " style="min-height:400px;">
-       	<div id='tab-content-explore-widget' class='explorepagesection' style="display:block">
-			<?php if ($nodetype == 'Challenge') { ?>
-				<div id="widgetareadiv" class="challengebackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="display:block" width="100%" class="widgettable challengebackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="70%">
-								<div id="nodearea" class="tabletop" style="display:block"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
+						<?php if ($nodetype == 'Challenge') { ?>
+							<div id="widgetareadiv" class="p-3 challengebackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 challengebackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == 'Issue') { ?>
+							<div id="widgetareadiv" class="p-3 issuebackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 issuebackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == 'Solution') { ?>
+							<div id="widgetareadiv" class="p-3 solutionbackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 solutionbackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == 'Idea') { ?>
+							<div id="widgetareadiv" class="p-3 plainbackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 plainbackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == "Pro") { ?>
+							<div id="widgetareadiv" class="p-3 probackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 probackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == "Con") { ?>
+							<div id="widgetareadiv" class="p-3 conbackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 conbackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == "Argument") { ?>
+							<div id="widgetareadiv" class="p-3 evidencebackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 evidencebackpale">
+									<div id="widgetcolnode" class="col-lg-8 col-md-12">
+										<div id="nodearea" class="tabletop"></div>
+									</div>
+									<div id="widgetcolright" class="col-lg col-md-12">
+										<div id="mapsarea" class="tabletop chatarea d-grid gap-2 mb-1">
+										<div id="followersarea" class="tablelower mb-2"></div>
+									</div>
+								</div>
+							</div>
+						<?php } else if ($nodetype == 'News') { ?>
+							<div id="widgetareadiv" class="p-3 themebackpale">
+								<div id="widgettable" class="widgettable d-flex gap-4 themebackpale">
+									<div id="widgetcolnode" valign='top'>
+										<div id="nodearea" class="tabletop" style="width:100%;display: block;"></div>
+									</div>
+								</div>
+							</div>
+						<?php } ?>
+					</div>
 				</div>
-			<?php } else if ($nodetype == 'Issue') { ?>
-				<div id="widgetareadiv" class="issuebackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="display:block" width="100%" class="widgettable issuebackpale" cellspacing="5">
-						<tr width="100%" style="width:100%">
-							<td id="widgetcolnode" width="70%" valign="top" style="70%">
-								<div id="nodearea" class="tabletop" style="display:block"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == 'Solution') { ?>
-				<div id="widgetareadiv" class="solutionbackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="display:block" width="100%" class="widgettable solutionbackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="width:70%">
-								<div id="nodearea" class="tabletop" style="display: block;"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="width:30%;">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == 'Idea') { ?>
-				<div id="widgetareadiv" class="plainbackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="display:block" width="100%" class="widgettable plainbackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="width:70%">
-								<div id="nodearea" class="tabletop" style="display: block;"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="width:30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == "Pro") { ?>
-				<div id="widgetareadiv" class="probackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="clear:both;display:block" width="100%" class="widgettable probackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="70%">
-								<div id="nodearea" class="tabletop" style="display: block;"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == "Con") { ?>
-				<div id="widgetareadiv" class="conbackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="clear:both;display:block" width="100%" class="widgettable conbackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="70%">
-								<div id="nodearea" class="tabletop" style="display: block;"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == "Argument") { ?>
-				<div id="widgetareadiv" class="evidencebackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="clear:both;display:block" width="100%" class="widgettable evidencebackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" width="70%" valign="top" style="70%">
-								<div id="nodearea" class="tabletop" style="display: block;"></div>
-							</td>
-							<td id="widgetcolright" width="30%" valign="top" style="30%">
-								<div id="mapsarea" class="tabletop" style="display:block"></div>
-								<div id="followersarea" class="tablelower" style="display:block"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } else if ($nodetype == 'News') { ?>
-				<div id="widgetareadiv" class="themebackpale" style="clear:both; float:left;width:100%;">
-					<table id="widgettable" style="display:block" width="100%" class="widgettable themebackpale" cellspacing="5">
-						<tr>
-							<td id="widgetcolnode" valign='top'>
-								<div id="nodearea" class="tabletop" style="width:100%;display: block;"></div>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php } ?>
+			</div>
 		</div>
-
 	</div>
 </div>
-
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

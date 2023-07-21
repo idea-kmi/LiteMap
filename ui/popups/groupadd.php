@@ -134,107 +134,112 @@
 	include($HUB_FLM->getCodeDirPath("ui/popuplib.php"));
 ?>
 
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+            <?php
+                if(!empty($errors)){
+                    echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+                    foreach ($errors as $error){
+                        echo "<li>".$error."</li>";
+                    }
+                    echo "</ul></div>";
+                }
+            ?>
 
-<script type="text/javascript">
+            <script type="text/javascript">
+                function init() {
+                    $('dialogheader').insert('<?php echo $LNG->GROUP_CREATE_TITLE; ?>');
+                }
+                function closeGroupDialog(groupid){
+                    try {
+                        var newurl = URL_ROOT + "group.php?groupid="+groupid;
+                        window.opener.location.href = newurl;
+                    } catch(err) {
+                        //do nothing
+                    }
+                    window.close();
+                }
+                function checkForm() {
+                    var checkname = ($('groupname').value).trim();
+                    if (checkname == ""){
+                        alert("<?php echo $LNG->GROUP_FORM_NAME_ERROR; ?>");
+                        return false;
+                    }
+                    $('addgroupform').style.cursor = 'wait';
+                    return true;
+                }
+                window.onload = init;
+            </script>
 
-function init() {
-    $('dialogheader').insert('<?php echo $LNG->GROUP_CREATE_TITLE; ?>');
-}
+            <?php insertFormHeaderMessage(); ?>
 
-function closeGroupDialog(groupid){
-	try {
-		var newurl = URL_ROOT + "group.php?groupid="+groupid;
-		window.opener.location.href = newurl;
-	} catch(err) {
-		//do nothing
-	}
-	window.close();
-}
+            <form name="addgroupform" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="photo">
+                        <?php echo $LNG->GROUP_FORM_PHOTO; ?>
+                        <span class="active" onMouseOver="showFormHint('GroupPhoto', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+                        </span>
+                    </label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="photo" name="photo" />
+                        <small><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></small>
+					</div>
+                </div>
 
-function checkForm() {
-	var checkname = ($('groupname').value).trim();
-	if (checkname == ""){
-		alert("<?php echo $LNG->GROUP_FORM_NAME_ERROR; ?>");
-		return false;
-	}
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="groupname">
+                        <?php echo $LNG->GROUP_FORM_NAME; ?>
+                        <span class="active" onMouseOver="showFormHint('GroupSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+                        </span>
+						<span class="required">*</span>
+                    </label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="groupname" name="groupname" value="<?php print $groupname; ?>" />
+					</div>
+                </div>
 
-    $('addgroupform').style.cursor = 'wait';
-	return true;
-}
+                <?php insertDescription('GroupDesc'); ?>
 
-window.onload = init;
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="website">
+                        <?php echo $LNG->GROUP_FORM_WEBSITE; ?>
+                        <span class="active" onMouseOver="showFormHint('GroupWebsite', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+                        </span>
+                    </label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="website" name="website" value="<?php print $website; ?>" />
+					</div>
+                </div>
 
-</script>
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="isopenjoining"><?php echo $LNG->GROUP_FORM_IS_JOINING_OPEN_LABEL; ?></label>
+					<div class="col-sm-9">                        
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" value="Y" id="isopenjoining" name="isopenjoining" <?php if($isopenjoining == "Y"){ echo ' checked="true"'; } ?> />
+                            <label class="form-check-label" for="followsendemail">
+                                <?php echo $LNG->GROUP_FORM_IS_JOINING_OPEN_HELP; ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
-<?php insertFormHeaderMessage(); ?>
-
-<form name="addgroupform" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();>
-
-	<div class="hgrformrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
-			<span class="active" onMouseOver="showFormHint('GroupPhoto', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-		<input class="forminput" type="file" id="photo" name="photo" size="40">
-	</div>
-	<div class="hgrformrow" style="padding-top:3px;">
-		<label class="formlabelbig" style="height:30px;">&nbsp;</label>
-		<div class="forminput"><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></div>
-	</div>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="groupname"><span style="vertical-align:top"><?php echo $LNG->GROUP_FORM_NAME; ?></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-			<span class="active" onMouseOver="showFormHint('GroupSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="groupname" name="groupname" value="<?php echo( $groupname ); ?>" />
-	</div>
-
-	<?php insertDescription('GroupDesc'); ?>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="website"><span style="vertical-align:top"><?php echo $LNG->GROUP_FORM_WEBSITE; ?></span>
-			<span class="active" onMouseOver="showFormHint('GroupWebsite', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-        <input class="forminput hgrwide" type="text" id="website" name="website" value="<?php echo $website; ?>">
+                <div class="mb-3 row">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                        <input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+                        <input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="creategroup" name="creategroup" />
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-
-
-    <div class="formrow">
-        <label class="formlabelbig" style="margin-top:11px;" for="isopenjoining"><?php echo $LNG->GROUP_FORM_IS_JOINING_OPEN_LABEL; ?></label>
-        <input style="float:left;margin-top:13px;" type="checkbox" class="forminput" id="isopenjoining" name="isopenjoining" value="Y"
-        <?php
-            if($isopenjoining == "Y"){
-                echo ' checked="true"';
-            }
-        ?>
-        >
-        <span style="float:left;margin-top:11px;width:500px;margin-left:5px;"><?php echo $LNG->GROUP_FORM_IS_JOINING_OPEN_HELP; ?></span>
-    </div>
-
-
-    <!-- div class="hgrformrow">
-        <label class="formlabelbig" for="members"><?php echo $LNG->GROUP_FORM_MEMBERS; ?></label>
-        <textarea class="forminput" id="members" name="members" cols="40" rows="5"><?php $members; ?></textarea><br/>
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" style="height:50px;">&nbsp;</label><div class="forminput"><?php echo $LNG->GROUP_FORM_MEMBERS_HELP; ?></div>
-    </div -->
-
-    <div class="hgrformrow">
-		<label class="formlabel">&nbsp;</label>
-        <input class="formsubmit" style="margin-top:20px;" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="creategroup" name="creategroup">
-    </div>
-
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

@@ -32,7 +32,7 @@
 	$obfuscationiv = $cipher->getIV();
 
 	//CSCP
-	$request = $CFG->homeAddress."api/conversations/6d417f98-39b5-4d52-8759-90a297d7dd0e";
+	$request = $CFG->homeAddress."api/conversations/1371081761300912288001398442436";
 
 	$reply = createObfuscationEntry($obfuscationkey, $obfuscationiv, $request);
 ?>

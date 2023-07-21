@@ -57,6 +57,8 @@ $LNG->HEADER_ABOUT_PAGE_LINK_HINT = 'Ir para a página sobre';
 $LNG->HEADER_ADMIN_PAGE_LINK_TEXT = 'Admin';
 $LNG->HEADER_ADMIN_PAGE_LINK_HINT = 'Ir para a página de Admin';
 
+$LNG->HEADER_SEARCH_BOX_LABEL = 'Procurar';
+$LNG->DEFAULT_SEARCH_TEXT = 'Digite "pesquisa de frase" ou palavras separadas';
 $LNG->HEADER_SEARCH_RUN_ICON_HINT = 'Pesquisa em execução';
 $LNG->HEADER_SEARCH_RUN_ICON_ALT = 'Executar';
 $LNG->HEADER_SEARCH_INFO_HINT = "<div  style='padding:10px;'>A pesquisa padrão será por palavras separadas usando espaços e considerando uma pesquisa OR, e.g. <b>'sistema escolar'</b> buscará as palavras <b>'escola' O 'sistema'</b> quer seja no item do título, item descrição, etiquetas item ou qualquer clip de textos web associados.";

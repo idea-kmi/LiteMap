@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -32,6 +32,7 @@
 	}
 
     checkLogin();
+    array_push($HEADER,"<script src='".$CFG->homeAddress."ui/lib/scriptaculous/scriptaculous.js' type='text/javascript'></script>");
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 
@@ -76,11 +77,10 @@
 			$USER = $admin;
 
     		$r = getRoleByName('News');
-			if (!$r instanceof Hub_Error) {
-    			$roleType = $r->roleid;
-	       		$node = addNode($name, $desc, 'N',$roleType);
-	       	}
-   			$USER = $currentuser;
+    		$roleType = $r->roleid;
+	       	$node = addNode($name, $desc, 'N',$roleType);
+
+       		$USER = $currentuser;
     	} else {
             array_push($errors,$LNG->ADMIN_NEWS_MISSING_NAME_ERROR);
         }

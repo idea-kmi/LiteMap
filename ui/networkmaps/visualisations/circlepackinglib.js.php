@@ -225,7 +225,7 @@ function completeCirclePackingD3Vis(root) {
 
 	var legend = d3LegendInactive();
 	legend
-		.width(width)
+		.width(width+10)
 		.height(20)
         .margin({top: 0, right: 0, bottom: 0, left: 0});
 

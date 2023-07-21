@@ -158,7 +158,7 @@ $jit.PositionedMapping.Plot.EdgeTypes.implement({
 			var deltaX = to.x - from.x;
 			var deltaY = to.y - from.y;
 			if ((Math.abs(deltaX) < 20) || (Math.abs(deltaY) < 20)) {
-				isReallyNonLinear = false; //under 10 pixels, ‘linear’ mode is always used
+				isReallyNonLinear = false; //under 10 pixels, ï¿½linearï¿½ mode is always used
 			}
 
 			if (isReallyNonLinear) {
@@ -1256,7 +1256,7 @@ function createNewMap(containername, rootNodeID, backgroundImagePath) {
 							var orinode = node.getData('orinode');
 							var position = getPosition($(fd.config.injectInto+'-outer'));
 							//viewNodeDetailsDiv(nodeid, orirole.name, orinode, e, position.x+30, position.y+30);
-							viewNodeDetailsDiv(nodeid, orirole.name, orinode, e, 5, position.y);
+							viewNodeDetailsDiv(nodeid, orirole.name, orinode, e, 15, position.y);
 						}
 					} else if (voteForRec && voteForRec.contains(pos.x, pos.y)) {
 						if(USER != ""){
@@ -2656,7 +2656,7 @@ function showMapMenu(graphview, type, node, evt) {
 
 	if (mediaindex >-1 && player && currentindex != mediaindex) {
 		var newnode = new Element("span", {'style':'cursor: pointer; margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_JUMP_HINT; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
 		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
 		newnode.insert('<span class="active" style="padding-left:5px;"><?php echo $LNG->MAP_MEDIA_NODE_JUMP; ?></span>');
@@ -2671,7 +2671,7 @@ function showMapMenu(graphview, type, node, evt) {
 		panel.insert(newnode);
 	} else if (mediaindex > -1 && player) {
 		var newnode = new Element("span", {'style':'margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
 		newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_MEDIAINDEX; ?>"+formatMovieTime(mediaindex));
 		panel.insert(newnode);
@@ -2687,7 +2687,7 @@ function showMapMenu(graphview, type, node, evt) {
 		if (player) {
 			if (player && currentindex != mediaindex) {
 				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN_HINT; ?>'} );
-				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 				newnode.insert(nodeicon);
 				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN; ?>"+formatMovieTime(currentindex));
 				Event.observe(newnode,'click',function (){
@@ -2699,7 +2699,7 @@ function showMapMenu(graphview, type, node, evt) {
 
 			if (mediaindex && mediaindex != -1 && mediaindex != "") {
 				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_REMOVE_HINT; ?>'} );
-				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 				newnode.insert(nodeicon);
 				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_REMOVE; ?>");
 				Event.observe(newnode,'click',function (){
@@ -2713,8 +2713,8 @@ function showMapMenu(graphview, type, node, evt) {
 		}
 
 		if (rolename == "Challenge") {
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2723,8 +2723,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 		} else if (rolename == "Issue") {
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
+			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2733,8 +2733,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2743,8 +2743,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 		} else if (rolename == "Solution") {
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
+			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2753,8 +2753,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
@@ -2764,8 +2764,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_ARGUMENT_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2773,8 +2773,8 @@ function showMapMenu(graphview, type, node, evt) {
 				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Con", 410, 730);
 			});
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2783,8 +2783,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2793,8 +2793,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 		} else if (rolename == "Pro" || rolename == "Con" || rolename == "Argument") {
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
+			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2803,8 +2803,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2815,8 +2815,8 @@ function showMapMenu(graphview, type, node, evt) {
 		}
 
 		if (rolename != "Map"){
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_COMMENT_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2825,8 +2825,8 @@ function showMapMenu(graphview, type, node, evt) {
 			});
 			panel.insert(newnode);
 
-			var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
+			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 			newnode.insert(nodeicon);
 			newnode.insert("<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>");
 			Event.observe(newnode,'click',function (){
@@ -2963,152 +2963,151 @@ function showCanvasMenu(evt, graphview, pos) {
 			NODE_ARGS['blockednodeids'] = getMapNodeString(positionedMap);
 		}
 
-		panel.insert('<div style="float:left;margin-bottom:5px;font-size:10pt"><?php echo $LNG->FORM_ADD_QUICK; ?></div>');
+		panel.insert('<div style="font-size:0.8em;"><?php echo $LNG->FORM_ADD_QUICK; ?></div>');
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION_QUICK; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		var quickaddicons = new Element("div", {'class':'d-flex flex-wrap align-items-center gap-2'} );
+
+		var newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION_QUICK; ?>'} );
+		var nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Issue', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION_QUICK; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION_QUICK; ?>'} );
+		var nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Solution', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION_QUICK; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION_QUICK; ?>'} );
+		var nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Pro', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION_QUICK; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION_QUICK; ?>'} );
+		nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Con', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION_QUICK; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION_QUICK; ?>'} );
+		nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Argument', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_COMMENT_TITLE_SECTION_QUICK; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','style':'padding-right:5px;width:28px;height:28px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active', 'style':'max-width: 20px; cursor: pointer;', 'title':'<?php echo $LNG->FORM_COMMENT_TITLE_SECTION_QUICK; ?>'} );
+		nodeicon = new Element("img", {'class':'img-fluid','src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>'} );
 		newnode.insert(nodeicon);
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			var pos = getMousePosition(graphview, evt);
 			addBlankNodeToMapFloating('Idea', pos.x+':'+pos.y);
 		});
-		panel.insert(newnode);
+		quickaddicons.insert(newnode);
+
+		panel.insert(quickaddicons);
 
 		panel.insert(createMenuSpacerSoft());
+		
+		var menuicons = new Element("div", {'class':'d-flex flex-column justify-content-start'} );
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Issue", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Solution", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
-		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
+		var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_PRO_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Pro", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
+		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_CON_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Con", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
+		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_ARGUMENT_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_ARGUMENT_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Argument", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_COMMENT_TITLE_SECTION; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_COMMENT_TITLE_SECTION; ?>'} );
+		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_COMMENT_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_COMMENT_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Idea", 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
 
-		var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
-		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+		var newnode = new Element("span", {'class':'active mb-1', 'style':'cursor:pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
+		nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 		newnode.insert(nodeicon);
-		newnode.insert("<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>");
+		newnode.insert("<span style='font-size:0.8em'><?php echo $LNG->FORM_MAP_TITLE_ADD; ?></span>");
 		Event.observe(newnode,'click',function (){
 			hideBox('maparrowdiv');
 			loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMapFloating&position="+pos.x+":"+pos.y+"&filternodetypes=Map&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
 		});
-		panel.insert(newnode);
+		menuicons.insert(newnode);
+		
+		panel.insert(menuicons);
 
 		panel.insert(createMenuSpacerSoft());
 	}
 
-	/*var selectall = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_SELECT_ALL_HINT; ?>'} );
-	selectall.insert("<?php echo $LNG->MAP_SELECT_ALL_LABEL; ?>");
-	Event.observe(selectall,'click',function (){
-		hideBox('maparrowdiv');
-		// select all nodes.
-		selectAllMapNodes(graphview);
-	});
-	panel.insert(selectall);
-	*/
 
 	positionPopup(evt, 'maparrowdiv', 1, 1);
 	panel.style.display = 'block';
@@ -3123,7 +3122,7 @@ function showLinkMenu(link, evt, graphview) {
 	var panel = $('maparrowdiv');
 	panel.innerHTML = "";
 
-	var viewuser = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_CONNECTION_HINT; ?>: '+user.name} );
+	var viewuser = new Element("span", {'class':'active','style':'font-size: 0.8em;', 'title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_CONNECTION_HINT; ?>: '+user.name} );
 	viewuser.insert("<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_LINK; ?>");
 	Event.observe(viewuser,'click',function (){
 		hideBox('maparrowdiv');
@@ -3159,10 +3158,10 @@ function showLinkMenu(link, evt, graphview) {
 	panel.innerHTML = "";
 
 	// ISSUE
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeissue', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeissue', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	panel.insert(checkdiv);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
@@ -3180,10 +3179,10 @@ function showLinkMenu(link, evt, graphview) {
 	});
 
 	// IDEA/COMMENT
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypesolution', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypesolution', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	panel.insert(checkdiv);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
@@ -3202,10 +3201,10 @@ function showLinkMenu(link, evt, graphview) {
 
 
 	// PRO
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypepro', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypepro', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	panel.insert(checkdiv);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
@@ -3224,10 +3223,10 @@ function showLinkMenu(link, evt, graphview) {
 
 
 	// CON
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypecon', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypecon', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
 	checklabel.insert('<?php echo $LNG->CON_NAME;?>');
@@ -3245,10 +3244,10 @@ function showLinkMenu(link, evt, graphview) {
 	panel.insert(checkdiv);
 
 	// ARGUMENT
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeargument', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeargument', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
 	checklabel.insert('<?php echo $LNG->ARGUMENT_NAME;?>');
@@ -3266,10 +3265,10 @@ function showLinkMenu(link, evt, graphview) {
 	panel.insert(checkdiv);
 
 	// IDEA/COMMENT (Open Comment)
-	var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
-	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeidea', 'style':'vertical-align:bottom'} );
+	var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
+	var checklink = new Element("input", {'type':'radio', 'name':'changetype', 'id':'changetypeidea', 'class':'me-2'} );
 	checkdiv.insert(checklink);
-	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','style':'padding-right:5px;width:16px;height:16px;vertical-align:bottom'} );
+	nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 	checkdiv.insert(nodeicon);
 	var checklabel = new Element("span", {'style':'font-size:10pt'} );
 	checklabel.insert('<?php echo $LNG->COMMENT_NAME;?>');
@@ -3346,7 +3345,7 @@ function processVoteClick(node, vote, evt, graphview) {
 
 			if(orirole.name != 'Map') {
 				if (nodeFrom.id == node.id) {
-					var checkdiv = new Element("div", {'class':'active','style':'margin-top:5px;margin-bottom:5px;clear:both;float:left;font-size:10pt'} );
+					var checkdiv = new Element("div", {'class':'active d-flex align-items-center'} );
 					var checklink = new Element("input", {'type':'checkbox'} );
 					checkdiv.insert(checklink);
 					panel.insert(checkdiv);
@@ -3381,14 +3380,6 @@ function processVoteClick(node, vote, evt, graphview) {
 				}
 			}
 		});
-
-		//var closebutton = new Element("button", {'style':'margin-top:15px;clear:both;float:left;font-size:8pt'} );
-		//closebutton.insert('<?php echo $LNG->FORM_BUTTON_CLOSE; ?>');
-		//Event.observe(closebutton,'click',function () {
-		//	hideBox('mapvotediv');
-		//	hideBox('mapvotediv');
-		//});
-		//panel.insert(closebutton);
 
 		adjustMenuPosition(panel, evt);
 		showBox('mapvotediv');

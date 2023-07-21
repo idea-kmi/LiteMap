@@ -110,94 +110,93 @@
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
 ?>
 
-<div>
+<div class="container-fluid">
+	<div class="row p-4 justify-content-center">	
+		<div class="col-sm-12 col-lg-8">
+			<h1><?php echo $LNG->LOGIN_TITLE; ?></h1>
+			<?php if ($CFG->signupstatus == $CFG->SIGNUP_OPEN) { ?>
+				<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/registeropen.php"><?php echo $LNG->LOGIN_SIGNUP_OPEN_LINK; ?></a>
+			<?php } else if ($CFG->signupstatus == $CFG->SIGNUP_REQUEST) { ?>
+				<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/requestregister.php"><?php echo $LNG->LOGIN_SIGNUP_REGISTER_LINK; ?></a>
+			<?php } else { ?>
+				<p><?php echo $LNG->LOGIN_INVITIATION_ONLY_MESSAGE; ?></p>
+			<?php } ?>
+			<?php
+				if(!empty($errors)){
+					echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE_LOGIN."<ul>";
+					foreach ($errors as $error){
+						echo "<li>".$error."</li>";
+					}
+					if ($revalidateEmail && isset($user) && isset($user->userid)) {
+						echo '<form id="emailvalidation" action="" enctype="multipart/form-data" method="post">';
+						echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
+						echo '<input type="hidden" id="validateemail" name="validateemail" value="" />';
+						echo '<input type="submit" title="'.$LNG->EMAIL_VALIDATE_HINT.'" id="validateemail" name="validateemail" value="'.$LNG->EMAIL_VALIDATE_TEXT.'" />';
+						echo '</form>';
+					}
+					echo "</ul></div>";
+				}
+			?>
 
-<h1><?php echo $LNG->LOGIN_TITLE; ?></h1>
+			<form name="login" action="<?php echo $CFG->homeAddress; ?>ui/pages/login.php" method="post">
+				<input type="hidden" name="fromembed" value="<?php print $fromembed; ?>"/>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="username"><?php echo $LNG->LOGIN_USERNAME_LABEL; ?></label>
+					<div class="col-sm-9">
+						<input class="form-control" id="username" name="username" value="">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="password"><?php echo $LNG->LOGIN_PASSWORD_LABEL; ?></label>
+					<div class="col-sm-9">
+						<input class="form-control" id="password" name="password" type="password" >
+					</div>
+				</div>
 
-<?php if ($CFG->signupstatus == $CFG->SIGNUP_OPEN) { ?>
-	<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/registeropen.php"><?php echo $LNG->LOGIN_SIGNUP_OPEN_LINK; ?></a>
-<?php } else if ($CFG->signupstatus == $CFG->SIGNUP_REQUEST) { ?>
-	<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/requestregister.php"><?php echo $LNG->LOGIN_SIGNUP_REGISTER_LINK; ?></a>
-<?php } else { ?>
-	<p><?php echo $LNG->LOGIN_INVITIATION_ONLY_MESSAGE; ?></p>
-<?php } ?>
+				<div class="mb-3 row">
+					<div class="d-grid gap-2 d-md-flex justify-content-md-between mb-3">
+						<?php if ($CFG->send_mail) { ?>
+							<p><a href="<?php echo $CFG->homeAddress; ?>ui/pages/forgot.php"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_LINK; ?></a></p>
+						<?php } else { ?>
+							<p><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART1; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART2; ?></a></p>
+						<?php } ?>						
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->LOGIN_LOGIN_BUTTON; ?>" id="login" name="login" />
+					</div>
+				</div>
 
+				<?php if ($CFG->SOCIAL_SIGNON_ON) {?>
+					<div class="mt-4">
+						<hr />
+						<fieldset class="row justify-content-center">	
+							<legend class="d-block text-center mb-3 h5"><?php echo $LNG->LOGIN_SOCIAL_SIGNON; ?></legend>
+							<?php if ($CFG->SOCIAL_SIGNON_GOOGLE_ON) {?>
+								<div class="col-auto"><a title="Sign-in with Google" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=google&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><i class="fab fa-google fa-2x" title="Google"></i><span class="sr-only">Sign-in with Google</span></a></div>
+							<?php } ?>
 
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE_LOGIN."<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
+							<?php if ($CFG->SOCIAL_SIGNON_YAHOO_ON) {?>
+								<div class="col-auto"><a title="Sign-in with Yahoo" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=yahoo&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><i class="fab fa-yahoo fa-2x" title="Yahoo"></i><span class="sr-only">Sign-in with Yahoo</span></a></div>
+							<?php } ?>
 
-    if ($revalidateEmail && isset($user) && isset($user->userid)) {
-		echo '<form id="emailvalidation" action="" enctype="multipart/form-data" method="post">';
-		echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-		echo '<input type="hidden" id="validateemail" name="validateemail" value="" />';
-		echo '<input type="submit" title="'.$LNG->EMAIL_VALIDATE_HINT.'" id="validateemail" name="validateemail" value="'.$LNG->EMAIL_VALIDATE_TEXT.'" />';
-		echo '</form>';
-    }
+							<?php if ($CFG->SOCIAL_SIGNON_FACEBOOK_ON) {?>
+								<div class="col-auto"><a title="Sign-in with Facebook" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=facebook&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><i class="fab fa-facebook-f fa-2x" title="Facebook"></i><span class="sr-only">Sign-in with Facebook</span></a></div>
+							<?php } ?>
 
-    echo "</ul></div>";
-}
-?>
+							<?php if ($CFG->SOCIAL_SIGNON_TWITTER_ON) {?>
+								<div class="col-auto"><a title="Sign-in with Twitter" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=twitter&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><i class="fab fa-twitter fa-2x" title="Twitter"></i><span class="sr-only">Sign-in with Twitter</span></a></div>
+							<?php } ?>
 
-<form name="login" action="<?php echo $CFG->homeAddress; ?>ui/pages/login.php" method="post">
-	<input type="hidden" name="ref" value="<?php print htmlentities($ref); ?>"/>
-	<input type="hidden" name="fromembed" value="<?php print $fromembed; ?>"/>
-    <div class="formrow">
-        <label class="formlabelmid" style="width: 80px" for="username"><?php echo $LNG->LOGIN_USERNAME_LABEL; ?></label>
-        <input class="forminput" id="username" name="username" size="30" value="">
-    </div>
-    <div class="formrow">
-        <label class="formlabelmid" style="width: 80px" for="password"><?php echo $LNG->LOGIN_PASSWORD_LABEL; ?></label>
-        <input class="forminput" id="password" name="password" type="password"  size="30">
-    </div>
-    <div class="formrow">
-        <input class="formsubmit" style="margin-left:84px;" type="submit" value="<?php echo $LNG->LOGIN_LOGIN_BUTTON; ?>" id="login" name="login">
-    </div>
-    <div class="formrow">
-        <label class="formlabelmid" style="width: 80px" for="password">&nbsp;</label>
-		<span class="forminput">
-		<?php if ($CFG->send_mail) { ?>
-        	<a href="<?php echo $CFG->homeAddress; ?>ui/pages/forgot.php"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_LINK; ?></a>
-        <?php } else { ?>
-        	<?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART1; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART2; ?></a>.
-        <?php } ?>
-        </span>
-    </div>
-
-	<?php if ($CFG->SOCIAL_SIGNON_ON) {?>
-		<div style="clear:both;float:left;margin-left:0px;margin-top:20px;">
-			<fieldset>
-				<legend><?php echo $LNG->LOGIN_SOCIAL_SIGNON; ?></legend>
-				<?php if ($CFG->SOCIAL_SIGNON_GOOGLE_ON) {?>
-					<div style="float:left;margin:10px;"><a title="Sign-in with Google" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=google&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/google.png'); ?>" /></a></div>
+							<?php if ($CFG->SOCIAL_SIGNON_LINKEDIN_ON) {?>
+								<div class="col-auto"><a title="Sign-in with LinkedIn" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=linkedin&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><i class="fab fa-linkedin-in fa-2x" title="LinkedIn"></i><span class="sr-only">Sign-in with LinkedIn</span></a></div>
+							<?php } ?>
+							<div class="text-center mt-3"><p><?php echo $LNG->CONDITIONS_LOGIN_FORM_MESSAGE; ?></p></div>
+						</fieldset>
+					</div>
 				<?php } ?>
 
-				<?php if ($CFG->SOCIAL_SIGNON_YAHOO_ON) {?>
-					<div style="float:left;margin:10px;"><a title="Sign-in with Yahoo" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=yahoo&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/yahoo.png'); ?>" /></a></div>
-				<?php } ?>
-
-				<?php if ($CFG->SOCIAL_SIGNON_FACEBOOK_ON) {?>
-					<div style="float:left;margin:10px;"><a title="Sign-in with Facebook" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=facebook&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/facebook.png'); ?>" /></a></div>
-				<?php } ?>
-
-				<?php if ($CFG->SOCIAL_SIGNON_TWITTER_ON) {?>
-					<div style="float:left;margin:10px;"><a title="Sign-in with Twitter" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=twitter&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/twitter.png'); ?>" /></a></div>
-				<?php } ?>
-
-				<?php if ($CFG->SOCIAL_SIGNON_LINKEDIN_ON) {?>
-					<div style="float:left;margin:10px;"><a title="Sign-in with LinkedIn" href="<?php echo $CFG->homeAddress; ?>ui/pages/loginexternal.php?provider=linkedin&referrer=<?php echo urlencode( $ref ); ?>&fromembed=<?php echo urlencode( $fromembed ); ?>"><img width="40" height="40" border="0" src="<?php echo $HUB_FLM->getImagePath('icons/linkedin.png'); ?>" /></a></div>
-				<?php } ?>
-				<div style="clear:both;max-width:300px;"><?php echo $LNG->CONDITIONS_LOGIN_FORM_MESSAGE; ?></div>
-			</fieldset>
+				<input type="hidden" name="ref" value="<?php print htmlentities($ref); ?>"/>
+			</form>
 		</div>
-	<?php } ?>
-
-    <input type="hidden" name="ref" value="<?php print htmlentities($ref); ?>"/>
-</form>
-
+	</div>
 </div>
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

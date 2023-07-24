@@ -4,6 +4,7 @@
 .well-known
 **/uploads
 # Files
+!config.php
 setup.php
 *.DS_Store
 ._*

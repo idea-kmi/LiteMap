@@ -32,7 +32,7 @@
 		die;
 	}
 
-	include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 ?>
 <div class="mt-4 px-4">
 	<h1><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h1>

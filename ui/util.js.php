@@ -33,10 +33,14 @@
 
     $evidenceArrayStr = "";
     $evidenceStr = "";
-    for($i=0;$i< sizeof($CFG->EVIDENCE_TYPES); $i++){
+	$count = 0;
+	if ( is_countable($CFG->EVIDENCE_TYPES) ){
+		$count = count($CFG->EVIDENCE_TYPES);
+	}
+    for($i=0;$i< $count; $i++){
         $evidenceArrayStr .= '"'.$CFG->EVIDENCE_TYPES[$i].'"';
         $evidenceStr .= $CFG->EVIDENCE_TYPES[$i];
-        if ($i != (sizeof($CFG->EVIDENCE_TYPES)-1)){
+        if ($i != ($count-1)){
             $evidenceArrayStr .= ',';
             $evidenceStr .= ',';
         }
@@ -46,10 +50,15 @@
 
     $baseArray = "";
     $baseStr = "";
-    for($j=0; $j<sizeof($CFG->BASE_TYPES); $j++){
+
+	$count = 0;
+	if ( is_countable($CFG->BASE_TYPES) ){
+		$count = count($CFG->BASE_TYPES);
+	}
+    for($j=0; $j<$count; $j++){
         $baseArray .= '"'.$CFG->BASE_TYPES[$j].'"';
         $baseStr .= $CFG->BASE_TYPES[$j];
-        if ($j != (sizeof($CFG->BASE_TYPES)-1)) {
+        if ($j != ($count-1)) {
             $baseArray .= ',';
             $baseStr .= ',';
         }
@@ -238,6 +247,11 @@ function loadDialog(windowName, url, width, height){
     if (height == null){
         height = 510;
     }
+
+	// to not trigger the Boostrap mobile threshold of 768.
+	if (width < 770) {
+		width = 770
+	}
 
     var left = parseInt((screen.availWidth/2) - (width/2));
     var top  = parseInt((screen.availHeight/2) - (height/2));
@@ -717,48 +731,56 @@ function hideBoxes() {
 function textAreaCancel() {
 	$('prompttext').style.display = "none";
 	$('prompttext').update("");
+					
+	var backDrop = document.getElementById("backDrop");
+	backDrop.remove(); 
 }
 
 function textAreaPrompt(messageStr, text, connid, handler, refresher, width, height) {
 
 	$('prompttext').innerHTML="";
-	if (width == undefined) {
-		width = 400;
-	}
-	if (height == undefined) {
-		height = 250;
-	}
-	$('prompttext').style.width = width+"px";
-	$('prompttext').style.height = height+"px";
 
 	var viewportHeight = getWindowHeight();
 	var viewportWidth = getWindowWidth();
-	var x = (viewportWidth-width)/2;
-	var y = (viewportHeight-height)/2;
-	$('prompttext').style.left = x+getPageOffsetX()+"px";
-	$('prompttext').style.top = y+getPageOffsetY()+"px";
+	var x = (viewportWidth-400)/2;
+	var y = (viewportHeight-200)/2;
+	
+	var innerPromptDiv = new Element('div', {'class':'prompttext-inner'});
 
-	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'7','style':'color: black; width:390px; border: 1px solid gray; padding: 3px; overflow:hidden'});
+	var textarea1 = new Element('textarea', {'id':'messagetextarea','rows':'5','class':'form-control'});
 	textarea1.value=text;
 
 	if (connid != "") {
-		var buttonOK = new Element('input', { 'style':'clear: both;margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
+		var buttonOK = new Element('input', { 'class':'btn btn-primary', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>'});
 		Event.observe(buttonOK,'click', function() {
 			eval( refresher + '("'+connid+'","'+textarea1.value+'","'+handler+'")' );
 			textAreaCancel();
 		});
 	}
 
-    var buttonCancel = new Element('input', { 'style':'margin-left: 5px; margin-top: 5px; font-size: 8pt', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});
+	var buttonCancel = new Element('input', { 'class':'btn btn-secondary', 'type':'button', 'value':'<?php echo $LNG->FORM_BUTTON_CANCEL; ?>'});	
 	Event.observe(buttonCancel,'click', textAreaCancel);
 
-	$('prompttext').insert('<h2>'+messageStr+'</h2>');
-	$('prompttext').insert(textarea1);
+
+	var footerPromptDiv = new Element('div', {'class':'prompttext-footer'});
+
 	if (connid != "") {
-		$('prompttext').insert(buttonOK);
+		footerPromptDiv.insert(buttonOK);
 	}
-	$('prompttext').insert(buttonCancel);
+	footerPromptDiv.insert(buttonCancel);
+	
+	innerPromptDiv.insert('<h2>'+messageStr+'</h2>');
+	innerPromptDiv.insert(textarea1);
+	innerPromptDiv.insert(footerPromptDiv);
+	$('prompttext').insert(innerPromptDiv);
 	$('prompttext').style.display = "block";
+
+	document.body.classList.add("modal-open");
+
+	var backDrop = new Element('div', {'class':'modal-backdrop fade show', 'id':'backDrop'});
+	document.body.insert(backDrop);
+
+	textarea1.focus();
 }
 
 function fadeMessage(messageStr) {
@@ -775,12 +797,39 @@ function fadeMessage(messageStr) {
     var fade=setTimeout("fadeout()",2500);
 }
 
+
 function fadein(){
-    new Effect.Opacity("message", {duration:1.0, from:0.0, to:1.0});
+	var element = document.getElementById("message");
+	element.style.opacity = 0.0;
+	fadeinloop();
+}
+
+function fadeinloop(){
+	var element = document.getElementById("message");
+
+	element.style.opacity += 0.1;
+	if(element.style.opacity > 1.0) {
+		element.style.opacity = 1.0;
+	} else {
+		setTimeout("fadeinloop()", 100);
+	}
 }
 
 function fadeout(){
-    new Effect.Opacity("message", {duration:1.5, from:1.0, to:0.0});
+	var element = document.getElementById("message");
+	element.style.opacity = 1.0;
+	fadeoutloop();
+}
+
+function fadeoutloop(){
+	var element = document.getElementById("message");
+
+	element.style.opacity -= 0.1;
+	if(element.style.opacity < 0.0) {
+		element.style.opacity = 0.0;
+	} else {
+		setTimeout("fadeoutloop()", 100);
+	}
 }
 
 function getLoading(infoText){
@@ -1475,9 +1524,7 @@ function loadSlimExplorePanel(nodeid, nodetype, node, evt, x, y) {
 
 	auditNodeView(nodeid, 'exploreslim');
 
-	exploreutils = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/exploreutils.js.php"); ?>');
-	exploreutils.buildScriptTag();
-	exploreutils.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/exploreutils.js.php"); ?>', 'exploreutils-script');
 
 	var reqUrl = URL_ROOT + "explore-slim.php?nodetype="+nodetype+"&nodeid="+nodeid;
 	//alert(reqUrl);
@@ -1495,33 +1542,19 @@ function loadSlimExplorePanel(nodeid, nodetype, node, evt, x, y) {
 			$('mapdetailsdiv').style.display='block';
 
 			if (nodetype == 'Challenge') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/challengenode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/challengenode.js.php"); ?>', 'slim-challengenode-script');
 			} else if (nodetype == 'Issue') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/issuenode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/issuenode.js.php"); ?>', 'slim-issuenode-script');
 			} else if (nodetype == 'Solution') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/solutionnode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/solutionnode.js.php"); ?>', 'slim-solutionnode-script');
 			} else if (nodetype == 'Pro') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/pronode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/pronode.js.php"); ?>', 'slim-pronode-script');
 			} else if (nodetype == 'Con') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/connode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/connode.js.php"); ?>', 'slim-connode-script');
 			} else if (nodetype == 'Argument') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/evidencenode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/evidencenode.js.php"); ?>', 'slim-evidencenode-script');
 			} else if (nodetype == 'Idea') {
-				scriptLoaded = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/commentnode.js.php"); ?>');
-				scriptLoaded.buildScriptTag();
-				scriptLoaded.addScriptTag();
+				addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/slim/commentnode.js.php"); ?>', 'slim-commentnode-script');
 			}
 		}
 	});
@@ -1778,4 +1811,72 @@ function formatMovieTime(seconds) {
 	seconds = Math.floor(seconds % 60);
 	seconds = (seconds >= 10) ? seconds : "0" + seconds;
 	return minutes + ":" + seconds;
+}
+
+
+/**
+ * Replacing function from Scriptaculous. Can now be done with css.
+ * Highlight an element transitioning between two highlight colours and finally restore it to a given colour.
+ * @param item, the item to tranition the background colour on.
+ * @param options, the options to use - object containing 'startcolor', 'endcolor', 'restorecolor', 'duration'
+ */
+function highlightElement(item, options) {
+
+	// Prevent executing on elements not in the layout flow
+	if (item.style.display == 'none') { return; }
+
+	if (!options.restorecolor)
+		options.restorecolor = item.style.backgroundColor;
+
+    item.style.backgroundColor = options['startcolor'];
+
+	item.style.webkitTransform = 'background-color '+options.duration+'s linear';
+	item.style.MozTransform = 'background-color '+options.duration+'s linear';
+	item.style.msTransform = 'background-color '+options.duration+'s linear';
+	item.style.OTransform = 'background-color '+options.duration+'s linear';
+	item.style.transition = 'background-color '+options.duration+'s linear';
+
+	// Needed so that initial color and transition are applied before the transition is later triggered.
+    setTimeout(function() {
+		 highlightElementComplete(item, options);
+    }, 100);
+
+}
+
+function highlightElementComplete(item, options) {
+
+	// trigger transition
+	item.style.backgroundColor = options['endcolor'];
+
+	// Put it all back to normal about when transition should end plus a bit.
+	var totalwait = parseInt((options.duration+1) * 1000); //convert seconds to milliseconds
+    setTimeout(function() {
+		item.style.transition = 'none';
+		item.style.webkitTransform = 'none';
+		item.style.MozTransform = 'none';
+		item.style.msTransform = 'none';
+		item.style.OTransform = 'none';
+   		item.style.backgroundColor = options['restorecolor'];
+    },totalwait);
+}
+
+/**
+ * Add new new Script tag to the current HTML page dynamically to load a local javascript file on demand.
+ *
+ * @param url The url to add as the src on the new script tag
+ * @param id If given set as the id of the new script tag
+ */
+function addScriptDynamically(url, id) {
+
+	// only allow the import of local code;
+	if (url.indexOf(URL_ROOT) == 0) {
+		var headarea = document.getElementsByTagName("head").item(0);
+		var scriptobj = document.createElement("script");
+		scriptobj.setAttribute("type", "text/javascript");
+		scriptobj.setAttribute("src", url);
+		if (id) {
+			scriptobj.setAttribute("id", id);
+		}
+		headarea.appendChild(scriptobj);
+	}
 }

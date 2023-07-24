@@ -57,7 +57,10 @@ class Following {
 		$params[1] = $this->itemid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_FOLLOW_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$this->userid = $array['UserID'];
@@ -90,7 +93,10 @@ class Following {
 		$params[1] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_FOLLOW_ADD_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if( $count == 0 ) {
         		$dt = time();
 

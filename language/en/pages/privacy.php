@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2018 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -23,168 +23,173 @@
  *                                                                              *
  ********************************************************************************/
 
-$LNG->PAGE_PRIVACY_TITLE = 'Privacy Statement for the '.$CFG->SITE_TITLE;
+$LNG->PAGE_PRIVACY_TITLE = 'Privacy Policy for the '.$CFG->SITE_TITLE.' website.';
 
-$LNG->PAGE_PRIVACY_BODY = '<h2>1. Introduction</h2>';
+$LNG->PAGE_PRIVACY_BODY = '<h2>Introduction</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">1.1.<span> </span>This statement sets out how we ';
-$LNG->PAGE_PRIVACY_BODY .= 'will use and protect personal information that you provide to us when you use ';
-$LNG->PAGE_PRIVACY_BODY .= 'the the '.$CFG->SITE_TITLE.' ('.$CFG->homeAddress.') (\'Site\') ';
-$LNG->PAGE_PRIVACY_BODY .= 'in accordance with UK data protection requirements and in particular ';
-$LNG->PAGE_PRIVACY_BODY .= 'the Data Protection Act 1998 (&quot;the Act&quot;).</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">Welcome to the privacy notice for the '.$CFG->SITE_TITLE.' ('.$CFG->homeAddress.') (\'Site\'),
+managed by the Knowledge Media Institute at the Open University.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">1.2.<span> </span>As we are established and based in ';
-$LNG->PAGE_PRIVACY_BODY .= 'the UK we are required to comply with the Act. If you are resident outside the ';
-$LNG->PAGE_PRIVACY_BODY .= 'UK then we cannot confirm that our collection and treatment of personal data is ';
-$LNG->PAGE_PRIVACY_BODY .= 'compliant with your local data protection/privacy laws. If you do not agree to ';
-$LNG->PAGE_PRIVACY_BODY .= 'your data being dealt with in the manner described in this statement then ';
-$LNG->PAGE_PRIVACY_BODY .= 'please do not submit your personal details to the Site. However, please note ';
-$LNG->PAGE_PRIVACY_BODY .= 'that where you do not submit the personal details that we request, your access ';
-$LNG->PAGE_PRIVACY_BODY .= 'to the services/materials offered by this Site may be restricted.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">The Open University respects your privacy and is committed to protecting your personal data. ';
+$LNG->PAGE_PRIVACY_BODY .= 'This privacy notice will inform you as to how we look after your personal data ';
+$LNG->PAGE_PRIVACY_BODY .= 'when you visit the '.$CFG->SITE_TITLE.' website (regardless of where you visit it from) ';
+$LNG->PAGE_PRIVACY_BODY .= 'and tell you about your privacy rights and how the law protects you.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">1.3.<span> </span>For your protection The Open ';
-$LNG->PAGE_PRIVACY_BODY .= 'University is notified as a Data Controller under the Act.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">This website is not intended for children and we do not knowingly collect data relating to children.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>2. Your personal information</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">It is important that you read this privacy notice together with any other privacy notice or fair processing ';
+$LNG->PAGE_PRIVACY_BODY .= 'notice we may provide on specific occasions when we are collecting or processing personal data about you so that you are fully aware ';
+$LNG->PAGE_PRIVACY_BODY .= 'of how and why we are using your data.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">2.1.<span> </span>By default, all of the personal ';
-$LNG->PAGE_PRIVACY_BODY .= 'information you upload to the Site is available to ';
-$LNG->PAGE_PRIVACY_BODY .= 'everyone who uses the Site, with the exception of ';
-$LNG->PAGE_PRIVACY_BODY .= 'your email address. We store this so that we can operate the Site ';
-$LNG->PAGE_PRIVACY_BODY .= 'and contact you about the Site when we need to. ';
-$LNG->PAGE_PRIVACY_BODY .= 'We will not make your email address available to anyone outside the ';
-$LNG->PAGE_PRIVACY_BODY .= 'team operating the Site, unless required to by law.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">This privacy notice is provided in a layered format so you can click through to the specific areas set out below. ';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">2.2.<span> </span>If you allow the '.$CFG->SITE_TITLE;
-$LNG->PAGE_PRIVACY_BODY .= ' access to your data stored on another site/other sites, the '.$CFG->SITE_TITLE;
-$LNG->PAGE_PRIVACY_BODY .= ' will maintain the rights settings and privacy ';
-$LNG->PAGE_PRIVACY_BODY .= 'levels that you have selected for the data on that site/those sites.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<ul>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">2.3.<span> </span>We use our own and third-party user analytics on the ';
-$LNG->PAGE_PRIVACY_BODY .= 'Site, and we provide a subset of these to all users as analytics reports at the overall Site level, and at the individual user level. ';
-$LNG->PAGE_PRIVACY_BODY .= 'You can see the analytic reports available by going to any user\'s homepage on this site. ';
-$LNG->PAGE_PRIVACY_BODY .= 'The team operating the Site will use this data to help monitor and improve the Site.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#whoweare">1. Who we are</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#whatwecollect">2. What information do we collect about you, and how do we collect it?</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#howweuse">3. How do we use and share your personal information?</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#transfers">4. Do we transfer information outside the EEA?</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#retention">5. How long do we keep your personal information for?</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#security">6. How we look after your personal information</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#cookies">7. Cookies</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#rights">8. Your rights</a></li>';
+$LNG->PAGE_PRIVACY_BODY .= '<li><a href="#contactus">9. Contact Us</a></li>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">2.4.<span> </span>As part of our user activity logging we will store your IP address. We will not share your IP address with anyone outside the team operating the Site, unless required to by law.';
+$LNG->PAGE_PRIVACY_BODY .= '</ul>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>3. What do we do with the information we collect?</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="whoweare"></a>1. Who we are</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">3.1.<span> </span>We will use the personal ';
-$LNG->PAGE_PRIVACY_BODY .= 'information you provide for the following purposes:</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">
+The Open University is the data controller in relation to the processing activities described below. This means that the Open University decides why and how your personal information is processed.
+Where this policy refers to "we", "our" or "us" below, unless it mentions otherwise, it\'s referring to the Open University.
+We have appointed a Data Protection Officer who is responsible for overseeing questions in relation to this privacy notice.
+Please direct any queries about this policy or about the way we process your personal information using the contact details below.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">a.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'process registrations;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">
+<ul>
+<li>Email: data-protection@open.ac.uk</li>
+<li>Telephone: +44 (0)1908 653994</li>
+<li>By post: The Data Protection Officer, PO Box 497, The Open University, Walton Hall, Milton Keynes MK7 6AT.</li>
+</ul>
+</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">b.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'supply and improve services to you;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="whatwecollect"></a>2. What information do we collect about you, and how do we collect it?</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">c.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'provide services to users of the Site;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">Personal data, or personal information, means any information about an individual from which that person can be identified. ';
+$LNG->PAGE_PRIVACY_BODY .= 'It does not include data where the identity has been removed (anonymous data).</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">d.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'carry out research to help us monitor, plan and improve our services (for this ';
-$LNG->PAGE_PRIVACY_BODY .= 'purpose we and/or outside research agencies (on our behalf) may contact you in ';
-$LNG->PAGE_PRIVACY_BODY .= 'the manners described below);</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h3>Information that you give to us</h3>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">e.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'produce statistical information for publication;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We collect the personal data you upload to the site via the registration form and your profile page on this Site.
+You can change or delete your personal information yourself at any time, by editing your profile page.
+However we will always need to hold a valid email address for you in order to manage your login to this Site, for as long as you have an account on this Site.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">f.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'analyse patterns and trends of use;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h3>Information that we collect automatically</h3>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">g.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'provide information to other organisations, in line with legal and government ';
-$LNG->PAGE_PRIVACY_BODY .= 'requirements;</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We use our own user analytics on the Site, and we provide a subset of these to all users as analytics reports.
+You can see the analytic reports available by going to any user\'s homepage on this Site.<br />
+As part of our user activity logging we will store your IP address.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">h.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'make sure we carry out your instructions correctly; and</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We use Google Analytics on the Site, which captures information about its usage, to help us monitor and improve it.
+None of the information captured by Google Analytics is personally-identifiable information - i.e., nothing that can identify you as an individual is stored. </p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent2">i.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>to ';
-$LNG->PAGE_PRIVACY_BODY .= 'enable third party service providers to provide services to us.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We collect, use and share Aggregated Data such as statistical data for any purpose.
+Aggregated Data may be derived from your personal data but is not considered personal data in law as this data does not directly or indirectly reveal your identity.
+For example, we may aggregate your Usage Data to calculate the percentage of users accessing a specific website feature.
+However, if we combine or connect Aggregated Data with your personal data so that it can directly or indirectly identify you,
+we treat the combined data as personal data which will be used in accordance with this privacy notice.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">3.2.<span> </span>By providing the information ';
-$LNG->PAGE_PRIVACY_BODY .= 'described above to us you expressly consent to us and the '.$CFG->SITE_TITLE;
-$LNG->PAGE_PRIVACY_BODY .= ' using that information for the purposes described in this privacy ';
-$LNG->PAGE_PRIVACY_BODY .= 'statement.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h3>Information that we receive from third parties</h3>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">If you chose to register on this site using our social sign up options, we will store the email address and third party user identifier
+we are passed from that third party, in order to process your registration on this Site and subsequent logins to this Site.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>4. Direct Marketing</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">4.1.<span> </span>By registering to use this Site ';
-$LNG->PAGE_PRIVACY_BODY .= 'and providing your personal data to us you are giving us your permission to ';
-$LNG->PAGE_PRIVACY_BODY .= 'hold and process your data.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="howweuse"></a>3. How do we use and share your personal information?</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">By default, all of the personal information you upload to the Site through the registration process or from completing or
+editing your profile page is available to everyone who uses the Site, with the exception of your IP and email addresses.<br />
+We store your email address so that we can operate the Site and contact you about the Site when we need to. We will never pass it on to anyone for marketing purposes.<br />
+We store your IP address as part of our user analytics. We will not share your IP address with anyone outside of the team operating the Site, unless required to by law.<br />
+The team will use the user analytics data to help monitor and improve the Site and for research purposes.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">4.2.<span> </span>We would like to provide you with ';
-$LNG->PAGE_PRIVACY_BODY .= 'information about new products, services and other information which we think ';
-$LNG->PAGE_PRIVACY_BODY .= 'you might find interesting.</p>';
+$LNG->PAGE_PRIVACY_BODY .= 'We will not make your email address available to anyone outside the team operating the Site, unless required to by law.<br /></p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">4.3.<span> </span>You can change your mind at any ';
-$LNG->PAGE_PRIVACY_BODY .= 'time by contacting the Data Protection Coordinator (KMi - '.$CFG->SITE_TITLE.') ';
-$LNG->PAGE_PRIVACY_BODY .= 'at PO Box 497, The Open University, Milton Keynes, MK7 6AT.</p>';
+$LNG->PAGE_PRIVACY_BODY .= 'This Site was created and is managed as part of an on-going line of research being conducted at Knowledge Media Institute at the Open University.<br />
+Any information available on this site could be analysed and used for research purposes. Any resultant research publications will always use anonymized data.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>5. Who do we share this information with?</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="transfers"></a>4. Do we transfer information outside the EEA?</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">Generally, information you provide to us is stored on our secure servers, or on our cloud based systems which are located within the EEA.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">However, there are times when we do need to store information outside the EEA. If we transfer your information outside of the EEA,
+we will take steps to ensure that appropriate security measures are taken with the aim of ensuring that your privacy rights continue to be protected as outlined in this policy.
+This would either be imposing contractual obligations on the recipient of your personal information, or ensuring that the recipients are subscribed to \'international frameworks\'
+that aim to ensure adequate protection.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">5.1.<span> </span>We will not transfer, disclose, ';
-$LNG->PAGE_PRIVACY_BODY .= 'sell, distribute or lease your personal information to third parties unless we ';
-$LNG->PAGE_PRIVACY_BODY .= 'have your permission or are required to do so by law.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="retention"></a>5. How long do we keep your personal information for?</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We will keep your personal information for as long as is necessary for us to fulfil the purposes that we ';
+$LNG->PAGE_PRIVACY_BODY .= 'describe in this policy. As a general rule, however, we will keep:</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>6. How to get copies of the information we have ';
-$LNG->PAGE_PRIVACY_BODY .= 'collected</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<ul><li>the personal information you provide when you register with the Site, together with any updates you ';
+$LNG->PAGE_PRIVACY_BODY .= 'make to that information through your profile page, for as long as you have an account on the Site;</li>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">6.1.<span> </span>You may request details of ';
-$LNG->PAGE_PRIVACY_BODY .= 'personal information which we hold about you under the Act. A small fee will be ';
-$LNG->PAGE_PRIVACY_BODY .= 'payable. If you would like a copy of the information held on you please write ';
-$LNG->PAGE_PRIVACY_BODY .= 'to the Data Protection Coordinator (KMi - '.$CFG->SITE_TITLE.') ';
-$LNG->PAGE_PRIVACY_BODY .= 'at PO Box 497, The Open University, Walton Hall, Milton Keynes, MK7 6AT or ';
-$LNG->PAGE_PRIVACY_BODY .= 'email '.$CFG->EMAIL_REPLY_TO.'.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<li>the personal information that we collect about you and your use of the Site ';
+$LNG->PAGE_PRIVACY_BODY .= 'for as long as you have an account on the Site;</li></ul></p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">6.2.<span> </span>If you think that any information ';
-$LNG->PAGE_PRIVACY_BODY .= 'we have about you is incorrect or incomplete please contact us. We will correct ';
-$LNG->PAGE_PRIVACY_BODY .= 'or update any information as soon as possible. </p>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">If you choose to close your account on this Site, your user record will be anonymized
+and your personal information will be removed. However, any content you have added to the Site will remain under an anonymized user.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>7. Security of Data</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">7.1.<span> </span>We are committed to ensuring that ';
-$LNG->PAGE_PRIVACY_BODY .= 'your personal information is secure. In order to prevent unauthorised access or ';
-$LNG->PAGE_PRIVACY_BODY .= 'disclosure we have put in place suitable physical, electronic and managerial ';
-$LNG->PAGE_PRIVACY_BODY .= 'procedures to safeguard and secure the information we collect on-line.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="security"></a>6. How we look after your personal information</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>8. Cookies</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We are committed to ensuring that your personal information is secure.
+In order to prevent unauthorised access or disclosure we have put in place suitable physical, electronic and managerial
+procedures to safeguard and secure the information we collect on-line.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">8.1.<span> </span>We use cookies in relation to ';
-$LNG->PAGE_PRIVACY_BODY .= 'certain areas of the Site. Cookies are files which store information on your ';
-$LNG->PAGE_PRIVACY_BODY .= 'hard drive or browser which means that we can recognise that you have visited ';
-$LNG->PAGE_PRIVACY_BODY .= 'the Site before. Cookies can make it easier for you to maintain your ';
-$LNG->PAGE_PRIVACY_BODY .= 'preferences on the Site. By seeing how you use the Site we can tailor the Site ';
-$LNG->PAGE_PRIVACY_BODY .= 'around users\' preferences and measure the general usability of the Site. In ';
-$LNG->PAGE_PRIVACY_BODY .= 'particular, we may use cookies to identify which pages are being most ';
-$LNG->PAGE_PRIVACY_BODY .= 'frequently used. This information is used for statistical analysis.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="cookies"></a>7. Cookies</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">8.2.<span> </span>If you prefer not to receive ';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">A cookie is a small amount of data, which often includes a unique identifier that is sent to your computer
+or mobile phone browser from a website\'s computer and is stored on your computer\'s or mobile phone\'s hard drive. Each website can send its own cookie to your
+browser if your browser\'s preferences allow it, which the site can then access when you visit it again to track online traffic flows, for example.
+A website cannot access cookies sent by other websites.</p>';
+
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">We use cookies in relation to ';
+$LNG->PAGE_PRIVACY_BODY .= 'certain areas of the Site. If you prefer not to receive ';
 $LNG->PAGE_PRIVACY_BODY .= 'cookies while browsing our website, you can set your computer or mobile device ';
 $LNG->PAGE_PRIVACY_BODY .= 'to refuse them, but this may impair your experience of the Site. You may find ';
 $LNG->PAGE_PRIVACY_BODY .= 'more information on cookies by clicking on the following link ';
 $LNG->PAGE_PRIVACY_BODY .= '<a href="http://www.allaboutcookies.org">http://www.allaboutcookies.org</a>.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= 'For more detailed information see <a href="'.$CFG->homeAddress.'ui/pages/cookies.php">Cookie use on the '.$CFG->SITE_TITLE.'</a> ';
+$LNG->PAGE_PRIVACY_BODY .= 'For more detailed information on our cookie usage see <a href="'.$CFG->homeAddress.'ui/pages/cookies.php">Cookie use on the '.$CFG->SITE_TITLE.'</a> ';
 $LNG->PAGE_PRIVACY_BODY .= '<br><br> ';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>Complete Agreement</h2>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p>This privacy statement, including the associated ';
-$LNG->PAGE_PRIVACY_BODY .= '<a href="'.$CFG->homeAddress.'ui/pages/conditionsofuse.php">Terms and Conditions of Use</a>, contain all the ';
-$LNG->PAGE_PRIVACY_BODY .= 'terms applicable to your use of the Site. Nothing contained on the Site is ';
-$LNG->PAGE_PRIVACY_BODY .= 'intended to be nor should be construed as an offer by us to enter into a ';
-$LNG->PAGE_PRIVACY_BODY .= 'contractual relationship with you or anyone else, except on these Terms.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="rights"></a>8. Your rights</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">You have a number of rights in relation to your personal information, which apply in certain circumstances.</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<h2>Jurisdiction and acceptance of these Terms</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">You have the right
+<ul>
+<li>To access your personal information that we process</li>
+<li>To rectify inaccuracies in the personal information that we hold about you</li>
+</ul>
+In some circumstances, you also have the right
+<ul>
+<li>To have your details removed from systems that we use to process your personal data</li>
+<li>To restrict the processing of your personal data in certain ways </li>
+<li>To obtain a copy of your personal data in a structured electronic data file</li>
+<li>To object to certain processing of your personal data by us </li>
+<li>To request that we stop sending you newsletter or email digest communications.</li>
+</ul>
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">1.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>These ';
-$LNG->PAGE_PRIVACY_BODY .= 'Terms and any dispute in relation to the materials available from the '.$CFG->SITE_TITLE;
-$LNG->PAGE_PRIVACY_BODY .= ' will be governed by English law. The English courts have ';
-$LNG->PAGE_PRIVACY_BODY .= 'exclusive jurisdiction to settle any disputes which may arise out of or in ';
-$LNG->PAGE_PRIVACY_BODY .= 'connection with these terms or use of the '.$CFG->SITE_TITLE.'.</p>';
+If you are concerned about the way we have processed your personal information, you can complain to the Information Commissioner\'s Office (ICO).<br />
+Please visit the ICO\'s website <a href="www.ico.org.uk" target="_blank">www.ico.org.uk</a>  for further details.
+</p>';
 
-$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">2.<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>Your ';
-$LNG->PAGE_PRIVACY_BODY .= 'continued use of the '.$CFG->SITE_TITLE.' indicates your acceptance these ';
-$LNG->PAGE_PRIVACY_BODY .= 'Terms.</p>';
+$LNG->PAGE_PRIVACY_BODY .= '<h2><a name="contactus"></a>9. Contact Us</h2>';
+$LNG->PAGE_PRIVACY_BODY .= '<p class="paraindent1">
+We have appointed a Data Protection Officer who is responsible for overseeing questions in relation to this privacy notice.<br />
+Please direct any queries about this policy or about the way we process your personal information using the contact details below.
+<ul>
+<li>Email: data-protection@open.ac.uk</li>
+<li>Telephone: +44 (0)1908 653994</li>
+<li>By post: The Data Protection Officer, PO Box 497, The Open University, Walton Hall, Milton Keynes MK7 6AT.</li>
+</ul>
+</p>';
 ?>

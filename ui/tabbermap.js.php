@@ -114,16 +114,16 @@ function setTabPushed(e) {
 		if ($("tab-"+i)) {
 			if(tab == i){
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("unselected");
-					$("tab-"+i).addClassName("current");
+					// $("tab-"+i).removeClassName("unselected");
+					$("tab-"+i).addClassName("active");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").show();
 					}
 				}
 			} else {
 				if($("tab-"+i)) {
-					$("tab-"+i).removeClassName("current");
-					$("tab-"+i).addClassName("unselected");
+					$("tab-"+i).removeClassName("active");
+					// $("tab-"+i).addClassName("unselected");
 					if ($("tab-content-"+i+"-div")) {
 						$("tab-content-"+i+"-div").hide();
 					}
@@ -140,14 +140,14 @@ function setTabPushed(e) {
 		for (i in DATAVIZ){
 			if(viz == i){
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("unselected");
-					$("tab-"+tab+"-"+i).addClassName("current");
+					// $("tab-"+tab+"-"+i).removeClassName("unselected");
+					$("tab-"+tab+"-"+i).addClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").show();
 				}
 			} else {
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("current");
-					$("tab-"+tab+"-"+i).addClassName("unselected");
+					$("tab-"+tab+"-"+i).removeClassName("active");
+					// $("tab-"+tab+"-"+i).addClassName("unselected");
 					$("tab-content-"+tab+"-"+i+"-div").hide();
 				}
 			}
@@ -162,14 +162,14 @@ function setTabPushed(e) {
 		for (i in DATAANALYTICS){
 			if(viz == i){
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("unselected");
-					$("tab-"+tab+"-"+i).addClassName("current");
+					// $("tab-"+tab+"-"+i).removeClassName("unselected");
+					$("tab-"+tab+"-"+i).addClassName("active");
 					$("tab-content-"+tab+"-"+i+"-div").show();
 				}
 			} else {
 				if ($("tab-"+tab+"-"+i)) {
-					$("tab-"+tab+"-"+i).removeClassName("current");
-					$("tab-"+tab+"-"+i).addClassName("unselected");
+					$("tab-"+tab+"-"+i).removeClassName("active");
+					// $("tab-"+tab+"-"+i).addClassName("unselected");
 					$("tab-content-"+tab+"-"+i+"-div").hide();
 				}
 			}
@@ -355,106 +355,82 @@ function iframeLoadingMessage(iframename, type) {
  * load JS file for creating the map network
  */
 function loadMapTab() {
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/create-map-net.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/create-map-net.js.php"); ?>', 'create-map-net-script');
 }
 
 /**
  * load JS file for creating the map network
  */
 function loadNetworkVis(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-network.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-network.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-network-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the circle packing network
  */
 function loadCirclesVis(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-circles.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-circles.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-circles-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the sunburst packing network
  */
 function loadSunburstVis(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-sunburst.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-sunburst.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-sunburst-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the treemap packing network
  */
 function loadTreemapVis(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-treemap.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-treemap.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-treemap-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the treemaptd packing network
  */
 function loadTreemapTDVis(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-treemaptd.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/vis-treemaptd.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-treemaptd-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the overview analytics
  */
 function loadOverviewAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-overview.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-overview.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-overview-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the social network analytics
  */
 function loadSocialAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-social.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-social.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-social-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the people and map ring analytics
  */
 function loadRingAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-ring.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-ring.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-ring-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the activity analytics
  */
 function loadActivityAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-activity.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-activity.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-activity-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the user user activity analytics
  */
 function loadUserActivityAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-useractivity.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-useractivity.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-useractivity-script'+NODE_ARGS['nodeid']);
 }
 
 /**
  * load JS file for creating the user contribution stream analytics
  */
 function loadStreamAnalytics(){
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-stream.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/analytics-stream.js.php?nodeid='+NODE_ARGS['nodeid']+'"); ?>', 'vis-analytics-stream-script'+NODE_ARGS['nodeid']);
 }

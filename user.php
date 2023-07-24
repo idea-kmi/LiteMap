@@ -44,19 +44,27 @@
 	$CONTEXT = $CFG->USER_CONTEXT;
 	$userid = optional_param("userid",$USER->userid,PARAM_ALPHANUMEXT);
 	$user = getUser($userid,'long');
-	if($user instanceof Error){
+	if($user instanceof Hub_Error){
    		// Check if Users table has OriginalID field and if so check if this userid is an old ID and adjust.
 		$params = array();
 		$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
 		if ($resArray !== false) {
-			if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count > 0) {
 				$array = $resArray[0];
 				if (isset($array['OriginalID'])) {
 					$params = array();
 					$params[0] = $userid;
 					$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
 					if ($resArray2 !== false) {
-						if (count($resArray2) > 0) {
+						$count2 = 0;
+						if (is_countable($resArray2)) {
+							$count2 = count($resArray2);
+						}
+						if ($count2 > 0) {
 							$array2 = $resArray2[0];
 							$userid = $array2['UserID'];
 							header("Location: ".$CFG->homeAddress."user.php?userid=".$userid);
@@ -67,7 +75,7 @@
 			}
 		}
     }
-	if($user instanceof Error){
+	if($user instanceof Hub_Error){
 		echo "<h1>".$LNG->ERROR_USER_NOT_FOUND_MESSAGE." : ".$userid."</h1>";
 		include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 		die;
@@ -111,7 +119,7 @@
 	$CONTEXTUSER = $user;
 
 	$in = $user->photo;
-	$imagetype = exif_imagetype($in);
+	$imagetype = @exif_imagetype($in);
 	if ($imagetype == IMAGETYPE_JPEG) {
 		$image = @imagecreatefromjpeg($in);
 	} else if ($imagetype == IMAGETYPE_GIF) {
@@ -127,105 +135,111 @@
     	$imageheight = imagesy($image);
 	}
 ?>
+
 <script type="text/javascript">
+	function getUserFeeds() {
+		args = new Object();
+		args['userid'] = '<?php echo $user->userid;?>';
 
-function getUserFeeds() {
-	args = new Object();
-	args['userid'] = '<?php echo $user->userid;?>';
-
-	var filter = "Issue,Solution,Pro,Con,Argument,Idea";
-	args['filternodetypes'] = filter;
-	getNodesFeed(args);
-}
-
+		var filter = "Issue,Solution,Pro,Con,Argument,Idea";
+		args['filternodetypes'] = filter;
+		getNodesFeed(args);
+	}
 </script>
 
-<?php
-	if(isset($USER->userid) && $USER->userid == $userid){
-		echo '<div class="myhubtitlediv"><h1 class="myhubtitle">'.$LNG->HEADER_MY_HUB_LINK.'</h1></div>';
-}?>
-
-<div id="context" class="peoplebackpale" style="float:left;width: 100%;">
-
-	<div id="contextimage" style="padding-top: 5px;"><img style="padding:5px;padding-bottom:0px;float:left;" <?php if (isset($imageheight) && $imageheight > 100) { echo 'height="100"'; } ?> src="<?php print $user->photo;?>"/></div>
-	<div id="contextinfo" style="float:left;margin-left:5px;padding-top:10px;">
-		<h1><?php print $user->name; ?></h1>
-
-		<div id='followarea'>
-		<?php if (isset($USER->userid) && $USER->userid != "" && $USER->userid != $user->userid) {
-
-			/** GETTING USER FROM CACHE MESSES THIS UP WHEN REFRESH AFTER FOLLOW CLICKED, SO GET INFO DIRECTLY **/
-			$userfollow = "N";
-			$params = array();
-			$params[0] = $USER->userid;
-			$params[1] = $user->userid;
-			$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_FOLLOW, $params);
-			if ($resArray !== false) {
-				$count = count($resArray);
-				if ($count > 0) {
-					$userfollow = "Y";
-				}
-			}
-
-			if ($userfollow == "Y") { ?>
-				<div style="float: left; margin-top:5px; margin-bottom:10px;">
-					<img style="cursor: pointer" onclick="javascript:unfollowMyUser('<?php echo $user->userid;?>')" border="0" id="follow<?php echo $user->userid; ?>" src="<?php echo $HUB_FLM->getImagePath('following.png'); ?>" alt="<?php echo $LNG->USER_UNFOLLOW_BUTTON; ?>" title="<?php echo $LNG->USER_UNFOLLOW_HINT; ?>"></img>
-				</div>
-			<?php } else {?>
-				<div style="float: left;margin-top:5px; margin-bottom:10px;">
-					<img style="cursor: pointer" onclick="javascript:followMyUser('<?php echo $user->userid;?>')" border="0" id="follow<?php echo $user->userid; ?>" src="<?php echo $HUB_FLM->getImagePath('follow.png'); ?>" alt="<?php echo $LNG->USER_FOLLOW_BUTTON; ?>" title="<?php echo $LNG->USER_FOLLOW_HINT; ?>"></img>
-				</div>
-			<?php }
-		}?>
+<div class="container-fluid">
+	<?php if(isset($USER->userid) && $USER->userid == $userid){ ?>
+		<div class="p-2">
+			<h1 class="myhubtitle"><?php echo $LNG->HEADER_MY_HUB_LINK; ?></h1>
 		</div>
+	<?php }	?>
 
-		<?php if ($CFG->hasRss && (($USER->userid != "" && $USER->userid != $user->userid) || $USER->userid == "")) { ?>
-			<div style="float: left;margin-top:3px; margin-bottom:10px; margin-left:10px;">
-				<img class="active" src="<?php echo $HUB_FLM->getImagePath('feed-icon-20x20.png'); ?>" onclick="getUserFeeds()" title="<?php echo $LNG->USER_RSS_HINT; ?> <?php echo $user->name; ?>" alt="<?php echo $LNG->USER_RSS_BUTTON; ?>"/>
+	<div id="context" class="row collapse multi-collapse show">
+		<div class="col">
+			<div id="contextimage" class="row">
+				<div class="col-auto">
+					<img class="image-fluid" alt="" <?php if (isset($imageheight) && $imageheight > 100) { echo 'height="100"'; } ?> src="<?php print $user->photo;?>"/>
+				</div>	
+				<h1 class="col-auto"><?php print $user->name; ?></h1>
 			</div>
-		<?php } ?>
+		</div>
+		<div class="col">
+			<div id="contextinfo">
+				<div id='followarea'>
+					<?php if (isset($USER->userid) && $USER->userid != "" && $USER->userid != $user->userid) {
 
-		<?php if (isset($USER->userid) && $USER->userid != "" && $USER->userid != $user->userid) {
-			if ($user->getStatus() == $CFG->USER_STATUS_REPORTED) { ?>
-			<div style="float:left;margin-left:10px;margin-top:5px;">
-				<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>" title="<?php echo $LNG->SPAM_USER_REPORTED; ?>" alt="<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>"/>
+						/** GETTING USER FROM CACHE MESSES THIS UP WHEN REFRESH AFTER FOLLOW CLICKED, SO GET INFO DIRECTLY **/
+						$userfollow = "N";
+						$params = array();
+						$params[0] = $USER->userid;
+						$params[1] = $user->userid;
+						$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_FOLLOW, $params);
+						if ($resArray !== false) {
+							$count = 0;
+							if (is_countable($resArray)) {
+								$count = count($resArray);
+							}
+							if ($count > 0) {
+								$userfollow = "Y";
+							}
+						}
+
+						if ($userfollow == "Y") { ?>
+							<div class="d-block">
+								<img style="cursor: pointer" onclick="javascript:unfollowMyUser('<?php echo $user->userid;?>')" id="follow<?php echo $user->userid; ?>" src="<?php echo $HUB_FLM->getImagePath('following.png'); ?>" alt="<?php echo $LNG->USER_UNFOLLOW_BUTTON; ?>" title="<?php echo $LNG->USER_UNFOLLOW_HINT; ?>"></img>
+							</div>
+						<?php } else {?>
+							<div class="d-block">
+								<img style="cursor: pointer" onclick="javascript:followMyUser('<?php echo $user->userid;?>')" id="follow<?php echo $user->userid; ?>" src="<?php echo $HUB_FLM->getImagePath('follow.png'); ?>" alt="<?php echo $LNG->USER_FOLLOW_BUTTON; ?>" title="<?php echo $LNG->USER_FOLLOW_HINT; ?>"></img>
+							</div>
+						<?php }
+					}?>
+				</div>
+				<?php if ($CFG->hasRss && (($USER->userid != "" && $USER->userid != $user->userid) || $USER->userid == "")) { ?>
+					<div class="d-block">
+						<img class="active" src="<?php echo $HUB_FLM->getImagePath('feed-icon-20x20.png'); ?>" onclick="getUserFeeds()" title="<?php echo $LNG->USER_RSS_HINT; ?> <?php echo $user->name; ?>" alt="<?php echo $LNG->USER_RSS_BUTTON; ?>"/>
+					</div>
+				<?php } ?>
+				<?php if (isset($USER->userid) && $USER->userid != "" && $USER->userid != $user->userid) {
+					if ($user->getStatus() == $CFG->USER_STATUS_REPORTED) { ?>
+						<div class="d-block">
+							<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>" title="<?php echo $LNG->SPAM_USER_REPORTED; ?>" alt="<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>"/>
+						</div>
+					<?php } else if ($user->getStatus() == $CFG->USER_STATUS_ACTIVE)  { ?>
+						<div class="d-block">
+							<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam.png'); ?>" onclick="reportUserSpamAlert(this, '<?php echo $user->userid; ?>')" title="<?php echo $LNG->SPAM_USER_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>"/>
+						</div>
+					<?php } else { ?>
+						<div class="d-block">
+							<img class="active" src="<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>" title="<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>"/>
+						</div>
+					<?php } 
+				} ?>
 			</div>
-			<?php } else if ($user->getStatus() == $CFG->USER_STATUS_ACTIVE)  { ?>
-			<div style="float:left;margin-left:10px;margin-top:5px;">
-				<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam.png'); ?>" onclick="reportUserSpamAlert(this, '<?php echo $user->userid; ?>')" title="<?php echo $LNG->SPAM_USER_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>"/>
-			</div>
-			<?php } else { ?>
-			<div style="float:left;margin-left:10px;margin-top:5px;">
-				<img class="active" src="<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>" title="<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>"/>
-			</div>
-		<?php } } ?>
+		</div>
 	</div>
+
+	<?php
+		$args = array();
+
+		$args["userid"] = $user->userid;
+		$args["start"] = $start;
+		$args["max"] = $max;
+
+		$wasEmpty = false;
+		if ($orderby == "") {
+			$args["orderby"] = 'date';
+			$wasEmpty = true;
+		} else {
+			$args["orderby"] = $orderby;
+		}
+		$args["sort"] = $sort;
+		$args["q"] = $query;
+		$args["title"] = $user->name;
+
+		displayUserTabs($CFG->USER_CONTEXT,$args, $wasEmpty);
+	?>
 </div>
-
 <?php
-	$args = array();
-
-	$args["userid"] = $user->userid;
-	$args["start"] = $start;
-	$args["max"] = $max;
-
-	$wasEmpty = false;
-	if ($orderby == "") {
-		$args["orderby"] = 'date';
-		$wasEmpty = true;
-	} else {
-		$args["orderby"] = $orderby;
-	}
-	$args["sort"] = $sort;
-	$args["q"] = $query;
-	$args["title"] = $user->name;
-
-	echo '<div style="float:left;width: 100%; height: 100%;">';
-	echo '<div style="clear:both;"></div>';
-
-	displayUserTabs($CFG->USER_CONTEXT,$args, $wasEmpty);
-
-	echo "</div>";
-
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

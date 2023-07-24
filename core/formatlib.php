@@ -85,9 +85,9 @@ function format_output($object){
     global $FORMAT,$CFG,$ERROR,$LNG,$HUB_FLM;
     $method = optional_param("method","",PARAM_ALPHA);
 
-    if($FORMAT && $FORMAT->allowed_methods() != null && !$object instanceof error){
+    if($FORMAT && $FORMAT->allowed_methods() != null && !$object instanceof Hub_Error){
         if(!in_array($method,$FORMAT->allowed_methods())){
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidMethodForTypeError();
             include($HUB_FLM->getCodeDirPath("api/formaterror.php"));
             die;

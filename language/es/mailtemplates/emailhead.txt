@@ -14,4 +14,4 @@ a {
 </stilo>
 </encabezado>
 <cuerpo>
-<img src="%s" alt="Evidence Hub logo"/>
+<img src="%s" alt="LiteMap logo"/>

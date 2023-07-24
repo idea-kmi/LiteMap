@@ -361,22 +361,6 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 	  .on("brush", brushmove)
 	  .on("brushend", brushend);
 
-    // Init tooltip
-    var tipScatterPlot = d3.tip()
-		.attr('class', 'd3-tip')
-		.offset([10, 50])
-		.html(function(d) {
-			var hint = '<div class="selectedback" style="padding:2px;border:1px solid dimgray">';
-			if (d.id != d.name) {
-				hint += d.name + " (click to view)";
-			} else {
-				hint += d.name;
-			}
-			hint += '</div>';
-			return hint;
-		})
-    svg.call(tipScatterPlot);
-
 	svg.selectAll(".x.axis")
 	  .data(traits)
 	  .enter().append("g")
@@ -427,19 +411,6 @@ function createScatterPlotMatrixD3Vis(container, data, width) {
 			.attr("cy", function(d) { return y(d[p.y]); })
 			.attr("r", 3)
 			.style("fill", function(d) { return color(d.name); });
-
-			/*.on('click', function (d,i) {
-				if (d.id != d.name) {
-					loadDialog('details', URL_ROOT+"explore.php?id="+d.id, 1024,768);
-				}
-			})
-			.on('mouseover', function (d,i) {
-				tipScatterPlot.show(d)
-			})
-			.on('mouseout', function (d,i) {
-			  	tipScatterPlot.hide(d)
-			});
-			*/
 	}
 
 	var brushCell;

@@ -86,7 +86,10 @@ class ConnectionSet {
 		$resArray = $DB->select($sql, $params);
 
         //create new nodeset and loop to add each node to the set
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalconns;
         $this->start = $start;
         $this->count = $count;
@@ -111,7 +114,10 @@ class ConnectionSet {
 
         $checkArray = array();
 
-		$counti = count($conns);
+		$counti = 0;
+		if (is_countable($conns)) {
+			$counti = count($conns);
+		}
         for ($i=0; $i < $counti; $i++) {
 			$array = $conns[$i];
 			if (!array_key_exists($array['TripleID'],$checkArray)) {
@@ -122,7 +128,10 @@ class ConnectionSet {
 			}
         }
 
-        $this->totalno = count($this->connections);
+		$this->totalno = 0;
+		if (is_countable($this->connections)) {
+			$this->totalno = count($this->connections);
+		}
         $this->count =  $this->totalno;
 
         return $this;

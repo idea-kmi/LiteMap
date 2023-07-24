@@ -66,9 +66,12 @@ class Role {
 		$params[0] = $this->roleid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-	 			$ERROR = new error;
+	 			$ERROR = new Hub_Error;
 	    		$ERROR->createRoleNotFoundError($this->roleid);
 	            return $ERROR;
             } else {
@@ -109,9 +112,12 @@ class Role {
 		$params[1] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_BY_NAME_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-	 			$ERROR = new error;
+	 			$ERROR = new Hub_Error;
 	    		$ERROR->createRoleNotFoundError($rolename);
 	            return $ERROR;
 	        } else {
@@ -154,7 +160,10 @@ class Role {
 		$params[1] = $rolename;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_ADD_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
         		for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -263,7 +272,10 @@ class Role {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_DELETE_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 
 			// Get the default role for this user
 			$defRoleID = getDefaultRoleID();
@@ -371,7 +383,10 @@ class Role {
 		$params[1] = $CFG->DEFAULT_NODE_TYPE;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_DEFAULT_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -402,7 +417,7 @@ class Role {
     	global $LNG;
 
         // needs to be logged in - that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -415,7 +430,7 @@ class Role {
     function canedit(){
         global $DB,$USER,$HUB_SQL,$LNG;
 
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -430,7 +445,10 @@ class Role {
 		$params[1] = $this->roleid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_CAN_EDIT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -447,7 +465,7 @@ class Role {
     function candelete(){
         global $DB,$USER,$HUB_SQL,$LNG;
 
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -462,7 +480,10 @@ class Role {
 		$params[1] = $this->roleid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_ROLE_CAN_DELETE, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }

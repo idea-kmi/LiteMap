@@ -67,12 +67,12 @@ function displayStreamGraphNVD3Vis(container, data, width) {
 	});
 
 	var chart = nv.models.stackedAreaChart()
+	      .options({transition: 500})
 		  .margin({right: 100})
 		  .x(function(d) { return d[0] })   //We can modify the data accessor functions...
 		  .y(function(d) { return d[1] })   //...in case your data is formatted differently.
 		  .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
 		  .rightAlignYAxis(true)      //Lets move the y-axis to the right side.
-		  .transitionDuration(500)
 		  .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
 		  .clipEdge(true);
 
@@ -113,17 +113,6 @@ function createStreamGraphD3Vis(container, data, width) {
 	var width = width - margin.left - margin.right - 50;
 	var height = 400 - margin.top - margin.bottom;
 
-	/*
-	var tooltip = d3.select(container)
-		.append("div")
-		.attr("class", "remove")
-		.style("position", "relative")
-		.style("z-index", "20")
-		.style("display", "none")
-		.style("top", "30px")
-		.style("left", "55px");
-	*/
-
 	var x = d3.time.scale().range([0, width]);
 	var y = d3.scale.linear().range([height-10, 0]);
 	var z = d3.scale.ordinal().range(colorrange);
@@ -162,18 +151,6 @@ function createStreamGraphD3Vis(container, data, width) {
 		.attr("height", height + margin.top + margin.bottom)
 	  	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    /*var tooltip = d3.tip()
-		.attr('class', 'd3-tip')
-		.offset([0, 0])
-		.html(function(d) {
-			var hint = '<div class="selectedback" style="padding:2px;border:1px solid dimgray">';
-			hint += d.key+": "+d.value;
-			hint += '</div>';
-			return hint;
-		});
-    svg.call(tooltip);
-    */
 
 	data.forEach(function(d) {
 		d.date = format.parse(d.date);
@@ -234,29 +211,12 @@ function createStreamGraphD3Vis(container, data, width) {
 			datearray[k] = selected[k].date
 			datearray[k] = datearray[k].getMonth() + datearray[k].getDate();
 		  }
-
-		  var mousedate = datearray.indexOf(invertedx);
-		  if (d.values[mousedate]) {
-			  //var pro = d.values[mousedate].value;
-
-			 //var temp = {"key":d.key, "value":pro};
-
-  			  //tooltip.show(temp);
-
-			  //d3.select(this)
-			  //.classed("hover", true)
-			  //.attr("stroke", strokecolor)
-			  //.attr("stroke-width", "0.5px"),
-			  //tooltip.html( "<p>" + d.key + ": " + pro + "</p>" ).style("display", "block");
-		   }
 		})
 		.on("mouseout", function(d, i) {
 			svg.selectAll(".layer")
 			.transition()
 			.duration(250)
 			.attr("opacity", "1");
-
-			//tooltip.hide(d);
 		});
 
 

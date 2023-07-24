@@ -37,7 +37,7 @@ function loadSocialNet() {
 		$("social-group-div").insert('<div style="float:left;font-weight:12pt;padding:10px;"><?php echo $LNG->GRAPH_NOT_SUPPORTED; ?></div>');
 		return;
 	}
-1
+
 	/**** SETUP THE GRAPH ****/
 
 	var graphDiv = new Element('div', {'id':'graphUserDiv', 'style': 'clear:both;float:left'});
@@ -102,7 +102,7 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 			var views = json.viewset[0].views;
 			var concount = 0;
 
-			//alert(views.length);
+			//console.log(views.length);
 			if (views.length > 0) {
 				for(var i=0; i< views.length; i++){
 					var view = views[i].view;
@@ -111,8 +111,9 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 						for (var j=0; j<conns.length; j++) {
 							var viewconnection = conns[j].viewconnection;
 							var c = viewconnection.connection[0].connection;
-							addConnectionToFDGraphSocial(c, forcedirectedGraph);
-							concount++;
+							if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
+								concount++;
+							}
 						}
 					}
 				}
@@ -121,7 +122,13 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 			//$('graphConnectionCount').innerHTML = "";
 			//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+concount+'</span>');
 
-			if (concount > 0) {
+			// but how many social connections are there from these connections?
+			let socialcount = 0;
+			for(var i in forcedirectedGraph.graph.nodes) {
+				socialcount++;
+			}
+
+			if (concount > 0 && socialcount > 0) {
 				if (!forcedirectedGraph.root) {
 					computeMostConnectedNode(forcedirectedGraph);
 				}

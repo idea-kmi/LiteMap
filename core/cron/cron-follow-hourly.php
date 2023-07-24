@@ -63,11 +63,15 @@ $currentUser = $USER;
 
 $us = getFollowEmailUsers('hourly');
 $users = $us->users;
-$count = count($users);
+
+$count = 0;
+if (is_countable($users)){
+	$count = count($users);
+}
 
 for ($i=0; $i<$count; $i++) {
 	$user = $users[$i];
-	if (!$user instanceof Error) {
+	if (!$user instanceof Hub_Error) {
 		$userid = $user->userid;
 
 		//if ($userid != '137108251921190199260') { // '1722128760393014001402920636'
@@ -87,7 +91,11 @@ for ($i=0; $i<$count; $i++) {
 
 		// GET PEOPLE THEY FOLLOW
 		$followingusers = getUsersBeingFollowedByMe($userid);
-		$countj = count($followingusers);
+
+		$countj = 0;
+		if (is_countable($followingusers)){
+			$countj = count($followingusers);
+		}
 		for ($j=0; $j<$countj;$j++) {
 			$next = $followingusers[$j];
 			$name = $next['Name'];
@@ -103,7 +111,10 @@ for ($i=0; $i<$count; $i++) {
 		// GET ITEMS THEY FOLLOW
 		$itemArray = getItemsBeingFollowedByMe($userid);
 		$k=0;
-		$countk = count($itemArray);
+		$countk = 0;
+		if (is_countable($itemArray)){
+			$countk = count($itemArray);
+		}
 		for ($k = 0; $k<$countk; $k++) {
 			$array = $itemArray[$k];
 
@@ -113,8 +124,11 @@ for ($i=0; $i<$count; $i++) {
 
 			$as = getNodeActivity($nodeid, $followlastrun);
 			$activities = $as->activities;
-
-			if (count($activities) > 0) {
+			$countactivities = 0;
+			if (is_countable($activities)){
+				$countactivities = count($activities);
+			}
+			if ($countactivities > 0) {
 				$nextMessage .= '<br /><br /><hr />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($nodetype, false).': <span style="font-weight:bold">'. ($nodename).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
 				$nextMessage .= processActivityList($activities, $array, $user);
 			}
@@ -123,7 +137,11 @@ for ($i=0; $i<$count; $i++) {
 			if ($nodetype == "Issue") {
 				$conSet = getDebate($nodeid);
 				$conns = $conSet->connections;
-				$countl = count($conns);
+
+				$countl = 0;
+				if (is_countable($conns)){
+					$countl = count($conns);
+				}
 				for ($l=0; $l < $countl; $l++) {
 					$con = $conns[$l];
 					$from = $con->from;
@@ -137,8 +155,11 @@ for ($i=0; $i<$count; $i++) {
 
 					$as = getNodeActivity($from->nodeid, $followlastrun);
 					$activities = $as->activities;
-
-					if (count($activities) > 0) {
+					$counta = 0;
+					if (is_countable($activities)){
+						$counta = count($activities);
+					}
+					if ($counta > 0) {
 						$nextMessage .= '<br /><br /><br />'.$LNG->ADMIN_CRON_FOLLOW_ACTIVITY_FOR.' '.getNodeTypeText($node['NodeType'], false).': <span style="font-weight:bold">'. ($from->name).'</span> <a href="'.$CFG->homeAddress.'ui/popups/activityviewer.php?nodeid='.$from->nodeid.'&fromtime='.$followlastrun.'">'.$LNG->ADMIN_CRON_FOLLOW_EXPLORE_LINK.'</a>';
 						$nextMessage .= processActivityList($activities, $node, $user);
 					}

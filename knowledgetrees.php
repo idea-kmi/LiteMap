@@ -51,7 +51,7 @@
 
     $node = getNode($nodeid);
 
-    if($node instanceof Error){
+    if($node instanceof Hub_Error){
         echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
         include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
         die;
@@ -69,9 +69,13 @@
    // now trigger the js to load data
     $argsStr = "{";
     $keys = array_keys($args);
-    for($i=0;$i< sizeof($keys); $i++){
+	$keycount = 0;
+	if (is_countable($keys)) {
+		$keycount = count($keys);
+	}
+    for($i=0;$i< $keycount; $i++){
         $argsStr .= '"'.$keys[$i].'":"'.addslashes($args[$keys[$i]]).'"';
-        if ($i != (sizeof($keys)-1)){
+        if ($i != ($keycount-1)){
             $argsStr .= ',';
         }
     }
@@ -91,7 +95,7 @@
 	echo "</script>";
 
 	try {
-		$jsonnode = json_encode($node);
+		$jsonnode = json_encode($node, JSON_INVALID_UTF8_IGNORE);
 	} catch (Exception $e) {
 		echo 'Caught exception: ',  $e->getMessage(), "<br>";
 	}
@@ -103,104 +107,105 @@
 	echo "</script>";
 ?>
 
-<script type='text/javascript'>
+<div class="container-fluid">
+	<div class="row p-3">		
+		<div class="col">
+			<script type='text/javascript'>
+				Event.observe(window, 'load', function() {
+					var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
+					$("tab-content-explore-linear").insert(mapdetailsdiv);
+					buildNodeTitle('trees');
+					loadKnowledgeTree(NODE_ARGS['nodeid'], "");
+				});
+				function loadSelecteditemNew(nodetofocusid) {
+					getConnections(nodetofocusid);
+				}
+			</script>
 
-Event.observe(window, 'load', function() {
-	var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
-	$("tab-content-explore-linear").insert(mapdetailsdiv);
+			<?php if ($nodetype == 'Challenge') { ?>
+				<div id="nodearealineartitle" class="challengeback challengeborder nodearealineartitle">
+					<div class="challengeback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Issue') { ?>
+				<div id="nodearealineartitle" class="issueback issueborder nodearealineartitle">
+					<div class="issueback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Claim') { ?>
+				<div id="nodearealineartitle" class="claimback claimborder nodearealineartitle">
+					<div class="claimback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Solution') { ?>
+				<div id="nodearealineartitle" class="solutionback solutionborder nodearealineartitle">
+					<div class="solutionback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Pro') { ?>
+				<div id="nodearealineartitle" class="proback proborder nodearealineartitle">
+					<div class="proback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Con') { ?>
+				<div id="nodearealineartitle" class="conback conborder nodearealineartitle">
+					<div class="conback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Argument') { ?>
+				<div id="nodearealineartitle" class="evidenceback evidenceborder nodearealineartitle">
+					<div class="evidenceback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Idea') { ?>
+				<div id="nodearealineartitle" class="plainback plainborder nodearealineartitle">
+					<div class="eplainback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } ?>
 
-	buildNodeTitle('trees');
-	loadKnowledgeTree(NODE_ARGS['nodeid'], "");
-});
+			<div class="p-1 border-bottom d-block">
+				<div id="headertoolbar" class="d-flex gap-4 headertoolbar align-items-center px-1 py-2"></div>
+			</div>
 
-function loadSelecteditemNew(nodetofocusid) {
-	getConnections(nodetofocusid);
-}
+			<div id="tabber" class="mt-2">
+				<div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
 
-</script>
-
-
-<?php if ($nodetype == 'Challenge') { ?>
-	<div id="nodearealineartitle" class="challengeback challengeborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="challengeback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Issue') { ?>
-	<div id="nodearealineartitle" class="issueback issueborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="issueback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Claim') { ?>
-	<div id="nodearealineartitle" class="claimback claimborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="claimback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Solution') { ?>
-	<div id="nodearealineartitle" class="solutionback solutionborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="solutionback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Pro') { ?>
-	<div id="nodearealineartitle" class="proback proborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="proback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Con') { ?>
-	<div id="nodearealineartitle" class="conback conborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="conback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Argument') { ?>
-	<div id="nodearealineartitle" class="evidenceback evidenceborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="evidenceback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Idea') { ?>
-	<div id="nodearealineartitle" class="plainback plainborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="eplainback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } ?>
-
-<div style="border-bottom:1px solid #E8E8E8; width:100%;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-	<div id="headertoolbar" style="clear:both;float:left;margin-top:10px;margin-left:5px;"></div>
-</div>
-
-<div id="tabber" style="clear:both;float:left;width:100%;">
-    <div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
-       	<div id='tab-content-explore-linear' class='explorepagesection'>
-			<div class="linearpagediv" id="linearpagediv">
-				<div style="clear:both;float:left; width 100%;margin-left:5px;">
-					<div style="clear:both;float:left;margin-top:5px;margin-right:5px;">
-						<h2 style="margin-bottom:5px;"><div style="font-size:13pt;font-style: italic;float:left; "><?php echo $LNG->VIEWS_LINEAR_TITLE; ?></div></h2>
-
-						<div style="clear:both;float:left;margin-bottom:5px;margin-top:5px;">
-							<span style="color: dimgray; font-size:10pt; font-weight:normal"><?php echo $LNG->DEABTES_COUNT_MESSAGE_PART1; ?> <span id="debatecount" style="font-size:12pt; font-weight:bold">0</span> <span id="maps-name"><?php echo $LNG->MAPS_NAME; ?></span></span>
-						</div>
-						<div style="clear:both;float:left;margin-bottom:5px;">
-							<span id="lineardebateheading" style="margin-top:3px;"></span>
+					<div id='tab-content-explore-linear' class='explorepagesection'>
+						<div class="linearpagediv" id="linearpagediv">
+							<div>
+								<div>
+									<h2><div><?php echo $LNG->VIEWS_LINEAR_TITLE; ?></div></h2>
+									<div>
+										<div class="alert alert-info"><?php echo $LNG->DEABTES_COUNT_MESSAGE_PART1; ?> <span id="debatecount">0</span> <span id="maps-name"><?php echo $LNG->MAPS_NAME; ?></span></div>
+									</div>
+									<div>
+										<span id="lineardebateheading"></span>
+									</div>
+								</div>
+								<div class="linearcontent" id="content-list"></div>
+								<div class="linearcontent" id="content-list-expanded" style="display:none;"></div>
+							</div>
+							<div id="treeaddarea" style="display:none;"></div>
 						</div>
 					</div>
-					<div class="linearcontent" id="content-list"></div>
-					<div class="linearcontent" id="content-list-expanded" style="display:none;"></div>
 				</div>
-				<div id="treeaddarea" style="display:none;clear:both;float:left;margin:0px;padding: 0px;margin-top:10px;margin-left:10px;background:white;"></div>
 			</div>
 		</div>
 	</div>

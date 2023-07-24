@@ -186,23 +186,46 @@ function getLinkCurve() {
 	return linkcurve;
 }
 
-
 function createSocialNetworkGraphKey() {
-	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow', 'style':'width:100%;margin-top:5px;'});
+	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow mb-3 mt-3'});
 
-	var key = new Element("div", {'id':'keydiv','style':'float:left;'});
+	var key = new Element("div", {'id':'key', 'class':'key d-flex flex-row gap-3'});
 	var text = "";
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: #E9157F; color: black; font-weight:bold;"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_MOST; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:#F8C7D9; color: black; font-weight:bold;"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_HIGHLY; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: #C6ECFE; color: black; font-weight:bold;"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_MODERATELY; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: #E4E2E2; color: black; font-weight:bold;"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_SLIGHTLY; ?></span></div>';
-	text += '<div style="float:left;"><span style="border: 3px solid yellow; color: black; font-weight:bold"><?php echo $LNG->NETWORKMAPS_KEY_SELECTED_ITEM; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-most"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_MOST; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-high"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_HIGHLY; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-moderate"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_MODERATELY; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-slight"><?php echo $LNG->NETWORKMAPS_KEY_SOCIAL_SLIGHTLY; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-selected"><?php echo $LNG->NETWORKMAPS_KEY_SELECTED_ITEM; ?></span></div>';
+
+	key.insert(text);
+	tb1.insert(key);
+	return tb1;
+}
+
+
+/**
+ * Create the key for the graph node types etc...
+ * @return a div holding the graph key.
+ */
+function createGroupNetworkGraphKey() {
+	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow mb-3'});
+
+	var key = new Element("div", {'id':'key', 'class':'key d-flex flex-row gap-3'});
+	var text = "";
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+challengebackpale+';"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+issuebackpale+';"><?php echo $LNG->ISSUE_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+solutionbackpale+';"><?php echo $LNG->SOLUTION_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+probackpale+';"><?php echo $LNG->PRO_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+conbackpale+';"><?php echo $LNG->CON_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+evidencebackpale+';"><?php echo $LNG->ARGUMENT_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+argumentbackpale+';"><?php echo $LNG->COMMENT_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-social-selected"><?php echo $LNG->NETWORKMAPS_KEY_SELECTED_ITEM; ?></span></div>';
 
 	key.insert(text);
 	tb1.insert(key);
 
-	//var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left-25px;'});
-	//tb1.insert(count);
+	var count = new Element("div", {'id':'graphConnectionCount', 'class':'connections-count'});
+	key.insert(count);
 
 	return tb1;
 }
@@ -212,50 +235,23 @@ function createSocialNetworkGraphKey() {
  * @return a div holding the graph key.
  */
 function createNetworkGraphKey() {
-	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow', 'style':'float:left;margin-top:10px;'});
+	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow mb-3'});
 
-	var key = new Element("div", {'id':'keydiv', 'style':'float:left;'});
+	var key = new Element("div", {'id':'key', 'class':'key d-flex flex-row gap-3'});
 	var text = "";
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+challengebackpale+'; color: black; font-weight:bold"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
-	text+= '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+issuebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ISSUE_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+solutionbackpale+'; color: black; font-weight:bold"><?php echo $LNG->SOLUTION_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+probackpale+'; color: black; font-weight:bold"><?php echo $LNG->PRO_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+conbackpale+'; color: black; font-weight:bold"><?php echo $LNG->CON_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+evidencebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ARGUMENT_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+argumentbackpale+'; color: black; font-weight:bold"><?php echo $LNG->COMMENT_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+challengebackpale+';"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+issuebackpale+';"><?php echo $LNG->ISSUE_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+solutionbackpale+';"><?php echo $LNG->SOLUTION_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+probackpale+';"><?php echo $LNG->PRO_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+conbackpale+';"><?php echo $LNG->CON_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+evidencebackpale+';"><?php echo $LNG->ARGUMENT_NAME; ?></span></div>';
+	text += '<div><span class="networkmaps-key key-network-type" style="background: '+argumentbackpale+';"><?php echo $LNG->COMMENT_NAME; ?></span></div>';
 
 	key.insert(text);
 	tb1.insert(key);
 
-	var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left-25px;'});
-	tb1.insert(count);
-
-	return tb1;
-}
-
-/**
- * Create the key for the graph node types etc...
- * @return a div holding the graph key.
- */
-function createGroupNetworkGraphKey() {
-	var tb1 = new Element("div", {'id':'graphkeydivtoolbar','class':'toolbarrow', 'style':'float:left;margin-top:10px;'});
-
-	var key = new Element("div", {'id':'keydiv', 'style':'float:left;'});
-	var text = "";
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+challengebackpale+'; color: black; font-weight:bold"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
-	text+= '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+issuebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ISSUE_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+solutionbackpale+'; color: black; font-weight:bold"><?php echo $LNG->SOLUTION_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+probackpale+'; color: black; font-weight:bold"><?php echo $LNG->PRO_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+conbackpale+'; color: black; font-weight:bold"><?php echo $LNG->CON_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+evidencebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ARGUMENT_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background:'+argumentbackpale+'; color: black; font-weight:bold"><?php echo $LNG->COMMENT_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="border: 3px solid yellow; color: black; font-weight:bold"><?php echo $LNG->NETWORKMAPS_KEY_SELECTED_ITEM; ?></span></div>';
-
-	key.insert(text);
-	tb1.insert(key);
-
-	var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left-25px;'});
-	tb1.insert(count);
+	var count = new Element("div", {'id':'graphConnectionCount', 'class':'connections-count'});
+	key.insert(count);
 
 	return tb1;
 }
@@ -265,75 +261,77 @@ function createGroupNetworkGraphKey() {
  */
 function createBasicGraphToolbar(forcedirectedGraph, contentarea) {
 
-	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding-top:5px;display:block;'});
+	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'graphmaintoolbar toolbarrow col-12'});
 
-	var button = new Element("button", {'id':'expandbutton','style':'float:left;margin-left:8px;padding:3px;','title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>'});
-	var icon = new Element("img", {'id':'expandicon', 'src':"<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>", 'border':'0', 'title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>'});
-	button.insert(icon);
-	tb2.insert(button);
+	// var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'graphmaintoolbar toolbarrow d-flex flex-row justify-content-between gap-2', });
 
-	var link = new Element("a", {'id':'expandlink', 'title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>', 'style':'float:left;cursor:pointer;margin-top:7px;margin-left:5px;'});
-	link.insert('<span id="linkbuttonsvn"><?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?></span>');
+	
+	var graphmaintoolbarButtons = new Element("div", {'id':'graphmaintoolbarButtons','class':'graphmaintoolbarButtons d-flex flex-wrap justify-content-start gap-2 align-items-start' });
+
+	var link = new Element("a", {
+		'data-bs-toggle':'collapse',
+		'data-bs-target':'.multi-collapse',
+		'aria-expanded':'true',
+		'aria-controls':'mainnav header footer tabs context',		
+		'id':'expandlink', 
+		'title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>', 
+		'class':'map-btn'
+	});
+
+	link.insert('<span id="linkbuttonsvn"><i class="fas fa-expand-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?></span>');
 
 	var handler = function() {
-		if ($('header').style.display == "none") {
-			$('linkbuttonsvn').update('<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>');
-			$('expandicon').src="<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>";
-			reduceMap(contentarea, forcedirectedGraph);
+		if (expandlink.getAttribute("aria-expanded") == "true") {
+			$('linkbuttonsvn').update('<i class="fas fa-expand-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>');
+			resizeFDGraph(forcedirectedGraph, contentarea, true);
 		} else {
-			$('linkbuttonsvn').update('<?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>');
-			$('expandicon').src="<?php echo $HUB_FLM->getImagePath('reduce.gif'); ?>";
-			enlargeMap(contentarea, forcedirectedGraph);
+			$('linkbuttonsvn').update('<i class="fas fa-compress-alt fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>');
+			resizeFDGraph(forcedirectedGraph, contentarea, true);
 		}
 	};
 	Event.observe(link,"click", handler);
-	Event.observe(button,"click", handler);
-	tb2.insert(link);
+	graphmaintoolbarButtons.insert(link);
 
-	var zoomOut = new Element("div", {'class':'active', 'style':'float:left;margin-left: 30px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
-	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
-	zoomOut.insert(zoomOuticon);
+	var zoomOut = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
+	zoomOut.insert('<span><i class="fas fa-search-minus fa-lg" aria-hidden="true"></i> <?php echo $LNG->GRAPH_ZOOM_OUT_HINT; ?></span>');
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
 	};
 	Event.observe(zoomOut,"click", zoomOuthandler);
-	tb2.insert(zoomOut);
+	graphmaintoolbarButtons.insert(zoomOut);
 
-	var zoomIn = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
-	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
-	zoomIn.insert(zoomInicon);
+	var zoomIn = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
+	zoomIn.insert('<span><i class="fas fa-search-plus fa-lg" aria-hidden="true"></i> <?php echo $LNG->GRAPH_ZOOM_IN_HINT; ?></span>');
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
 	};
 	Event.observe(zoomIn,"click", zoomInhandler);
-	tb2.insert(zoomIn);
+	graphmaintoolbarButtons.insert(zoomIn);
 
-	var zoom1to1 = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
-	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
-	zoom1to1.insert(zoom1to1icon);
+	var zoom1to1 = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
+	zoom1to1.insert('<span><i class="fas fa-search fa-lg" aria-hidden="true"></i> 1:1 focus</span>');
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
 	};
 	Event.observe(zoom1to1,"click", zoom1to1handler);
-	tb2.insert(zoom1to1);
+	graphmaintoolbarButtons.insert(zoom1to1);
 
-	var zoomFit = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
-	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
-	zoomFit.insert(zoomFiticon);
+	var zoomFit = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
+	zoomFit.insert('<span><i class="fas fa-expand fa-lg" aria-hidden="true"></i> Fit all</span>');
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
 	};
 	Event.observe(zoomFit,"click", zoomFithandler);
-	tb2.insert(zoomFit);
+	graphmaintoolbarButtons.insert(zoomFit);
 
-	var printButton = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
-	var printButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
-	printButton.insert(printButtonicon);
+	var printButton = new Element("button", {'class':'btn btn-link', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
+	printButton.insert('<span><i class="fas fa-print fa-lg" aria-hidden="true"></i> <?php echo $LNG->GRAPH_PRINT_HINT; ?></span>');
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
 	};
 	Event.observe(printButton,"click", printButtonhandler);
-	tb2.insert(printButton);
+	graphmaintoolbarButtons.insert(printButton);
+	tb2.insert(graphmaintoolbarButtons);
 
 	return tb2;
 }
@@ -345,12 +343,12 @@ function createSocialGraphToolbar(forcedirectedGraph,contentarea) {
 
 	var tb2 = createBasicGraphToolbar(forcedirectedGraph,contentarea);
 
-	var button3 = new Element("button", {'id':'viewdetailbutton','style':'margin-left: 30px;padding:3px;margin-bottom:5px;','title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_HINT; ?>'});
-	var icon3 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('profile_sm.png'); ?>", 'border':'0'});
-	button3.insert(icon3);
+	var button3 = new Element("button", {'id':'viewdetailbutton','class':'d-none','title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_HINT; ?>'});
 	tb2.insert(button3);
-	var view3 = new Element("a", {'id':'viewdetaillink', 'title':"<?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_HINT; ?>", 'style':'margin-left:5px;cursor:pointer;'});
-	view3.insert('<span id="viewbuttons"><?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_LINK; ?></span>');
+
+	var view3 = new Element("a", {'id':'viewdetaillink', "class":"map-btn", 'title':"<?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_HINT; ?>"});
+	view3.insert('<span id="viewbuttons"><i class="fas fa-user fa-lg" aria-hidden="true"></i> <?php echo $LNG->NETWORKMAPS_SOCIAL_ITEM_LINK; ?></span>');
+
 	var handler3 = function() {
 		var node = getSelectFDNode(forcedirectedGraph);
 		if (node != null && node != "") {
@@ -366,13 +364,11 @@ function createSocialGraphToolbar(forcedirectedGraph,contentarea) {
 	Event.observe(view3,"click", handler3);
 	tb2.insert(view3);
 
-	var button2 = new Element("button", {'id':'viewdetailbutton','style':'margin-left: 30px;padding:3px;','title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>'});
-	var icon2 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('connection.png'); ?>", 'border':'0'});
-	button2.insert(icon2);
+	var button2 = new Element("button", {'id':'viewdetailbutton','class':'d-none', 'title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>'});
 	tb2.insert(button2);
 
-	var view = new Element("a", {'id':'viewdetaillink', 'title':"<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>", 'style':'margin-left:5px;cursor:pointer;'});
-	view.insert('<span id="viewbuttons"><?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_LINK; ?></span>');
+	var view = new Element("a", {'id':'viewdetaillink', 'class':'map-btn', 'title':"<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>"});
+	view.insert('<span id="viewbuttons"><i class=\"fas fa-link fa-lg\" aria-hidden=\"true\"></i> <?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_LINK; ?></span>');
 	var handler2 = function() {
 		var adj = getSelectFDLink(forcedirectedGraph);
 		var connectionids = adj.getData('connections');
@@ -396,71 +392,21 @@ function createGraphToolbar(forcedirectedGraph,contentarea) {
 
 	var tb2 = createBasicGraphToolbar(forcedirectedGraph,contentarea);
 
-	/*var button2 = new Element("button", {'id':'viewdetailbutton','style':'margin-left: 30px;padding:3px;','title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_HINT; ?>'});
-	var icon2 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('lightbulb-16.png'); ?>", 'border':'0'});
-	button2.insert(icon2);
-	tb2.insert(button2);
-
-	var view = new Element("a", {'id':'viewdetaillink', 'title':"<?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_HINT; ?>", 'style':'margin-left:5px;cursor:pointer;'});
-	view.insert('<span id="viewbuttons"><?php echo $LNG->NETWORKMAPS_EXPLORE_ITEM_LINK; ?></span>');
-	var handler2 = function(e) {
-		var node = getSelectFDNode(forcedirectedGraph);
-		if (node != null && node != "") {
-			var nodeid = node.id;
-
-			var orirole = node.getData('orirole');
-			var orinode = node.getData('orinode');
-			var nodetype = orirole.name;
-
-			//var width = getWindowWidth();
-			//var height = getWindowHeight()-20;
-			//viewNodeDetails(nodeid, nodetype, width, height);
-
-			var pos  = getPosition(contentarea);
-			viewNodeDetailsDiv(nodeid, nodetype, orinode, e, pos.x, pos.y);
-		} else {
-			alert("<?php echo $LNG->NETWORKMAPS_SELECTED_NODEID_ERROR; ?>");
-		}
-	};
-	Event.observe(button2,"click", handler2);
-	Event.observe(view,"click", handler2);
-	tb2.insert(view);
-
-	var button3 = new Element("button", {'id':'viewdetailbutton','style':'margin-left: 30px;padding:3px;margin-bottom:5px;','title':'<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>'});
-	var icon3 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('profile_sm.png'); ?>", 'border':'0'});
-	button3.insert(icon3);
-	tb2.insert(button3);
-	var view3 = new Element("a", {'id':'viewdetaillink', 'title':"<?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_HINT; ?>", 'style':'margin-left:5px;cursor:pointer;'});
-	view3.insert('<span id="viewbuttons"><?php echo $LNG->NETWORKMAPS_EXPLORE_AUTHOR_LINK; ?></span>');
-	var handler3 = function() {
-		var node = getSelectFDNode(forcedirectedGraph);
-		if (node != null && node != "") {
-			var userid = node.getData('oriuser').userid;
-			if (userid != "") {
-				viewUserHome(userid);
-			} else {
-				alert("<?php echo $LNG->NETWORKMAPS_SELECTED_NODEID_ERROR; ?>");
-			}
-		}
-	};
-	Event.observe(button3,"click", handler3);
-	Event.observe(view3,"click", handler3);
-	tb2.insert(view3);
-	*/
-
-	var key = new Element("div", {'id':'keydiv', 'style':'vertical-align:middle;float:left;margin-top:7px;margin-left:25px;'});
+	var key = new Element("div", {'id':'keydiv', 'class':'key d-flex flex-wrap gap-2 align-items-center my-2'});
 	var text = "";
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+challengebackpale+'; color: black; font-weight:bold"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+issuebackpale+'; color: black; font-weight:bold"><?php echo $LNG->ISSUE_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+solutionbackpale+'; color: black; font-weight:bold"><?php echo $LNG->SOLUTION_NAME_SHORT; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+probackpale+'; color: black; font-weight:bold"><?php echo $LNG->PRO_NAME; ?></span></div>';
-	text += '<div style="float:left;margin-right:5px;"><span style="padding:3px;background: '+conbackpale+'; color: black; font-weight:bold"><?php echo $LNG->CON_NAME; ?></span></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+challengebackpale+';"><?php echo $LNG->CHALLENGE_NAME_SHORT; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+issuebackpale+';"><?php echo $LNG->ISSUE_NAME; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+solutionbackpale+';"><?php echo $LNG->SOLUTION_NAME; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+probackpale+';"><?php echo $LNG->PRO_NAME; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+conbackpale+';"><?php echo $LNG->CON_NAME; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+evidencebackpale+';"><?php echo $LNG->ARGUMENT_NAME; ?></div>';
+	text += '<div class="networkmaps-key key-network-type" style="background: '+argumentbackpale+';"><?php echo $LNG->COMMENT_NAME; ?></div>';
 
 	key.insert(text);
 	tb2.insert(key);
 
-	var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left-25px;margin-top:7px;'});
-	tb2.insert(count);
+	var count = new Element("div", {'id':'graphConnectionCount','class':'graphConnectionCount'});
+	key.insert(count);
 
 	return tb2;
 }
@@ -490,7 +436,7 @@ function createImportGraphToolbar(forcedirectedGraph) {
 	tb2.insert(toggleview);
 
 	var zoomOut = new Element("div", {'class':'active', 'style':'float:left;padding:3px;margin-left: 20px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
-	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
+	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'alt': 'zoom out'});
 	zoomOut.insert(zoomOuticon);
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
@@ -499,7 +445,7 @@ function createImportGraphToolbar(forcedirectedGraph) {
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("div", {'class':'active', 'style':'float:left;padding:3px;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
-	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
+	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'alt': 'zoom in'});
 	zoomIn.insert(zoomInicon);
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
@@ -508,7 +454,7 @@ function createImportGraphToolbar(forcedirectedGraph) {
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
-	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
+	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'alt': '1:1 zoom'});
 	zoom1to1.insert(zoom1to1icon);
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
@@ -517,7 +463,7 @@ function createImportGraphToolbar(forcedirectedGraph) {
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("div", {'class':'active', 'style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
-	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
+	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'alt': 'zoom to fit'});
 	zoomFit.insert(zoomFiticon);
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
@@ -548,21 +494,8 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 
 	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding-top:5px;display:block;'});
 
-	/*
-	var button = new Element("button", {'id':'homebutton','style':'float:left;margin-left:8px;padding:3px;','title':'<?php echo $LNG->BUILDER_GOTO_HOME_SITE_HINT; ?>'});
-	var icon = new Element("img", {'id':'homeicon', 'alt':'<?php echo $CFG->SITE_TITLE; ?>', 'src':"<?php echo $HUB_FLM->getImagePath('builder-logo.png'); ?>", 'border':'0'});
-	button.insert(icon);
-	tb2.insert(button);
-
-	var handler = function() {
-		//go to debate hub
-	};
-	Event.observe(button,"click", handler);
-	tb2.insert(button);
-	*/
-
 	var zoomOut = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
-	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
+	var zoomOuticon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'alt': 'zoom out'});
 	zoomOut.insert(zoomOuticon);
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
@@ -571,7 +504,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
-	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
+	var zoomInicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'alt': 'zoom in'});
 	zoomIn.insert(zoomInicon);
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
@@ -580,7 +513,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
-	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
+	var zoom1to1icon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'alt': 'zoom 1:1'});
 	zoom1to1.insert(zoom1to1icon);
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
@@ -589,7 +522,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
-	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
+	var zoomFiticon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'alt': 'zoom to fit'});
 	zoomFit.insert(zoomFiticon);
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
@@ -598,7 +531,7 @@ function createEmbedBasicGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomFit);
 
 	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;padding:3px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
-	var printButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
+	var printButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'alt': 'print'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
@@ -625,7 +558,7 @@ function createEmbedSocialGraphToolbar(forcedirectedGraph,contentarea) {
 	var tb2 = createEmbedBasicGraphToolbar(forcedirectedGraph,contentarea);
 
 	var button2 = new Element("button", {'id':'viewdetailbutton','style':'margin-left: 30px;padding:3px;','title':'<?php echo $LNG->NETWORKMAPS_SOCIAL_CONNECTION_HINT; ?>'});
-	var icon2 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('connection.png'); ?>", 'border':'0'});
+	var icon2 = new Element("img", {'id':'viewdetailicon', 'src':"<?php echo $HUB_FLM->getImagePath('connection.png'); ?>"});
 	button2.insert(icon2);
 	tb2.insert(button2);
 
@@ -671,7 +604,7 @@ function resizeFDGraph(graphview, contentarea, withInner){
 		$(graphview.config.injectInto+'-outer').style.height = height+"px";
 
 		resizeFDGraphCanvas(graphview, width, height);
-		if (resizeMainArea) {
+		if (typeof resizeMainArea !== 'undefined') {
 			baseSize = calulateInitialGraphViewport(contentarea);
 			resizeMainArea(false);
 		}
@@ -683,7 +616,7 @@ function resizeFDGraph(graphview, contentarea, withInner){
 		$(graphview.config.injectInto+'-outer').style.height = height+"px";
 
 		resizeFDGraphCanvas(graphview, width, height);
-		if (resizeMainArea) {
+		if (typeof resizeMainArea !== 'undefined') {
 			baseSize = size;
 			resizeMainArea(false);
 		}
@@ -766,131 +699,7 @@ function calulateInitialGraphViewport(areaname) {
  */
 function reduceMap(contentarea, forcedirectedGraph) {
 
-	if ($('header')) {
-		$('header').style.display="block";
-	}
-	if ($('footer')) {
-		$('footer').style.display="block";
-	}
-	if ($('mainnodediv')) {
-		$('mainnodediv').style.display="block";
-	}
-	if ($('parentbar')) {
-		$('parentbar').style.display="block";
-	}
-	if ($('pageseparatorbar')) {
-		$('pageseparatorbar').style.display="block";
-	}
-
-	// The explore views toolbar
-	if ($('headertoolbar')) {
-		$('headertoolbar').style.display="block";
-	}
-	if ($('nodearealineartitle')) {
-		$('nodearealineartitle').style.display="block";
-	}
-
-	// Main social Network
-	if ($('tabs')) { // +user social uses this
-		$('tabs').style.display="block";
-	}
-	if ($('tab-content-user-title')) {
-		$('tab-content-user-title').style.display="block";
-	}
-	if ($('tab-content-user-search')) {
-		$('tab-content-user-search').style.display="block";
-	}
-	if ($('usertabs')) {
-		$('usertabs').style.display="block";
-	}
-
-	// User social network
-	if ($('context')) {
-		$('context').style.display="block";
-	}
-	if ($('tab-content-user-bar')) {
-		$('tab-content-user-bar').style.display="block";
-	}
-
-	resizeFDGraph(forcedirectedGraph, contentarea, true);
-}
-
-/**
- * Called to remove some screen realestate to increase map area.
- */
-function enlargeMap(contentarea, forcedirectedGraph) {
-
-	if ($('header')) {
-		$('header').style.display="none";
-	}
-	if ($('footer')) {
-		$('footer').style.display="none";
-	}
-	if ($('mainnodediv')) {
-		$('mainnodediv').style.display="none";
-	}
-	if ($('parentbar')) {
-		$('parentbar').style.display="none";
-	}
-	if ($('pageseparatorbar')) {
-		$('pageseparatorbar').style.display="none";
-	}
-
-	// The explore views toolbar
-	if ($('headertoolbar')) {
-		$('headertoolbar').style.display="none";
-	}
-	if ($('nodearealineartitle')) {
-		$('nodearealineartitle').style.display="none";
-	}
-
-	// Main social Network
-	if ($('tabs')) { // +user social uses this
-		$('tabs').style.display="none";
-	}
-	if ($('tab-content-user-title')) {
-		$('tab-content-user-title').style.display="none";
-	}
-	if ($('tab-content-user-search')) {
-		$('tab-content-user-search').style.display="none";
-	}
-	if ($('usertabs')) {
-		$('usertabs').style.display="none";
-	}
-
-	// User social network
-	if ($('context')) {
-		$('context').style.display="none";
-	}
-	if ($('tab-content-user-bar')) {
-		$('tab-content-user-bar').style.display="none";
-	}
-
-	resizeFDGraph(forcedirectedGraph, contentarea, true);
-}
-
-/**
- * Called to set the screen to standard view
- */
-function reduceMapNew(contentarea, forcedirectedGraph) {
-	if ($('header')) {
-		$('header').style.display="block";
-	}
-	if ($('footer')) {
-		$('footer').style.display="block";
-	}
-	if ($('mainnodediv')) {
-		$('mainnodediv').style.display="block";
-	}
-	if ($('parentbar')) {
-		$('parentbar').style.display="block";
-	}
-	if ($('pageseparatorbar')) {
-		$('pageseparatorbar').style.display="block";
-	}
-	if ($('tabs')) {
-		$('tabs').style.display="block";
-	}
+	// Bootstrap collapse used for component showing and hiding
 
 	baseSize = calulateInitialGraphViewport(contentarea);
 
@@ -904,37 +713,23 @@ function reduceMapNew(contentarea, forcedirectedGraph) {
 		$('editbarlist').style.height = $('editbarlist').oriheight+"px";
 	}
 	if($('alertsdivinner') && $('alertsdivinner').style) {
-		$('alertsdivinner').style.height = $('alertdivinner').oriheight+"px";
+		$('alertsdivinner').style.height = $('alertsdivinner').oriheight;
 	}
 
-	resizeMainArea(false);
+	if (typeof resizeMainArea !== 'undefined') {
+		resizeMainArea(false);
+	}
 }
 
 /**
  * Called to remove some screen realestate to increase map area.
  */
-function enlargeMapNew(contentarea, forcedirectedGraph) {
+function enlargeMap(contentarea, forcedirectedGraph) {
+
+	// Bootstrap collapse used for component showing and hiding
+
 	var w = $(contentarea).offsetWidth;
 	var h = getWindowHeight();
-
-	if ($('header')) {
-		$('header').style.display="none";
-	}
-	if ($('footer')) {
-		$('footer').style.display="none";
-	}
-	if ($('mainnodediv')) {
-		$('mainnodediv').style.display="none";
-	}
-	if ($('parentbar')) {
-		$('parentbar').style.display="none";
-	}
-	if ($('pageseparatorbar')) {
-		$('pageseparatorbar').style.display="none";
-	}
-	if ($('tabs')) {
-		$('tabs').style.display="none";
-	}
 
 	h = h-60;
 	baseSize = {width:w, height:h};
@@ -953,7 +748,10 @@ function enlargeMapNew(contentarea, forcedirectedGraph) {
 			$('editbarlist').style.height = height+"px";
 		}
 	}
-	resizeMainArea(false);
+
+	if (typeof resizeMainArea !== 'undefined') {
+		resizeMainArea(false);
+	}
 }
 
 /**
@@ -1011,37 +809,43 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 
 	var tb1 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding:0px;display:block;'});
 
-	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding-top:10px;display:block;'});
+	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow d-flex gap-4 p-2 align-items-center'});
 
 	if (!fromEmbed) {
-		var button = new Element("button", {'class':'active editbackgradient', 'id':'expandbutton','style':'float:left;margin-right:8px;padding-top:3px;','title':'<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>'});
-		var icon = new Element("img", {'id':'expandicon', 'src':"<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>", 'border':'0', 'alt':'<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>'});
+		var button = new Element("button", {
+				'data-bs-toggle':'collapse',
+				'data-bs-target':'.multi-collapse',
+				'aria-expanded':'true',
+				'aria-controls':'mainnav header footer parentbar mainnodediv pageseparatorbar tabs',
+				'class':'btn btn-secondary',
+				'id':'expandbutton',
+				'title':'<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>'
+		});
+		var icon = new Element("img", {'id':'expandicon', 'src':"<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>", 'alt':'<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>'});
 		button.insert(icon);
 		tb2.insert(button);
 
-		var link = new Element("a", {'id':'expandlink', 'title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>', 'style':'float:left;cursor:pointer;margin-top:7px;margin-left:5px;'});
+		var link = new Element("a", {'id':'expandlink', 'title':'<?php echo $LNG->NETWORKMAPS_RESIZE_MAP_HINT; ?>'});
 		link.insert('<span id="linkbuttonsvn"><?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?></span>');
 
 		var handler = function() {
-			if ($('header').style.display == "none") {
+			const expandbutton = document.getElementById("expandbutton");
+			console.log(expandbutton.getAttribute("aria-expanded"));
+			if (expandbutton.getAttribute("aria-expanded") == "true") {
 				$('expandbutton').title = '<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>';
-				//$('expandbutton').update('<?php echo $LNG->NETWORKMAPS_ENLARGE_MAP_LINK; ?>');
 				$('expandicon').src="<?php echo $HUB_FLM->getImagePath('enlarge2.gif'); ?>";
-				reduceMapNew(contentarea, forcedirectedGraph);
+				reduceMap(contentarea, forcedirectedGraph);
 			} else {
 				$('expandbutton').title = '<?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>';
-				//$('expandbutton').update('<?php echo $LNG->NETWORKMAPS_REDUCE_MAP_LINK; ?>');
 				$('expandicon').src="<?php echo $HUB_FLM->getImagePath('reduce.gif'); ?>";
-				enlargeMapNew(contentarea, forcedirectedGraph);
+				enlargeMap(contentarea, forcedirectedGraph);
 			}
 		};
-		//Event.observe(link,"click", handler);
 		Event.observe(button,"click", handler);
-		//tb2.insert(link);
 	}
 
 	if(toggleEditBar && USER && USER != "" && NODE_ARGS['caneditmap'] == 'true'){
-		var embedButton = new Element("button", {'id':'editbarmenulink', 'class':'active editbackgradient', 'style':'float:left', 'title':'<?php echo $LNG->MAP_EDITOR_LINK_HINT; ?>'});
+		var embedButton = new Element("button", {'id':'editbarmenulink', 'aria-pressed':'true', 'data-toggle':'button', 'class':'btn btn-secondary', 'title':'<?php echo $LNG->MAP_EDITOR_LINK_HINT; ?>'});
 		embedButton.insert('<?php echo $LNG->MAP_EDITOR_LINK; ?>');
 		var embedButtonhandler = function() {
 			toggleEditBar(false);
@@ -1052,18 +856,18 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 
 	<?php if ($CFG->HAS_ALERTS) {?>
 	if (toggleAlertBar) {
-		var embedButton = new Element("button", {'id':'alertbarmenulink', 'class':'active alertbackgradient', 'style':'float:left', 'title':'<?php echo $LNG->MAP_ALERT_LINK_HINT; ?>'});
-		embedButton.insert('<?php echo $LNG->MAP_ALERT_LINK; ?>');
-		var embedButtonhandler = function() {
+		let alertButton = new Element("button", {'id':'alertbarmenulink', 'aria-pressed':'true', 'data-toggle':'button', 'class':'btn btn-secondary', 'title':'<?php echo $LNG->MAP_ALERT_LINK_HINT; ?>'});
+		alertButton.insert('<?php echo $LNG->MAP_ALERT_LINK; ?>');
+		let alertButtonhandler = function() {
 			toggleAlertBar(false);
 		};
-		Event.observe(embedButton,"click", embedButtonhandler);
-		tb2.insert(embedButton);
+		Event.observe(alertButton,"click", alertButtonhandler);
+		tb2.insert(alertButton);
 	}
 	<?php } ?>
 
-	var zoomOut = new Element("div", {'class':'active','style':'float:left;', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
-	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
+	var zoomOut = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
+	var zoomOuticon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'alt': 'zoom out'});
 	zoomOut.insert(zoomOuticon);
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
@@ -1071,8 +875,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(zoomOut,"click", zoomOuthandler);
 	tb2.insert(zoomOut);
 
-	var zoomIn = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
-	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
+	var zoomIn = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
+	var zoomInicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'alt': 'zoom in'});
 	zoomIn.insert(zoomInicon);
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
@@ -1080,8 +884,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(zoomIn,"click", zoomInhandler);
 	tb2.insert(zoomIn);
 
-	var zoom1to1 = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
-	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
+	var zoom1to1 = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
+	var zoom1to1icon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'alt': 'zoom 1:1'});
 	zoom1to1.insert(zoom1to1icon);
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
@@ -1089,8 +893,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(zoom1to1,"click", zoom1to1handler);
 	tb2.insert(zoom1to1);
 
-	var zoomFit = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
-	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
+	var zoomFit = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
+	var zoomFiticon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'alt': 'zoom to fit'});
 	zoomFit.insert(zoomFiticon);
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
@@ -1099,8 +903,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	tb2.insert(zoomFit);
 
 	var noderollover = getNodeRollover();
-	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:15px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
-	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
+	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'alt': 'enable/disable rollover hints'});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	rolloverTitlesChoiceIcon.chosen = true;
 	if (noderollover == 'false') {
@@ -1125,8 +929,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	tb2.insert(rolloverTitlesChoiceDiv);
 
 	var linktext = getLinkText();
-	var linktextChoiceDiv = new Element("div", {'chosen':'true','id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
-	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'border':'0'});
+	var linktextChoiceDiv = new Element("div", {'chosen':'true','id':'linktextChoiceDiv', 'class':'active iconSelected', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
+	var linktextChoiceIcon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'alt': 'enable/disable links'});
 	linktextChoiceIcon.chosen = true;
 	if (linktext == 'false') {
 		linktextChoiceDiv.className = "active iconUnselected";
@@ -1152,8 +956,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	linktextChoiceDiv.insert(linktextChoiceIcon);
 	tb2.insert(linktextChoiceDiv);
 
-	var linkcurveChoiceDiv = new Element("div", {'id':'linkcurveChoiceDiv', 'class':'active iconUnselected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_CURVE_CHOICE_HINT;?>'});
-	var linkcurveChoiceIcon = new Element("img", {'style':'vertical-align:middle;height:20px','src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'border':'0'});
+	var linkcurveChoiceDiv = new Element("div", {'id':'linkcurveChoiceDiv', 'class':'active iconUnselected', 'title':'<?php echo $LNG->MAP_LINK_CURVE_CHOICE_HINT;?>'});
+	var linkcurveChoiceIcon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'alt': 'enable/disable curved links'});
 	linkcurveChoiceIcon.chosen = false;
 	var linkcurve = getLinkCurve();
 	if (linkcurve == 'true') {
@@ -1182,8 +986,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	linkcurveChoiceDiv.insert(linkcurveChoiceIcon);
 	tb2.insert(linkcurveChoiceDiv);
 
-	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 20px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
-	var printButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
+	var printButton = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
+	var printButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'alt': 'print'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
 		if ($('treedata').style.display == 'block') {
@@ -1195,8 +999,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(printButton,"click", printButtonhandler);
 	tb2.insert(printButton);
 
-	var helpButton = new Element("div", {'class':'active','style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->GRAPH_HELP_HINT;?>'});
-	var helpButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('info.png'); ?>", 'border':'0'});
+	var helpButton = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_HELP_HINT;?>'});
+	var helpButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('info.png'); ?>", 'alt': 'help'});
 	helpButton.insert(helpButtonicon);
 	var printButtonhandler = function() {
 		showHelp();
@@ -1204,8 +1008,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(helpButton,"click", printButtonhandler);
 	tb2.insert(helpButton);
 
-	var selectAllButton = new Element("div", {'class':'active','style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_SELECT_ALL_HINT;?>'});
-	var selectAllButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('selectall2.png'); ?>", 'border':'0'});
+	var selectAllButton = new Element("div", {'class':'active', 'title':'<?php echo $LNG->MAP_SELECT_ALL_HINT;?>'});
+	var selectAllButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('selectall2.png'); ?>", 'alt': 'select all'});
 	selectAllButton.insert(selectAllButtonicon);
 	var selectAllButtonhandler = function() {
 		if (selectAllButton.title == '<?php echo $LNG->MAP_SELECT_ALL_HINT;?>') {
@@ -1223,9 +1027,9 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	tb2.insert(selectAllButton);
 
 	/** SEARCH BOX **/
-	var searchdiv = new Element("div", {'id':'searchmap', 'style':'float:left;margin-left: 25px;'});
+	var searchdiv = new Element("div", {'id':'searchmap', 'class':'d-flex gap-2 align-items-center'});
 
-	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:160px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
+	var searchfield = new Element("input", {'type':'text', 'class':'form-control', 'id':'qmap', 'name':'qmap', 'value':'', 'aria-label':'search'});
 	searchdiv.insert(searchfield);
 	Event.observe(searchfield,"keyup", function(event) {
 		if(checkKeyPressed(event)) {
@@ -1233,40 +1037,24 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 		}
 	});
 
-	var buttondiv = new Element('div', {'style': 'float:left;'});
-	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'style': 'float:left;padding-left:3px; padding-right:10px;', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
+	var buttondiv = new Element('div', {'class':'d-inline-flex'});
+
+	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
 	searchbutton.src = "<?php echo $HUB_FLM->getImagePath('search.png'); ?>";
 	Event.observe(searchbutton,"click", function(event){
 		var query = $('qmap').value;
 		searchMap(query);
 	});
 	buttondiv.insert(searchbutton);
-	searchdiv.insert(buttondiv);
-
-	/*var gobutton = new Element("button", {
-					'class':'active',
-					'id':'map-go-button',
-					'class':'searchborder',
-					'style':'margin-right:10px;color:dimgray;font-weight:bold;height:22px;padding-left:3px;padding-right:3px;',
-				});
-	gobutton.insert('<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>');
-	var handleMapSearch = function() {
-		var query = $('qmap').value;
-		searchMap(query);
-	}
-	Event.observe(gobutton,"click", handleMapSearch);
-	searchdiv.insert(gobutton);
-	*/
 
 	var clearbutton = new Element("img", {
-					'class':'active',
+					'class':'active mx-2',
 					'width':'20',
 					'height':'20',
 					'id':'map-clear-button',
 					'src':'<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>',
 					'title':'<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>',
 					'alt':'<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>',
-					'style':'padding-left:0px;'
 				});
 	var clearhandler = function(event) {
 		$('qmap').value='';
@@ -1278,12 +1066,14 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 		clearKnowledgeTreeSelections();
 	};
 	Event.observe(clearbutton,"click", clearhandler);
-	searchdiv.insert(clearbutton);
+	buttondiv.insert(clearbutton);
+
+	searchdiv.insert(buttondiv);
 
 	tb2.insert(searchdiv);
 
 	// VIEWS
-	var toggleview = new Element("div", {'style':'float:left;margin-left: 20px;'});
+	var toggleview = new Element("div", {});
 	var toggleviewicon = new Element("img", {
 					'id':'toggle-map-view',
 					'class':'active',
@@ -1299,14 +1089,23 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	Event.observe(toggleview,"click", toggleviewhandler);
 	tb2.insert(toggleview);
 
-	var movieModeButton = new Element("div", {'chosen':'false', 'id':'mediamodebuttondiv', 'class':'active iconUnselected','style':'float:left;margin-left: 20px;margin-top:0px;padding:0px;'});
+	var movieModeIcon = new Element("img", {
+			'chosen':'false',
+			'id':'mediamodebuttondiv',
+			'class':'active iconUnselected',
+			'data-bs-target': '#moviemaptoolbar',
+			'data-bs-toggle':'collapse',
+			'aria-expanded':'false',
+			'aria-controls':'moviemaptoolbar',
+			'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>",
+			'alt':'toggle replay'
+	});
 	if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
-		movieModeButton.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
+		movieModeIcon.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
 	} else {
-		movieModeButton.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
+		movieModeIcon.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
 	}
-	var movieModeIcon = new Element("img", {'style':'vertical-align:top;height:20px;', 'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>", 'border':'0'});
-	movieModeButton.insert(movieModeIcon);
+
 	var movieModeButtonhandler = function(event) {
 		if (this.chosen) {
 			this.className  = "active iconUnSelected";
@@ -1335,7 +1134,6 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 				forcedirectedGraph.mapReplayCurrentIndex = -1;
 				$('mapreplayslider').value = 0;
 				$('mapreplayslider').max = 0;
-				$('moviemaptoolbar').style.display = "none";
 				forcedirectedGraph.refresh();
 			} else {
 				addMapNodeReplayIndexes(forcedirectedGraph);
@@ -1344,13 +1142,12 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 				forcedirectedGraph.mapReplayCurrentIndex = 0;
 				$('mapreplayslider').value = 0;
 				$('mapreplayslider').max = forcedirectedGraph.mapReplayMaxIndex;
-				$('moviemaptoolbar').style.display = "block";
 				forcedirectedGraph.refresh();
 			}
 		}
 	};
-	Event.observe(movieModeButton,"click", movieModeButtonhandler);
-	tb2.insert(movieModeButton);
+	Event.observe(movieModeIcon,"click", movieModeButtonhandler);
+	tb2.insert(movieModeIcon);
 
 	tb2.insert(createMapMovieBar(forcedirectedGraph));
 
@@ -1358,11 +1155,6 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
 	if (!fromEmbed) {
 		addEmbedButtons($('tabs'));
 	}
-
-	// CONNECTION COUNT
-	//var count = new Element("div", {'id':'graphConnectionCount','style':'float:left;margin-left:20px;margin-top:7px;'});
-	//count.insert('<span style="font-size:10pt;color:black;float:left;"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> 0</span>');
-	//tb2.insert(count);
 
 	tb1.insert(tb2);
 
@@ -1382,8 +1174,8 @@ function createBasicMapGraphToolbar(forcedirectedGraph, contentarea, fromEmbed) 
  */
 function addEmbedButtons(contentarea) {
 
-	var jsonldButton = new Element("div", {'style':'float:right;margin-left:10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
-	var jsonldButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'border':'0'});
+	var jsonldButton = new Element("div", {'class':'m-2 ms-auto', 'style':'cursor: pointer', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT;?>'});
+	var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'json LD Data'});
 	jsonldButton.insert(jsonldButtonicon);
 	var jsonldButtonhandler = function() {
 		var code = URL_ROOT+'api/views/'+NODE_ARGS['nodeid'];
@@ -1392,8 +1184,8 @@ function addEmbedButtons(contentarea) {
 	Event.observe(jsonldButton,"click", jsonldButtonhandler);
 	contentarea.insert(jsonldButton);
 
-	var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left:10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_EMBEDEDIT_HINT;?>'});
-	var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embededit.png'); ?>", 'border':'0'});
+	var embedButton = new Element("div", {'class':'active m-2', 'style':'cursor: pointer', 'title':'<?php echo $LNG->GRAPH_EMBEDEDIT_HINT;?>'});
+	var embedButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('embededit.png'); ?>", 'alt':'embed edit'});
 	embedButton.insert(embedButtonicon);
 	var embedButtonhandler = function() {
 		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/editmap.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
@@ -1402,8 +1194,8 @@ function addEmbedButtons(contentarea) {
 	Event.observe(embedButton,"click", embedButtonhandler);
 	contentarea.insert(embedButton);
 
-	var embedButton = new Element("div", {'class':'active','style':'float:right;margin-left: 10px;margin-top:3px;', 'title':'<?php echo $LNG->GRAPH_EMBED_HINT;?>'});
-	var embedButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('embed.png'); ?>", 'border':'0'});
+	var embedButton = new Element("div", {'class':'active m-2', 'style':'cursor: pointer', 'title':'<?php echo $LNG->GRAPH_EMBED_HINT;?>'});
+	var embedButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('embed.png'); ?>", 'alt':'embed'});
 	embedButton.insert(embedButtonicon);
 	var embedButtonhandler = function() {
 		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/map.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
@@ -1421,7 +1213,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	var tb2 = new Element("div", {'id':'graphmaintoolbar','class':'toolbarrow', 'style':'padding-top:5px;display:block;'});
 
 	var zoomOut = new Element("div", {'class':'active','style':'float:left;', 'title':'<?php echo $LNG->GRAPH_ZOOM_IN_HINT;?>'});
-	var zoomOuticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'border':'0'});
+	var zoomOuticon = new Element("img", { 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-minus.png'); ?>", 'alt': 'zoom out'});
 	zoomOut.insert(zoomOuticon);
 	var zoomOuthandler = function() {
 		zoomFD(forcedirectedGraph, 5.0);
@@ -1430,7 +1222,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomOut);
 
 	var zoomIn = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_OUT_HINT;?>'});
-	var zoomInicon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'border':'0'});
+	var zoomInicon = new Element("img", { 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-plus.png'); ?>", 'alt': 'zoom in'});
 	zoomIn.insert(zoomInicon);
 	var zoomInhandler = function() {
 		zoomFD(forcedirectedGraph, -5.0);
@@ -1439,7 +1231,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomIn);
 
 	var zoom1to1 = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_ONE_TO_ONE_HINT;?>'});
-	var zoom1to1icon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'border':'0'});
+	var zoom1to1icon = new Element("img", { 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-ratio1-1.png'); ?>", 'alt': 'zoom 1:1'});
 	zoom1to1.insert(zoom1to1icon);
 	var zoom1to1handler = function() {
 		zoomFDFull(forcedirectedGraph);
@@ -1448,7 +1240,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoom1to1);
 
 	var zoomFit = new Element("div", {'class':'active','style':'float:left;margin-left: 10px;', 'title':'<?php echo $LNG->GRAPH_ZOOM_FIT_HINT;?>'});
-	var zoomFiticon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;', 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'border':'0'});
+	var zoomFiticon = new Element("img", { 'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-fit.png'); ?>", 'alt': 'zoom to fit'});
 	zoomFit.insert(zoomFiticon);
 	var zoomFithandler = function() {
 		zoomFDFit(forcedirectedGraph);
@@ -1457,8 +1249,8 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(zoomFit);
 
 	var noderollover = getNodeRollover();
-	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
-	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
+	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected',  'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'alt': 'enable/disable rollover hints'});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	rolloverTitlesChoiceIcon.chosen = true;
 	if (noderollover == 'false') {
@@ -1484,7 +1276,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 
 	var noderollover = getNodeRollover();
 	var rolloverTitlesChoiceDiv = new Element("div", {'chosen':'true', 'id':'rolloverTitlesChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:20px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_TITLE_ROLLOVER_CHOICE_HINT;?>'});
-	var rolloverTitlesChoiceIcon = new Element("img", {'style':'width:20px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'border':'0'});
+	var rolloverTitlesChoiceIcon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('mag-glass-rollover.png'); ?>", 'alt': 'enable/disable rollover hints'});
 	rolloverTitlesChoiceDiv.insert(rolloverTitlesChoiceIcon);
 	rolloverTitlesChoiceIcon.chosen = true;
 	if (noderollover == 'false') {
@@ -1510,7 +1302,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 
 	var linktext = getLinkText();
 	var linktextChoiceDiv = new Element("div", {'chosen':'true','id':'linktextChoiceDiv', 'class':'active iconSelected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_TEXT_CHOICE_HINT;?>'});
-	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'border':'0'});
+	var linktextChoiceIcon = new Element("img", {'style':'width:25px;height:20px;vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('linktext.png'); ?>", 'alt': 'enable/disable links'});
 	linktextChoiceIcon.chosen = true;
 	if (linktext == 'false') {
 		linktextChoiceDiv.className = "active iconUnselected";
@@ -1537,7 +1329,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(linktextChoiceDiv);
 
 	var linkcurveChoiceDiv = new Element("div", {'id':'linkcurveChoiceDiv', 'class':'active iconUnselected', 'style':'float:left;margin-left:10px;margin-top:-2px', 'title':'<?php echo $LNG->MAP_LINK_CURVE_CHOICE_HINT;?>'});
-	var linkcurveChoiceIcon = new Element("img", {'style':'vertical-align:middle;height:20px','src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'border':'0'});
+	var linkcurveChoiceIcon = new Element("img", {'style':'vertical-align:middle;height:20px','src':"<?php echo $HUB_FLM->getImagePath('curvelink24.png'); ?>", 'alt': 'enable/disable curved links'});
 	linkcurveChoiceIcon.chosen = false;
 	var linkcurve = getLinkCurve();
 	if (linkcurve == 'true') {
@@ -1567,7 +1359,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	tb2.insert(linkcurveChoiceDiv);
 
 	var printButton = new Element("div", {'class':'active','style':'float:left;margin-left: 20px;', 'title':'<?php echo $LNG->GRAPH_PRINT_HINT;?>'});
-	var printButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'border':'0'});
+	var printButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('printer.png'); ?>", 'alt': 'print'});
 	printButton.insert(printButtonicon);
 	var printButtonhandler = function() {
 		printCanvas(forcedirectedGraph);
@@ -1575,8 +1367,8 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	Event.observe(printButton,"click", printButtonhandler);
 	tb2.insert(printButton);
 
-	var helpButton = new Element("div", {'class':'active','style':'float:left;margin-left:10px;', 'title':'<?php echo $LNG->GRAPH_HELP_HINT;?>'});
-	var helpButtonicon = new Element("img", {'style':'vertical-align:middle;','src':"<?php echo $HUB_FLM->getImagePath('info.png'); ?>", 'border':'0'});
+	var helpButton = new Element("div", {'class':'active', 'title':'<?php echo $LNG->GRAPH_HELP_HINT;?>'});
+	var helpButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('info.png'); ?>", 'alt': 'help'});
 	helpButton.insert(helpButtonicon);
 	var printButtonhandler = function() {
 		showHelp();
@@ -1588,16 +1380,7 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	/** SEARCH BOX **/
 	var searchdiv = new Element("div", {'id':'searchmap', 'style':'float:left;margin-left: 25px;'});
 
-	//var searchlabel = new Element("label", {'for':'q', 'class':'search','style':'float: left; margin-right: 3px;'});
-	//searchlabel.insert('<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>');
-	//searchdiv.insert(searchlabel);
-
-	//var searchfielddiv = new Element("div", {/*'class':'search',*/ 'style':'float:left;'});
-	//var searchicon = new Element("span", {'id':'searchicon', 'class':'fa fa-search'});
-	//searchfielddiv.insert(searchicon)
-	//searchdiv.insert(searchfielddiv);
-
-	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:160px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':''});
+	var searchfield = new Element("input", {'type':'text', 'class':'searchborder', 'style':'width:160px;height:18px;', 'id':'qmap', 'name':'qmap', 'value':'', 'aria-label':'search'});
 	searchdiv.insert(searchfield);
 	Event.observe(searchfield,"keyup", function(event) {
 		if(checkKeyPressed(event)) {
@@ -1605,7 +1388,8 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 		}
 	});
 
-	var buttondiv = new Element('div', {'style': 'float:left;'});
+	var buttondiv = new Element('div', {'class': 'd-inline-flex'});
+
 	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'style': 'float:left;padding-left:3px; padding-right:10px;', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
 	searchbutton.src = "<?php echo $HUB_FLM->getImagePath('search.png'); ?>";
 	Event.observe(searchbutton,"click", function(event){
@@ -1613,27 +1397,12 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 		searchMap(query);
 	});
 	buttondiv.insert(searchbutton);
-	searchdiv.insert(buttondiv);
-
-	/*var gobutton = new Element("button", {
-					'class':'active',
-					'id':'map-go-button',
-					'class':'searchborder',
-					'style':'margin-right:10px;color:dimgray;font-weight:bold;height:22px;padding-left:3px;padding-right:3px;',
-				});
-	gobutton.insert('<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>');
-	var handleMapSearch = function() {
-		var query = $('qmap').value;
-		searchMap(query);
-	}
-	Event.observe(gobutton,"click", handleMapSearch);
-	searchdiv.insert(gobutton);
-	*/
 
 	var clearbutton = new Element("img", {
-					'class':'active',
+					'class':'active mx-2',
 					'width':'20',
 					'height':'20',
+					'style': 'float:left;padding-left:3px; padding-right:10px;',
 					'id':'map-clear-button',
 					'src':'<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>',
 					'title':'<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>',
@@ -1649,12 +1418,14 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 		clearKnowledgeTreeSelections();
 	};
 	Event.observe(clearbutton,"click", clearhandler);
-	searchdiv.insert(clearbutton);
+	buttondiv.insert(clearbutton);
+
+	searchdiv.insert(buttondiv);
 
 	tb2.insert(searchdiv);
 
 	// VIEWS
-	var toggleview = new Element("div", {'style':'float:left;margin-left: 20px;'});
+	var toggleview = new Element("div", {'style':'float:left;margin-left: 20px;height:19px'});
 	var toggleviewicon = new Element("img", {
 					'id':'toggle-map-view',
 					'class':'active',
@@ -1670,20 +1441,28 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 	Event.observe(toggleview,"click", toggleviewhandler);
 	tb2.insert(toggleview);
 
-	var movieModeButton = new Element("div", {'id':'mediamodebuttondiv', 'class':'active','style':'float:left;margin-left: 20px;margin-top:0px;padding:0px;'});
+	var movieModeIcon = new Element("img", {
+			'chosen':'false',
+			'id':'mediamodebuttondiv',
+			'class':'active iconUnselected',
+			'data-bs-target': '#moviemaptoolbar',
+			'data-bs-toggle':'collapse',
+			'aria-expanded':'false',
+			'aria-controls':'moviemaptoolbar',
+			'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>",
+			'alt':'toggle replay'
+	});
 	if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
-		movieModeButton.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
+		movieModeIcon.title = '<?php echo $LNG->MAP_MEDIA_MODE_HINT;?>';
 	} else {
-		movieModeButton.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
+		movieModeIcon.title = '<?php echo $LNG->MAP_REPLAY_MODE_HINT;?>';
 	}
 
-	var movieModeIcon = new Element("img", {'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('mediaiconmode.png'); ?>", 'border':'0'});
-	movieModeButton.insert(movieModeIcon);
 	var movieModeButtonhandler = function(event) {
 		if (this.chosen) {
-			this.style.border = "3px solid transparent";
+			this.className  = "active iconUnSelected";
 		} else {
-			this.style.border = "3px solid #80ba42";
+			this.className = "active iconSelected";
 		}
 
 		if (NODE_ARGS['media'] || NODE_ARGS['youtubeid'] || NODE_ARGS['vimeoid']) {
@@ -1709,7 +1488,6 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 				forcedirectedGraph.mapReplayCurrentIndex = -1;
 				$('mapreplayslider').value = 0;
 				$('mapreplayslider').max = 0;
-				$('moviemaptoolbar').style.display = "none";
 				forcedirectedGraph.refresh();
 			} else {
 				//forcedirectedGraph.Events.enable = false;
@@ -1720,13 +1498,12 @@ function createEmbedMapGraphToolbar(forcedirectedGraph, contentarea) {
 				forcedirectedGraph.mapReplayCurrentIndex = 0;
 				$('mapreplayslider').value = 0;
 				$('mapreplayslider').max = forcedirectedGraph.mapReplayMaxIndex;
-				$('moviemaptoolbar').style.display = "block";
 				forcedirectedGraph.refresh();
 			}
 		}
 	};
 	Event.observe(movieModeIcon,"click", movieModeButtonhandler);
-	tb2.insert(movieModeButton);
+	tb2.insert(movieModeIcon);
 
 	tb2.insert(createMapMovieBar(forcedirectedGraph));
 
@@ -1748,11 +1525,15 @@ function playMap(forcedirectedGraph) {
 }
 
 function createMapMovieBar(forcedirectedGraph) {
-	var tb = new Element("div", {'id':'moviemaptoolbar', 'style':'float:left;margin-left:10px;padding:0px;display:none;'});
-	var tbspeed = new Element("div", {'style':'float:left;padding:0px;padding-top:2px;'});
-	var tbinner = new Element("div", {'class':'curvedBorder', 'style':'float:left;background-color: #E8E8E8;padding:0px;'});
-	tb.insert(tbspeed);
-	tb.insert(tbinner);
+
+	var tb = new Element("div", {'id':'moviemaptoolbar', 'class':'collapse'});
+	var tb2= new Element("div", {'id':'moviemapflex', 'class':'d-inline-flex align-items-center flex-wrap'});
+	tb.insert(tb2);
+
+	var tbspeed = new Element("div", {'style':'padding:0px;padding-top:2px;'});
+	var tbinner = new Element("div", {'class':'curvedBorder', 'style':'background-color: #E8E8E8;border:none;padding:2px 2px 0px 2px;'});
+	tb2.insert(tbspeed);
+	tb2.insert(tbinner);
 
 	var mapReplayInterval = new Element("input", {'id':'mapreplayspeed', 'type':'text', 'value':'', 'style':'width:40px;','title':'<?php echo $LNG->MAP_REPLAY_SPEED_UNITS_HINT; ?>'});
 	mapReplayInterval.value = forcedirectedGraph.mapReplayInterval;
@@ -1772,7 +1553,7 @@ function createMapMovieBar(forcedirectedGraph) {
 	mapReplayIntervalType.innerHTML = "<?php echo $LNG->MAP_REPLAY_SPEED_UNITS; ?>";
 	tbspeed.insert(mapReplayIntervalType);
 
-	var mapPlayIcon = new Element("img", {'id':'mapplaybutton', 'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_PLAY_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>", 'border':'0'});
+	var mapPlayIcon = new Element("img", {'id':'mapplaybutton', 'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_PLAY_HINT; ?>', 'style':'vertical-align:inherit;height:18px;box-sizing: content-box;padding-left:4px;', 'src':"<?php echo $HUB_FLM->getImagePath('video-play-white.png'); ?>"});
 	var mapPlayButtonhandler = function(event) {
 		// is it play or pause mode
 		if (this.mode == "play") {
@@ -1800,7 +1581,7 @@ function createMapMovieBar(forcedirectedGraph) {
 	Event.observe(mapPlayIcon,"click", mapPlayButtonhandler);
 	tbinner.insert(mapPlayIcon);
 
-	var mapBackIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_BACK_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-back-white.png'); ?>", 'border':'0'});
+	var mapBackIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_BACK_HINT; ?>', 'style':'vertical-align:inherit;height:18px;padding:3px 5px 0px 4px;box-sizing: content-box;', 'src':"<?php echo $HUB_FLM->getImagePath('video-back-white.png'); ?>"});
 	var mapBackButtonhandler = function(event) {
 		var currentIndex = parseInt($('mapreplayslider').value);
 		if (currentIndex > 0) {
@@ -1812,7 +1593,7 @@ function createMapMovieBar(forcedirectedGraph) {
 	Event.observe(mapBackIcon,"click", mapBackButtonhandler);
 	tbinner.insert(mapBackIcon);
 
-	var mapslider = new Element("input", {'id':'mapreplayslider', 'type':'range', 'min':'0', 'max':0, 'value':'0', 'steps':'1', 'style':'width:160px;height:18px; margin-top:2px'});
+	var mapslider = new Element("input", {'id':'mapreplayslider', 'type':'range', 'min':'0', 'max':0, 'value':'0', 'steps':'1', 'style':'width:160px;height:18px;margin-top:2px;box-sizing: content-box;', 'aria-label':'slider'});
 	var mapSliderHandler = function(event) {
 			forcedirectedGraph.mapReplayCurrentIndex = parseInt(this.value);
 			forcedirectedGraph.refresh();
@@ -1820,7 +1601,7 @@ function createMapMovieBar(forcedirectedGraph) {
 	Event.observe(mapslider,"change", mapSliderHandler);
 	tbinner.insert(mapslider);
 
-	var mapForwardIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_FORWARD_HINT; ?>',  'style':'vertical-align:top;height:18px;border:3px solid transparent', 'src':"<?php echo $HUB_FLM->getImagePath('video-forward-white.png'); ?>", 'border':'0'});
+	var mapForwardIcon = new Element("img", {'mode':'play', 'title':'<?php echo $LNG->MAP_REPLAY_FORWARD_HINT; ?>', 'style':'vertical-align:inherit;height:18px;padding-left:5px;margin-right:4px;box-sizing: content-box;', 'src':"<?php echo $HUB_FLM->getImagePath('video-forward-white.png'); ?>"});
 	var mapForwardButtonhandler = function(event) {
 		var currentIndex = parseInt($('mapreplayslider').value);
 		if (currentIndex < forcedirectedGraph.mapReplayMaxIndex) {
@@ -1878,16 +1659,16 @@ function createEditSidebar(container, forcedirectedGraph) {
 		mapheight = MAP_HEIGHT;
 	}
 
-	var nodeEditBar = new Element('div', {'id':'nodeeditbar', 'style': 'clear: both;float: left;height:'+mapheight+'px; width: '+mainwidth-2+'px; display: block;'});
+	var nodeEditBar = new Element('div', {'id':'nodeeditbar'});
 	nodeEditBar.oriheight = mapheight;
 
-	var editbartopdiv = new Element('div', {'id':'editbartopdiv','style':'clear:both;float:left; width:100%;height:110px;'});
+	var editbartopdiv = new Element('div', {'id':'editbartopdiv'});
 	nodeEditBar.insert(editbartopdiv);
 
-	editbartopdiv.insert('<h1 style="margin-top:0px;Margin-bottom:0px;margin-left: 5px;margin-bottom:5px;"><?php echo $LNG->MAP_EDITOR_INBOX; ?></h1>');
+	//editbartopdiv.insert('<h1 style="margin-top:0px;Margin-bottom:0px;margin-left: 5px;margin-bottom:5px;"><?php echo $LNG->MAP_EDITOR_INBOX; ?></h1>');
 
 	//ADD BUTTONS
-	var addbuttonsdiv = new Element('div', {'id':'addbuttonsdiv','style':'border-bottom:1px solid #E8E8E8;clear:both;float:left;margin-bottom:5px; padding-top:0px;margin-top:0px;margin-left: 5px; width:100%'});
+	var addbuttonsdiv = new Element('div', {'id':'addbuttonsdiv','class':'pb-1', 'style':'border-bottom:1px solid #E8E8E8;'});
 	editbartopdiv.insert(addbuttonsdiv);
 	addbuttonsdiv.insert('<div style="clear:both;float:left;width: 100%;margin-bottom:3px;"><?php echo $LNG->FORM_BUTTON_ADD_NEW; ?>:</div>');
 
@@ -1970,23 +1751,13 @@ function createEditSidebar(container, forcedirectedGraph) {
 	addbuttonsdiv.insert(commentaddbutton);
 
 	// SEARCH AREA
-	var searcharea = new Element('div', {'id':'editbar-searcharea', 'style': 'clear:both;float:left;width:100%;margin-left: 5px;margin-bottom:5px'});
+	var searcharea = new Element('div', {'id':'editbar-searcharea', 'class':'container-fluid px-0 py-1 mx-0 my-0'});
 	editbartopdiv.insert(searcharea);
 
-	var helpbuttondiv = new Element('div', {'style': 'float:left;'});
-	var infobutton = new Element('img', {'width':'16', 'height':'16', 'style': 'float:left;padding-top:3px; padding-right:3px;', 'title':'<?php echo $LNG->FORM_SELECTOR_SEARCH_MESSAGE; ?>', 'alt':'?'});
-	infobutton.src = "<?php echo $HUB_FLM->getImagePath('info.png'); ?>";
-	helpbuttondiv.insert(infobutton);
-	searcharea.insert(helpbuttondiv);
-
-	var searchlabel = new Element('label', {'style': 'float: left; margin-right: 3px; margin-top: 3px;'});
-	searchlabel.insert('<?php echo $LNG->FORM_SELECTOR_SEARCH_LABEL; ?>')
-	searcharea.insert(searchlabel);
-
-	var searchinnerdiv = new Element('div', {'style': 'float: left;'});
+	var searchinnerdiv = new Element('span', {'class': 'col- d-inline-flex px-1'});
 	searcharea.insert(searchinnerdiv);
 
-	var searchfield = new Element('input', {'id':'editbar-itemsearch', 'name':'editbar-itemsearch', 'type':'text', 'style': 'margin-right:3px; width:'+(mainwidth-110)+'px', 'value':''});
+	var searchfield = new Element('input', {'id':'editbar-itemsearch', 'class':'form-control', 'name':'editbar-itemsearch', 'type':'text', 'value':'', 'aria-label':'search'});
 	Event.observe(searchfield,"keypress", function(event){
 		editBarSearchKeyPressed(event);
 	});
@@ -1995,37 +1766,42 @@ function createEditSidebar(container, forcedirectedGraph) {
 	var searchchoices = new Element('div', {'id':'editbar-item_choices', 'class':'autocomplete', 'style': 'border-color: white;'});
 	searchinnerdiv.insert(searchchoices);
 
-	var buttondiv = new Element('div', {'style': 'float:left;'});
-	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'active', 'style': 'float:left;', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
+	var searchbutton = new Element('img', {'width':'20', 'height':'20', 'class':'col- gap-1', 'title':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>', 'alt':'<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>'});
 	searchbutton.src = "<?php echo $HUB_FLM->getImagePath('search.png'); ?>";
 	Event.observe(searchbutton,"click", function(event){
 		runEditBarSearch('0', '10', 'date', 'DESC');
 	});
-	buttondiv.insert(searchbutton);
-	searcharea.insert(buttondiv);
+	searcharea.insert(searchbutton);
 
-	//var messagelabel = new Element('label', {'style': 'clear:both; float: left; margin-top:0px;margin-bottom:5px;width:100%'});
-	//messagelabel.insert('<?php echo $LNG->FORM_SELECTOR_SEARCH_MESSAGE; ?>')
-	//searcharea.insert(messagelabel);
+	var clearbutton = new Element("img", { 'class':'col- mx-2', 'width':'20', 'height':'20', 'id':'edit-map-clear-button', 'src':'<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>',
+					'title':'<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>',
+					'alt':'<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>',
+				});
+	var clearhandler = function(event) {
+		$('editbar-itemsearch').value='';
+		$('search-editbar-item-list-count').innerHTML = "0";
+		$("item-editbar-search-list").innerHTML = "";
+	};
+	Event.observe(clearbutton,"click", clearhandler);
+	searcharea.insert(clearbutton);
 
 	// TABS AREA
-	var tabberparentdiv = new Element('div', {'id':'parenttabber', 'style': 'clear:both;float:left;width:100%;height:'+(mapheight-90)+'px;'});
+	var tabberparentdiv = new Element('div', {'id':'parenttabber', 'class': 'pt-1'});
 	tabberparentdiv.oriheight = mapheight-90;
 	nodeEditBar.insert(tabberparentdiv);
 
-	var tabberdiv = new Element('div', {'id':'tabber', 'style': 'background:white;border-top:1px solid #E8E8E8;clear:both;float:left;width:100%;height:100%;'});
+	var tabberdiv = new Element('div', {'id':'tabber', 'role':'navigation'});
 	tabberparentdiv.insert(tabberdiv);
 
-	var tabberinnerdiv = new Element('div', {'id':'tabberinnerdiv','class':'plainbackgradientpale', 'style': 'float:left;width:100%;'});
+	var tabberinnerdiv = new Element('div', {'id':'tabberinnerdiv'});
 	tabberdiv.insert(tabberinnerdiv);
 
-	var tabberlist = new Element('div', {'id':'tabs', 'class': 'tab2'});
+	var tabberlist = new Element('ul', {'id':'editsearchtabs', 'class': 'nav nav-tabs', 'role':'tablist'});
 	tabberinnerdiv.insert(tabberlist);
 
-	var tabbernodelistitem = new Element('div', {'class': 'tab', 'style':'font-size:9pt'});
+	var tabbernodelistitem = new Element('li', {'class': 'nav-item', 'style':'font-size:9pt'});
 	tabberlist.insert(tabbernodelistitem);
-	var tabbernodelink = new Element('a', {'id':'tab-editbar-item-node', 'class': 'tab2'});
-	tabbernodelink.href="javascript:void(0)" ;
+	var tabbernodelink = new Element('a', {'id':'tab-editbar-item-node', 'class': 'nav-link p-1 px-2 active', 'href':'#map'});
 	Event.observe(tabbernodelink,"click", function(event){
 		viewEditBarNodes();
 	});
@@ -2036,13 +1812,12 @@ function createEditSidebar(container, forcedirectedGraph) {
 	var tabbernodelinkspaninner = new Element('span', {'id': 'node-editbar-item-list-count'});
 	tabbernodelinkspaninner.insert('0')
 	tabbernodelinkspan.insert(tabbernodelinkspaninner);
-	tabbernodelinkspan.insert(' )');
+	tabbernodelinkspan.insert(') ');
 	tabbernodelink.insert(tabbernodelinkspan);
 
-	var tabbersearchlistitem = new Element('div', {'class': 'tab', 'style':'font-size:9pt'});
+	var tabbersearchlistitem = new Element('li', {'class': 'nav-item', 'style':'font-size:9pt'});
 	tabberlist.insert(tabbersearchlistitem);
-	var tabbersearchlink = new Element('a', {'id':'tab-editbar-item-search', 'class': 'tab2 unselected'});
-	tabbersearchlink.href="javascript:void(0)" ;
+	var tabbersearchlink = new Element('a', {'id':'tab-editbar-item-search', 'class': 'nav-link p-1 px-2', 'href':'#map'});
 	Event.observe(tabbersearchlink,"click", function(event){
 		viewEditBarSearch();
 	});
@@ -2053,17 +1828,17 @@ function createEditSidebar(container, forcedirectedGraph) {
 	var tabbersearchlinkspaninner = new Element('span', {'id': 'search-editbar-item-list-count'});
 	tabbersearchlinkspaninner.insert('0')
 	tabbersearchlinkspan.insert(tabbersearchlinkspaninner);
-	tabbersearchlinkspan.insert(' )');
+	tabbersearchlinkspan.insert(') ');
 	tabbersearchlink.insert(tabbersearchlinkspan);
 
 	//add the contents areas for the two tabs.
 	var tabbercontentdiv = new Element('div', {'id':'tabbercontentdiv','style': 'clear:both;float:left;height:100%;width:'+(mainwidth)+'px;'});
 	tabberdiv.insert(tabbercontentdiv);
 
-	var tabbercontentideas = new Element('div', {'id':'item-editbar-idea-list', 'style':'margin: 0px;overflow:hidden;clear: both;float:left;height:100%;width:100%;'});
+	var tabbercontentideas = new Element('div', {'id':'item-editbar-idea-list'});
 	tabbercontentdiv.insert(tabbercontentideas);
 
-	var tabbercontentsearch = new Element('div', {'id':'item-editbar-search-list', 'style':'margin: 0px;overflow:hidden;clear: both;float:left;height:100%;width:100%; display: none;'});
+	var tabbercontentsearch = new Element('div', {'id':'item-editbar-search-list', 'style':'margin: 0;overflow:hidden;height:100%; display: none;'});
 	tabbercontentsearch.insert('<?php echo $LNG->FORM_SELECTOR_SEARCH_EMPTY_MESSAGE; ?>');
 	tabbercontentdiv.insert(tabbercontentsearch);
 
@@ -2189,10 +1964,6 @@ function loadEditBarNodes(userid, start, max, orderby, sort){
 				var navbar = createEditBarNav(total, json.nodeset[0].count, start, max, "node", orderby, sort);
 				$("item-editbar-idea-list").insert(navbar);
 
-				//var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', url: '<?php echo $LNG->SORT_URL; ?>'};
-				//var sortArea = displayEditBarSortForm(sortOpts, handleEditBarMineSort, 'mine', orderby, sort);
-				//$("item-editbar-idea-list").insert(sortArea);
-
 				displayEditBarNodes($("item-editbar-idea-list"),nodes,1, false, total, "node");
 			} else {
 				$("item-editbar-idea-list").insert("<?php echo $LNG->FORM_SELECTOR_NOT_ITEMS; ?>");
@@ -2229,7 +2000,7 @@ function displayEditBarNodes(objDiv,nodes,start, includeUser, total, type){
 	height = height-extras;
 
 	objDiv.insert('<div style="clear:both; margin: 0px; padding: 0px;"></div>');
-	var lOL = new Element("ol", {'id':'editbarlist','start':start, 'class':'idea-list-ol', 'style':'background:white;margin:0px;padding:0px;overflow-y: auto; overflow-x: hidden; height: '+height+'px;'});
+	var lOL = new Element("ol", {'id':'editbarlist','start':start, 'class':'idea-list-ol', 'style':'margin:0px;padding:10px;overflow-y: auto; overflow-x: hidden; height: '+height+'px;'});
 	lOL.oriheight = height;
 	for(var i=0; i< nodes.length; i++){
 		if(nodes[i].cnode && nodes[i].cnode.nodeid != NODE_ARGS['nodeid']){
@@ -2244,96 +2015,34 @@ function displayEditBarNodes(objDiv,nodes,start, includeUser, total, type){
 	objDiv.insert(lOL);
 }
 
-/*function handleEditBarMineSort() {
-	var sort = $('select-editbar-sort-node-mine').options[$('select-editbar-sort-node-mine').selectedIndex].value;
-	var orderby = $('select-editbar-orderby-node-mine').options[$('select-editbar-orderby-node-mine').selectedIndex].value;
-	loadEditBarNodes('<?php echo($USER->userid); ?>', 0, 10, orderby, sort);
-}
-
-function handleEditBarSearchSort() {
-	var sort = $('select-editbar-sort-node-search').options[$('select-editbar-sort-node-search').selectedIndex].value;
-	var orderby = $('select-editbar-orderby-node-search').options[$('select-editbar-orderby-node-search').selectedIndex].value;
-	runEditBarSearch(0, 10, orderby, sort);
-}
-*/
-
-/**
- * show the sort form
- */
-/*function displayEditBarSortForm(sortOpts, handler, type, orderby, sort){
-
-	if (!orderby) {
-		orderby = 'Date';
-	}
-	if (!sort) {
-		sort = 'DESC';
-	}
-
-	var sbTool = new Element("span", {'class':'toolbar', 'style':'padding-top:0px;width:100%'});
-	//sbTool.insert("<?php echo $LNG->SORT; ?>: ");
-
-	var selOrd = new Element("select", {'style':'font-size:9pt'});
-	selOrd.id = "select-editbar-orderby-node-"+type;
-	selOrd.className = "toolbar";
-	selOrd.name = "orderby";
-	sbTool.insert(selOrd);
-	Event.observe(selOrd,'change',handler);
-	for(var key in sortOpts){
-		var opt = new Element("option", {'style':'font-size:9pt'});
-		opt.value=key;
-		opt.insert(sortOpts[key].valueOf());
-		selOrd.insert(opt);
-		if(orderby == key){
-			opt.selected = true;
-		}
-	}
-
-	var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
-	var sortBy = new Element("select", {'style':'font-size:9pt'});
-	sortBy.id = "select-editbar-sort-node-"+type;
-	sortBy.className = "toolbar";
-	sortBy.name = "sort";
-	sbTool.insert(sortBy);
-	Event.observe(sortBy,'change',handler);
-	for(var key in sortBys){
-		var opt = new Element("option", {'style':'font-size:9pt'});
-		opt.value=key;
-		opt.insert(sortBys[key]);
-		sortBy.insert(opt);
-		if(sort == key){
-			opt.selected = true;
-		}
-	}
-
-	return sbTool;
-}
-*/
-
 /**
  * display Nav
  */
-function createEditBarNav(total, count, start, max, type, orderby, sort){
+function createEditBarNav(total, count, start, max, type, orderby, sort) {
 
-	var navheight = 40;
-	if (totalPages = Math.ceil(total/max) < 13) {
-		navheight = 20;
-	}
+	var mainnav = new Element ("div",{'style':'background:white;'});
 
-   var mainnav = new Element ("div",{'style':'background:white;width:100%;'});
-   var outernav = new Element ("div",{'style':'background:white;overflow-x:auto;overflow-y:hidden;height:'+navheight+'px; width: 240px; max-width:240px'});
-   var nav = new Element ("div",{'id':'page-editbar-nav'+type, 'style':'background:white;height:12px;white-space: nowrap;'});
+	var header = createEditBarNavCounter(total, start, count);
+	mainnav.insert(header);
 
-   var header = createEditBarNavCounter(total, start, count);
-   mainnav.insert(header);
-   outernav.insert(nav);
-   mainnav.insert(outernav);
-   if (total > parseInt( max )) {
+	var outernav = new Element ("div",{'class':'border-bottom', 'style':'overflow-x:auto;overflow-y:hidden;width: 240px; max-width:240px'});
+	var nav = new Element ("div",{'id':'page-editbar-nav'+type, 'class':'toolbarrow pb-1', 'style':'white-space: nowrap;' });
+	outernav.insert(nav);
+    mainnav.insert(outernav);
+
+	var pageNav = new Element ("nav",{'aria-label':'Page navigation' });
+	var pageUL = new Element ("ul",{'id':'page-editbar-nav'+type, 'class':'pagination mb-0' });
+
+ 	if (total > max) {
+		var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link", "style":"padding: 0.2rem 0.5rem;"});
+
 		if(start > 0){
-			var previmage = new Element('img', {'title':'<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>', 'alt':'<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>', 'class':'toolbar active', 'style':'padding-right: 0px;'});
-			previmage.src = '<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>';
-			Event.observe(previmage,"click", function(){
-				var newArr = {"max":max, "start":start};
-				newArr["start"] = parseInt(start) - newArr["max"];
+			prevSpan.update("<i class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+	        prevSpan.addClassName("active");
+			Event.observe(prevSpan,"click", function(){
+				let newArr = new Object();
+				newArr.max = max;
+				newArr.start = parseInt(start) - newArr["max"];
 				if (type=="node") {
 					loadEditBarNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
 				} else if (type=="search") {
@@ -2341,67 +2050,76 @@ function createEditBarNav(total, count, start, max, type, orderby, sort){
 				}
 				this.scrollIntoView();
 			});
-			nav.insert(previmage);
 		} else {
-			var previmage = new Element('img', {'title':'<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>', 'alt':'<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>', 'disabled':'true', 'class':'toolbar inactive', 'style':'padding-right: 0px;'});
-			previmage.src = '<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>';
-			nav.insert(previmage);
+			prevSpan.update("<i disabled class=\"fas fa-chevron-left fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+	        prevSpan.addClassName("inactive");
 		}
+
+		pageUL.insert(prevSpan)
 
 		//pages
 		var totalPages = Math.ceil(total/max);
 		var currentPage = (start/max) + 1;
-		for (var i = 1; i<totalPages+1; i++){
-			var page = new Element("span", {'class':'nav-page', 'style':'display:inline'}).insert(i);
-			if(i != currentPage){
-				page.addClassName("active");
-				var newArr = {"max":max, "start":start};
-				newArr["start"] = newArr["max"] * (i-1) ;
+		for (let i = 1; i < totalPages+1; i++) {
+			var page = new Element("span", {'class':'page-link', "style":"padding: 0.2rem 0.5rem;" } ).insert(i);
+			if ( i != currentPage ) {
+				page.addClassName( "active" );
+				let newArr = new Object();
+				newArr.max = max;
+				newArr.start = newArr[ "max" ] * (i-1) ;
 				Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,newArr,orderby,sort));
 			} else {
 				page.addClassName("currentpage");
 				page.scrollIntoView(true);
 			}
-			nav.insert(page);
+
+			pageUL.insert(page);
 		}
 
-		//next
-		if(parseInt(start)+parseInt(count) < parseInt(total)){
-			var nextimage = new Element('img', {'title':'<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>', 'alt':'<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>', 'class':'toolbar active', 'style':'padding-right: 0px;display:inline-block'});
-			nextimage.src = '<?php echo $HUB_FLM->getImagePath("arrow-right2.png"); ?>';
-			Event.observe(nextimage,"click", function(){
-				var newArr = {"max":max, "start":start};
-				newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
+	    //next
+	    var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link", "style":"padding: 0.2rem 0.5rem;"});
+	    if(parseInt(start)+parseInt(count) < parseInt(total)) {
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+	        nextSpan.addClassName("active");
+	        Event.observe(nextSpan,"click", function() {
+				let newArr = new Object();
+				newArr.max = max;
+	            newArr.start = parseInt(start) + parseInt(newArr["max"]);
 				if (type=="node") {
 					loadEditBarNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
 				} else if (type=="search") {
 					runEditBarSearch(newArr["start"], newArr["max"], orderby, sort);
 				}
-			});
-			nav.insert(nextimage);
-		} else {
-			var nextimage = new Element('img', {'title':'<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>', 'alt':'<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>', 'disabled':'true','class':'toolbar inactive', 'style':'padding-right: 0px;display:inline-block'});
-			nextimage.src = '<?php echo $HUB_FLM->getImagePath("arrow-right2-disabled.png"); ?>';
-			nav.insert(nextimage);
-		}
+	        });
+	    } else {
+			nextSpan.update("<i class=\"fas fa-chevron-right fa-lg\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+	        nextSpan.addClassName("inactive");
+	    }
+
+		pageUL.insert(nextSpan);
+
+		if ( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))) {
+			pageNav.insert(pageUL);
+			nav.insert(pageNav);
+	    }
 	}
 
 	return mainnav;
-   }
+}
 
-   var Pages = {
-		next: function(e){
-			var data = $A(arguments);
-			var type = data[1];
-			var arrayData = data[2];
-			var orderby = data[3];
-			var sort = data[4];
-			if (type=="node") {
-				loadEditBarNodes('<?php echo($USER->userid); ?>', arrayData['start'], arrayData['max'], orderby, sort);
-			} else if (type=="search") {
-				runEditBarSearch(arrayData['start'], arrayData['max'], orderby, sort);
-			}
+var Pages = {
+	next: function(e){
+		var data = $A(arguments);
+		var type = data[1];
+		var arrayData = data[2];
+		var orderby = data[3];
+		var sort = data[4];
+		if (type=="node") {
+			loadEditBarNodes('<?php echo($USER->userid); ?>', arrayData['start'], arrayData['max'], orderby, sort);
+		} else if (type=="search") {
+			runEditBarSearch(arrayData['start'], arrayData['max'], orderby, sort);
 		}
+	}
 };
 
 /**
@@ -2409,10 +2127,10 @@ function createEditBarNav(total, count, start, max, type, orderby, sort){
 */
 function createEditBarNavCounter(total, start, count, type){
 	if(count != 0){
-		var objH = new Element("span",{'class':'nav', 'style':'background:transparent;padding-left:5px;'});
+		var objH = new Element("span",{'class':'nav', 'style':'padding:5px 10px;'});
 		var s1 = parseInt(start)+1;
 		var s2 = parseInt(start)+parseInt(count);
-		objH.insert("<b>" + s1 + " to " + s2 + " (" + total + ")</b>");
+		objH.insert("<b>" + s1 + " to " + s2 + "</b>");
 	} else {
 		var objH = new Element("span");
 		objH.insert("<p><b><?php echo $LNG->LIST_NAV_NO_ITEMS; ?></b></p>");
@@ -2421,22 +2139,18 @@ function createEditBarNavCounter(total, start, count, type){
 }
 
 function viewEditBarNodes() {
-	$("tab-editbar-item-node").removeClassName("unselected");
-	$("tab-editbar-item-node").addClassName("current");
-	$("item-editbar-idea-list").style.display = 'block';
-
-	$("tab-editbar-item-search").removeClassName("current");
-	$("tab-editbar-item-search").addClassName("unselected");
+	$("tab-editbar-item-search").removeClassName("active");
 	$("item-editbar-search-list").style.display = 'none';
+
+	$("tab-editbar-item-node").addClassName("active");
+	$("item-editbar-idea-list").style.display = 'block';
 }
 
 function viewEditBarSearch() {
-	$("tab-editbar-item-node").removeClassName("current");
-	$("tab-editbar-item-node").addClassName("unselected");
+	$("tab-editbar-item-node").removeClassName("active");
 	$("item-editbar-idea-list").style.display = 'none';
 
-	$("tab-editbar-item-search").removeClassName("unselected");
-	$("tab-editbar-item-search").addClassName("current");
+	$("tab-editbar-item-search").addClassName("active");
 	$("item-editbar-search-list").style.display = 'block';
 }
 

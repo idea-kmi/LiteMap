@@ -31,6 +31,18 @@
 $LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Loading a Live Visualisation from <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 $LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Loading Live Visual Analytics from <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 
+$LNG->STATS_GO_BACK = "Go back";
+
+$LNG->STATS_AVAILABLE_FROM = "Available Date Range from";
+$LNG->STATS_AVAILABLE_TO = "to";
+$LNG->STATS_START_DATE = "Show data from";
+$LNG->STATS_END_DATE = "Show data to";
+$LNG->STATS_LOAD_BUTTON = "Load Data";
+$LNG->STATS_ACTIVITY_WARNING = "If there is a lot of data to load, your connection may timout. If this happens, please reduce the date range you have selected.";
+$LNG->STATS_START_END_DATE_ERROR = "The from date must be earlier than the to date";
+$LNG->STATS_START_DATE_ERROR = "Please select a date to load data from";
+$LNG->STATS_END_DATE_ERROR = "Please select a date to load data to";
+
 /** STATE PAGE NAMES **/
 $LNG->STATS_TAB_MAP = 'Map';
 $LNG->STATS_TAB_VIS = 'Alternative Views';

@@ -33,7 +33,5 @@ Event.observe(window, 'load', function() {
 	var itemobj = renderMapNode("976","", nodeObj, 'mainnode', nodeObj.role, true, 'active', false, false, false, true, false);
 	$('mainnodediv').insert(itemobj);
 
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/create-map-net.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/create-map-net.js.php"); ?>', 'create-map-net-script');
 });

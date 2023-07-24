@@ -427,8 +427,6 @@ function createNewForceDirectedGraph(containername, rootNodeID) {
  */
 function addConnectionToFDGraph(c, graph) {
 
-	//var graph = positionedMap.graph;
-
 	if (c && c.from && c.to) {
 
 		var fN = c.from[0].cnode;
@@ -631,37 +629,41 @@ function relayoutMap(graphview) {
  */
 function layoutAndAnimateFD(graphview, messagearea) {
 
-	//graphview.computeIncremental({
-	graphview.computePrefuse({
-		iter:200,
-		property: 'end',
-		onComplete: function(){
-		  	graphview.animate({
-				modes: ['linear'],
-				transition: $jit.Trans.Elastic.easeOut,
-				duration: 500,
-				onComplete: function() {
-					var width = $(graphview.config.injectInto+'-outer').offsetWidth;
-					var height = $(graphview.config.injectInto+'-outer').offsetHeight;
-					clipInitialCanvas(graphview, width, height);
+	try {
+		//graphview.computeIncremental({
+		graphview.computePrefuse({
+			iter:200,
+			property: 'end',
+			onComplete: function(){
+				graphview.animate({
+					modes: ['linear'],
+					transition: $jit.Trans.Elastic.easeOut,
+					duration: 500,
+					onComplete: function() {
+						var width = $(graphview.config.injectInto+'-outer').offsetWidth;
+						var height = $(graphview.config.injectInto+'-outer').offsetHeight;
+						clipInitialCanvas(graphview, width, height);
 
-					var size = graphview.canvas.getSize();
-					if (size.width > width || size.height > height) {
-						zoomFDFit(graphview);
-					} else {
-						var rootNodeID = graphview.root;
-						panToNodeFD(graphview, rootNodeID);
+						var size = graphview.canvas.getSize();
+						if (size.width > width || size.height > height) {
+							zoomFDFit(graphview);
+						} else {
+							var rootNodeID = graphview.root;
+							panToNodeFD(graphview, rootNodeID);
+						}
+
+						if (messagearea) {
+							messagearea.innerHTML="";
+							messagearea.style.display = "none";
+						}
+
+						graphview.canvas.getPos(true);
 					}
-
-					if (messagearea) {
-						messagearea.innerHTML="";
-						messagearea.style.display = "none";
-					}
-
-					graphview.canvas.getPos(true);
-				}
-		  	});
-		}
-	});
+				});
+			}
+		});
+	} catch(e) {
+		console.log(e);
+	}
 }
 

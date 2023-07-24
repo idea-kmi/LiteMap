@@ -158,9 +158,11 @@ class format_jsonld extends format_base {
                 $users = $object->users;
                 if (isset($object->cipher)) {
 					foreach ($users as $user){
-						if (in_array($user->userid,$this->checkUsers) === FALSE) {
-							$this->addFullUserProfile($user);
-							array_push($this->checkUsers, $user->userid);
+						if (!$user instanceof Hub_Error) {
+							if (in_array($user->userid,$this->checkUsers) === FALSE) {
+								$this->addFullUserProfile($user);
+								array_push($this->checkUsers, $user->userid);
+							}
 						}
 					}
 				}
@@ -246,7 +248,7 @@ class format_jsonld extends format_base {
            default:
                 //error as method not defined.
 				global $ERROR;
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createInvalidMethodError();
 				include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
                 die;
@@ -284,7 +286,10 @@ class format_jsonld extends format_base {
 
 		if (isset($object->unobfuscationid) && $object->unobfuscationid != ""
 					&& $api_class != "UnobfuscatedUserSet") {
-			$count = count($this->checkUsers);
+			$count = 0;
+			if (is_countable($this->checkUsers)) {
+				$count = count($this->checkUsers);
+			}
 			$users = "";
 			for ($i=0; $i<$count;$i++) {
 				$userid = $this->checkUsers[$i];
@@ -301,7 +306,10 @@ class format_jsonld extends format_base {
 
 	function addGroups($groupset) {
 		$groups = $groupset->groups;
-		$count = count($groups);
+		$count = 0;
+		if (is_countable($groups)) {
+			$count = count($groups);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$this->addGroup($groups[$i]);
 		}
@@ -322,7 +330,11 @@ class format_jsonld extends format_base {
 
       	$this->namespaces .= '"'.$groupname.'": "'.$this->serviceurl.'conversations/'.$id.'/",';
 
-		$this->siteBlockStr .= '"space_of": "'.$groupid.'",';
+		if (isset($this->siteBlockStr)) {
+			$this->siteBlockStr .= '"space_of": "'.$groupid.'",';
+		} else {
+			$this->siteBlockStr = '"space_of": "'.$groupid.'",';
+		}
 
 		$this->conversationBlockStr .= '{';
 		$this->conversationBlockStr .= '"@type": "catalyst:Conversation",';
@@ -343,7 +355,10 @@ class format_jsonld extends format_base {
  			   	case "nodes":
 					//add just nodes
 					$nodes = $view->nodes;
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -354,7 +369,10 @@ class format_jsonld extends format_base {
  			   	case "users":
 					//add nodes
 					$nodes = $view->nodes;
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -367,7 +385,10 @@ class format_jsonld extends format_base {
 
 					//add connection users
 					$conns = $view->connections;
-					$count = count($conns);
+					$count = 0;
+					if (is_countable($conns)) {
+						$count = count($conns);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewconnection = $conns[$i];
 						$connection = $viewconnection->connection;
@@ -392,7 +413,10 @@ class format_jsonld extends format_base {
 					//add node activities
 					$nodes = $view->nodes;
 					$justnodes = array();
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -413,11 +437,14 @@ class format_jsonld extends format_base {
 			$nodes = $view->nodes;
 			if ($nodes) {
 				$justnodes = array();
-				$count = count($nodes);
+				$count = 0;
+				if (is_countable($nodes)) {
+					$count = count($nodes);
+				}
 				for ($i=0; $i<$count; $i++) {
 					$viewnode = $nodes[$i];
 					$node = $viewnode->node;
-					if (!$node instanceof Error) {
+					if (!$node instanceof Hub_Error) {
 						array_push($justnodes, $node);
 						$this->addNode($node);
 
@@ -433,11 +460,14 @@ class format_jsonld extends format_base {
 
 				//add connections
 				$conns = $view->connections;
-				$count = count($conns);
+				$count = 0;
+				if (is_countable($conns)) {
+					$count = count($conns);
+				}
 				for ($i=0; $i<$count; $i++) {
 					$viewconnection = $conns[$i];
 					$connection = $viewconnection->connection;
-					if (!$connection instanceof Error) {
+					if (!$connection instanceof Hub_Error) {
 						$this->addConnection($connection);
 						$user = $connection->users[0];
 						if (in_array($user->userid, $this->checkUsers) === FALSE) {
@@ -459,7 +489,10 @@ class format_jsonld extends format_base {
 
 	function addViews($viewset) {
 		$views = $viewset->views;
-		$count = count($views);
+		$count = 0;
+		if (is_countable($views)) {
+			$count = count($views);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$this->addView($views[$i]);
 		}
@@ -480,7 +513,11 @@ class format_jsonld extends format_base {
 
       	$this->namespaces .= '"'.$viewname.'": "'.$this->serviceurl.'views/'.$id.'/",';
 
-		$this->siteBlockStr .= '"space_of": "'.$viewid.'",';
+		if (isset($this->siteBlockStr)) {
+			$this->siteBlockStr .= '"space_of": "'.$viewid.'",';
+		} else {
+			$this->siteBlockStr = '"space_of": "'.$viewid.'",';
+		}
 
 		$this->conversationBlockStr .= '{';
 		$this->conversationBlockStr .= '"@type": "catalyst:Conversation",';
@@ -499,7 +536,7 @@ class format_jsonld extends format_base {
 		*/
 
 		$viewnode = $view->viewnode;
-		if (!isset($viewnode) || $viewnode instanceof Error) {
+		if (!isset($viewnode) || $viewnode instanceof Hub_Error) {
 			return "";
 		}
 
@@ -514,7 +551,10 @@ class format_jsonld extends format_base {
  			   	case "nodes":
 					//add just nodes
 					$nodes = $view->nodes;
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -525,7 +565,10 @@ class format_jsonld extends format_base {
  			   	case "users":
 					//add nodes
 					$nodes = $view->nodes;
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -538,7 +581,10 @@ class format_jsonld extends format_base {
 
 					//add connection users
 					$conns = $view->connections;
-					$count = count($conns);
+					$count = 0;
+					if (is_countable($conns)) {
+						$count = count($conns);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewconnection = $conns[$i];
 						$connection = $viewconnection->connection;
@@ -563,7 +609,10 @@ class format_jsonld extends format_base {
 					//add node activities
 					$nodes = $view->nodes;
 					$justnodes = array();
-					$count = count($nodes);
+					$count = 0;
+					if (is_countable($nodes)) {
+						$count = count($nodes);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$viewnode = $nodes[$i];
 						$node = $viewnode->node;
@@ -584,10 +633,10 @@ class format_jsonld extends format_base {
 
 			// Add Map node
 			$viewnode = $view->viewnode;
-			if (!isset($viewnode) || $viewnode instanceof Error) {
+			if (!isset($viewnode) || $viewnode instanceof Hub_Error) {
 				$viewnode = new CNode($view->nodeid);
 			}
-			if (!$viewnode instanceof Error) {
+			if (!$viewnode instanceof Hub_Error) {
 				array_push($justnodes, $viewnode);
 				$this->addNode($viewnode);
 				$user = $viewnode->users[0];
@@ -599,7 +648,10 @@ class format_jsonld extends format_base {
 
 			//add nodes
 			$nodes = $view->nodes;
-			$count = count($nodes);
+			$count = 0;
+			if (is_countable($nodes)) {
+				$count = count($nodes);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$viewnode = $nodes[$i];
 				$node = $viewnode->node;
@@ -617,7 +669,10 @@ class format_jsonld extends format_base {
 
 			//add connections
 			$conns = $view->connections;
-			$count = count($conns);
+			$count = 0;
+			if (is_countable($conns)) {
+				$count = count($conns);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$viewconnection = $conns[$i];
 				$connection = $viewconnection->connection;
@@ -649,7 +704,7 @@ class format_jsonld extends format_base {
 	function addNode($node) {
 		global $CFG;
 
-		if (!isset($node) || $node instanceof Error) {
+		if (!isset($node) || $node instanceof Hub_Error) {
 			return "";
 		}
 
@@ -709,7 +764,11 @@ class format_jsonld extends format_base {
 			$this->dataGraphStr .= '},';
 
 			// add any URLS
-			if ( isset($node->urls) && count($node->urls) > 0) {
+			$counturls = 0;
+			if ( isset($node->urls) && is_countable($node->urls)) {
+				$counturls = count($node->urls);
+			}
+			if ($counturls > 0) {
 				$this->addURLs($node->urls, $node->nodeid);
 			}
 
@@ -724,7 +783,10 @@ class format_jsonld extends format_base {
 	function addComments($node) {
 		$connset = getAllChatConnections($node->nodeid, $node->role->name);
 		$conns = $connset->connections;
-		$count = count($conns);
+		$count = 0;
+		if (is_countable($conns)) {
+			$count = count($conns);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$conn = $conns[$i];
 			$this->addComment($conn);
@@ -737,7 +799,7 @@ class format_jsonld extends format_base {
 
 		$fromTypeObj = $conn->fromrole;
 		$toTypeObj = $conn->torole;
-		if (!$fromTypeObj instanceof Error && !$toTypeObj instanceof Error) {
+		if (!$fromTypeObj instanceof Hub_Error && !$toTypeObj instanceof Hub_Error) {
 			$fromType = $fromTypeObj->name;
 			$toType = $toTypeObj->name;
 
@@ -792,11 +854,14 @@ class format_jsonld extends format_base {
 		$this->historyGraphStr  .= "{";
 		$this->historyGraphStr  .= '"@graph": [';
 
-		$count = count($nodes);
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$node = $nodes[$i];
-			if (!$node instanceof Error) {
-				$as = getAllNodeActivity($node->nodeid, 0, 0, -1, 'cif');
+			if (!$node instanceof Hub_Error) {
+				$as = getAllNodeActivity($node->nodeid);
 				$activities = $as->activities;
 				foreach($activities as $activity) {
 					$this->addNodeHistoryItem($activity);
@@ -875,7 +940,7 @@ class format_jsonld extends format_base {
 				//$node = getNode($activity->itemid);
 				//if ($node instanceof CNode) {
 					$pseudo_id = "anonymous";
-					if (!$userObj instanceof Error && $userObj->userid != NULL) {
+					if (!$userObj instanceof Hub_Error && $userObj->userid != NULL) {
 						if (in_array($userObj->userid, $this->checkUsers) === FALSE) {
 							$this->addUser($userObj);
 							array_push($this->checkUsers, $userObj->userid);
@@ -946,7 +1011,7 @@ class format_jsonld extends format_base {
 	function addConnections($conset) {
 		$str = "";
 
-		if (!isset($conset) || $conset instanceof Error) {
+		if (!isset($conset) || $conset instanceof Hub_Error) {
 			return "";
 		}
 
@@ -955,7 +1020,11 @@ class format_jsonld extends format_base {
 
       	$this->namespaces .= '"'.$conversationname.'": "'.$this->serviceurl.'connections/",';
 
-		$this->siteBlockStr .= '"space_of": "'.$conversationid.'",';
+		if (isset($this->siteBlockStr)) {
+			$this->siteBlockStr .= '"space_of": "'.$conversationid.'",';
+		} else {
+			$this->siteBlockStr = '"space_of": "'.$conversationid.'",';
+		}
 
 		$this->conversationBlockStr .= '{';
 		$this->conversationBlockStr .= '"@type": "catalyst:Conversation",';
@@ -998,7 +1067,7 @@ class format_jsonld extends format_base {
 	function addConnection($conn) {
 		global $CFG;
 
-		if (!isset($conn) || $conn instanceof Error) {
+		if (!isset($conn) || $conn instanceof Hub_Error) {
 			return "";
 		}
 
@@ -1007,7 +1076,7 @@ class format_jsonld extends format_base {
 
 			$fromTypeObj = $conn->fromrole;
 			$toTypeObj = $conn->torole;
-			if (!$fromTypeObj instanceof Error && !$toTypeObj instanceof Error) {
+			if (!$fromTypeObj instanceof Hub_Error && !$toTypeObj instanceof Hub_Error) {
 				$fromType = $fromTypeObj->name;
 				$toType = $toTypeObj->name;
 
@@ -1077,7 +1146,10 @@ class format_jsonld extends format_base {
 	}
 
 	function addURLs($urls, $nodeid) {
-		$count = count($urls);
+		$count = 0;
+		if (is_countable($urls)) {
+			$count = count($urls);
+		}
 		for ($i=0; $i<$count;$i++) {
 			$url = $urls[$i];
 			$this->addURL($url, $nodeid);
@@ -1162,7 +1234,10 @@ class format_jsonld extends format_base {
 					$bits = explode(":",$startlast);
 					$textnum = $bits[1];
 					$localpath = "";
-					$count = count($startbits);
+					$count = 0;
+					if (is_countable($startbits)) {
+						$count = count($startbits);
+					}
 					for($i=0; $i<$count-1; $i++) {
 						$localpath .= $startbits[$i];
 						$localpath .= "/";
@@ -1171,16 +1246,28 @@ class format_jsonld extends format_base {
 					$starttext .= "string-range(".$localpath."text()[".$bits2[1].", '', ".$textnum."))";
 				} else {
 					$bits = explode(":",$startlast);
-					if (count($bits) > 1) {
+					$countbits = 0;
+					if (is_countable($bits)) {
+						$countbits = count($bits);
+					}
+					if ($countbits > 1) {
 						$localpath = "";
 						$count = count($startbits);
+						$count = 0;
+						if (is_countable($startbits)) {
+							$count = count($startbits);
+						}
 						for($i=0; $i<$count-1; $i++) {
 							$localpath .= $startbits[$i];
 							$localpath .= "/";
 						}
 						$textnum = $bits[1];
 						$bits2 = explode("[",$bits[0]);
-						if (count($bits2) > 1) {
+						$countbits2 = 0;
+						if (is_countable($bits2)) {
+							$countbits2 = count($bits2);
+						}
+						if ($countbits2 > 1) {
 							$starttext .= "string-range(".$localpath."text()[".$bits2[1]." '', ".$textnum."))";
 						} else {
 							$starttext .= "string-range(".$localpath."text(), '', ".$textnum."))";
@@ -1197,7 +1284,10 @@ class format_jsonld extends format_base {
 					$bits = explode(":",$endlast);
 					$textnum = $bits[1];
 					$localpath = "";
-					$count = count($endbits);
+					$count = 0;
+					if (is_countable($endbits)) {
+						$count = count($endbits);
+					}
 					for($i=0; $i<$count-1; $i++) {
 						$localpath .= $endbits[$i];
 						$localpath .= "/";
@@ -1206,16 +1296,27 @@ class format_jsonld extends format_base {
 					$endtext .= "string-range(".$localpath."text()[".$bits2[1].", '', ".$textnum."))";
 				} else {
 					$bits = explode(":",$endlast);
-					if (count($bits) > 1) {
+					$countbits = 0;
+					if (is_countable($bits)) {
+						$countbits = count($bits);
+					}
+					if ($countbits > 1) {
 						$localpath = "";
-						$count = count($endbits);
+						$count = 0;
+						if (is_countable($endbits)) {
+							$count = count($endbits);
+						}
 						for($i=0; $i<$count-1; $i++) {
 							$localpath .= $endbits[$i];
 							$localpath .= "/";
 						}
 						$textnum = $bits[1];
 						$bits2 = explode("[",$bits[0]);
-						if (count($bits2) > 1) {
+						$countbits = 0;
+						if (is_countable($bits2)) {
+							$countbits = count($bits2);
+						}
+						if ($countbits > 1) {
 							$endtext .= "string-range(".$localpath."text()[".$bits2[1]." '', ".$textnum."))";
 						} else {
 							$endtext .= "string-range(".$localpath."text(), '', ".$textnum."))";
@@ -1250,11 +1351,14 @@ class format_jsonld extends format_base {
 
 	function addNodeVotes($nodeid) {
 		$votesObj = getVotes($nodeid);
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 
-			$count = count($posvotes);
+			$count = 0;
+			if (is_countable($posvotes)) {
+				$count = count($posvotes);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$vote = $posvotes[$i];
 				$id = $vote->id;
@@ -1280,7 +1384,10 @@ class format_jsonld extends format_base {
 				$this->dataGraphStr .= '},';
 			}
 
-			$count = count($negvotes);
+			$count = 0;
+			if (is_countable($negvotes)) {
+				$count = count($negvotes);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$vote = $negvotes[$i];
 				$id = $vote->id;
@@ -1311,14 +1418,17 @@ class format_jsonld extends format_base {
 
 	function addConnectionVotes($con) {
 		$votesObj = getVotes($con->connid);
-		if (!$votesObj instanceof Error) {
+		if (!$votesObj instanceof Hub_Error) {
 			$posvotes = $votesObj->positivevoteslist;
 			$negvotes = $votesObj->negativevoteslist;
 
 			//$posvotes = $votesObj->positiveconnvoteslist;
 			//$negvotes = $votesObj->negativeconnvoteslist;
 
-			$count = count($posvotes);
+			$count = 0;
+			if (is_countable($posvotes)) {
+				$count = count($posvotes);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$vote = $posvotes[$i];
 				$id = $vote->id;
@@ -1344,7 +1454,10 @@ class format_jsonld extends format_base {
 				$this->dataGraphStr .= '},';
 			}
 
-			$count = count($negvotes);
+			$count = 0;
+			if (is_countable($negvotes)) {
+				$count = count($negvotes);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$vote = $negvotes[$i];
 				$id = $vote->id;
@@ -1398,27 +1511,30 @@ class format_jsonld extends format_base {
 	function addFullUserProfile($user) {
 		global $CFG;
 
-		$pseudo_id = $this->getPseudonym($user->userid);
+		if (!$user instanceof Hub_Error) {
 
-		$this->dataGraphStr .= '{';
-		$this->dataGraphStr .= '"@type": "Agent",';
-		$this->dataGraphStr .= '"@id": "'.$this->site.':agents/'.$pseudo_id.'",';
+			$pseudo_id = $this->getPseudonym($user->userid);
 
-		if (isset($user->description) && $user->description != "") {
-			$desc = character_convert_to($user->description, 'UTF-8');
-			$this->dataGraphStr .= '"description": "'.parseToJSON($desc).'",';
+			$this->dataGraphStr .= '{';
+			$this->dataGraphStr .= '"@type": "Agent",';
+			$this->dataGraphStr .= '"@id": "'.$this->site.':agents/'.$pseudo_id.'",';
+
+			if (isset($user->description) && $user->description != "") {
+				$desc = character_convert_to($user->description, 'UTF-8');
+				$this->dataGraphStr .= '"description": "'.parseToJSON($desc).'",';
+			}
+			if (isset($user->photo) && $user->photo != "") {
+				$this->dataGraphStr .= '"img": "'.$user->photo.'",';
+			}
+
+			if (isset($user->userid) && $user->userid != 'anonymous') {
+				$this->dataGraphStr .= '"homepage": "'.$CFG->homeAddress.'user.php?userid='.$user->userid.'",';
+			}
+
+			$name = character_convert_to($user->name, 'UTF-8');
+			$this->dataGraphStr .= '"fname": "'.parseToJSON($name).'"';
+			$this->dataGraphStr .= '},';
 		}
-		if (isset($user->photo) && $user->photo != "") {
-			$this->dataGraphStr .= '"img": "'.$user->photo.'",';
-		}
-
-		if (isset($user->userid) && $user->userid != 'anonymous') {
-			$this->dataGraphStr .= '"homepage": "'.$CFG->homeAddress.'user.php?userid='.$user->userid.'",';
-		}
-
-		$name = character_convert_to($user->name, 'UTF-8');
-		$this->dataGraphStr .= '"fname": "'.parseToJSON($name).'"';
-		$this->dataGraphStr .= '},';
 	}
 
 	/*** HELPER FUNCTIONS ***/

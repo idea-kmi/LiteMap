@@ -139,7 +139,7 @@ $HUB_SQL->UTILLIB_GROUP_TAGS_FOR_CLOUD = "SELECT alltags.Name, count(alltags.Nam
 										SELECT t.Name as Name From Tag t RIGHT JOIN TagTriple tt ON t.TagID = tt.TagID
 										RIGHT JOIN Triple ON tt.TripleID = Triple.TripleID
 										WHERE tt.UserID IN (Select UserID from UserGroup where GroupID=?)
-										AND Triple.TripleID IN (Select TripleID FROM TripleGroup WHERE GroupID=?))
+										AND Triple.TripleID IN (Select TripleID FROM TripleGroup WHERE GroupID=?)
 										UNION ALL
 										SELECT t.Name as Name From Tag t RIGHT JOIN TagUsers tu ON t.TagID = tu.TagID
 										WHERE tu.UserID IN (Select UserID from UserGroup where GroupID=?)
@@ -152,90 +152,125 @@ $HUB_SQL->UTILLIB_GROUP_TAGS_FOR_CLOUD = "SELECT alltags.Name, count(alltags.Nam
 
 /** Get ALL Node Activity **/
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART1 = "Select ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2_BRACKET = "(";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART2 = "SELECT DISTINCT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
     									FROM AuditNode a WHERE a.NodeID=?";
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3 = ") UNION (SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_FROM = " AND a.ModificationDate >= ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_MOD_DATE_TO = " AND a.ModificationDate < ?";
+
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_FROM = " AND a.CreationDate >= ?";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_CREATE_DATE_FOLLOWING_TO = " AND a.CreationDate < ?";
+
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART3 = "SELECT DISTINCT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
 										a.ChangeType, a.TripleXML as XML
 										FROM AuditTriple a
 										LEFT JOIN Triple t ON t.TripleID = a.TripleID
 										WHERE (a.FromID=? OR a.ToID=?) AND a.ChangeType <> 'edit'";
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART4 = "SELECT DISTINCT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
 										a.ChangeType as ChangeType, a.VoteType as XML
 										FROM AuditVoting a WHERE a.ItemID=?";
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART5 = "SELECT DISTINCT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
 										'' as ChangeType, '' as XML
 										FROM Following a WHERE a.ItemID=?";
 
-$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART6 = "SELECT DISTINCT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
 										ViewType as ChangeType, '' as XML
 										FROM AuditNodeView a WHERE a.NodeID=?";
 
 $HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
 
+// for if called as individual statements
+$HUB_SQL->UTILLIB_ALL_NODE_ACTIVITY_ORDERBY_MODDATE = " order by ModificationDate DESC";
 
 /** Get Node Activity **/
 
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
 
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2_BRACKET = "(";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2 = "SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate, a.ChangeType, a.NodeXML as XML
     									FROM AuditNode a WHERE a.NodeID=? AND a.ChangeType <> 'delete'";
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
 
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3 = ") UNION (SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3 = "SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type, a.ModificationDate,
 										a.ChangeType, a.TripleXML as XML
 										FROM AuditTriple a
 										LEFT JOIN Triple t ON t.TripleID = a.TripleID
 										WHERE (a.FromID=? OR a.ToID=?) AND a.ChangeType <> 'edit'";
 
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4 = "SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
 										a.ChangeType as ChangeType, a.VoteType as XML
 										FROM AuditVoting a WHERE a.ItemID=?";
 
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5 = "SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type, a.CreationDate as ModificationDate,
 										'' as ChangeType, '' as XML
 										FROM Following a WHERE a.ItemID=?";
 
-$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6 = "SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
 										ViewType as ChangeType, '' as XML
 										FROM AuditNodeView a WHERE a.NodeID=?";
 
 $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
 
+// for if called as individual statements
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_ORDERBY_MODDATE = " order by ModificationDate DESC";
+
 /** Get User Activity **/
 $HUB_SQL->UTILLIB_USER_ACTIVITY_PART1 = "Select DISTINCT ItemID, UserID, Type, ModificationDate, ChangeType, XML from (";
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART2 = "(SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART2_BRACKET = "(";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART2 = "SELECT a.NodeID as ItemID, a.UserID, 'Node' as Type, a.ModificationDate,
 											a.ChangeType, a.NodeXML as XML FROM AuditNode a WHERE a.UserID=? AND a.ChangeType <> 'delete'";
 
 $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE = " AND a.ModificationDate >= ?";
 $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING = " AND a.CreationDate >= ?";
 
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART3 = ") UNION (SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type,
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART3_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART3 = "SELECT a.TripleID as ItemID, a.UserID, 'Connection' as Type,
 												a.ModificationDate, a.ChangeType, a.TripleXML as XML
 												FROM AuditTriple a
 												LEFT JOIN Triple t ON t.TripleID = a.TripleID
 												WHERE a.UserID=? AND a.ChangeType <> 'edit'";
 
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART4 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART4_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART4 = "SELECT a.ItemID as ItemID, a.UserID, 'Vote' as Type, a.ModificationDate,
 												a.ChangeType as ChangeType, a.VoteType as XML
 												FROM AuditVoting a WHERE a.UserID=?";
 
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART5 = ") UNION (SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type,
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART5_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART5 = "SELECT a.ItemID as ItemID, a.UserID, 'Follow' as Type,
 												a.CreationDate as ModificationDate, '' as ChangeType, '' as XML
 												FROM Following a WHERE a.UserID=?";
 
-$HUB_SQL->UTILLIB_USER_ACTIVITY_PART6 = ") UNION (SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART6_UNION = ") UNION (";
+$HUB_SQL->UTILLIB_USER_ACTIVITY_PART6 = "SELECT a.NodeID as ItemID, a.UserID, 'View' as Type, a.ModificationDate,
 												ViewType as ChangeType, '' as XML
 												FROM AuditNodeView a WHERE a.UserID=?";
 
 $HUB_SQL->UTILLIB_USER_ACTIVITY_PART7 = ")) as AllActivity order by AllActivity.ModificationDate DESC";
+
+// for if called as individual statements
+$HUB_SQL->UTILLIB_USER_ACTIVITY_ORDERBY_MODDATE = " order by ModificationDate DESC";
+
+
+/** Get Activity date ranges **/
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODEVIEW = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditNodeView";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_VOTING = "SELECT MAX(`ModificationDate`)as max, MIN(`ModificationDate`) as min FROM AuditVoting";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_TRIPLE = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditTriple";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_NODE = "SELECT MAX(`ModificationDate`) as max, MIN(`ModificationDate`) as min FROM AuditNode";
+$HUB_SQL->UTILLIB_NODE_ACTIVITY_MINMAX_AUDIT_FOLLOWING = "SELECT MAX(`CreationDate`) as max, MIN(`CreationDate`) as min FROM Following";
 
 
 /** Get Countries For Cloud By Type **/

@@ -33,7 +33,6 @@
 	}
 
     checkLogin();
-    array_push($HEADER,"<script src='".$CFG->homeAddress."ui/lib/scriptaculous/scriptaculous.js' type='text/javascript'></script>");
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 
@@ -55,6 +54,7 @@
 	$nodetypename = optional_param("nodetypename", "", PARAM_TEXT);
 	$summary = optional_param("summary","",PARAM_TEXT);
 	$desc = optional_param("desc","",PARAM_HTML);
+	$imagefilename = optional_param("imagefilename","",PARAM_TEXT);
 
 	$node = getNode($nodeid, 'long');
 
@@ -74,8 +74,10 @@
 
 			$desc = stripslashes(trim($desc));
 
-			$evidencenode = editNode($nodeid, $summary, $desc, $private, $roleType);
-		    if ($evidencenode instanceof Error){
+			// send the same image as it has now if any and update below after checking for new image or delete being checked.
+			$evidencenode = editNode($nodeid, $summary, $desc, $private, $roleType, $imagefilename);
+
+		    if ($evidencenode instanceof Hub_Error){
 				array_push($errors, $LNG->FORM_EVIDENCE_ALREADY_EXISTS);
 			} else {
 
@@ -83,10 +85,10 @@
 				if ($imagedelete == 'Y') {
 					$evidencenode->updateImage("");
 				} else {
-					if ($_FILES['image']['error'] == 0) {
+					if ($_FILES['image']['error'] == 0 && $_FILES['image']['size'] > 0) {
 						$imagedir = $HUB_FLM->getUploadsNodeDir($evidencenode->nodeid);
 						$photofilename = uploadImageToFitComments('image',$errors,$imagedir, 155, 45);
-						if($photofilename != ""){
+						if(isset($photofilename) && $photofilename != ""){
 							$evidencenode->updateImage($photofilename);
 						}
 					}
@@ -95,7 +97,10 @@
 				// Get all connections this node is used in and update any that are now using the wrong link type or role type.
 				if ($node->role->name != $nodetypename) {
 					$mainConnections = getConnectionsByNode($nodeid,0,-1,'date','ASC', 'all', '', 'Solution');
-					$count = count($mainConnections->connections);
+					$count = 0;
+					if (is_countable($mainConnections->connections)) {
+						$count = count($mainConnections->connections);
+					}
 					$currentuser = $USER;
 					for ($i=0; $i<$count; $i++) {
 						$con = $mainConnections->connections[$i];
@@ -131,7 +136,7 @@
 				}
 
 				/** ADD RESOURCES/URLS **/
-				if(empty($errors)){
+				if(empty($errors) && $resourceurlarray != ""){
 
 					// remove all the existing urls so they can be re-added below
 					$evidencenode->removeAllURLs();
@@ -206,10 +211,17 @@
 		$desc = $node->description;
 		$private = $node->private;
 		$nodetypename = $node->role->name;
+		$imagefilename = "";
+		if (isset($node->filename)) {
+			$imagefilename = $node->filename;
+		}
 
 		if(isset($node->urls)) {
 			$urls = $node->urls;
-			$count = count($urls);
+			$count = 0;
+			if (is_countable($urls)) {
+				$count = count($urls);
+			}
 			for ($i=0; $i<$count;$i++) {
 				$url = $urls[$i];
 				$resourcetypesarray[$i] = $url;
@@ -233,119 +245,146 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
 
 <script type="text/javascript">
-var noResources = <?php echo sizeof($resourceurlarray);?>;
+	var noResources = <?php if (is_countable($resourceurlarray)) { echo count($resourceurlarray);} else {echo 0;}?>;
 
-function init() {
-    $('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_TITLE_EDIT; ?>');
-}
-
-function addSelectedResource(node, num) {
-	$('resource'+num+'label').value=node.role[0].role.name;
-
-	$('resourcetitle-'+num).value = node.name;
-	$('resourcetitle-'+num).disabled = true;
-	$('resourcenodeidsarray-'+num).value = node.nodeid;
-
-	if ($('identifierdiv-'+num)) {
-		$('identifierdiv-'+num).style.display="none";
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_TITLE_EDIT; ?>');
 	}
 
-	$('typehiddendiv-'+num).style.display="block";
-	$('typediv-'+num).style.display="none";
-	$('resourceurldiv-'+num).style.display="none";
-	$('resourcedescdiv-'+num).style.display="none";
-}
+	function addSelectedResource(node, num) {
+		$('resource'+num+'label').value=node.role[0].role.name;
 
-function removeSelectedResource(num) {
-	$('resourcetitle-'+num).value = "";
-	$('resourcetitle-'+num).disabled = false;
-	$('resourcedesc-'+num).value = "";
-	$('resourcenodeidsarray-'+num).value = "";
+		$('resourcetitle-'+num).value = node.name;
+		$('resourcetitle-'+num).disabled = true;
+		$('resourcenodeidsarray-'+num).value = node.nodeid;
 
-	$('typehiddendiv-'+num).style.display="none";
-	$('typediv-'+num).style.display="block";
-	$('resourceurldiv-'+num).style.display="block";
-	$('resourcedescdiv-'+num).style.display="block";
-}
+		if ($('identifierdiv-'+num)) {
+			$('identifierdiv-'+num).style.display="none";
+		}
 
-function checkForm() {
-	var checkname = ($('summary').value).trim();
-	if (checkname == ""){
-		  alert("<?php echo $LNG->FORM_EVIDENCE_ENTER_SUMMARY_ERROR; ?>");
-	      return false;
+		$('typehiddendiv-'+num).style.display="block";
+		$('typediv-'+num).style.display="none";
+		$('resourceurldiv-'+num).style.display="none";
+		$('resourcedescdiv-'+num).style.display="none";
 	}
 
-    $('evidenceform').style.cursor = 'wait';
+	function removeSelectedResource(num) {
+		$('resourcetitle-'+num).value = "";
+		$('resourcetitle-'+num).disabled = false;
+		$('resourcedesc-'+num).value = "";
+		$('resourcenodeidsarray-'+num).value = "";
 
-	return true;
-}
+		$('typehiddendiv-'+num).style.display="none";
+		$('typediv-'+num).style.display="block";
+		$('resourceurldiv-'+num).style.display="block";
+		$('resourcedescdiv-'+num).style.display="block";
+	}
 
-window.onload = init;
+	function checkForm() {
+		var checkname = ($('summary').value).trim();
+		if (checkname == ""){
+			alert("<?php echo $LNG->FORM_EVIDENCE_ENTER_SUMMARY_ERROR; ?>");
+			return false;
+		}
+
+		$('evidenceform').style.cursor = 'wait';
+
+		return true;
+	}
+
+	window.onload = init;
 
 </script>
 
-<span style="clear:both;margin-left: 10px;">
-<?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART1; ?> <span style="font-size:14pt;margin-top:3px;vertical-align:top; font-weight:bold;color:red;">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART2; ?><?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART3; ?>
-</span>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+            <?php
+                if(!empty($errors)){
+                    echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+                    foreach ($errors as $error){
+                        echo "<li>".$error."</li>";
+                    }
+                    echo "</ul></div>";
+                }
+            ?>
 
-<form id="evidenceform" name="evidenceform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-	<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
-	<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
-	<input type="hidden" id="nodetypename" name="nodetypename" value="<?php echo $nodetypename; ?>" />
+			<div class="col-12 mb-4">
+				<p>
+					<?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART1; ?> <span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART2; ?><?php echo $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART3; ?>
+				</p>
+			</div>
 
-	<?php if ($node->connectedness == 0) { ?>
-		<div class="hgrformrow">
-			<label  class="formlabelbig" for="nodetypename"><span style="vertical-align:top"><?php echo $LNG->FORM_LABEL_TYPE; ?></span>
-			<span class="active" onMouseOver="showFormHint('EvidenceType', event, 'hgrhint', '<?php echo $CFG->EVIDENCE_TYPES_DEFAULT;?>'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-			</label>
-			<select class="subforminput hgrselect forminputmust" id="nodetypename" name="nodetypename">
-				<?php
-					foreach($CFG->EVIDENCE_TYPES as $item){?>
-						<option value='<?php echo $item; ?>' <?php if ($nodetypename == $item || ($nodetypename == "" && $item == $CFG->EVIDENCE_TYPES_DEFAULT)) { echo 'selected=\"true\"'; }  ?> ><?php echo $item ?></option>
+			<form id="evidenceform" name="evidenceform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="nodeid" name="nodeid" value="<?php echo $nodeid; ?>" />
+				<input type="hidden" id="handler" name="handler" value="<?php echo $handler; ?>" />
+				<input type="hidden" id="nodetypename" name="nodetypename" value="<?php echo $nodetypename; ?>" />
+				<input type="hidden" id="imagefilename" name="imagefilename" value="<?php echo $imagefilename; ?>" />
+
+				<?php if ($node->connectedness == 0) { ?>
+					<div class="mb-3 row">
+						<label class="col-sm-3 col-form-label" for="nodetypename">
+							<span><?php echo $LNG->FORM_LABEL_TYPE; ?></span>
+							<span class="active" onMouseOver="showFormHint('EvidenceType', event, 'hgrhint', '<?php echo $CFG->EVIDENCE_TYPES_DEFAULT;?>'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+								<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+								<span class="sr-only">More info</span>
+							</span>
+							<span class="required">*</span>
+						</label>
+						<div class="col-sm-9">
+							<select class="form-select" id="nodetypename" name="nodetypename">
+								<?php
+									foreach($CFG->EVIDENCE_TYPES as $item){?>
+										<option value='<?php echo $item; ?>' <?php if ($nodetypename == $item || ($nodetypename == "" && $item == $CFG->EVIDENCE_TYPES_DEFAULT)) { echo 'selected=\"true\"'; }  ?> ><?php echo $item ?></option>
+								<?php } ?>
+							</select>
+						</div>
+					</div>
 				<?php } ?>
-			</select>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">
+						<?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?>
+					</label>
+					<div class="col-sm-9">
+						<div style="max-height: 120px; max-width: 150px; border:1px solid gray; overflow: hidden">
+							<img class="img-fluid" src="<?php print $node->image; ?>"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
+					<div class="col-sm-9">
+						<div class="d-flex flex-wrap">
+							<input class="form-control" type="file" id="image" name="image" />
+						</div>					
+						<div class="form-check mt-2 d-flex align-items-center gap-2">
+							<input class="form-check-input" type="checkbox" value="Y" id="imagedelete"  name="imagedelete">
+							<label class="form-check-label" for="imagedelete">
+								<?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>
+				<?php insertDescription('EvidenceDesc'); ?>
+				<?php insertPrivate('Private', $private); ?>
+				<?php insertResourceForm('URLs'); ?>
+
+                <div class="mb-3 row">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                        <input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+                        <input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editevidence" name="editevidence" />
+					</div>
+				</div>
+			</form>
 		</div>
-   	<?php } ?>
-
-    <div class="hgrformrow">
-		<label class="formlabelbig" style="padding-right:5px;"><?php echo $LNG->PROFILE_PHOTO_CURRENT_LABEL; ?></label>
-		<div style="position:relative;overflow:hidden;border:1px solid gray;width:160px;height:120;max-width:160px;max-height:120px;min-width:160px;min-height:120px;overflow:auto">
-			<img style="position:absolute; top:0px left:0px;cursor:move;width:150px" id="dragableElement" border="0" src="<?php print $node->image; ?>"/>
-		</div>
-    </div>
-    <div class="hgrformrow">
-		<label class="formlabelbig" for="image"><?php echo $LNG->PROFILE_PHOTO_REPLACE_LABEL; ?></label>
-		<input class="forminput" type="file" id="image" name="image" size="40">
-		<input id="imagedelete" class="forminput" type="checkbox" name="imagedelete" value="Y" /><?php echo $LNG->MAP_BACKGROUND_DELETE_LABEL; ?>
-    </div>
-
-	<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>
-
-	<?php insertDescription('EvidenceDesc'); ?>
-
-	<?php insertPrivate('Private', $private); ?>
-
-	<?php insertResourceForm('URLs'); ?>
-
-    <br>
-    <div class="hgrformrow">
-		<label class="formlabelbig">&nbsp;</label>
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="editevidence" name="editevidence">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+	</div>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

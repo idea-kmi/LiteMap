@@ -105,9 +105,12 @@ class user {
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_SELECT, $params);
 
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUserNotFoundError($this->userid);
 				return $ERROR;
 			} else {
@@ -231,7 +234,10 @@ class user {
 			$params[0] = $this->userid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_TAGS, $params);
 			if ($resArray !== false) {
-				$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
 				if ($count > 0) {
 					$this->tags = array();
 					for ($i=0; $i<$count; $i++) {
@@ -258,7 +264,10 @@ class user {
 		$params[1] = $this->userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_FOLLOW, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
         		$this->userfollow = "Y";
         	}
@@ -283,7 +292,7 @@ class user {
 
         // can only validate password against cohere auth type users
         if ($this->authtype == $CFG->AUTH_TYPE_EVHUB){
-            if(crypt( $password, $this->password ) == $this->password ){
+            if(password_verify( $password, $this->password )){
                return true;
             } else {
                return false;
@@ -305,9 +314,12 @@ class user {
  		$params[0] = $this->email;
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_BY_EMAIL_SELECT, $params);
  		if ($resArray !== false) {
- 			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
  			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUserNotFoundError($this->userid);
 				return $ERROR;
 			} else {
@@ -375,7 +387,7 @@ class user {
 
 			$passwordcrypt = "";
 			if ($authtype == $CFG->AUTH_TYPE_EVHUB && $password != "") {
-				$passwordcrypt = crypt($password);
+				$passwordcrypt = password_hash($password, PASSWORD_BCRYPT);
 			}
 
 			$testGroup = 0;
@@ -417,10 +429,6 @@ class user {
 				// add default links for user.
 				$lt = new LinkType();
 				$lt->setUpDefaultLinkTypes($this->userid);
-
-				// set email activity
-				$this->updateFollowSendEmail($CFG->ACTIVITY_EMAIL_SENDING_ON);
-				$this->updateFollowRunInterval($CFG->ACTIVITY_EMAIL_SENDING_INTERVAL);
 
 				// add default node for user
 				//$n = new CNode();
@@ -617,7 +625,10 @@ class user {
  		$params[1] = $this->userid;
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_EMAIL_UPDATE_CHECK, $params);
  		if ($resArray !== false) {
- 			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
  			if ($count != 0) {
 				return false;
 			}
@@ -661,7 +672,7 @@ class user {
 		}
 
 		$params = array();
-		$params[0] = crypt($password);
+		$params[0] = password_hash($password, PASSWORD_BCRYPT);
 		$params[1] = $this->userid;
 		$res = $DB->insert($HUB_SQL->DATAMODEL_USER_PASSWORD_UPDATE, $params);
         if( !$res ) {
@@ -726,7 +737,7 @@ class user {
      *
      * @return User object (this) (or Error object)
      */
-    function updateLocation($location="",$loccountry=""){
+    function updateLocation($location=null,$loccountry=null){
         global $DB,$CFG,$USER,$HUB_SQL,$HUB_CACHE;
 
 		if (isset($HUB_CACHE)) {
@@ -947,7 +958,11 @@ class user {
  		if (!$resArray) {
             return false;
         } else {
-            if(count($resArray) == 0){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+            if($count == 0){
                 return false;
             } else {
                 return true;
@@ -973,7 +988,11 @@ class user {
         if( !$res ) {
             return false;
         } else {
-            if(count($resArray) == 0){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+            if($count == 0){
                 return false;
             } else {
                 return true;
@@ -993,7 +1012,11 @@ class user {
  		$params[0] = $this->userid;
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_REGISTRATION_KEY_SELECT, $params);
 		if ($resArray !== false) {
-			if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count > 0) {
         	    return $resArray[0]['RegistrationKey'];
         	}
 		}
@@ -1014,7 +1037,11 @@ class user {
         if(!$resArray) {
             return false;
         } else {
-            if(count($resArray) == 0){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+            if($count == 0){
                 return false;
             } else {
                 return true;
@@ -1052,7 +1079,11 @@ class user {
  		$params[0] = $this->userid;
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_IS_EMAIL_VALIDATED, $params);
         if ($resArray !== false) {
-        	if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+        	if ($count > 0) {
 				$registrationKey = $resArray[0]['RegistrationKey'];
 				$validationKey = $resArray[0]['ValidationKey'];
 
@@ -1183,7 +1214,10 @@ class user {
  		$params[1] = $this->userid;
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_ADD_TAG_CHECK, $params);
         if ($resArray !== false) {
-            $count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if( $count == 0 ) {
 				$params = array();
 				$params[0] = $this->userid;

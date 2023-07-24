@@ -61,7 +61,10 @@ class RoleSet {
 			$params = array();
 		}
 		$resArray = $DB->select($sql, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
       		$r = new Role($array["NodeTypeID"]);
@@ -83,7 +86,10 @@ class RoleSet {
 			$params = array();
 		}
 		$resArray = $DB->select($sql, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$r = new Role();

@@ -27,11 +27,13 @@ $HUB_SQL->DATAMODEL_TAG_SELECT = "SELECT Tag.UserID, Tag.Name FROM Tag WHERE Tag
 $HUB_SQL->DATAMODEL_TAG_BY_NAME_SELECT = "SELECT TagID FROM Tag WHERE (Name=? AND UserID=?)";
 
 $HUB_SQL->DATAMODEL_TAG_ADD_CHECK = $HUB_SQL->DATAMODEL_TAG_BY_NAME_SELECT;
-$HUB_SQL->DATAMODEL_TAG_ADD = "INSERT into Tag (TagID, UserID, CreationDate, Name)
-								VALUES (?, ?, ?, ?)";
+
+$HUB_SQL->DATAMODEL_TAG_ADD = "INSERT into Tag (TagID, UserID, CreationDate, Name, ModificationDate)
+								VALUES (?, ?, ?, ?, ?)";
 
 $HUB_SQL->DATAMODEL_TAG_EDIT_CHECK = $HUB_SQL->DATAMODEL_TAG_BY_NAME_SELECT;
-$HUB_SQL->DATAMODEL_TAG_EDIT = "UPDATE Tag set Name=? where TagID=? and UserID=?";
+$HUB_SQL->DATAMODEL_TAG_EDIT = "UPDATE Tag set Name=? where TagID=? and UserID=? and ModificationDate=?";
+
 $HUB_SQL->DATAMODEL_TAG_DELETE = "DELETE from Tag where UserID=? and TagID=?";
 
 $HUB_SQL->DATAMODEL_TAG_CAN_EDIT = "SELECT t.TagID FROM Tag t WHERE t.UserID=? AND t.TagID=?";

@@ -30,6 +30,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 var diameter = 760;
 var svg;
 var circlepackingcontainer;
+var tipCirclePack;
 
 function createCirclePackingD3Vis(container){
 	circlepackingcontainer = d3.select(container);
@@ -39,6 +40,19 @@ function createCirclePackingD3Vis(container){
     .attr("height", diameter)
     .append("g")
     .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+
+    // Init tooltip
+	tipCirclePack = d3.select(container)
+  		.append("div")
+    	.style("visibility", "hidden")
+    	.style("position","absolute")
+    	.style("border","1px solid lightgray")
+    	.style("background-color","white")
+    	.style("padding", "2px")
+    	.style("top", "10px")
+    	.style("left", "10px")
+    	.text("");
 }
 
 function completeCirclePackingD3Vis(root) {
@@ -78,7 +92,7 @@ function completeCirclePackingD3Vis(root) {
 			} else if (d.nodetype == "Issue") {
 				d.color = issueback;
 			} else if (d.nodetype == "Group") {
-				d.color = "transparent";
+				d.color = "#F4F5F7"; // was 'transparent' now background colour - very light gray
 			} else if (d.nodetype == "Challenge") {
 				d.color = colorLuminance(challengeback, -(7*d.depth-1)/100);
 			} else if (d.nodetype == "Map") {
@@ -140,19 +154,6 @@ function completeCirclePackingD3Vis(root) {
     centerNodes( nodes );
     makePositionsRelativeToZero( nodes );
 
-    // Init tooltip
-    var tipCirclePack = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-    	if (d.name.length > 80) {
-    		return '<div style="padding:2px;background:white;border:1px solid lightgray;weight:bold;width:300px;">' + getNodeTitleAntecedence(d.nodetype, true)+ d.name + '</div>';
-    	} else {
-    		return '<div style="padding:2px;background:white;border:1px solid lightgray;weight:bold;">' + getNodeTitleAntecedence(d.nodetype, true)+d.name + '</div>';
-    	}
-    })
-    svg.call(tipCirclePack);
-
 	var circle = svg.selectAll("circle")
 		.data(nodes)
 		.enter().append("circle")
@@ -162,10 +163,20 @@ function completeCirclePackingD3Vis(root) {
 		})
 		.on("click", function(d) {if (d.children) { if (focus !== d) zoom(d), d3.event.stopPropagation(); } })
 		.on('mouseover', function (d,i) {
-			tipCirclePack.show(d)
+			var offset = [15,15];
+	    	var label = getNodeTitleAntecedence(d.nodetype, true)+" "+d.name;
+			tipCirclePack.style("top", (event.pageY)+(offset[1])+"px");
+        	tipCirclePack.style("left",(event.pageX)+(offset[0])+"px");
+			tipCirclePack.text(label);
+			tipCirclePack.style("visibility", "visible");
+		})
+		.on('mousemove', function (d,i) {
+			var offset = [15,15];
+			tipCirclePack.style("top", (event.pageY)+(offset[1])+"px");
+        	tipCirclePack.style("left",(event.pageX)+(offset[0])+"px");
 		})
 		.on('mouseout', function (d,i) {
-		  	tipCirclePack.hide(d)
+			tipCirclePack.style("visibility", "hidden")
 		});
 
 	var text = svg.selectAll("text")
@@ -214,9 +225,9 @@ function completeCirclePackingD3Vis(root) {
 
 	var legend = d3LegendInactive();
 	legend
-		.width(width)
+		.width(width+10)
 		.height(20)
-        .margin({top: 0, right: 0, bottom: 10, left: 15});
+        .margin({top: 0, right: 0, bottom: 0, left: 0});
 
 	var legendData = flatten(data)
 	var priorities = ['Group','Challenge','Idea','Issue','Solution','Pro','Con','Argument'];
@@ -235,7 +246,7 @@ function completeCirclePackingD3Vis(root) {
     svg.append('g').attr('class', 'legendWrap');
 	svg.select('.legendWrap')
           .datum(nest.entries(legendData))
-          .attr('transform', 'translate(' + -((diameter/2)-220) + ',' + -((diameter/2)+5) +')')
+          .attr('transform', 'translate(' + -((diameter)-100) + ',' + -((diameter/2)+5) +')')
           .call(legend);
 
 	//d3.select(self.frameElement).style("height", diameter + "px");

@@ -76,14 +76,15 @@
 			// CREATE THE MAP NODE
 			$mapview = addView($maptitle, $desc, $private, $roleMap, $groupid, 0, 0);
 			$mapnode = $mapview->viewnode;
-			if (!$mapview instanceof Error) {
+			if (!$mapview instanceof Hub_Error) {
+
 				if ($_FILES['image']['error'] == 0) {
 					$imagedir = $HUB_FLM->getUploadsNodeDir($mapnode->nodeid);
 
 					$photofilename = uploadImageToFit('image',$errors,$imagedir);
-					if($photofilename == ""){
-						$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
-					}
+					//if($photofilename == ""){
+					//	$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
+					//}
 					$mapnode->updateImage($photofilename);
 				}
 
@@ -142,270 +143,307 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
 
-<script type="text/javascript">
-function init() {
-   	$('dialogheader').insert('<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>');
-}
-
-
-function clearVimeoElements() {
-	$('media').value = '';
-	$('media').disabled = false;
-	$('vimeoid').value = '';
-	$('moviewidth').value = '';
-	$('movieheight').value = '';
-	return false;
-}
-
-function extractVimeoElements() {
-	var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT; ?>");
-	if (text != null) {
-
-		var ID = '';
-		var width = 0;
-		var height= 0;
-
-		var striptags = text.replace(/(>|<)/gi,'');
-
-		// Get ID
-		var firstsplit = striptags.split(/(vi\/|v=|\/v\/|vimeo\.be\/|\/video\/)/);
-		if(firstsplit[2] !== undefined) {
-			ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
-			ID = ID[0];
-		} else {
-			ID = firstsplit;
-		}
-		if (ID != "") {
-			$('media').value = '';
-			$('media').disabled = true;
-			$('vimeoid').value = ID;
-		}
-
-		// Get width / height
-		var widthsplit = striptags.split(/width=/);
-		if (widthsplit[1] !== undefined) {
-			var end = widthsplit[1].indexOf('"', 1);
-			width = widthsplit[1].substr(1,end-1);
-		}
-		var heightsplit = striptags.split(/height=/);
-		if (heightsplit[1] !== undefined) {
-			var end = heightsplit[1].indexOf('"', 1);
-			height = heightsplit[1].substr(1,end-1);
-		}
-
-		if (width > 0) {
-			$('moviewidth').value = width;
-		}
-		if (height > 0) {
-			$('movieheight').value = height;
-		}
-		if (width == 0 && height == 0) {
-			alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
-		}
-	}
-	return false;
-}
-
-function clearYouTubeElements() {
-	$('media').value = '';
-	$('media').disabled = false;
-	$('youtubeid').value = '';
-	$('moviewidth').value = '';
-	$('movieheight').value = '';
-	return false;
-}
-
-function extractYouTubeElements() {
-	var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT; ?>");
-	if (text != null) {
-
-		var ID = '';
-		var width = 0;
-		var height= 0;
-
-		var striptags = text.replace(/(>|<)/gi,'');
-
-		// Get ID
-		var firstsplit = striptags.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-		if(firstsplit[2] !== undefined) {
-			ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
-			ID = ID[0];
-		} else {
-			ID = firstsplit;
-		}
-		if (ID != "") {
-			$('media').value = '';
-			$('media').disabled = true;
-			$('youtubeid').value = ID;
-		}
-
-		// Get width / height
-		var widthsplit = striptags.split(/width=/);
-		if (widthsplit[1] !== undefined) {
-			var end = widthsplit[1].indexOf('"', 1);
-			width = widthsplit[1].substr(1,end-1);
-		}
-		var heightsplit = striptags.split(/height=/);
-		if (heightsplit[1] !== undefined) {
-			var end = heightsplit[1].indexOf('"', 1);
-			height = heightsplit[1].substr(1,end-1);
-		}
-
-		if (width > 0) {
-			$('moviewidth').value = width;
-		}
-		if (height > 0) {
-			$('movieheight').value = height;
-		}
-		if (width == 0 && height == 0) {
-			alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
-		}
-	}
-	return false;
-}
-
-function checkForm() {
-	var checkname = ($('maptitle').value).trim();
-	if (checkname == ""){
-	   alert("<?php echo $LNG->FORM_MAP_ENTER_SUMMARY_ERROR; ?>");
-	   return false;
-    }
-
-    $('mapform').style.cursor = 'wait';
-
-	return true;
-}
-
-window.onload = init;
-
-</script>
-
-<form id="mapform" name="mapform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-
-	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_IMAGE_LABEL; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
-	</div>
-	<div class="formrow" style="margin-top:0px;">
-		<label class="formlabelbig" style="height:30px;">&nbsp;</label>
-		<span class="forminput"><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></span>
-	</div>
-
-    <div class="formrow">
-		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_MAP_LABEL_SUMMARY; ?></span>
-			<span class="active" onMouseOver="showFormHint('MapSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="maptitle" name="maptitle" value="<?php echo( $maptitle ); ?>" />
-	</div>
-
-	<?php insertDescription('MapDesc'); ?>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_BACKGROUND_LABEL; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<input class="hgrinput forminput" type="file" id="background" name="background" size="40">
-	</div>
-	<div class="formrow">
-		<label class="formlabelbig">&nbsp;</label>
-		<div style="float:left;margin-left:5px;width:500px;"><?php echo $LNG->MAP_BACKGROUND_HELP; ?></div>
-	</div>
-
-	<hr style="clear:both;float:left; width:100%;border: 0;color: #E8E8E8; background-color:#E8E8E8; height: 1px;" />
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('MapMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<input class="hgrinput forminput" id="media" name="media" size="40">
-	</div>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('MapImportYouTubeMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<button class="forminput" onclick="extractYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON; ?></button>
-		<input class="forminput" id="youtubeid" name="youtubeid" size="20" value="<?php echo $youtubeid; ?>">
-		<button class="forminput" onclick="clearYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR; ?></button>
-	</div>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('MapImportVimeoMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<button class="forminput" onclick="extractVimeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON; ?></button>
-		<input class="forminput" id="vimeoid" name="vimeoid" size="20" value="<?php echo $vimeoid; ?>">
-		<button class="forminput" onclick="clearVomeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR; ?></button>
-	</div>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MOVIE_WIDTH_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('MapMovieWidth', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<input class="forminput" id="moviewidth" name="moviewidth" size="10">
-	</div>
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->MAP_MOVIE_HEIGHT_LABEL; ?>
-			<span class="active" onMouseOver="showFormHint('MapMovieHeight', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:transparent;">*</span>
-		</label>
-		<input class="forminput" id="movieheight" name="movieheight" size="10">
-	</div>
-
-	<hr style="clear:both;float:left; width:100%;border: 0;color: #E8E8E8; background-color:#E8E8E8; height: 1px;" />
-
-	<?php
-		if (isset($groupid) && $groupid != "") {
-			insertPrivate('MapPrivateGroup', $private);
-		} else {
-			insertPrivate('MapPrivate', $private);
-		}
-	?>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="groupid"><?php echo $LNG->MAP_FORM_ADD_TO_GROUP; ?>
-			<span class="active" onMouseOver="showFormHint('MapGroup', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-		</label>
-
-		<select class="forminput" name="groupid" id="groupid" onchange="loadgroup();">
-			<option value=""><?php echo $LNG->GROUP_FORM_SELECT; ?></option>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
 			<?php
-				foreach($groups as $g){
-				   echo "<option value='".$g->groupid."' ";
-				   if($g->groupid == $groupid){
-						echo "selected='true'";
-				   }
-				   echo ">".$g->name."</option>";
+				if(!empty($errors)){
+					echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
+					foreach ($errors as $error){
+						echo "<li>".$error."</li>";
+					}
+					echo "</ul></div>";
 				}
 			?>
-		</select>
-	</div>
 
-    <div class="hgrformrow">
-		<label class="formlabelbig" style="height:30px;">&nbsp;</label>
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addmap" name="addmap">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+			<script type="text/javascript">
+				function init() {
+					$('dialogheader').insert('<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>');
+				}
+				function clearVimeoElements() {
+					$('media').value = '';
+					$('media').disabled = false;
+					$('vimeoid').value = '';
+					$('moviewidth').value = '';
+					$('movieheight').value = '';
+					return false;
+				}
+				function extractVimeoElements() {
+					var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT; ?>");
+					if (text != null) {
+
+						var ID = '';
+						var width = 0;
+						var height= 0;
+
+						var striptags = text.replace(/(>|<)/gi,'');
+
+						// Get ID
+						var firstsplit = striptags.split(/(vi\/|v=|\/v\/|vimeo\.be\/|\/video\/)/);
+						if(firstsplit[2] !== undefined) {
+							ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
+							ID = ID[0];
+						} else {
+							ID = firstsplit;
+						}
+						if (ID != "") {
+							$('media').value = '';
+							$('media').disabled = true;
+							$('vimeoid').value = ID;
+						}
+
+						// Get width / height
+						var widthsplit = striptags.split(/width=/);
+						if (widthsplit[1] !== undefined) {
+							var end = widthsplit[1].indexOf('"', 1);
+							width = widthsplit[1].substr(1,end-1);
+						}
+						var heightsplit = striptags.split(/height=/);
+						if (heightsplit[1] !== undefined) {
+							var end = heightsplit[1].indexOf('"', 1);
+							height = heightsplit[1].substr(1,end-1);
+						}
+
+						if (width > 0) {
+							$('moviewidth').value = width;
+						}
+						if (height > 0) {
+							$('movieheight').value = height;
+						}
+						if (width == 0 && height == 0) {
+							alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
+						}
+					}
+					return false;
+				}
+				function clearYouTubeElements() {
+					$('media').value = '';
+					$('media').disabled = false;
+					$('youtubeid').value = '';
+					$('moviewidth').value = '';
+					$('movieheight').value = '';
+					return false;
+				}
+				function extractYouTubeElements() {
+					var text = prompt("<?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT; ?>");
+					if (text != null) {
+
+						var ID = '';
+						var width = 0;
+						var height= 0;
+
+						var striptags = text.replace(/(>|<)/gi,'');
+
+						// Get ID
+						var firstsplit = striptags.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+						if(firstsplit[2] !== undefined) {
+							ID = firstsplit[2].split(/[^0-9a-z_\-]/i);
+							ID = ID[0];
+						} else {
+							ID = firstsplit;
+						}
+						if (ID != "") {
+							$('media').value = '';
+							$('media').disabled = true;
+							$('youtubeid').value = ID;
+						}
+
+						// Get width / height
+						var widthsplit = striptags.split(/width=/);
+						if (widthsplit[1] !== undefined) {
+							var end = widthsplit[1].indexOf('"', 1);
+							width = widthsplit[1].substr(1,end-1);
+						}
+						var heightsplit = striptags.split(/height=/);
+						if (heightsplit[1] !== undefined) {
+							var end = heightsplit[1].indexOf('"', 1);
+							height = heightsplit[1].substr(1,end-1);
+						}
+
+						if (width > 0) {
+							$('moviewidth').value = width;
+						}
+						if (height > 0) {
+							$('movieheight').value = height;
+						}
+						if (width == 0 && height == 0) {
+							alert('<?php echo $LNG->MAP_MOVIE_SIZE_MESSAGE;?>');
+						}
+					}
+					return false;
+				}
+				function checkForm() {
+					var checkname = ($('maptitle').value).trim();
+					if (checkname == ""){
+					alert("<?php echo $LNG->FORM_MAP_ENTER_SUMMARY_ERROR; ?>");
+					return false;
+					}
+
+					$('mapform').style.cursor = 'wait';
+
+					return true;
+				}
+				window.onload = init;
+			</script>
+
+			<form id="mapform" name="mapform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="image">
+                        <?php echo $LNG->MAP_IMAGE_LABEL; ?>
+						<span class="required">*</span>
+                    </label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="image" name="image" />
+                        <small><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></small>
+					</div>
+                </div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="maptitle">
+						<?php echo $LNG->FORM_MAP_LABEL_SUMMARY; ?>
+						<span class="active" onMouseOver="showFormHint('MapSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="maptitle" name="maptitle" value="<?php print $maptitle; ?>" />
+					</div>
+				</div>
+
+				<?php insertDescription('MapDesc'); ?>
+
+                <div class="mb-3 row">
+                    <label class="col-sm-3 col-form-label" for="background">
+                        <?php echo $LNG->MAP_BACKGROUND_LABEL; ?>
+                    </label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="background" name="background" />
+                        <small><?php echo $LNG->MAP_BACKGROUND_HELP; ?></small>
+					</div>
+                </div>
+
+				<hr />
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="media">
+						<?php echo $LNG->MAP_MEDIA_LABEL; ?>
+						<span class="active" onMouseOver="showFormHint('MapMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="media" name="media" value="<?php print $media; ?>" />
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="youtubeid">
+						<?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_LABEL; ?>
+						<span class="active" onMouseOver="showFormHint('MapImportYouTubeMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+					</label>
+					<div class="col-sm-9 d-flex flex-wrap gap-3">
+						<button class="btn btn-primary" onclick="extractYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_BUTTON; ?></button>
+						<input type="text" class="form-control w-auto" id="youtubeid" name="youtubeid" value="<?php print $youtubeid; ?>" />
+						<button class="btn btn-secondary" onclick="clearYouTubeElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_YOUTUBE_CLEAR; ?></button>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="vimeoid">
+						<?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_LABEL; ?>
+						<span class="active" onMouseOver="showFormHint('MapImportVimeoMedia', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+					</label>
+					<div class="col-sm-9 d-flex flex-wrap gap-3">
+						<button class="btn btn-primary" onclick="extractVimeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_BUTTON; ?></button>
+						<input type="text" class="form-control w-auto" id="vimeoid" name="vimeoid" value="<?php print $vimeoid; ?>" />
+						<button class="btn btn-secondary" onclick="clearVimeoElements(); return false;"><?php echo $LNG->MAP_MEDIA_IMPORT_VIMEO_CLEAR; ?></button>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="media">
+						<?php echo $LNG->MAP_MOVIE_WIDTH_LABEL; ?>
+						<span class="active" onMouseOver="showFormHint('MapMovieWidth', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="moviewidth" name="moviewidth" value="<?php print $moviewidth; ?>" />
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="media">
+						<?php echo $LNG->MAP_MOVIE_HEIGHT_LABEL; ?>
+						<span class="active" onMouseOver="showFormHint('MapMovieHeight', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="movieheight" name="movieheight" value="<?php print $movieheight; ?>" />
+					</div>
+				</div>
+
+				<hr />
+
+				<?php
+					if (isset($groupid) && $groupid != "") {
+						insertPrivate('MapPrivateGroup', $private);
+					} else {
+						insertPrivate('MapPrivate', $private);
+					}
+				?>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="groupid">
+						<?php echo $LNG->MAP_FORM_ADD_TO_GROUP; ?>
+						<span class="active" onMouseOver="showFormHint('MapGroup', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+					</label>
+					<div class="col-sm-9">						
+						<select class="form-select" name="groupid" id="groupid" onchange="loadgroup();">
+							<option value=""><?php echo $LNG->GROUP_FORM_SELECT; ?></option>
+							<?php
+								foreach($groups as $g){
+								echo "<option value='".$g->groupid."' ";
+								if($g->groupid == $groupid){
+										echo "selected='true'";
+								}
+								echo ">".$g->name."</option>";
+								}
+							?>
+						</select>
+					</div>
+				</div>
+
+                <div class="mb-3 row">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+                        <input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+                        <input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addmap" name="addmap" />
+                    </div>
+                </div>
+			</form>
+        </div>
     </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

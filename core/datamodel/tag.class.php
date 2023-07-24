@@ -66,9 +66,12 @@ class Tag {
 		$params[0] = $this->tagid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_SELECT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-	 			$ERROR = new error;
+	 			$ERROR = new Hub_Error;
 	    		$ERROR->createTagNotFoundError($this->tagid);
 	            return $ERROR;
 			} else {
@@ -107,9 +110,12 @@ class Tag {
 		$params[1] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_BY_NAME_SELECT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-	 			$ERROR = new error;
+	 			$ERROR = new Hub_Error;
 	    		$ERROR->createTagNotFoundError($this->tagid);
 	            return $ERROR;
 	        } else {
@@ -156,7 +162,10 @@ class Tag {
 		$params[1] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -172,6 +181,7 @@ class Tag {
 				$params[1] = $currentuser;
 				$params[2] = $dt;
 				$params[3] = $tagname;
+				$params[4] = $dt;
 
 				$res = $DB->insert($HUB_SQL->DATAMODEL_TAG_ADD, $params);
                 if (!$res) {
@@ -212,14 +222,21 @@ class Tag {
 		$params[1] = $tagname;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_EDIT_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
             	return database_error("Tag already exists","7012");
             } else {
+
+                $dt = time();
+
 				$params = array();
 				$params[0] = $tagname;
 				$params[1] = $this->tagid;
 				$params[2] = $currentuser;
+				$params[3] = $dt;
 
 				$res = $DB->insert($HUB_SQL->DATAMODEL_TAG_EDIT, $params);
 		        if (!$res) {
@@ -277,7 +294,7 @@ class Tag {
     function canadd(){
     	global $LNG;
         // needs to be logged in - that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -289,7 +306,7 @@ class Tag {
      */
     function canedit(){
         global $DB,$USER,$HUB_SQL,$LNG;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -303,7 +320,10 @@ class Tag {
 		$params[1] = $this->tagid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_CAN_EDIT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
             	throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
             }
@@ -319,7 +339,7 @@ class Tag {
      */
     function candelete(){
         global $DB,$USER,$HUB_SQL,$LNG;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -334,7 +354,10 @@ class Tag {
 		$params[1] = $this->tagid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_TAG_CAN_DELETE, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
             	throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
             }

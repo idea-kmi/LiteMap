@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2013 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -25,19 +25,19 @@
 
 $page = optional_param("page","overview",PARAM_TEXT);
 ?>
-<div id="tabber" style="margin-left:10px;clear:both;float:left; width: 100%;">
-	<ul id="tabs" class="tab">
-		<li class="tab">
-			<a class="tab <?php if ($page == "overview") { echo 'current'; } else { echo 'unselected'; } ?>" href="index.php?page=overview"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_OVERVIEW; ?></span></a>
+<div id="tabber" class="tabber-user mt-2" role="navigation">
+	<ul id="tabs" class="nav nav-tabs">
+		<li class="nav-item">
+			<a class="nav-link <?php if ($page == "overview") { echo 'active'; } else { echo ''; } ?>" href="index.php?page=overview"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_OVERVIEW; ?></span></a>
 		</li>
-		<li class="tab">
-			<a class="tab <?php if ($page == "register") { echo 'current'; } else { echo 'unselected'; } ?>" href="userRegistration.php?page=register"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_REGISTER; ?></span></a>
+		<li class="nav-item">
+			<a class="nav-link <?php if ($page == "register") { echo 'active'; } else { echo 'unselected'; } ?>" href="userRegistration.php?page=register"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_REGISTER; ?></span></a>
 		</li>
-		<li class="tab">
-			<a class="tab <?php if ($page == "ideas") { echo 'current'; } else { echo 'unselected'; } ?>" href="newIdeas.php?page=ideas"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_IDEAS; ?></span></a>
+		<li class="nav-item">
+			<a class="nav-link <?php if ($page == "ideas") { echo 'active'; } else { echo 'unselected'; } ?>" href="newIdeas.php?page=ideas"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_IDEAS; ?></span></a>
 		</li>
-		<li class="tab">
-			<a class="tab <?php if ($page == "conns") { echo 'current'; } else { echo 'unselected'; } ?>" href="connections.php?page=conns"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_CONNS; ?></span></a>
+		<li class="nav-item">
+			<a class="nav-link <?php if ($page == "conns") { echo 'active'; } else { echo 'unselected'; } ?>" href="connections.php?page=conns"><span class="tab"><?php echo $LNG->ADMIN_STATS_TAB_CONNS; ?></span></a>
 		</li>
 	</ul>
 </div>

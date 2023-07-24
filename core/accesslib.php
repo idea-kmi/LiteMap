@@ -38,7 +38,7 @@ function userLogin($email,$password){
 
 	/** Just in case **/
     if($password == "" || $email == ""){
-        $ERROR = new error();
+        $ERROR = new Hub_Error();
         $ERROR->createLoginFailedError();
         return $ERROR;
     }
@@ -61,18 +61,18 @@ function userLogin($email,$password){
 					$user->load();
 					return $user;
 				} else {
-					$ERROR = new error();
+					$ERROR = new Hub_Error();
 					$ERROR->createLoginFailedError();
 					return $ERROR;
 				}
 			} else {
-				$ERROR = new error();
+				$ERROR = new Hub_Error();
 				$provider = ucfirst($user->getAuthType());
 				$ERROR->createLoginFailedExternalError($provider);
 				return $ERROR;
 			}
 		} else {
-			$ERROR = new error();
+			$ERROR = new Hub_Error();
 			if ($status == $CFG->USER_STATUS_UNAUTHORIZED) {
 				$ERROR->createLoginFailedUnauthorizedError();
 			} else if ($status == $CFG->USER_STATUS_SUSPENDED) {
@@ -85,23 +85,24 @@ function userLogin($email,$password){
 			return $ERROR;
 		}
     } else {
-        $ERROR = new error();
+        $ERROR = new Hub_Error();
         $ERROR->createLoginFailedError();
         return $ERROR;
     }
 }
 
+// NOTE: THIS IS NOW DONE IN /ui/pages/loginexternal.php
 function loginExternal($provider, &$errors) {
     global $CFG, $LNG;
 
     clearSession();
 
 	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth/config.php';
-	require_once( $CFG->dirAddress.'core/lib/hybridauth/Hybrid/Auth.php' );
+	require_once( $CFG->dirAddress.'core/lib/hybridauth/autoload.php' );
 
 	try{
 		// create an instance for Hybridauth with the configuration file path as parameter
-		$hybridauth = new Hybrid_Auth( $hybridauth_config );
+		$hybridauth = new Hybridauth\Hybridauth( $hybridauth_config );
 
 		// try to authenticate the selected $provider
 		$adapter = $hybridauth->authenticate( $provider );
@@ -112,6 +113,8 @@ function loginExternal($provider, &$errors) {
 		$user_profile = $adapter->getUserProfile();
 
 		//echo print_r($user_profile);
+
+		$adapter->disconnect();
 
 		return $user_profile;
 	}
@@ -146,13 +149,20 @@ function logoutExternal() {
     global $CFG;
 
 	$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth/config.php';
-	require_once( $CFG->dirAddress.'core/lib/hybridauth/Hybrid/Auth.php' );
+	require_once( $CFG->dirAddress.'core/lib/hybridauth/autoload.php' );
 
 	try{
-		$hybridauth = new Hybrid_Auth( $hybridauth_config );
-		$hybridauth->logoutAllProviders();
+		$hybridauth = new Hybridauth\Hybridauth( $hybridauth_config );
+
+		//logout All Providers;
+		$idps = $hybridauth->getConnectedProviders();
+		foreach ($idps as $idp) {
+			$adapter = Hybrid_Auth::getAdapter($idp);
+			$adapter->logout();
+		}
 	}
 	catch( Exception $e ){
+		error_log($e->getMessage());
 		//echo "<br /><br /><b>Oh well, we got an error :</b> " . $e->getMessage();
 		//echo "<hr /><h3>Trace</h3> <pre>" . $e->getTraceAsString() . "</pre>";
 	}

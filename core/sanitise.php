@@ -113,7 +113,7 @@ function check_param($param, $type=PARAM_ALPHAEXT) {
     global $CFG, $HUB_FLM;
 
     if (!isset($param) || $param == "") {
-         $ERROR = new error;
+         $ERROR = new Hub_Error;
          $ERROR->createRequiredParameterError($parname);
          include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
          die;
@@ -141,7 +141,7 @@ function required_param($parname, $type=PARAM_ALPHAEXT) {
         $param = $_GET[$parname];
     } else {
          global $ERROR;
-         $ERROR = new error;
+         $ERROR = new Hub_Error;
          $ERROR->createRequiredParameterError($parname);
          include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
          die;
@@ -288,7 +288,7 @@ function clean_param($param, $type) {
 		    if(validEmail($param)) {
 		        return $param;
 		    } else {
-				 $ERROR = new error;
+				 $ERROR = new Hub_Error;
 				 $ERROR->createInvalidEmailError();
             	 include_once($HUB_FLM->getCodeDirPath("core/formaterror.php"));
 				 die;
@@ -300,7 +300,7 @@ function clean_param($param, $type) {
 
         default:
             include_once($HUB_FLM->getCodeDirPath("core/formaterror.php"));
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->createInvalidParameterError($type);
             die;
     }
@@ -371,6 +371,9 @@ function fixMSWord($string) {
 
 function demicrosoftize($str) {
 
+	//"\x98" => "~", // took out as breaking single closing speech mark on OU website
+	//"\x99" => "(TM)", // took out as breaking single closing speech mark on OU website
+
     return strtr($str,
 		array(
 			"\x82" => "'",
@@ -391,8 +394,6 @@ function demicrosoftize($str) {
 			"\x95" => "*",
 			"\x96" => "-",
 			"\x97" => "--",
-			"\x98" => "~",
-			"\x99" => "(TM)",
 			"\x9a" => "\xa8",
 			"\x9b" => ">",
 			"\x9c" => "\xbd",
@@ -418,11 +419,11 @@ function clean_text($text) {
 	$text = preg_replace('/(&#[0-9]+)(;?)/i', "\\1;", $text);
 	$text = preg_replace('/(&#x[0-9a-fA-F]+)(;?)/i', "\\1;", $text);
 
-	$text = demicrosoftize($text);
+	$text = demicrosoftize($text); // was using this one
 
 	//$text = swapMicrosoftChars($text);
 
-	require_once($CFG->dirAddress .'core/lib/htmlpurifier-4.5.0/library/HTMLPurifier.auto.php');
+	require_once($CFG->dirAddress .'core/lib/htmlpurifier/library/HTMLPurifier.auto.php');
 
     $config = HTMLPurifier_Config::createDefault();
 
@@ -439,7 +440,10 @@ function clean_text($text) {
 	$safeurls = '%^(http:|https:)?//(';
 
 	if (isset($CFG->safeurls)) {
-		$count = sizeof($CFG->safeurls);
+		$count = 0;
+		if (is_countable($CFG->safeurls)) {
+			$count = count($CFG->safeurls);
+		}
 		for ($i=0; $i<$count;$i++) {
 			if ($i == 0) {
 				$safeurls .= $CFG->safeurls[$i];

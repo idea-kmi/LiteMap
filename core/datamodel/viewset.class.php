@@ -64,7 +64,10 @@ class ViewSet {
 
 		$resArray = $DB->select($sql, $params);
 
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->count = $count;
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
@@ -90,7 +93,10 @@ class ViewSet {
 
 		$resArray = $DB->select($sql, $params);
 
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->count = $count;
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];

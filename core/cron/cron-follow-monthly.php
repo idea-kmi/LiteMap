@@ -63,10 +63,14 @@ $currentUser = $USER;
 
 $us = getFollowEmailUsers('monthly');
 $users = $us->users;
-$count = count($users);
+
+$count = 0;
+if (is_countable($users)){
+	$count = count($users);
+}
 
 for ($i=0; $i<$count; $i++) {
-	if (!$user instanceof Error) {
+	if (!$user instanceof Hub_Error) {
 		$user = $users[$i];
 		$userid = $user->userid;
 		$USER = $user;
@@ -82,7 +86,11 @@ for ($i=0; $i<$count; $i++) {
 
 		// GET PEOPLE THEY FOLLOW
 		$followingusers = getUsersBeingFollowedByMe($userid);
-		$countj = count($followingusers);
+
+		$countj = 0;
+		if (is_countable($followingusers)){
+			$countj = count($followingusers);
+		}
 		for ($j=0; $j<$countj;$j++) {
 			$next = $followingusers[$j];
 			$name = $next['Name'];
@@ -97,7 +105,10 @@ for ($i=0; $i<$count; $i++) {
 		// GET ITEMS THEY FOLLOW
 		$itemArray = getItemsBeingFollowedByMe($userid);
 		$k=0;
-		$countk = count($itemArray);
+		$countk = 0;
+		if (is_countable($itemArray)){
+			$countk = count($itemArray);
+		}
 		for ($k = 0; $k<$countk; $k++) {
 			$array = $itemArray[$k];
 

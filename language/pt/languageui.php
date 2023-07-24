@@ -42,6 +42,8 @@ $LNG->HOMEPAGE_TOOLS_TITLE = 'Ferramentas:';
 $LNG->HOMEPAGE_TOOLS_LINK = 'Obtenha barra de ferramentas de LiteMap';
 $LNG->HOMEPAGE_VIEW_ALL = "Ver todo";
 $LNG->HOMEPAGE_NEWS_TITLE = "Notícias recentes";
+
+$LNG->HOMEPAGE_MOST_POPULAR_GROUPS_TITLE = $LNG->GROUPS_NAME.' Mais Populares';
 $LNG->HOMEPAGE_MOST_RECENT_GROUPS_TITLE = 'o mais novo '.$LNG->GROUPS_NAME;
 $LNG->HOMEPAGE_MOST_RECENT_MAPS_TITLE = 'o mais novo '.$LNG->MAPS_NAME;
 
@@ -396,6 +398,7 @@ $LNG->TAB_PRO = $LNG->PROS_NAME;
 $LNG->TAB_CON = $LNG->CONS_NAME;
 
 //explore
+$LNG->VIEWS_LINEAR_TITLE = "Árvores de Conhecimento";
 $LNG->VIEWS_LINEAR_HINT = "Click para ver árvores de conhecimento deste item";
 $LNG->VIEWS_WIDGET_TITLE = "Todos os detalhes";
 $LNG->WIDGET = "Click para ver árvore de conhecimento deste item";
@@ -441,6 +444,7 @@ $LNG->SORT_MODDATE = 'Data de modificação';
 $LNG->SORT_TITLE = 'Título';
 $LNG->SORT_URL = 'Website';
 $LNG->SORT_NAME = 'Nome';
+$LNG->SORT_MEMBERS = 'Contagem de membro';
 $LNG->SORT_CONNECTIONS = 'Conexões';
 $LNG->SORT_VOTES = 'Votos';
 $LNG->SORT_LAST_LOGIN = 'Última seção';
@@ -992,6 +996,7 @@ $LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Clique no botão \'Importação do YouTub
 $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Cole o seu filme do YouTube \'Incorporar\' código aqui:";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Clique no botão \'Importação do Vimeo\' para adicionar o seu filme do Vimeo \'Incorporar\' código. A largura, altura e identificação do filme serão extraídas e usadas para carregar o filme no mapa.";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Cole o seu filme do Vimeo \'Incorporar\' código aqui:";
+$LNG->MAP_MOVIE_SIZE_MESSAGE = "Nenhuma informação de altura e largura pode ser determinada para o seu filme do YouTube";
 
 $LNG->MAP_MEDIA_NODE_JUMP_HINT = "Ir para tempo de índice de mídia fornecido";
 $LNG->MAP_MEDIA_NODE_JUMP = "Saltar";

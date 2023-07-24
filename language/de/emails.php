@@ -37,7 +37,7 @@ $LNG->VALIDATE_REGISTER_SUBJECT = "Schließen Sie Ihre Registrierung mit dem Kli
 
 $LNG->WELCOME_REGISTER_REQUEST_SUBJECT = "Registrierungsanfrage für ".$CFG->SITE_TITLE;
 $LNG->WELCOME_REGISTER_REQUEST_BODY = 'Vielen Dank für Ihre Registrierungsanfrage <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a>.<br> So können wir erkennen, dass wir Ihre Anfrage erhalten haben.<br>Wir werden versuchen, Ihre Anfrage innerhalb von 24 Stunden zu bearbeiten, aber zu Stoßzeiten kann es etwas länger dauern.<br>Sie werden eine weitere E-Mail mit Ihren Anmeldedaten erhalten, sobald Ihre Anfrage bearbeitet.<br><br>Vielen Dank nochmals für Ihr Interesse.';
-$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "Der oben genannte User hat ein Konto angefordert. Im Admin-Bereich können Sie den neuen Benutzer annehmen oder ablehnen.";
+$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "Ein neuer Benutzer hat ein Konto angefordert. Im Admin-Bereich können Sie den neuen Benutzer annehmen oder ablehnen.";
 
 $LNG->WELCOME_REGISTER_CLOSED_SUBJECT = "Registrierung auf ".$CFG->SITE_TITLE;
 

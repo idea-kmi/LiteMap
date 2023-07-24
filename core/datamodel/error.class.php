@@ -24,10 +24,10 @@
  ********************************************************************************/
 
 ///////////////////////////////////////
-// Error Class
+// Hub_Error Class
 ///////////////////////////////////////
 
-class Error {
+class Hub_Error {
 
 	private $REQUIRED_PARAMETER_MISSING = "1000";
 	private $INVALID_METHOD_SPECIFIED = "1001";

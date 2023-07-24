@@ -56,7 +56,7 @@
 
     $node = getNode($nodeid);
 
-    if($node instanceof Error){
+    if($node instanceof Hub_Error){
         echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
         include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
         die;
@@ -75,9 +75,13 @@
    // now trigger the js to load data
     $argsStr = "{";
     $keys = array_keys($args);
-    for($i=0;$i< sizeof($keys); $i++){
+	$keycount = 0;
+	if (is_countable($keys)) {
+		$keycount = count($keys);
+	}
+    for($i=0;$i< $keycount; $i++){
         $argsStr .= '"'.$keys[$i].'":"'.addslashes($args[$keys[$i]]).'"';
-        if ($i != (sizeof($keys)-1)){
+        if ($i != ($keycount-1)){
             $argsStr .= ',';
         }
     }
@@ -90,7 +94,7 @@
 	echo "</script>";
 
 	try {
-		$jsonnode = json_encode($node);
+		$jsonnode = json_encode($node, JSON_INVALID_UTF8_IGNORE);
 	} catch (Exception $e) {
 		echo 'Caught exception: ',  $e->getMessage(), "<br>";
 	}
@@ -102,79 +106,80 @@
 	echo "</script>";
 ?>
 
-<script type='text/javascript'>
+<div class="container-fluid">
+	<div class="row p-3">		
+		<div class="col">
+			<script type='text/javascript'>
+				Event.observe(window, 'load', function() {
+					var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
+					$("tab-content-explore-net").insert(mapdetailsdiv);
+					buildNodeTitle('network');
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-map-net.js.php"); ?>', 'networkgraphmapdetails');
+				});
+			</script>
 
-Event.observe(window, 'load', function() {
-	var mapdetailsdiv = new Element("div", {'class':'boxshadowsquaredark', 'id':'mapdetailsdiv', 'style':'left:-1px;top:-1px;clear:both;position:absolute;display:none;z-index:60;padding:5px;width:380px;height:580px;'} );
-	$("tab-content-explore-net").insert(mapdetailsdiv);
+			<?php if ($nodetype == 'Challenge') { ?>
+				<div id="nodearealineartitle" class="challengeback challengeborder nodearealineartitle">
+					<div class="challengeback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Issue') { ?>
+				<div id="nodearealineartitle" class="issueback issueborder nodearealineartitle">
+					<div class="issueback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Idea') { ?>
+				<div id="nodearealineartitle" class="plainback plainborder nodearealineartitle">
+					<div class="plainback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Solution') { ?>
+				<div id="nodearealineartitle" class="solutionback solutionborder nodearealineartitle">
+					<div class="solutionback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Argument') { ?>
+				<div id="nodearealineartitle" class="evidenceback evidenceborder nodearealineartitle">
+					<div class="evidenceback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Pro') { ?>
+				<div id="nodearealineartitle" class="proback proborder nodearealineartitle">
+					<div class="proback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Con') { ?>
+				<div id="nodearealineartitle" class="conback conborder nodearealineartitle">
+					<div class="conback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } ?>
 
-	buildNodeTitle('network');
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-map-net.js.php"); ?>');
-	bObj.buildScriptTag();
-	bObj.addScriptTag();
-});
+			<div class="p-1 border-bottom d-block">
+				<div id="headertoolbar" class="d-flex gap-4 headertoolbar align-items-center px-1 py-2"></div>
+			</div>
 
-</script>
-
-<?php if ($nodetype == 'Challenge') { ?>
-	<div id="nodearealineartitle" class="challengeback challengeborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="challengeback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Issue') { ?>
-	<div id="nodearealineartitle" class="issueback issueborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="issueback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Idea') { ?>
-	<div id="nodearealineartitle" class="plainback plainborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="plainback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Solution') { ?>
-	<div id="nodearealineartitle" class="solutionback solutionborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="solutionback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Argument') { ?>
-	<div id="nodearealineartitle" class="evidenceback evidenceborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="evidenceback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Pro') { ?>
-	<div id="nodearealineartitle" class="proback proborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="proback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Con') { ?>
-	<div id="nodearealineartitle" class="conback conborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="conback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } ?>
-
-<div style="border-bottom:1px solid #E8E8E8; width:100%;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-	<div id="headertoolbar" style="clear:both;float:left;margin-top:10px;margin-left:5px;"></div>
-</div>
-
-<div id="tabber" style="clear:both;float:left;width:100%;">
-    <div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
-       	<div id='tab-content-explore-net' class='explorepagesection' style="display:block">
-			<div id="tab-content-map-net" style="clear:both; float:left;width:100%;">
+			<div id="tabber">
+				<div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
+					<div id='tab-content-explore-net' class='explorepagesection' style="display:block">
+						<div id="tab-content-map-net">
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -24,7 +24,6 @@
  ********************************************************************************/
 
     include_once("../../config.php");
-	require_once( $CFG->dirAddress.'core/lib/hybridauth/Hybrid/Auth.php' );
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
     if ($HUB_FLM->hasCustomVersion($me)) {
@@ -41,8 +40,7 @@
 
     $errors = array();
 
-   	$provider = required_param("provider",PARAM_ALPHA);
-   	$providerDisplay = ucfirst($provider);
+   	$providerDisplay = "";
 
     $referrer = optional_param("referrer",$CFG->homeAddress."index.php",PARAM_URL);
     if ($referrer == "") {
@@ -193,17 +191,50 @@
 			}
 		}
 
-	// INITIAL REDIRECT FROM LOGIN
-	} else if ($provider != "" && $CFG->SOCIAL_SIGNON_ON) {
+	} else if ($CFG->SOCIAL_SIGNON_ON) {
 
-		// SOCIAL SIGN ON REQUESTED AND REDIRECTED BACK (no idea why this is need, but it it)
-   		if( isset( $_REQUEST["redirect_to_idp"] ) ) {
+    	clearSession();
 
-			$userprofile = loginExternal($provider,$errors);
+		$hybridauth_config = $CFG->dirAddress.'core/lib/hybridauth/config.php';
+		require_once( $CFG->dirAddress.'core/lib/hybridauth/autoload.php' );
+
+		try {
+			$hybridauth = new Hybridauth\Hybridauth( $hybridauth_config );
+
+			/**
+			 * Initialize session storage.
+			 */
+			$storage = new Hybridauth\Storage\Session();
+
+			/**
+			 * Hold information about provider when user clicks on Sign In.
+			 */
+			if (isset($_GET['provider'])) {
+				$provider = optional_param("provider","",PARAM_ALPHA);
+
+				$storage->set('provider', $provider);
+				$storage->set('wasprovider', $provider);
+				$storage->set('providerdisplay', ucfirst($provider));
+			}
+
+			/**
+			 * When provider exists in the storage, try to authenticate user and clear storage.
+			 *
+			 * When invoked, `authenticate()` will redirect users to provider login page where they
+			 * will be asked to grant access to your application. If they do, provider will redirect
+			 * the users back to Authorization callback URL (i.e., this script).
+			 */
+			if ($provider = $storage->get('provider')) {
+				$hybridauth->authenticate($provider);
+				$storage->set('provider', null);
+			}
+
+			$userprofile = $hybridauth->getAdapter($storage->get('wasprovider'))->getUserProfile();
+			$providerDisplay = $storage->get('providerdisplay');
 
 			//print_r($userprofile);
 
-			if ($userprofile instanceof Hybrid_User_Profile) {
+			if (isset($userprofile->email)) {
 
 				$email        = $userprofile->email;
 				$provideruid  = $userprofile->identifier;
@@ -364,7 +395,7 @@
 							}
 						} else {
 							//# 4 - if authentication does not exist and email was given and is not in use,
-							// then check for Evidence Hub SIGNUP STATUS and act as required
+							// then check for SIGNUP STATUS and act as required
 
 							if ($CFG->signupstatus == $CFG->SIGNUP_CLOSED) {
 								array_push($errors, $LNG->LOGIN_EXTERNAL_ERROR_REGISTRATION_CLOSED);
@@ -430,12 +461,23 @@
 					}
 				}
 			}
-        } else {?>
-			<script>
-				window.location.href = window.location.href + "&redirect_to_idp=1";
-			</script>
-        <?php
-        	die();
+		} catch (Exception $e) {
+			error_log($e->getMessage());
+			switch( $e->getCode() ){
+				case 0 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_0; break;
+				case 1 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_1; break;
+				case 2 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_2; break;
+				case 3 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_3; break;
+				case 4 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_4; break;
+				case 5 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_5; break;
+				case 6 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_6;
+						 $adapter->logout();
+						 break;
+				case 7 : $error = $LNG->LOGIN_EXTERNAL_ERROR_HYBRIDAUTH_7;
+						 $adapter->logout();
+						 break;
+			}
+			array_push($errors, $error);
 		}
     }
 

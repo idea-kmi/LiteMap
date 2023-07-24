@@ -1060,7 +1060,13 @@ function init_x_axis() {
 
   // check whether to treat x axis as numeric
   if ($this->parameter['x_axis_gridlines'] == 'auto') { // auto means text based x_axis, not numeric...
-    $this->calculated['x_axis']['num_ticks'] = sizeof($this->x_data);
+
+  	$count = 0;
+  	if ( is_countable($this->x_data) ){
+  		$count = sizeof($this->x_data);
+  	}
+
+    $this->calculated['x_axis']['num_ticks'] = $count;
       $data = $this->x_data;
       for ($i=0; $i < $this->calculated['x_axis']['num_ticks']; $i++) {
         $value = array_shift($data); // grab value from begin of array
@@ -1118,27 +1124,33 @@ function init_x_axis() {
 
 // find max and min values for a data array given the resolution.
 function find_range($data, $min, $max, $resolution) {
-  if (sizeof($data) == 0 ) return array('min' => 0, 'max' => 0);
-  foreach ($data as $key => $value) {
-    if ($value=='none') continue;
-    if ($value > $max) $max = $value;
-    if ($value < $min) $min = $value;
-  }
 
-  if ($max == 0) {
-    $factor = 1;
-  } else {
-    if ($max < 0) $factor = - pow(10, (floor(log10(abs($max))) + $resolution) );
-    else $factor = pow(10, (floor(log10(abs($max))) - $resolution) );
-  }
-  $factor = round($factor * 1000.0) / 1000.0; // To avoid some wierd rounding errors (Moodle)
+	$count = 0;
+	if ( is_countable($data) ){
+		$count = sizeof($data);
+	}
+	if ($count == 0 ) return array('min' => 0, 'max' => 0);
 
-  $max = $factor * @ceil($max / $factor);
-  $min = $factor * @floor($min / $factor);
+	foreach ($data as $key => $value) {
+		if ($value=='none') continue;
+		if ($value > $max) $max = $value;
+		if ($value < $min) $min = $value;
+	}
 
-  //print "max=$max, min=$min<br />";
+	if ($max == 0) {
+		$factor = 1;
+	} else {
+		if ($max < 0) $factor = - pow(10, (floor(log10(abs($max))) + $resolution) );
+		else $factor = pow(10, (floor(log10(abs($max))) - $resolution) );
+	}
+	$factor = round($factor * 1000.0) / 1000.0; // To avoid some wierd rounding errors (Moodle)
 
-  return array('min' => $min, 'max' => $max);
+	$max = $factor * @ceil($max / $factor);
+	$min = $factor * @floor($min / $factor);
+
+	//print "max=$max, min=$min<br />";
+
+	return array('min' => $min, 'max' => $max);
 }
 
 function graph() {

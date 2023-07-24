@@ -66,7 +66,10 @@ class GroupSet {
 		}
 		$resArray = $DB->select($sql, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$g = new Group($array["GroupID"]);
@@ -103,14 +106,16 @@ class GroupSet {
 
         // get the connection records for the given parameters, start, max etc.
         // ADD SORTING
-        $sql = $DB->userOrderString($sql, $orderby, $sort);
+        $sql = $DB->groupOrderString($sql, $orderby, $sort);
 
         // ADD LIMITING
         $sql = $DB->addLimitingResults($sql, $start, $max);
 
 		$resArray = $DB->select($sql, $params);
-
-  		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalconns;
         $this->start = $start;
         $this->count = $count;

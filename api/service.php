@@ -30,7 +30,7 @@
  *
  */
 
-include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+include_once(__DIR__ . '/../config.php');
 
 global $USER,$CFG,$LNG;
 
@@ -355,7 +355,7 @@ switch($method) {
         $description = optional_param('description',"",PARAM_TEXT);
 
         $link = getLinkTypeByLabel($linktypename);
-        if (!$link instanceof Error) {
+        if (!$link instanceof Hub_Error) {
         	$response = addConnection($fromnodeid,$fromroleid,$link->linktypeid,$tonodeid,$toroleid,$private,$description);
         } else {
 			$ERROR = new Error;

@@ -87,7 +87,10 @@ class UserSet {
 
 		$resArray = $DB->select($sql, $params);
 
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalusers;
         $this->start = $start;
         $this->count = $count;
@@ -137,7 +140,10 @@ class UserSet {
 
  		$resArray = $DB->select($sql, $params);
 
- 		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalusers;
         $this->start = $start;
         $this->count = $count;
@@ -173,7 +179,10 @@ class UserSet {
 
  		$resArray = $DB->select($sql, $params);
 
- 		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalusers;
         $this->count = $count;
  		for ($i=0; $i<$count; $i++) {
@@ -208,7 +217,10 @@ class UserSet {
 
  		$resArray = $DB->select($sql, $params);
 
- 		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalusers;
         $this->count = $count;
  		for ($i=0; $i<$count; $i++) {

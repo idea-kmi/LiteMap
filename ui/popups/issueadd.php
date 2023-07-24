@@ -79,7 +79,7 @@
 			// CREATE THE ISSUE NODE
 			$issuenode = addNode($issue, $desc, $private, $roleIssue);
 
-			if (!$issuenode instanceof Error) {
+			if (!$issuenode instanceof Hub_Error) {
 
 				if ($_FILES['image']['error'] == 0) {
 					$imagedir = $HUB_FLM->getUploadsNodeDir($issuenode->nodeid);
@@ -102,16 +102,6 @@
 					$connection = addConnection($issuenode->nodeid, $roleIssue, $linkComment, $clonenodeid, $roleClone, "N");
 				}
 
-			    /*if ($_FILES['image']['error'] == 0) {
-					$imagedir = $HUB_FLM->getUploadsNodeDir($issuenode->nodeid);
-
-					$photofilename = uploadImageToFit('image',$errors,$imagedir);
-					if($photofilename == ""){
-						$photofilename = $CFG->DEFAULT_ISSUE_PHOTO;
-					}
-					$issuenode->updateImage($photofilename);
-				}*/
-
 				if (isset($groupid) && $groupid != "") {
 					$issuenode->addGroup($groupid);
 				}
@@ -123,18 +113,6 @@
 
 					$i = 0;
 					foreach($resourceurlarray as $resourceurl) {
-
-						// connect exisitng resource
-						/*if (isset($resourcenodeidsarray[$i]) && $resourcenodeidsarray[$i] != "") {
-							$refnode = getNode($resourcenodeidsarray[$i]);
-							$r = getRoleByName($refnode->role->name);
-							$refrole = $r->roleid;
-							$connection = addConnection($refnode->nodeid, $refrole, $linkRelated, $evidencenode->nodeid, $roleType, "N");
-						} else { // create and connect new resource
-						*/
-
-							//$r = getRoleByName($resourcetype);
-							//$refrole = $r->roleid;
 
 							$resourcetitle = trim($resourcetitlearray[$i]);
 
@@ -153,38 +131,24 @@
 								$resourcetitle = $resourceurl;
 							}
 
-							//$refnode = addNode($resourceurl,$resourcetitle, 'N', $refrole);
-							//if (!$refnode instanceof Error) {
-								//if ($resourcetype == 'Publication') {
-								//	$refnode->updateAdditionalIdentifier($identifierarray[$i]);
-								//}
+							// ADD URL TO REF and EVIDENCE
+							$clip = "";
+							$clippath = "";
+							$identifier="";
+							if (isset($resourcecliparray[$i])) {
+								$clip = $resourcecliparray[$i];
+							}
+							if (isset($resourceclippatharray[$i])) {
+								$clippath = $resourceclippatharray[$i];
+							}
+							if (isset($identifierarray[$i])) {
+								$identifier= $identifierarray[$i];
+							}
 
-								// ADD URL TO REF and EVIDENCE
-								$clip = "";
-								$clippath = "";
-								$identifier="";
-								if (isset($resourcecliparray[$i])) {
-									$clip = $resourcecliparray[$i];
-								}
-								if (isset($resourceclippatharray[$i])) {
-									$clippath = $resourceclippatharray[$i];
-								}
-								if (isset($identifierarray[$i])) {
-									$identifier= $identifierarray[$i];
-								}
+							$urlObj = addURL($resourceurl, $resourcetitle, "", $private, $clip, $clippath, "", "cohere", $identifier);
+							$issuenode->addURL($urlObj->urlid, "");
 
-								$urlObj = addURL($resourceurl, $resourcetitle, "", $private, $clip, $clippath, "", "cohere", $identifier);
-								$issuenode->addURL($urlObj->urlid, "");
-
-								// CONNECT REF TO EVIDENCE
-								//$connection = addConnection($refnode->nodeid, $refrole, $linkRelated, $evidencenode->nodeid, $roleType, "N");
-
-								$USER = $currentUser;
-
-							//} else {
-							//	array_push($errors,$LNG->FORM_RESOURCE_CREATE_ERROR_MESSAGE." ".$refrole->message);
-							//}
-						//}
+							$USER = $currentUser;
 
 						$i++;
 					}
@@ -233,7 +197,10 @@
 
 			if(isset($clone->urls)) {
 				$urls = $clone->urls;
-				$count = count($urls);
+				$count = 0;
+				if (is_countable($urls)) {
+					$count = count($urls);
+				}
 				for ($i=0; $i<$count;$i++) {
 					$url = $urls[$i];
 					$resourcetypesarray[$i] = $url;
@@ -252,107 +219,124 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
 
 <script type="text/javascript">
-var noResources = <?php echo sizeof($resourceurlarray);?>;
+	var noResources = <?php if (is_countable($resourceurlarray)) { echo count($resourceurlarray);} else {echo 0;}?>;
 
-function init() {
-   	$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
-}
-
-function addSelectedResource(node, num) {
-	$('resource'+num+'label').value=node.role[0].role.name;
-
-	$('resourcetitle-'+num).value = node.name;
-	$('resourcetitle-'+num).disabled = true;
-	$('resourcenodeidsarray-'+num).value = node.nodeid;
-
-	if ($('identifierdiv-'+num)) {
-		$('identifierdiv-'+num).style.display="none";
+	function init() {
+		$('dialogheader').insert('<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>');
 	}
 
-	$('typehiddendiv-'+num).style.display="block";
-	$('typediv-'+num).style.display="none";
-	$('resourceurldiv-'+num).style.display="none";
-	$('resourcedescdiv-'+num).style.display="none";
-}
+	function addSelectedResource(node, num) {
+		$('resource'+num+'label').value=node.role[0].role.name;
 
-function removeSelectedResource(num) {
-	$('resourcetitle-'+num).value = "";
-	$('resourcetitle-'+num).disabled = false;
-	$('resourcedesc-'+num).value = "";
-	$('resourcenodeidsarray-'+num).value = "";
+		$('resourcetitle-'+num).value = node.name;
+		$('resourcetitle-'+num).disabled = true;
+		$('resourcenodeidsarray-'+num).value = node.nodeid;
 
-	$('typehiddendiv-'+num).style.display="none";
-	$('typediv-'+num).style.display="block";
-	$('resourceurldiv-'+num).style.display="block";
-	$('resourcedescdiv-'+num).style.display="block";
-}
+		if ($('identifierdiv-'+num)) {
+			$('identifierdiv-'+num).style.display="none";
+		}
 
-function checkForm() {
-	var checkname = ($('issue').value).trim();
-	if (checkname == ""){
-	   alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
-	   return false;
-    }
+		$('typehiddendiv-'+num).style.display="block";
+		$('typediv-'+num).style.display="none";
+		$('resourceurldiv-'+num).style.display="none";
+		$('resourcedescdiv-'+num).style.display="none";
+	}
 
-    $('issueform').style.cursor = 'wait';
+	function removeSelectedResource(num) {
+		$('resourcetitle-'+num).value = "";
+		$('resourcetitle-'+num).disabled = false;
+		$('resourcedesc-'+num).value = "";
+		$('resourcenodeidsarray-'+num).value = "";
 
-	return true;
-}
+		$('typehiddendiv-'+num).style.display="none";
+		$('typediv-'+num).style.display="block";
+		$('resourceurldiv-'+num).style.display="block";
+		$('resourcedescdiv-'+num).style.display="block";
+	}
 
-window.onload = init;
+	function checkForm() {
+		var checkname = ($('issue').value).trim();
+		if (checkname == ""){
+		alert("<?php echo $LNG->FORM_ISSUE_ENTER_SUMMARY_ERROR; ?>");
+		return false;
+		}
+
+		$('issueform').style.cursor = 'wait';
+
+		return true;
+	}
+
+	window.onload = init;
 
 </script>
 
-<?php insertFormHeaderMessageShort(); ?>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+			<?php
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
+			<?php } ?>
+			<?php insertFormHeaderMessageShort(); ?>
 
-<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-	<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
-	<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
+			<form id="issueform" name="issueform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>">
+				<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
 
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
-		</label>
-		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
+				<div class="mb-3 row">
+					<label for="image" class="col-sm-3 col-form-label">
+						<?php echo $LNG->GROUP_FORM_PHOTO; ?>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="file" class="form-control" id="image" name="image" />
+						<small><?php echo $LNG->GROUP_FORM_PHOTO_HELP; ?></small>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label for="issue" class="col-sm-3 col-form-label">
+						<span><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>
+						<span class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="issue" name="issue" value="<?php echo( $issue ); ?>" />
+					</div>
+				</div>
+
+				<?php insertDescription('IssueDesc'); ?>
+				<?php insertPrivate('Private', $private); ?>
+
+				<?php if ($isRemote) {
+						insertResourceForm('RemoteURLs');
+					} else {
+						insertResourceForm('URLs');
+					}
+				?>
+
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addissue" name="addissue">
+				</div>
+			</form>
+		</div>
 	</div>
-
-    <div class="hgrformrow">
-		<label  class="formlabelbig" for="url"><span style="vertical-align:top"><?php echo $LNG->FORM_ISSUE_LABEL_SUMMARY; ?></span>
-			<span class="active" onMouseOver="showFormHint('IssueSummary', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></span>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-		</label>
-		<input class="forminputmust hgrinput hgrwide" id="issue" name="issue" value="<?php echo( $issue ); ?>" />
-	</div>
-
-	<?php insertDescription('IssueDesc'); ?>
-
-	<?php insertPrivate('Private', $private); ?>
-
-	<?php if ($isRemote) {
-			insertResourceForm('RemoteURLs');
-		} else {
-			insertResourceForm('URLs');
-		}
-	?>
-
-    <br>
-    <div class="hgrformrow">
-		<label class="formlabelbig">&nbsp;</label>
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_SAVE; ?>" id="addissue" name="addissue">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

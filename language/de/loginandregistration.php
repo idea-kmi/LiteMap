@@ -108,7 +108,7 @@ $LNG->LOGIN_EXTERNAL_ERROR_EMAIL_UNVALIDATED_PART2 = 'Profil auf diesem Hub.';
 $LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART1 = '<br><br>Leider hat uns'; // Provder service name will be inserted here .e.g Facebook, Yahoo, Google etc.
 $LNG->LOGIN_EXTERNAL_ERROR_NO_EMAIL_PART2 = ' nicht Ihre Email-Adresse mitgeteilt, so dass wir nicht überprüfen können, ob Sie bereits einen Account bei uns haben. Bitte erstellen Sie falls nötig, einen neuen.<br><br>Dazu tippen Sie bitte Ihre für LiteMap gewünschte Email-Addresse unten ein und klicken auf Login.';
 
-$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE .= 'Sie werden in Kürze eine Email erhalten.';
+$LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE = 'Sie werden in Kürze eine Email erhalten.';
 $LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE .= '<br>Sie müssen darin auf den link klicken, um die Registrierung für dieses Hub abzuschließen.';
 
 $LNG->LOGIN_EXTERNAL_EMAIL_VERIFICALTION_MESSAGE2 = 'Es gab kein Hub-Benutzerkonto für Ihre Emailadresse - also haben wir eines erstellt und  so we have now created one and es mit Ihrem KOnto verknüpft.';

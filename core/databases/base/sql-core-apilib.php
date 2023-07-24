@@ -409,12 +409,22 @@ $HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SELECT = $HUB_SQL->APILIB_GET_MY_GROUPS_SEL
 
 $HUB_SQL->APILIB_GET_MY_ADMIN_GROUPS_SORT = 'order by u.CreationDate DESC';
 
-$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1	= "SELECT DISTINCT t.UserID FROM Users t
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1_OLD	= "SELECT DISTINCT t.UserID FROM Users t
         									LEFT JOIN TagUsers tn ON t.UserID = tn.UserID
         									LEFT JOIN Tag u ON u.tagID = tn.TagID
 											WHERE (t.CurrentStatus=? OR
 											t.CurrentStatus=?)
 											AND t.USERID <> ? AND t.IsGroup='Y'";
+
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART1	= "SELECT DISTINCT t.UserID, count(ug.GroupID) as members FROM Users t
+        									LEFT JOIN TagUsers tn ON t.UserID = tn.UserID
+        									LEFT JOIN Tag u ON u.tagID = tn.TagID
+        									LEFT JOIN UserGroup ug ON t.UserID = ug.GroupID
+											WHERE (t.CurrentStatus=? OR
+											t.CurrentStatus=?)
+											AND t.USERID <> ? AND t.IsGroup='Y'";
+
+$HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2 = " GROUP BY ug.GroupID";
 
 $HUB_SQL->APILIB_MAPS_FOR_NODE_SELECT = "SELECT t.NodeID from Node t WHERE
 										t.NodeTypeID IN (Select NodeTypeID from NodeType where Name='Map')

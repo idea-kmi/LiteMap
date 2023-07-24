@@ -31,16 +31,20 @@
 
 /** HOMEPAGE **/
 $LNG->HOMEPAGE_TITLE = 'Welcome To LiteMap';
-$LNG->HOMEPAGE_FIRST_PARA = '<b>LiteMap</b> gives online communities a place to map out visually a debate that may be happening in other forums or Website. It is a place to harvest the main issues, ideas, pros and cons happening in an online debate and to connect and visualize them in the form of network graphs.';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 = 'LiteMap has a bookmarklet to harvest content from the Web, and 2-D canvases (the Maps) in which harvested content can be connected to build argument maps. These are network representations of the issues, ideas, and arguments around a specific discussion topic. Litemap is also distinctive in its use of advanced analytics to show you the best argued ideas, and visualisations of your community';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>For Community Managers:</b><br>Litemap helps you to summarize the state of a debate and to present it to the community: to trigger further reflection, promote deeper understanding and improve engagement with the online debate. Litemap is also a tool to organise your community\'s contributions, reduces idea duplication, and supports content analysis and summarisation. The analytics dashboard onto your maps helps you spot connections between ideas, detect gaps in knowledge, discover new patterns and produce visual summaries of the community debate.</p>';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>For Community Members:</b><br>Litemap is your way to move from debate participation to community moderation. With Litemap you can build a visual representation of your own view of where an online debate is going and you can use this representation to communicate your ideas to others.</p>';
+
+$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> is an online collaborative tool to visually structure and make sense of complex problems. With '.$CFG->SITE_TITLE.' face-to-face and online debates can be mapped visually by building knowledge maps, such as concept, argument and issue maps. These are network maps which are characterised by different semantic data models, and can be used to address different collective sense making needs (such as brainstorming, collaborative discussion and building common understating).';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 = '<p>The use of '.$CFG->SITE_TITLE.' can improve face-to-face meetings with facilitated Dialogue Mapping and it can enable blended online-offline participation in collective deliberation processes.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' was developed in the context of a recent FP7 Project CATALYST (<a href="http://catalyst-fp7.eu/">http://catalyst-fp7.eu/</a>) on <i>Collective Applied Intelligence and Analytics for Social Innovation</i>. Since its first launch in 2015 '.$CFG->SITE_TITLE.' has been used by over 1300 users, in 10 different countries, by 100 community groups, who built over 500 Maps to confirm an emerging public and education impact.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' has so far been used in different domains such as: social innovation, social entrepreneurship, European research, science teaching, and secondary school education. '.$CFG->SITE_TITLE.' has also been the subject of a policy report published by the European Commission on Responsible Research and innovation.';
+
 $LNG->HOMEPAGE_KEEP_READING = 'keep reading';
 $LNG->HOMEPAGE_READ_LESS = 'read less';
 $LNG->HOMEPAGE_TOOLS_TITLE = 'Tools:';
 $LNG->HOMEPAGE_TOOLS_LINK = 'Get LiteMap Toolbar';
 $LNG->HOMEPAGE_VIEW_ALL = "View All";
 $LNG->HOMEPAGE_NEWS_TITLE = "Recent News";
+
+$LNG->HOMEPAGE_MOST_POPULAR_GROUPS_TITLE = 'Most Popular '.$LNG->GROUPS_NAME;
 $LNG->HOMEPAGE_MOST_RECENT_GROUPS_TITLE = 'Newest '.$LNG->GROUPS_NAME;
 $LNG->HOMEPAGE_MOST_RECENT_MAPS_TITLE = 'Newest '.$LNG->MAPS_NAME;
 
@@ -56,47 +60,47 @@ $LNG->HELP_NETWORKMAP_BODY .= '<ul style="margin-top:0px;margin-bottom:0px;paddi
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Left-click and drag canvas to pan.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Right-click to get a menu to add free-floating nodes to the map. Only available if logged in and you have permissions to edit the map.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '</ul>';
-$LNG->HELP_NETWORKMAP_BODY .= '<br><b>Links:</b>';
-$LNG->HELP_NETWORKMAP_BODY .= '<span style="padding-left:10px;">Click on link to see the link menu. Here you can click to go to the author page or, if logged in and you have permissions to edit the map, you can remove the link from the map.</span><br><br>';
+$LNG->HELP_NETWORKMAP_BODY .= '<br /><b>Links:</b>';
+$LNG->HELP_NETWORKMAP_BODY .= '<span style="padding-left:10px;">Click on link to see the link menu. Here you can click to go to the author page or, if logged in and you have permissions to edit the map, you can remove the link from the map.</span><br /><br />';
 $LNG->HELP_NETWORKMAP_BODY .= '<b>Items:</b>';
 $LNG->HELP_NETWORKMAP_BODY .= '<ul style="margin-top:0px;margin-bottom:0px;padding-bottom:0px;">';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">ctrl+left-click on one or more items to select them. Not available on read-only embedded maps.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">alt+left-click on an item to select a tree of nodes. Not available on read-only embedded maps.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Left-click</b> and hold mouse down then drag to move around current item and selected nodes</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Right-click a comment node with a picture to view an enlarge version of the picture.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Right-click and drag from one node and drop on another node to link them (assuming they are not already linked and linking rules allow). Only available if logged in and you have permissions to edit the map.<br><b>For Opera only</b> it is ctrl+right-click drag and drop to link nodes.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;">Right-click and drag from one node and drop on another node to link them (assuming they are not already linked and linking rules allow). Only available if logged in and you have permissions to edit the map.<br /><b>For Opera only</b> it is ctrl+right-click drag and drop to link nodes.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:0px;">Rollover type icon to see the type name.</li></ul>';
 
-$LNG->HELP_NETWORKMAP_BODY .= '<br><h2>Map Toolbar</h2><img style="width:640px;border-bottom:1px solid gray" src="'.$HUB_FLM->getImagePath('help/maptoolbar.png').'" />';
+$LNG->HELP_NETWORKMAP_BODY .= '<br /><h2>Map Toolbar</h2><img style="width:640px;border-bottom:1px solid gray" src="'.$HUB_FLM->getImagePath('help/maptoolbar.png').'" alt="" />';
 $LNG->HELP_NETWORKMAP_BODY .= '<ul style="margin-bottom:0px;padding-bottom:0px;margin-top:5px;">';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('enlarge2.gif').'">Click to enlarge the mapping area. This removes header and footer areas and map title box and enlarges the mapping area to fill thier space. <img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('reduce.gif').'">Click again to reduce the map back down.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="enlarge" src="'.$HUB_FLM->getImagePath('enlarge2.gif').'">Click to enlarge the mapping area. This removes header and footer areas and map title box and enlarges the mapping area to fill thier space. <img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('reduce.gif').'">Click again to reduce the map back down.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;">Edit Bar: You will only see this option is you have permissions to edit the map and are in an editable view. Click tp open and close the left-hand side edit bar. Here you will find a list of the entries you have created. A place to search all entries and buttons to create new entries. You simply drag and drop entries onto the map. To create a new entry either drag and drop the icons onto the map which will ask you just for the title, or click the icons to get the full \'Add New\' forms.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;">Alert Bar: If alerts have been activate on your site this button will open and close the right-hand side Alert bar area. Here alerts will displayed with recommendations based on the current state of the map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('mag-glass-minus.png').'">Click to zoom the map out. You can also scroll the mouse wheel backwards.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('mag-glass-plus.png').'">Click to zoom the map in. You can also scroll the mouse wheel forwards.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('mag-glass-ratio1-1.png').'">Zoom the map to 100% sizing.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('mag-glass-fit.png').'">Zoom the map so all items fit in the visible area.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('printer.png').'">Print the map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('info.png').'">Open this help window.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('selectall2.png').'" width="18" height="18">Click to select/deselect all items in the map. Not seen on read-only embeddable maps.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('search.png').'">Enter text to search on the search box and then press enter or click this icon to search. Any matches will be highlighted in the map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('search-clear.png').'">This clears any search text in the search field and clears and item selections in the map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('knowledge-tree.png').'">This button allows you to view a readonly linear represenation of the map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:21px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('embed.png').'">This opens a text box from which you can copy the iframe code to embed the current map as an read-only map in another site. Not seen on embeddable maps.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:32px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('embededit.png').'">This opens a text box from which you can copy the iframe code to embed the current map as an editable map in another site. Not seen on embeddable maps.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:24px;height:18px;" border="0" src="'.$HUB_FLM->getImagePath('json-ld-data-24.png').'">This opens a text box from which you can copy the url to get the jsonld data for this map. Not seen on embeddable maps.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="zoom out" src="'.$HUB_FLM->getImagePath('mag-glass-minus.png').'">Click to zoom the map out. You can also scroll the mouse wheel backwards.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="zoom in" src="'.$HUB_FLM->getImagePath('mag-glass-plus.png').'">Click to zoom the map in. You can also scroll the mouse wheel forwards.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="zoom 1:1" src="'.$HUB_FLM->getImagePath('mag-glass-ratio1-1.png').'">Zoom the map to 100% sizing.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="zoom to fit" src="'.$HUB_FLM->getImagePath('mag-glass-fit.png').'">Zoom the map so all items fit in the visible area.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="print" src="'.$HUB_FLM->getImagePath('printer.png').'">Print the map.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="help" src="'.$HUB_FLM->getImagePath('info.png').'">Open this help window.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="select/deselect all" src="'.$HUB_FLM->getImagePath('selectall2.png').'" width="18" height="18">Click to select/deselect all items in the map. Not seen on read-only embeddable maps.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="search" src="'.$HUB_FLM->getImagePath('search.png').'">Enter text to search on the search box and then press enter or click this icon to search. Any matches will be highlighted in the map.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="clear search" src="'.$HUB_FLM->getImagePath('search-clear.png').'">This clears any search text in the search field and clears and item selections in the map.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="readonly version" src="'.$HUB_FLM->getImagePath('knowledge-tree.png').'">This button allows you to view a readonly linear represenation of the map.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:21px;height:16px;"alt="code to embed - read only" src="'.$HUB_FLM->getImagePath('embed.png').'">This opens a text box from which you can copy the iframe code to embed the current map as an read-only map in another site. Not seen on embeddable maps.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:32px;height:16px;"alt="code to embed - editible" src="'.$HUB_FLM->getImagePath('embededit.png').'">This opens a text box from which you can copy the iframe code to embed the current map as an editable map in another site. Not seen on embeddable maps.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="padding-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:24px;height:18px;"alt="jsonld data" src="'.$HUB_FLM->getImagePath('json-ld-data-24.png').'">This opens a text box from which you can copy the url to get the jsonld data for this map. Not seen on embeddable maps.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '</ul>';
 
-$LNG->HELP_NETWORKMAP_BODY .= '<br><h2>Item Toolbar</h2><img src="'.$HUB_FLM->getImagePath('help/nodetoolbar.png').'" border="0" />';
+$LNG->HELP_NETWORKMAP_BODY .= '<br /><h2>Item Toolbar</h2><img src="'.$HUB_FLM->getImagePath('help/nodetoolbar.png').'"alt="" />';
 $LNG->HELP_NETWORKMAP_BODY .= '<ul style="margin-bottom:0px;padding-bottom:0px;margin-top:5px;"><li style="margin-bottom:5px;"><b>2:</b> If an item is in more than one map there will be a number as the first item in the toolbar which is a count of how many maps the item is in. In this example it is two, but it could be more. Rollover number to see list of all maps a given item appears in. Click map name to view map.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('desc-gray.png').'">Rollover white square icon to see any extra title text and / or description text. Click to open full details window.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('thumb-up-empty.png').'">If you are logged in you can vote for an item by clicking on the thumbs up icon. The number to the right shows how many votes for the item has.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('thumb-down-empty.png').'">If you are logged in you can vote against an item by clicking on the thumbs down icon. The number to the right shows how many votes against the item has.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('edit.png').'">If you are logged in and you are the owner of an item you will see the edit icon. Click this to open the edit form and make changes. It the item appears in multiple map be aware your changes may affect the logic of those maps conversations.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('delete.png').'">If you are logged in you and have permissions to edit the map will see an x menu item. Click this to remove the item from the map. You will be asked if you are sure before the action is completed. Removing an item from the map does not delete it from any other maps or the system.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('link.png').'">Rollover this icon to view associated websites. A small popup will appear listing any urls that have been added to that item. Click those links to visit the sites.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:18px;height:18px;" border="0" src="'.$HUB_FLM->getImagePath('lock-32.png').'" width="18" height="18">If you see a padlock on the toolbar then that means this item is private. You will therefore only see it on your own items that you have made private or on private items in any '.$LNG->GROUP_NAME.' you are in.</li>';
-$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:0px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;" border="0" src="'.$HUB_FLM->getImagePath('rightarrowlarge.gif').'">If logged in and have permissions to edit the map, you will see an arrow at the end of the toolbar. This opens the builder menu. Rollover arrow to view the menu. Here you will find options to create/add items to the map and link them.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('desc-gray.png').'">Rollover white square icon to see any extra title text and / or description text. Click to open full details window.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('thumb-up-empty.png').'">If you are logged in you can vote for an item by clicking on the thumbs up icon. The number to the right shows how many votes for the item has.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('thumb-down-empty.png').'">If you are logged in you can vote against an item by clicking on the thumbs down icon. The number to the right shows how many votes against the item has.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('edit.png').'">If you are logged in and you are the owner of an item you will see the edit icon. Click this to open the edit form and make changes. It the item appears in multiple map be aware your changes may affect the logic of those maps conversations.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('delete.png').'">If you are logged in you and have permissions to edit the map will see an x menu item. Click this to remove the item from the map. You will be asked if you are sure before the action is completed. Removing an item from the map does not delete it from any other maps or the system.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('link.png').'">Rollover this icon to view associated websites. A small popup will appear listing any urls that have been added to that item. Click those links to visit the sites.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:5px;"><img style="vertical-align:middle;padding-right:5px;width:18px;height:18px;"alt="" src="'.$HUB_FLM->getImagePath('lock-32.png').'" width="18" height="18">If you see a padlock on the toolbar then that means this item is private. You will therefore only see it on your own items that you have made private or on private items in any '.$LNG->GROUP_NAME.' you are in.</li>';
+$LNG->HELP_NETWORKMAP_BODY .= '<li style="margin-bottom:0px;"><img style="vertical-align:middle;padding-right:5px;width:16px;height:16px;"alt="" src="'.$HUB_FLM->getImagePath('rightarrowlarge.gif').'">If logged in and have permissions to edit the map, you will see an arrow at the end of the toolbar. This opens the builder menu. Rollover arrow to view the menu. Here you will find options to create/add items to the map and link them.</li>';
 $LNG->HELP_NETWORKMAP_BODY .= '</ul>';
 
 /** IMPORT CIF **/
@@ -122,7 +126,7 @@ $LNG->IMPORT_CIF_PRIVACY_HINT = "If this is set to public all imported nodes wil
 $LNG->IMPORT_CIF_LOADING = 'Importing Data';
 $LNG->IMPORT_CIF_LIMIT_MESSAGE = 'We currently have a '.$CFG->ImportLimit.' node import limit. You will need to deselect some of your nodes before importing.';
 $LNG->IMPORT_CIF_LIMIT_MESSAGE_REACHED = 'You have more than '.$CFG->ImportLimit.' nodes selected. Please deselect some nodes before importing.';
-$LNG->IMPORT_CIF_CONDITIONS_MESSAGE = 'We would like to remind you that as a member of this Hub you have agreed to our <a href="'.$CFG->homeAddress.'ui/pages/conditionsofuse.php">Terms of Use</a>.<br>Before you import this data we would like to draw your attention especially to <a href="'.$CFG->homeAddress.'ui/pages/conditionsofuse.php#section2">Section 2</a>.';
+$LNG->IMPORT_CIF_CONDITIONS_MESSAGE = 'We would like to remind you that as a member of this Hub you have agreed to our <a href="'.$CFG->homeAddress.'ui/pages/conditionsofuse.php">Terms of Use</a>.<br />Before you import this data we would like to draw your attention especially to <a href="'.$CFG->homeAddress.'ui/pages/conditionsofuse.php#section2">Section 2</a>.';
 
 $LNG->USER_HOME_IMPORT_CIF_LINK = 'Import CIF';
 
@@ -259,12 +263,12 @@ $LNG->GROUP_FORM_REJECT_MESSAGE_PART1 = 'Are you sure you want to reject';
 $LNG->GROUP_FORM_REJECT_MESSAGE_PART2 = 'as a member of this '.$LNG->GROUP_NAME.'?';
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART1 = 'Are you sure you want to approve';
 $LNG->GROUP_FORM_APPROVE_MESSAGE_PART2 = 'to be a member of this '.$LNG->GROUP_NAME.'?';
-$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br><br>Thank you for your interest in this '.$LNG->GROUP_NAME;
+$LNG->GROUP_JOIN_REQUEST_MESSAGE = 'Your request to join this '.$LNG->GROUP_NAME.' has been logged and is waiting to be approved. You will recieve and email when you request has been processed.<br /><br />Thank you for your interest in this '.$LNG->GROUP_NAME;
 $LNG->GROUP_JOIN_PENDING_MESSAGE = 'Membership Pending';
 $LNG->GROUP_MY_ADMIN_GROUPS_TITLE = $LNG->GROUPS_NAME.' I manage:';
 $LNG->GROUP_MY_MEMBER_GROUPS_TITLE = $LNG->GROUPS_NAME.' I am a member of:';
 $LNG->GROUP_FORM_IS_JOINING_OPEN_LABEL = 'Is '.$LNG->GROUP_NAME.' joining open?';
-$LNG->GROUP_FORM_IS_JOINING_OPEN_HELP = 'Select the checkbox if you want people to decide to join the '.$LNG->GROUP_NAME.' themselves.<br>Leave the checkbox unselected if you wish to moderate '.$LNG->GROUP_NAME.' join requests and therefore control who can join the '.$LNG->GROUP_NAME;
+$LNG->GROUP_FORM_IS_JOINING_OPEN_HELP = 'Select the checkbox if you want people to decide to join the '.$LNG->GROUP_NAME.' themselves.<br />Leave the checkbox unselected if you wish to moderate '.$LNG->GROUP_NAME.' join requests and therefore control who can join the '.$LNG->GROUP_NAME;
 
 $LNG->GROUP_FORM_MEMBERS = "Add Members:<br/>(comma separated)";
 $LNG->GROUP_FORM_MEMBERS_HELP = "Please enter the email address of all those people you would like to join this '.$LNG->GROUP_NAME.', all of these people will be sent an email notifying them of the '.$LNG->GROUP_NAME.' membership and any users who don't already have accounts will be invited to join.";
@@ -393,6 +397,7 @@ $LNG->TAB_PRO = $LNG->PROS_NAME;
 $LNG->TAB_CON = $LNG->CONS_NAME;
 
 //explore
+$LNG->VIEWS_LINEAR_TITLE = "Knowledge Trees";
 $LNG->VIEWS_LINEAR_HINT = "Click to view any Knowledge Trees for this item";
 $LNG->VIEWS_WIDGET_TITLE = "Full Details";
 $LNG->WIDGET = "Click to view any Knowledge Trees for this item";
@@ -438,6 +443,7 @@ $LNG->SORT_MODDATE = 'Modification Date';
 $LNG->SORT_TITLE = 'Title';
 $LNG->SORT_URL = 'Website';
 $LNG->SORT_NAME = 'Name';
+$LNG->SORT_MEMBERS = 'Member Count';
 $LNG->SORT_CONNECTIONS = 'Connections';
 $LNG->SORT_VOTES = 'Votes';
 $LNG->SORT_LAST_LOGIN = 'Last Sign In';
@@ -493,7 +499,7 @@ $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART3 = ', unless they are in an optional sub
 $LNG->FORM_REQUIRED_FIELDS_MESSAGE_PART4 = '.)';
 $LNG->FORM_RESOURCE_ADD_ANOTHER = 'add another '.$LNG->RESOURCE_NAME;
 $LNG->FORM_ADD_ANOTHER = 'add another';
-$LNG->RESOURCES_TITLE_FORM_HINT = '(compulsory) - Enter a title for the web resource. If you do not complete the title, the url will be used.<br><br>You can use the arrow button at the end of the URL field to try and fetch the title from the website page automatically if you wish.';
+$LNG->RESOURCES_TITLE_FORM_HINT = '(compulsory) - Enter a title for the web resource. If you do not complete the title, the url will be used.<br /><br />You can use the arrow button at the end of the URL field to try and fetch the title from the website page automatically if you wish.';
 $LNG->RESOURCES_URL_FORM_HINT = '(compulsory) - Enter the url of the web resource';
 $LNG->RESOURCES_REMOTE_FORM_HINT = '(optional) - Enter any '.$LNG->RESOURCES_NAME.' supporting this item. The url of the site you are currently on should have been automatically entered for you, as well as any selected text.';
 $LNG->RESOURCES_FORM_HINT  = '(optional) - Please add any supporting '.$LNG->RESOURCES_NAME.' you feel will be useful to people viewing this item.';
@@ -795,13 +801,13 @@ $LNG->HELP_BUILDER_USING_IE_MORE_LINK = 'more info for IE 9';
 $LNG->HELP_BUILDER_USING_IE_HIDE_LINK = 'hide';
 $LNG->HELP_BUILDER_USING_IE_ERROR_TITLE = 'Annoying popup security message in IE 9';
 $LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART1 = 'If you see a warning similar to the one above when using our bookmarklet please follow these instructions:';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 = '1. In Internet Explorer, select Tools &gt; Internet Options.<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '2. Select the Security tab.<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '3. Select "Trusted Sites" (the big green tick).<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '4. Click the "Custom level..." button.<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '5. In the "Security Settings" dialog, scroll down to the "Miscellaneous" section.<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '6. Find this setting: "Websites in less privileged content zone can navigate into this zone" and select "Enable."<br>';
-$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '7. Click OK to close the dialog, then OK to close Internet Options.<br>';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 = '1. In Internet Explorer, select Tools &gt; Internet Options.<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '2. Select the Security tab.<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '3. Select "Trusted Sites" (the big green tick).<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '4. Click the "Custom level..." button.<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '5. In the "Security Settings" dialog, scroll down to the "Miscellaneous" section.<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '6. Find this setting: "Websites in less privileged content zone can navigate into this zone" and select "Enable."<br />';
+$LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '7. Click OK to close the dialog, then OK to close Internet Options.<br />';
 $LNG->HELP_BUILDER_USING_IE_ERROR_MESSAGE_PART2 .= '8. Restart Internet Explorer.';
 
 $LNG->HELP_BUILDER_GET_TITLE_BOOKMARKLET = 'As a Bookmarklet';
@@ -810,7 +816,7 @@ $LNG->HELP_BUILDER_EXTENSION_CHROME = "Google Chrome Extension";
 $LNG->HELP_BUILDER_EXTENSION_FIREFOX = "Firefox Extension";
 $LNG->HELP_BUILDER_EXTENSION_SAFARI = "Safari Extension";
 $LNG->HELP_BUILDER_EXTENSION_IE = "Internet Explorer Extension";
-$LNG->HELP_BUILDER_EXTENSION_MESSAGE = 'After installing the extension you activate the toolbar by clicking on the litemap icon which should appear somewhere in the address bar (location varies between Browsers; see illustrations above).<br>Note: If your browser did not restart after installing the extension then any already open tabs will need their content refreshing before the toolbar will show.';
+$LNG->HELP_BUILDER_EXTENSION_MESSAGE = 'After installing the extension you activate the toolbar by clicking on the litemap icon which should appear somewhere in the address bar (location varies between Browsers; see illustrations above).<br />Note: If your browser did not restart after installing the extension then any already open tabs will need their content refreshing before the toolbar will show.';
 $LNG->HELP_BUILDER_EXTENSION_MESSAGE2 = '(more under development)';
 $LNG->HELP_BUILDER_EXTENSION_SAFARI_MESSAGE = 'Due to Safari limitations the extension button will always be gray and will  not show an on/off state as in other browsers. You will need to read the rollover text to see if the toolbar is on or off. Also, when you create a new post through the popup forms, once the form closes the page will not automatically refresh, so you will need to manually refresh the page to see the new entry in the website page.';
 $LNG->HELP_BUILDER_EXTENSION_IE_MESSAGE = 'This IE extension needs to run a dll that it installs in order to work. On some systems strong virus control software may block the dll from installing. On some system, like company computers, strong security setting may block the dll from being run.';
@@ -989,6 +995,7 @@ $LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Click the \'Import from YouTube\' button 
 $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Paste your YouTube movie \'Embed\' code here:";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Click the \'Import from Vimeo\' button to add your Vimeo movie \'Embed\' code. The width, height and movie id will be extracted and used to load the movie in the map.";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Paste your Vimeo movie \'Embed\' code here:";
+$LNG->MAP_MOVIE_SIZE_MESSAGE = "No height and width information can be determined for your YouTube movie";
 
 $LNG->MAP_MEDIA_NODE_JUMP_HINT = "Jump To given media index time";
 $LNG->MAP_MEDIA_NODE_JUMP = "Jump";

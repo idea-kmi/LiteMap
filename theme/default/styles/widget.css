@@ -1,318 +1,90 @@
+.widgettable { background-color: transparent; }
 
-.widgettable {
-}
+div.tabletop { background: transparent; }
+div.tablelower { background: transparent; margin-top: 8px; }
+div.recommender { margin-left: 8px; }
+.widgetdivnode { background: white; }
+div.widgetheaderinnernode { padding: 5px; }
+.widgetdiv { border: 1px solid #E3E3E3; background: white; margin-bottom: 15px; width: 100%; }
+.widgetheader { font-weight: bold; }
+div.widgetheaderinner { padding: 10px; }
+.widgetheaderlabel { margin-right: 10px; }
+.widgetheadernode { font-weight: bold; text-align: left; margin-bottom: 5px; }
+.widgetnodeheaderlabel { color: #000; margin-right: 10px; }
+.widgetnodeheaderlabel2 { font-size: 14pt; }
+.widgetnodebody { text-align: left; background: white; }
 
-div.tabletop {
-	float:left; 
-	width: 100%;
-}
+.widgetnodeinnerbody { overflow-y: auto; overflow-x: hidden; text-align: left; padding: 20px; }
+.widgetnodeinnerbody .debate-title { display: block; position: relative; }
 
-div.tablelower {
-	clear:top; 
-	float:left; 
-	width: 100%; 
-	background:transparent;
-	margin-top:8px;
-}
+.widgetnodeinnerbody .issue-details { border: 1px solid #ddd; clear: both; display: block; margin: 0; padding: 20px; position: relative; }
+.widgetnodeinnerbody .issue-details h2 { margin: 0 0 5px 0; }
+.widgetnodeinnerbody .issue-details .idea-user2 { display: inline-block; height: 100%; padding: 10px; position: relative; text-align: center; vertical-align: top; width: 100px; }
+.widgetnodeinnerbody .issue-details .idea-user2 a { display: block; }
+.widgetnodeinnerbody .issue-details .idea-user2 a img { height: auto; width: auto; }
+.widgetnodeinnerbody .issue-details .issue-user-details { display: inline-block; width: 90%; }
+.widgetnodeinnerbody .issue-details .issue-user-details .debate-info { display: block; }
+.widgetnodeinnerbody .issue-details .issue-user-details .debate-info strong { display: inline-block; min-width: 90px; padding-right: 20px; vertical-align: top; width: 8%; }
+.widgetnodeinnerbody .issue-details .issue-user-details .commentdiv { display: block; }
+.widgetnodeinnerbody .issue-details .issue-user-details .debate-info { clear: both; display: block; }
 
-div.recommender {
-	float:left; 
-	margin-left:8px;
-}
+.maininner { display: block; padding: 0 20px; }
+.maininner .addnewideaarea { display: block; margin-top: -20px; }
+.maininner .addnewideaarea .newideaform { display: block; }
+.maininner .addnewideaarea .newideaform h2 { display: block; margin: 10px 5px; }
+.maininner .addnewideaarea .newideaform h2 img { display: inline-block; vertical-align: text-bottom; }
+.maininner .addnewideaarea .newideaform h2 span { display: inline-block; margin-left: 10px; }
+.maininner .addnewideaarea .newideaform .addformdividea { display: block; }
+.maininner .addnewideaarea .newideaform .addformdividea .formrowsm { display: block; margin: 6px 0; }
+.maininner .addnewideaarea .newideaform .addformdividea .formrowsm input { box-sizing: border-box; display: inline-block; float: none; margin: 0 !important; padding: 3px; width: 100%; }
+.maininner .addnewideaarea .newideaform .addformdividea .formrowsm textarea { box-sizing: border-box; display: inline-block; float: none; font-family: Arial, Helvetica, sans-serif; margin: 0 !important; min-height: 100px; padding: 3px; resize: vertical; width: 100%; }
+.maininner .addnewideaarea .newideaform .addformdividea .formrowsm button { cursor: pointer; display: inline-block; margin: 1px 5px; padding: 3px; width: auto; }
 
-.widgetdivnode {
-	clear:both;
-	width: 99%;
-	background:white;
-}
+.content-ideas-div { display: block; margin-bottom: 20px; padding: 0 20px; }
+.content-ideas-div .tabcontentinner { display: block; margin-top: 10px; }
+.content-ideas-div .tabcontentinner .toolbarrow { display: block; float: none; margin: 0; padding: 0; width: 100%; }
+.content-ideas-div .tabcontentinner .toolbarrow .sortback.toolbar2 { display: block; float: none; margin: 20px 0 15px 0; padding: 0; width: 100%; }
+.content-ideas-div .tabcontentinner .toolbarrow .sortback.toolbar2 select { cursor: pointer; display: inline-block; margin: 0 10px; }
+.widgetnodespacer { clear: both; float: left; width: 100%; border: 0; color: #E8E8E8; background-color: #E8E8E8; height: 1px; padding: 0px; margin: 0px; margin-top: 5px; }
+.nodewidgettoolbar { margin: 0; padding: 0; }
+.nodewidgettoolbar .exploreToolbarIcon { margin: 0 !important; }
+.nodewidgettoolbar img { height: 100%; max-height: 30px; width: auto; }
+.innerwidgetnodebody { clear: both; width: 100%; padding: 5px; overflow-y: auto; overflow-x: hidden; text-align: left; display: block; }
+.widgetbody { padding: 5px; overflow-y: auto; overflow-x: hidden; text-align: left; }
+div.widgetheadercontrol { padding-top: 5px; padding-right: 5px; }
+div.widgetheadercontrol img { display: block; margin: 3px; }
+div.commentdiv { margin-top: 4px; padding: 5px; padding-top: 1px; z-index: top; height: 50px; display: none; }
 
-div.widgetheaderinnernode {
-	float: left;
-	padding: 5px;
-}
-
-.widgetdiv {
-	clear:both;
-	float:left;
-	border: 1px solid #E3E3E3;	
-	width: 99.5%;
-	background: white;
-}
-
-.widgetheader {
-	clear:both;
-	float:left;
-	font-weight:bold;
-	width:100%;
-	text-align: left;
-}
-
-div.widgetheaderinner {
-	float: left;
-	width: 83%;
-	padding: 5px;
-}
-
-.widgetheaderlabel {
-	margin-right: 10px;
-}
-
-.widgetheadernode {
-	float:left;
-	clear:both;
-	font-weight:bold;
-	width:100%;
-	text-align: left;
-	margin-bottom:5px;
-}
-
-.widgetnodeheaderlabel {
-	color: black; 
-	margin-right: 10px;
-	font-size: 12pt;
-}
-
-.widgetnodeheaderlabel2 {
-	font-size: 14pt;
-}
-
-.widgetnodebody {
-	clear: both;
-	width: 100%;
-	text-align: left;
-	display:block;
-	background:white;
-}
-
-.widgetnodeinnerbody {
-	clear: both;
-	float:left;
-	overflow-y: auto;
-	overflow-x:hidden;
-	text-align: left;
-	display:block;
-	padding:5px;
-	width:98%;
-}
-
-.widgetnodespacer {
-	clear: both;
-	float:left;
-	width:100%;
-	border: 0;
-	color: #E8E8E8; 
-	background-color:#E8E8E8; 
-	height: 1px;
-	padding:0px;
-	margin:0px;
-	margin-top:5px;
-}
-
-.nodewidgettoolbar {
-	float:left;
-	clear: both;
-	padding:5px;
-	margin: 0px;
-	width: 98%;
-	height:20px;
-}
-
-.innerwidgetnodebody {
-	clear: both;
-	width: 100%;
-	padding:5px;
-	overflow-y: auto;
-	overflow-x:hidden;
-	text-align: left;
-	display:block;
-}
-
-.widgetbody {
-	clear: both;
-	padding:5px;
-	overflow-y: auto;
-	overflow-x:hidden;
-	text-align: left;
-	display:block;
-}
-
-div.widgetheadercontrol {
-	float:right;
-	width: 12px;
-	padding-top: 5px;
-	padding-right: 5px;
-}
-
-div.commentdiv{
-	clear:both;
-	float:left;
-	margin-top:4px;
-	padding:5px;
-	padding-top: 1px;
-	z-index: top;
-	height:50px; 
-	display:none;
-	width: 97%;
-}
-
+/******************************/
 /** widget header background **/
+/******************************/
+.headerwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.followwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.commentwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.recommendwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.challengewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.issuewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.claimwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.solutionwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.orgwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.projectwidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.peoplewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.evidencewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.resourcewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
+.themewidgetback { background: #E3E3E3; background: linear-gradient(to bottom, #ffffff, #E3E3E3); }
 
-.headerwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
+.overviewfieldset { min-height: 300px; padding: 10px; }
+.searchresultblock .overviewfieldset { min-height: 0px; padding: 10px 20px; }
+.overviewlegend { font-weight: bold; margin-left: 10px; margin-top: 5px; }
+.overviewDiv { padding: 10px; }
 
-.followwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
+.widgetcountlabel { margin-right: 5px; font-weight: normal; }
 
-.commentwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
+.widgetTitleIcon { margin-right: 10px; max-height: 24px; width: auto; }
 
-.recommendwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.challengewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.issuewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.claimwidgetback{
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.solutionwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.orgwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.projectwidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.peoplewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.evidencewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.resourcewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
-.themewidgetback {
-	background: #E3E3E3;
-	background: -o-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -moz-linear-gradient(top, #EFEDED, #E3E3E3);
-	background: -webkit-gradient(linear,
-                left top, left bottom, from(#EFEDED), to(#E3E3E3));
-	filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EFEDED  ', EndColorStr='#E3E3E3', GradientType=0);
-    	background: linear-gradient(to bottom, #ffffff, #E3E3E3);
-}
-
+/* 
 .overviewlegend {
 	font-weight: bold;
 	margin-left: 1em; 
 	padding: 0.2em 0.8em;
-}
+} */

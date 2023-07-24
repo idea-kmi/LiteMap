@@ -107,6 +107,11 @@ $CFG->databasename = "";
 // The name must correspnd to a folder in the 'language' folder where the translated texts should exist.
 $CFG->language = 'en';
 
+/** CACHE **/
+// Can't both be true. APCu is tested first
+$CFG->hasAPCuCacheManager = false;
+$CFG->hasMemcacheManager = false;
+
 /** INTERFACE THEME **/
 
 // This string indicates what theme the interface should use.
@@ -267,15 +272,6 @@ $CFG->ERROR_ALERT_RECIPIENT = "";
 // Should recent activity email sending should be included in this hub? (true/false);
 $CFG->RECENT_EMAIL_SENDING_ON = true;
 
-// If recent activity email sending should be on or off by default for new user ('Y' == on / 'N' = off);
-$CFG->RECENT_EMAIL_SENDING_SELECTED = 'Y';
-
-// If follow activity email sending should be on or off by default for new user ('Y' == on / 'N' = off);
-$CFG->ACTIVITY_EMAIL_SENDING_ON = 'Y';
-
-// When to send email alerts by default for new users ('daily'/'weekly'/'monthly');
-$CFG->ACTIVITY_EMAIL_SENDING_INTERVAL = 'weekly';
-
 /**
  * PROXY SETTINGS
  *
@@ -292,7 +288,7 @@ $CFG->PROXY_PORT = "";
 $CFG->CAPTCHA_ON = true;
 
 // captcha public/private keys.
-// You can get these from the Captcha website (https://www.google.com/recaptcha/admin)
+// You can get these from the Captcha website (http://www.captcha.net/)
 $CFG->CAPTCHA_PUBLIC = "";
 $CFG->CAPTCHA_PRIVATE = "";
 
@@ -306,6 +302,11 @@ $CFG->GOOGLE_ANALYTICS_ON = false;
 // If you set the GOOGLE_ANALYTICS_ON to 'true' you must add a key and your website domain for it to work.
 $CFG->GOOGLE_ANALYTICS_KEY = "";
 $CFG->GOOGLE_ANALYTICS_DOMAIN = "";
+
+//For geo code look up
+//https://docs.microsoft.com/en-us/bingmaps/rest-services/locations/find-a-location-by-query
+//https://www.bingmapsportal.com/
+$CFG->BINGMAPS_KEY = "";
 
 
 /**
@@ -370,8 +371,8 @@ $CFG->SOCIAL_SIGNON_YAHOO_SECRET = "";
  * 6. Then select '(more options)'.
  * 7. In the section 'Authorized Redirect URIs' you need to add a callback URL for your application:
  *	  The URL should start with the URL you have entered into $CFG->homeAddress
- *    followed by 'core/lib/hybridauth/?hauth.done=Google'
- * 	  e.g. https://litemap.net/core/lib/hybridauth/?hauth.done=Google
+ *    followed by 'core/lib/hybridauth-2.6.0/hybridauth/?hauth.done=Google'
+ * 	  e.g. https://test.evidence-hub.net/core/lib/hybridauth-2.6.0/hybridauth/?hauth.done=Google
  * 	  Then press 'Create Client ID'
  * 8. Once you have done this, copy and paste the 'Client ID' as the $CFG-SOCIAL_SIGNON_GOOGLE_ID
  *    and the 'Client Secret' as the $CFG->SOCIAL_SIGNON_GOOGLE_SECRET below

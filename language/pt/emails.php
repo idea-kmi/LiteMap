@@ -38,7 +38,7 @@ $LNG->VALIDATE_REGISTER_SUBJECT = "Complete seu registro em ".$CFG->SITE_TITLE;
 
 $LNG->WELCOME_REGISTER_REQUEST_SUBJECT = "Solicitação de inscrição para o ".$CFG->SITE_TITLE;
 $LNG->WELCOME_REGISTER_REQUEST_BODY = 'Agradecemos seu interesse pela conta <a href="'.$CFG->homeAddress.'">'.$CFG->SITE_TITLE.'</a>.<br>Saiba que recebemos sua solicitação.<br>Vamos tratar de processar sua solicitação nas próximas 24 horas, mas em horários de pico pode levar mais tempo.<br>Você receberá um e-mail com mais detalhes sobre seu início de seção, assim que sua solicitação for aceita.<br><br>Agradecemos novamente seu interesse.';
-$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "O usuário anterior já solicitou uma conta. Utilize a área de administração para aceitar ou rejeitar este novo usuário..";
+$LNG->WELCOME_REGISTER_REQUEST_BODY_ADMIN = "Um novo usuário solicitou uma conta. Utilize a área de administração para aceitar ou rejeitar este novo usuário.";
 
 $LNG->WELCOME_REGISTER_CLOSED_SUBJECT = "A inscrição em  ".$CFG->SITE_TITLE;
 

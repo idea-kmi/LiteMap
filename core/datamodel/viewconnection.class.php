@@ -75,9 +75,12 @@ class ViewConnection {
 
  		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWCONNECTION_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createNodeNotFoundError($this->connid);
 				return $ERROR;
 			} else {
@@ -124,7 +127,11 @@ class ViewConnection {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWCONNECTION_SELECT, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
 				$this->viewid = $resArray[0]["ViewID"];
 				$this->connid = $resArray[0]["TripleID"];
 				$this->userid = $resArray[0]["UserID"];
@@ -283,7 +290,11 @@ class ViewConnection {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWCONNECTION_CAN_DELETE, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
         } else {

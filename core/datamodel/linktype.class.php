@@ -66,9 +66,12 @@ class LinkType {
 		$params[0] = $this->linktypeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createLinkTypeNotFoundError($this->linktypeid);
 				return $ERROR;
 			}
@@ -108,9 +111,12 @@ class LinkType {
 		$params[1] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_BY_LABEL_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createLinkTypeNotFoundError($this->linktypeid);
 				return $ERROR;
 			} else {
@@ -153,7 +159,10 @@ class LinkType {
 		$params[0] = $linktypegroup;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_ADD_GROUP_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if( $count != 1) {
 				 return database_error($LNG->ERROR_LINKTYPE_GROUP_NAME);
 			} else {
@@ -170,7 +179,10 @@ class LinkType {
 				$params[2] = $CFG->defaultUserID;
 				$resArray2 = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_ADD_CHECK, $params);
 				if ($resArray2) {
-					$count2 = count($resArray2);
+					$count2 = 0;
+					if (is_countable($resArray2)) {
+						$count2 = count($resArray2);
+					}
 					if( $count2 != 0) {
 						for ($j=0; $j<$count2; $j++) {
 							$array2 = $resArray2[$j];
@@ -277,7 +289,10 @@ class LinkType {
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_DELETE_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
                 $c = new Connection($array['TripleID']);
@@ -349,7 +364,7 @@ class LinkType {
     function canadd(){
         global $LNG;
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -361,7 +376,7 @@ class LinkType {
      */
     function canedit(){
         global $DB,$USER,$LNG,$HUB_SQL;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -377,7 +392,10 @@ class LinkType {
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_LINKTYPE_CAN_EDIT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 	        if($count == 0){
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -393,7 +411,7 @@ class LinkType {
      */
     function candelete(){
         global $DB,$USER,$LNG;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
         //can edit only if owner of the node
@@ -409,7 +427,10 @@ class LinkType {
 
 		$resArray = $DB->select($HUB_SQL->$HUB_SQL->DATAMODEL_LINKTYPE_CAN_DELETE, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 	        if($count == 0){
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }

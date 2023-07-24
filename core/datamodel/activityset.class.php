@@ -38,6 +38,7 @@ class ActivitySet {
      */
     function ActivitySet() {
         $this->activities = array();
+        $this->totalno = 0;
     }
 
     /**
@@ -66,18 +67,27 @@ class ActivitySet {
 		// get records
 		$resArray = $DB->select($sql, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$a = new Activity();
 				$xml = $array['XML'];
 				$activity = $a->load($array['ItemID'], $array['UserID'], $array['Type'], $array['ModificationDate'], $array['ChangeType'], $xml, $style);
-				if (! $activity instanceof Error) {
+				if (! $activity instanceof Hub_Error) {
 					$this->add($a);
 				}
+			}            
+			//$this->totalno = 0; // allow multiple calls to acumulate the total
+
+			if (is_countable($this->activities)) {
+				$this->totalno += count($this->activities); // allow multiple calls to acumulate the total, hence +=
 			}
-			$this->totalno = count($this->activities);
-		} else {
+
+        } else {
 			return database_error();
 		}
 

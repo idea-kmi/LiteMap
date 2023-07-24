@@ -29,58 +29,59 @@ if ($CFG->privateSite) {
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
-<head>
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title><?php echo $CFG->SITE_TITLE; ?></title>
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
+	<head>
+		<?php
+			if ($CFG->GOOGLE_ANALYTICS_ON) {
+				include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
+			}
+		?>
 
-<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
+		<meta charset="UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title><?php echo $CFG->SITE_TITLE; ?></title>
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
 
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
+		<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
 
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
 
-<?php
-$custom = $HUB_FLM->getCodeDirPath("ui/headerreportCustom.php");
-if (file_exists($custom)) {
-    include_once($custom);
-}
-?>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 
-<?php
-    global $HEADER,$BODY_ATT, $CFG;
-    if(is_array($HEADER)){
-        foreach($HEADER as $header){
-            echo $header;
-        }
-    }
-?>
-<?php
-	if ($CFG->GOOGLE_ANALYTICS_ON) {
-		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
-	}
-?>
-</head>
+		<?php
+		$custom = $HUB_FLM->getCodeDirPath("ui/headerreportCustom.php");
+		if (file_exists($custom)) {
+			include_once($custom);
+		}
+		?>
 
-<body>
-	<table style="border-collapse: collapse;padding:0px;margin:0px;width:90%">
-	<tr>
-	<td width="20%">
-    	<a id="dialoglogo" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" href="<?php print($CFG->homeAddress);?>" style="font-size: 10pt; margin-bottom:3px;">
-        <img border="0" style="float: left;" alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
-		</a>
-   </td>
-   <td width="80%">
-		<h1 style="text-align:center; margin: 0px; padding: 0px;margin-top:10px;" id="dialogheader"></h1>
-   </td>
-   </tr>
-   </table>
+		<?php
+			global $HEADER,$BODY_ATT, $CFG;
+			if(is_array($HEADER)){
+				foreach($HEADER as $header){
+					echo $header;
+				}
+			}
+		?>
+	</head>
 
-<div id="main">
+	<body>
+		<table style="border-collapse: collapse;padding:0px;margin:0px;width:90%">
+		<tr>
+		<td width="20%">
+			<a id="dialoglogo" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" href="<?php print($CFG->homeAddress);?>" style="font-size: 10pt; margin-bottom:3px;">
+			<img border="0" style="float: left;" alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
+			</a>
+	   </td>
+	   <td width="80%">
+			<h1 style="text-align:center; margin: 0px; padding: 0px;margin-top:10px;" id="dialogheader"></h1>
+	   </td>
+	   </tr>
+	   </table>
+
+		<div id="main">

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2013 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -79,7 +79,7 @@ class format_gmap extends format_base {
 	            		//if (isProbablyHTML($desc)) {
 	            			$desc = "";
 	            		//}
-		                $tmp = '{"country":"'.parseToJSON(addslashes($node->users[0]->country)).'","desc":"'.parseToJSON($desc).'", "city":"'.$node->users[0]->location.'","lat":"'. $node->users[0]->locationlat.'","lng":"'.$node->users[0]->locationlng.'","title":"'.parseToJSON($node->name).'","thumb":"'.parseToJSON($node->role->image).'","id":"'.$node->nodeid.'","user":"'.parseToJSON($node->users[0]->name).'",}';
+		                $tmp = '{"country":"'.parseToJSON(addslashes($node->users[0]->country)).'","desc":"'.parseToJSON($desc).'", "city":"'.$node->users[0]->location.'","lat":"'. $node->users[0]->locationlat.'","lng":"'.$node->users[0]->locationlng.'","title":"'.parseToJSON($node->name).'","thumb":"'.parseToJSON($node->role->image).'","id":"'.$node->nodeid.'","user":"'.parseToJSON($node->users[0]->name).'"}';
 		                array_push($locs,$tmp);
 	            	}
 	            }

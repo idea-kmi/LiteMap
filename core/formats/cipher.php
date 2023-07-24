@@ -22,31 +22,32 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
-/* @Author Michelle Bachler Kmi, the Open University */
-/*
-Modified from the example given on the php manual page
-(http://php.net/manual/en/function.mcrypt-encrypt.php),
-by 'dylan at wedefy dot com'
-*/
+ /** Author: Michelle Bachler, KMi, The Open University **/
+
 
 class Cipher {
 
     private $securekey;
     private $iv;
+    private $cipher_type = 'AES-256-CBC';
 
     function __construct($textkey = "", $iv = "") {
     	if ($textkey != "") {
         	$this->securekey = hash('sha256',$textkey,TRUE);
         }
 
-		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CFB);
-    	$this->iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+        $len = openssl_cipher_iv_length($this->cipher_type);
+        if (!$len) {
+            $len = 32;
+        }
+        $this->iv = openssl_random_pseudo_bytes($len);
     }
 
     function encrypt($input) {
     	$reply = "";
     	if (isset($this->securekey)) {
-    		$reply = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->securekey, $input, MCRYPT_MODE_CFB, $this->iv));
+		        $encryptedMessage = openssl_encrypt($input, $this->cipher_type, $this->securekey, OPENSSL_RAW_DATA, $this->iv);
+		        $reply = base64_encode($encryptedMessage);
     	}
         return $reply;
     }
@@ -54,7 +55,7 @@ class Cipher {
     function decrypt($input) {
     	$reply = "";
     	if (isset($this->securekey)) {
-	    	$reply = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->securekey, base64_decode($input), MCRYPT_MODE_CFB, $this->iv);
+    		$reply = openssl_decrypt(base64_decode($input), $this->cipher_type, $this->securekey, OPENSSL_RAW_DATA, $this->iv);
 	    }
         return trim($reply);
     }
@@ -74,4 +75,5 @@ class Cipher {
     function setIV($iv) {
     	$this->iv = $iv;
     }
+
 }

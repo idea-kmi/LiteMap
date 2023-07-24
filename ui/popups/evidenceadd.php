@@ -78,7 +78,7 @@
 
 			$evidencenode = addNode($summary, $desc, $private, $roleType);
 
-			if (!$evidencenode instanceof Error) {
+			if (!$evidencenode instanceof Hub_Error) {
 
 				if ($_FILES['image']['error'] == 0) {
 					$imagedir = $HUB_FLM->getUploadsNodeDir($evidencenode->nodeid);
@@ -177,7 +177,10 @@
 
 			if(isset($clone->urls)) {
 				$urls = $clone->urls;
-				$count = count($urls);
+				$count = 0;
+				if (is_countable($urls)) {
+					$count = count($urls);
+				}
 				for ($i=0; $i<$count;$i++) {
 					$url = $urls[$i];
 					$resourcetypesarray[$i] = $url;
@@ -196,118 +199,134 @@
 
     /**********************************************************************************/
 ?>
-<?php
-if(!empty($errors)){
-    echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE.":<ul>";
-    foreach ($errors as $error){
-        echo "<li>".$error."</li>";
-    }
-    echo "</ul></div>";
-}
-?>
 
 <script type="text/javascript">
-var noResources = <?php echo sizeof($resourceurlarray);?>;
+	var noResources = <?php if (is_countable($resourceurlarray)) { echo count($resourceurlarray);} else {echo 0;}?>;
 
-function init() {
-	<?php if ($nodetypename == "Pro") { ?>
-    	$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_PRO_TITLE_ADD; ?>');
-	<?php } else if ($nodetypename == "Con") { ?>
-    	$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_CON_TITLE_ADD; ?>');
-	<?php } else { ?>
-    	$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_TITLE_ADD; ?>');
-	<?php } ?>
-}
-
-function addSelectedResource(node, num) {
-	$('resource'+num+'label').value=node.role[0].role.name;
-
-	$('resourcetitle-'+num).value = node.name;
-	$('resourcetitle-'+num).disabled = true;
-	$('resourcenodeidsarray-'+num).value = node.nodeid;
-
-	if ($('identifierdiv-'+num)) {
-		$('identifierdiv-'+num).style.display="none";
+	function init() {
+		<?php if ($nodetypename == "Pro") { ?>
+			$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_PRO_TITLE_ADD; ?>');
+		<?php } else if ($nodetypename == "Con") { ?>
+			$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_CON_TITLE_ADD; ?>');
+		<?php } else { ?>
+			$('dialogheader').insert('<?php echo $LNG->FORM_EVIDENCE_TITLE_ADD; ?>');
+		<?php } ?>
 	}
 
-	$('typehiddendiv-'+num).style.display="block";
-	$('typediv-'+num).style.display="none";
-	$('resourceurldiv-'+num).style.display="none";
-	$('resourcedescdiv-'+num).style.display="none";
-}
+	function addSelectedResource(node, num) {
+		$('resource'+num+'label').value=node.role[0].role.name;
 
-function removeSelectedResource(num) {
-	$('resourcetitle-'+num).value = "";
-	$('resourcetitle-'+num).disabled = false;
-	$('resourcedesc-'+num).value = "";
-	$('resourcenodeidsarray-'+num).value = "";
+		$('resourcetitle-'+num).value = node.name;
+		$('resourcetitle-'+num).disabled = true;
+		$('resourcenodeidsarray-'+num).value = node.nodeid;
 
-	$('typehiddendiv-'+num).style.display="none";
-	$('typediv-'+num).style.display="block";
-	$('resourceurldiv-'+num).style.display="block";
-	$('resourcedescdiv-'+num).style.display="block";
-}
+		if ($('identifierdiv-'+num)) {
+			$('identifierdiv-'+num).style.display="none";
+		}
 
-function checkForm() {
-	var checkname = ($('summary').value).trim();
-	if (checkname == ""){
-	   alert("<?php echo $LNG->FORM_EVIDENCE_ENTER_SUMMARY_ERROR; ?>");
-	   return false;
-    }
-    $('evidenceform').style.cursor = 'wait';
+		$('typehiddendiv-'+num).style.display="block";
+		$('typediv-'+num).style.display="none";
+		$('resourceurldiv-'+num).style.display="none";
+		$('resourcedescdiv-'+num).style.display="none";
+	}
 
-	return true;
-}
+	function removeSelectedResource(num) {
+		$('resourcetitle-'+num).value = "";
+		$('resourcetitle-'+num).disabled = false;
+		$('resourcedesc-'+num).value = "";
+		$('resourcenodeidsarray-'+num).value = "";
 
-window.onload = init;
+		$('typehiddendiv-'+num).style.display="none";
+		$('typediv-'+num).style.display="block";
+		$('resourceurldiv-'+num).style.display="block";
+		$('resourcedescdiv-'+num).style.display="block";
+	}
+
+	function checkForm() {
+		var checkname = ($('summary').value).trim();
+		if (checkname == ""){
+		alert("<?php echo $LNG->FORM_EVIDENCE_ENTER_SUMMARY_ERROR; ?>");
+		return false;
+		}
+		$('evidenceform').style.cursor = 'wait';
+
+		return true;
+	}
+
+	window.onload = init;
 
 </script>
 
-<?php insertFormHeaderMessageShort(); ?>
 
-<form id="evidenceform" name="evidenceform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
-	<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
-	<input type="hidden" id="nodetypename" name="nodetypename" value="<?php echo $nodetypename; ?>" />
-
-   <div class="hgrformrow">
-		<label  class="formlabelbig" for="url"><?php echo $LNG->FORM_LABEL_TYPE; ?>
-		<a href="javascript:void(0)" onMouseOver="showFormHint('EvidenceType', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)"><img src="<?php echo $HUB_FLM->getImagePath('info.png'); ?>" border="0" style="margin-top: 2px; margin-left: 5px; margin-right: 2px;" /></a>
-		<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:red;">*</span>
-		</label>
-		<select class="subforminput hgrselect forminputmust" id="nodetypename" name="nodetypename">
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
 			<?php
-				foreach($CFG->EVIDENCE_TYPES as $item){?>
-					<option value='<?php echo $item; ?>' <?php if ($nodetypename == $item || ($nodetypename == "" && $item == $CFG->EVIDENCE_TYPES_DEFAULT)) { echo 'selected=\"true\"'; }  ?> ><?php echo $item ?></option>
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
 			<?php } ?>
-		</select>
+			<?php insertFormHeaderMessageShort(); ?>
+
+			<form id="evidenceform" name="evidenceform" action="" enctype="multipart/form-data" method="post" onsubmit="return checkForm();">
+				<input type="hidden" id="clonenodeid" name="clonenodeid" value="<?php echo $clonenodeid; ?>" />
+				<input type="hidden" id="nodetypename" name="nodetypename" value="<?php echo $nodetypename; ?>" />
+
+				<div class="mb-3 row">
+					<label  class="col-sm-3 col-form-label" for="nodetypename">
+						<span><?php echo $LNG->FORM_LABEL_TYPE; ?></span>
+						<span class="active" onMouseOver="showFormHint('EvidenceType', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
+							<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
+							<span class="sr-only">More info</span>
+						</span>
+						<span class="required">*</span>
+					</label>
+					<div class="col-sm-9">
+						<select class="form-select" id="nodetypename" name="nodetypename">
+							<?php
+								foreach($CFG->EVIDENCE_TYPES as $item){?>
+									<option value='<?php echo $item; ?>' <?php if ($nodetypename == $item || ($nodetypename == "" && $item == $CFG->EVIDENCE_TYPES_DEFAULT)) { echo 'selected=\"true\"'; }  ?> ><?php echo $item ?></option>
+							<?php } ?>
+						</select>
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="image">
+						<?php echo $LNG->GROUP_FORM_PHOTO; ?>
+					</label>
+					<div class="col-sm-9">
+						<input class="form-control" type="file" id="image" name="image">
+					</div>
+				</div>
+
+				<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>
+				<?php insertDescription('EvidenceDesc'); ?>
+				<?php insertPrivate('Private', $private); ?>
+
+				<?php if ($isRemote) {
+						insertResourceForm('RemoteURLs');
+					} else {
+						insertResourceForm('URLs');
+					}
+				?>
+				
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>" id="addevidence" name="addevidence" />
+				</div>
+			</form>
+		</div>
 	</div>
-
-	<div class="formrow">
-		<label class="formlabelbig" for="photo"><?php echo $LNG->GROUP_FORM_PHOTO; ?>
-			<span style="font-size:14pt;margin-top:3px;vertical-align:middle;color:white;">*</span>
-		</label>
-		<input class="hgrinput forminput" type="file" id="image" name="image" size="40">
-	</div>
-
-	<?php insertSummary('EvidenceSummary', $LNG->FORM_EVIDENCE_LABEL_SUMMARY); ?>
-
-	<?php insertDescription('EvidenceDesc'); ?>
-
-	<?php insertPrivate('Private', $private); ?>
-
-	<?php if ($isRemote) {
-			insertResourceForm('RemoteURLs');
-		} else {
-			insertResourceForm('URLs');
-		}
-	?>
-    <br>
-    <div class="hgrformrow">
-		<label class="formlabelbig">&nbsp;</label>
-        <input class="submit" type="submit" value="<?php echo $LNG->FORM_BUTTON_PUBLISH; ?>" id="addevidence" name="addevidence">
-        <input type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-</form>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

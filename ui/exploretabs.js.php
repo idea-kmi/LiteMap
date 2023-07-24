@@ -111,24 +111,16 @@ function setTabPushed(e) {
 		case 'chat':
 			if (!DATA_LOADED.chat) {
 				if (NODE_ARGS['nodetype'] == 'Challenge') {
-					var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/challengechatstree.js.php");
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically(URL_ROOT+'ui/explore/chat/challengechatstree.js.php', 'challengechatstree-script');
 					DATA_LOADED.chat = true;
 				} else if (NODE_ARGS['nodetype'] == 'Issue') {
-					var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/issuechatstree.js.php");
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically(URL_ROOT+'ui/explore/chat/issuechatstree.js.php', 'issuechatstree-script');
 					DATA_LOADED.chat = true;
 				} else if (NODE_ARGS['nodetype'] == 'Solution') {
-					var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/solutionchatstree.js.php");
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically(URL_ROOT+'ui/explore/chat/solutionchatstree.js.php', 'solutionchatstree-script');
 					DATA_LOADED.chat = true;
 				} else if (EVIDENCE_TYPES_STR.indexOf(EVIDENCE_ARGS['nodetype']) != -1) {
-					var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/evidencechatstree.js.php");
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically(URL_ROOT+'ui/explore/chat/evidencechatstree.js.php', 'evidencechatstree-script');
 					DATA_LOADED.chat = true;
 				}
 			}
@@ -136,21 +128,13 @@ function setTabPushed(e) {
 		case 'linear':
 			if (!DATA_LOADED.linear) {
 				if (NODE_ARGS['nodetype'] == 'Challenge') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/challengelineartree.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/challengelineartree.js.php"); ?>', 'challengelineartree-script');
 				} else if (NODE_ARGS['nodetype'] == 'Issue') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/issuelineartree.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/issuelineartree.js.php"); ?>', 'issuelineartree-script');
 				} else if (NODE_ARGS['nodetype'] == 'Solution') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/solutionlineartree.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/solutionlineartree.js.php"); ?>', 'solutionlineartree-script');
 				} else if (EVIDENCE_TYPES_STR.indexOf(EVIDENCE_ARGS['nodetype']) != -1) {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/evidencelineartree.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/linear/evidencelineartree.js.php"); ?>', 'evidencelineartree-script');
 				}
 				DATA_LOADED.linear = true;
 			}
@@ -158,37 +142,21 @@ function setTabPushed(e) {
 		case 'widget':
 			if (!DATA_LOADED.widget) {
 				if (NODE_ARGS['nodetype'] == 'Challenge') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/challengenode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/challengenode.js.php"); ?>', 'challengenode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Issue') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/issuenode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/issuenode.js.php"); ?>', 'issuenode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Solution') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/solutionnode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/solutionnode.js.php"); ?>', 'solutionnode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Argument') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/evidencenode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/evidencenode.js.php"); ?>', 'evidencenode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Pro') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/pronode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/pronode.js.php"); ?>', 'pronode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Con') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/connode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/connode.js.php"); ?>', 'connode-script');
 				} else if (NODE_ARGS['nodetype'] == 'Idea') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/commentnode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/commentnode.js.php"); ?>', 'commentnode-script');
 				} else if (NODE_ARGS['nodetype'] == 'News') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/newsnode.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/explore/widget/newsnode.js.php"); ?>', 'newsnode-script');
 				}
 				DATA_LOADED.widget = true;
 			}
@@ -196,21 +164,13 @@ function setTabPushed(e) {
 		case 'net':
 			//if (!DATA_LOADED.net) {
 				if (NODE_ARGS['nodetype'] == 'Challenge') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-challenge-net.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-challenge-net.js.php"); ?>', 'explore-challenge-net-script');
 				} else if (NODE_ARGS['nodetype'] == 'Issue') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-issue-net.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-issue-net.js.php"); ?>', 'explore-issue-net-script');
 				} else if (NODE_ARGS['nodetype'] == 'Solution') {
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-solution-net.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-solution-net.js.php"); ?>', 'explore-solution-net-script');
 				} else if (EVIDENCE_TYPES_STR.indexOf(EVIDENCE_ARGS['nodetype']) != -1) { //EVIDENCE
-					var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-evidence-net.js.php"); ?>');
-					bObj.buildScriptTag();
-					bObj.addScriptTag();
+					addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/explore-evidence-net.js.php"); ?>', 'explore-evidence-net-script');
 				}
 				//DATA_LOADED.net = true;
 			//}

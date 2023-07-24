@@ -76,10 +76,13 @@ class Group {
 		$params[0] = $this->groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if($count==0){
 				global $ERROR;
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				return $ERROR->createGroupNotFoundError($this->groupid);
             }
 			for ($i=0; $i<$count; $i++) {
@@ -161,7 +164,10 @@ class Group {
     	if (!$resArray) {
     		return database_error();
     	} else {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             $us = new UserSet();
             $us->totalno = $count;
             $this->membercount = $us->totalno;
@@ -196,7 +202,10 @@ class Group {
     	if (!$resArray) {
     		return database_error();
     	} else {
-    		$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
                 $this->debatecount = $array['debateCount'];
@@ -221,7 +230,10 @@ class Group {
     	if (!$resArray) {
     		return database_error();
     	} else {
-    		$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = $array['VoteType'];
@@ -241,7 +253,10 @@ class Group {
     	if (!$resArray) {
     		return database_error();
     	} else {
-    		$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = $array['VoteType'];
@@ -295,7 +310,10 @@ class Group {
 		$params[1] = $userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_IS_MEMBER, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
                 return true;
             } else {
@@ -319,10 +337,13 @@ class Group {
 
 		$resArray = $DB->select($sql, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count != 0){
 				global $ERROR;
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				return $ERROR->createGroupExists($groupname);
 			} else {
 				return false;
@@ -351,17 +372,17 @@ class Group {
 
         //check group name doesn't already exist
         $ge = $this->groupNameExists($groupname);
-        if($ge instanceof Error){
+        if($ge instanceof Hub_Error){
             return $ge;
         }
 
         // add the 'user' (group)
         $user = new User();
-        $password = crypt(getUniqueID()); //dummy (non-blank) password
+        $password = password_hash(getUniqueID()); //dummy (non-blank) password
         $isGroup = 'Y';
 
         $user = $user->add("",$groupname,$password,"",$isGroup, $CFG->AUTH_TYPE_EVHUB,"",$CFG->USER_STATUS_ACTIVE,$CFG->DEFAULT_GROUP_PHOTO);
-		if (!$user instanceof Error) {
+		if (!$user instanceof Hub_Error) {
 	        $dt = time();
 	        //now add the user who created the group as an admin
 			$params = array();
@@ -442,9 +463,9 @@ class Group {
 
         // check user exists
         $user = new User($userid);
-        if($user->load() instanceof Error){
+        if($user->load() instanceof Hub_Error){
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
         }
 
@@ -454,7 +475,10 @@ class Group {
 		$params[1] = $this->groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_MEMBER_ADD_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count == 0) {
 
 				$dt = time();
@@ -525,9 +549,9 @@ class Group {
 
         // check user exists
         $user = new User($userid);
-        if($user->load() instanceof Error) {
+        if($user->load() instanceof Hub_Error) {
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
         }
 
@@ -563,9 +587,9 @@ class Group {
 
         // check user exists
         $user = new User($userid);
-        if($user->load() instanceof Error){
+        if($user->load() instanceof Hub_Error){
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
         }
 
@@ -575,7 +599,10 @@ class Group {
 		$params[1] = $this->groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_REMOVE_ADMIN_CHECK, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count < 2) {
             	return database_error($LNG->CORE_DATAMODEL_GROUP_CANNOT_REMOVE_MEMBER,"7002");
             }
@@ -613,16 +640,16 @@ class Group {
 
         // check user exists
         $user = new User($userid);
-        if($user->load() instanceof Error){
+        if($user->load() instanceof Hub_Error){
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
         }
 
         // remove them as admin (if they are already)
-        if( $this->isgroupadmin($userid) && ($this->removeadmin($userid) instanceof Error)){
+        if( $this->isgroupadmin($userid) && ($this->removeadmin($userid) instanceof Hub_Error)){
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createGroupLastAdmin($userid);
         }
 
@@ -655,7 +682,7 @@ class Group {
     	global $LNG;
 
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -667,7 +694,7 @@ class Group {
      */
     function isgroupadmin($userid){
         global $DB,$HUB_SQL;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             return false;
         }
         //can edit only if admin for the group
@@ -678,7 +705,10 @@ class Group {
 		$params[2] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_IS_ADMIN, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count == 0) {
         		return false;
         	} else {
@@ -715,9 +745,9 @@ class Group {
 
 		// check user exists
 		$user = new User($userid);
-		if($user->load() instanceof Error) {
+		if($user->load() instanceof Hub_Error) {
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
 		}
 
@@ -750,7 +780,10 @@ class Group {
 		$params[1] = $userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_IS_PENDING_MEMBER, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
                 return true;
             } else {
@@ -775,7 +808,10 @@ class Group {
 		$params[1] = $userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_IS_REJECTED_MEMBER, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
                 return true;
             } else {
@@ -800,7 +836,10 @@ class Group {
 		$params[1] = $userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_GROUP_IS_REPORTED_MEMBER, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
                 return true;
             } else {
@@ -833,7 +872,10 @@ class Group {
     	if (!$resArray) {
     		return database_error();
     	} else {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             $us = new UserSet();
             $us->totalno = $count;
             //$this->membercount = $us->totalno;
@@ -864,9 +906,9 @@ class Group {
 
 		// check user exists
 		$user = new User($userid);
-		if($user->load() instanceof Error) {
+		if($user->load() instanceof Hub_Error) {
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
 		}
 
@@ -909,9 +951,9 @@ class Group {
 
 		// check user exists
 		$user = new User($userid);
-		if($user->load() instanceof Error) {
+		if($user->load() instanceof Hub_Error) {
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
 		}
 
@@ -927,7 +969,7 @@ class Group {
 			return database_error();
 		} else {
 			$reply = $this->addmember($userid);
-			if (!$reply instanceof Error) {
+			if (!$reply instanceof Hub_Error) {
 				$reply->loadpendingmembers();
 
 				$newmember = new User($userid);
@@ -956,9 +998,9 @@ class Group {
 
 		// check user exists
 		$user = new User($userid);
-		if($user->load() instanceof Error) {
+		if($user->load() instanceof Hub_Error) {
 			global $ERROR;
-			$ERROR = new error;
+			$ERROR = new Hub_Error;
 			return $ERROR->createUserNotFoundError($userid);
 		}
 

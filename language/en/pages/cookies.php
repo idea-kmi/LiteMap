@@ -78,7 +78,7 @@ $LNG->PAGE_COOKIES_BODY .= '</ul>';
 
 $LNG->PAGE_COOKIES_BODY .= '<h2>Cookies you may see if you browse our site without signing in</h2>';
 
-$LNG->PAGE_COOKIES_BODY .= '<table border="1" cellpadding="1" cellspacing="1" width="95%">';
+$LNG->PAGE_COOKIES_BODY .= '<table class="cookies" cellpadding="1" cellspacing="1" width="95%">';
 $LNG->PAGE_COOKIES_BODY .= '<thead>';
 $LNG->PAGE_COOKIES_BODY .= '<tr>';
 $LNG->PAGE_COOKIES_BODY .= '<th scope="col" valign="top" width="15%">Cookie Name</th>';
@@ -113,7 +113,7 @@ $LNG->PAGE_COOKIES_BODY .= '<p></p>';
 $LNG->PAGE_COOKIES_BODY .= '<h3>Cookies we use to track visits to our site</h3>';
 $LNG->PAGE_COOKIES_BODY .= '<p>';
 $LNG->PAGE_COOKIES_BODY .= '</p>';
-$LNG->PAGE_COOKIES_BODY .= '<table border="1" cellpadding="1" cellspacing="1" width="95%">';
+$LNG->PAGE_COOKIES_BODY .= '<table class="cookies" cellpadding="1" cellspacing="1" width="95%">';
 $LNG->PAGE_COOKIES_BODY .= '<thead>';
 $LNG->PAGE_COOKIES_BODY .= '<tr>';
 $LNG->PAGE_COOKIES_BODY .= '<th scope="col" valign="top" width="20%">Type</th>';
@@ -156,7 +156,7 @@ $LNG->PAGE_COOKIES_BODY .= '<p>Please note that if you set your browser to disab
 $LNG->PAGE_COOKIES_BODY .= 'not be able to sign in to secure areas of our website. Without these ';
 $LNG->PAGE_COOKIES_BODY .= 'cookies, services you\'ve asked for can\'t be provided.<br> ';
 $LNG->PAGE_COOKIES_BODY .= '</p>';
-$LNG->PAGE_COOKIES_BODY .= '<table border="1" cellpadding="1" cellspacing="1" width="95%">';
+$LNG->PAGE_COOKIES_BODY .= '<table class="cookies" cellpadding="1" cellspacing="1" width="95%">';
 $LNG->PAGE_COOKIES_BODY .= '<thead>';
 $LNG->PAGE_COOKIES_BODY .= '<tr>';
 $LNG->PAGE_COOKIES_BODY .= '<th scope="col" valign="top" width="15%">Cookie Name</th>';

@@ -124,7 +124,7 @@ function loadExploreMapNet(){
 		Event.observe(editcontrol,"click", function(){
 			toggleEditBar(false);
 		});
-		var arrowimg = new Element('img', {'id':'editcontrolimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("leftarrowbig.gif"); ?>'});
+		var arrowimg = new Element('img', {'id':'editcontrolimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("leftarrowbig.gif"); ?>', 'alt':''});
 		editcontrol.insert(arrowimg);
 	}
 
@@ -253,7 +253,7 @@ function loadExploreMapNet(){
 			toggleAlertBar(false);
 		});
 
-		var arrowimg = new Element('img', {'id':'controlimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("rightarrowbig.gif"); ?>'});
+		var arrowimg = new Element('img', {'id':'controlimage', 'style':'vertical-align:middle', 'src':'<?php echo $HUB_FLM->getImagePath("rightarrowbig.gif"); ?>', 'alt':''});
 		alertcontrol.insert(arrowimg);
 
 		// ALERT AREA
@@ -580,7 +580,6 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 			NODE_ARGS['blockednodeids'] = blockednodeids;
 			if(USER && USER != "" && NODE_ARGS['caneditmap'] == 'true'){
 				loadEditBarNodes('<?php echo($USER->userid); ?>', 0, 10, 'date', 'DESC');
-				//new Ajax.Autocompleter("itemsearch", "item_choices", "<?php echo $CFG->homeAddress; ?>api/service.php?method=getnodesbyfirstcharacters&format=list&scope=all&filternodetypes="+filternodetypes, {paramName: "q", minChars: 1});
 			}
 
 			var concount = 0;

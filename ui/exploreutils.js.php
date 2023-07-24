@@ -85,7 +85,7 @@ function buildNodeTitle(from) {
 	if (widgetHeaderLabel) {
 		if (icon) {
 			icon = URL_ROOT+icon;
-			var iconObj = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'title':title, 'alt':title+' Icon', 'border':'0','src':icon});
+			var iconObj = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'title':title, 'alt':title+' Icon', 'src':icon});
 			iconObj.align='left';
 			widgetHeaderLabel.appendChild(iconObj);
 		}
@@ -135,36 +135,12 @@ function buildExploreToolbar(container, name, type, node, from) {
 		{'src': '<?php echo $HUB_FLM->getImagePath("printer.png"); ?>',
 		'alt': '<?php echo $LNG->EXPLORE_PRINT_BUTTON_ALT;?>',
 		'title': '<?php echo $LNG->EXPLORE_PRINT_BUTTON_HINT;?>',
-		'class': 'active',
-		'style': 'float:left;padding-top:0px;padding-right:10px;margin-top:10px;'});
+		'class': 'active'
+	});
 	container.insert(print);
 	Event.observe(print,'click',function(){
 		 printNodeExplore(NODE_ARGS, name, nodeid);
 	});
-
-	// Add spam icon
-	/*var spaming = new Element('img', {'style':'float:left;padding-top:0px;padding-right:10px;margin-top:10px;'});
-	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
-		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
-		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
-	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
-		if(USER != ""){
-			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
-			spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
-			spaming.style.cursor = 'pointer';
-			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, type, node); } );
-		} else {
-			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
-			spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
-			spaming.style.cursor = 'pointer';
-			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
-		}
-	}
-	container.insert(spaming);
-	*/
 
 	if (USER != "") {
 		var userid = node.users[0].userid;
@@ -172,76 +148,50 @@ function buildExploreToolbar(container, name, type, node, from) {
 			var otheruserconnections = node.otheruserconnections;
 
 			if (type == 'issue') {
-				var edit = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+				var edit = new Element('img',{'class':'exploreToolbarIcon','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_ISSUE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 				Event.observe(edit,'click',function (){loadDialog('editissue',URL_ROOT+"ui/popups/issueedit.php?nodeid="+nodeid, 770,500)});
 				container.appendChild(edit);
 			} if (type == 'challenge') {
-				var edit = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_CHALLENGE;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+				var edit = new Element('img',{'class':'exploreToolbarIcon','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_CHALLENGE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 				Event.observe(edit,'click',function (){loadDialog('editchallenge',URL_ROOT+"ui/popups/challengeedit.php?nodeid="+nodeid, 770,500)});
 				container.appendChild(edit);
 			} else if (type == 'solution') {
-				var edit = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_SOLUTION;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+				var edit = new Element('img',{'class':'exploreToolbarIcon','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_SOLUTION;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 				Event.observe(edit,'click',function (){loadDialog('editsolution',URL_ROOT+"ui/popups/solutionedit.php?nodeid="+nodeid, 770,500)});
 				container.appendChild(edit);
 			} else if (type == 'evidence') {
-				var edit = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_EVIDENCE;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+				var edit = new Element('img',{'class':'exploreToolbarIcon','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_EVIDENCE;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 				Event.observe(edit,'click',function (){loadDialog('editevidence',URL_ROOT+"ui/popups/evidenceedit.php?nodeid="+nodeid, 770,500)});
 				container.appendChild(edit);
 			}  else if (type == 'idea') {
-				var edit = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_COMMENT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
+				var edit = new Element('img',{'class':'exploreToolbarIcon','alt':'<?php echo $LNG->EDIT_BUTTON_TEXT;?>', 'title': '<?php echo $LNG->EDIT_BUTTON_HINT_COMMENT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("edit.png"); ?>'});
 				Event.observe(edit,'click',function (){loadDialog('editcomment',URL_ROOT+"ui/popups/commentedit.php?nodeid="+nodeid, 770,500)});
 				container.appendChild(edit);
 			}
 
 			if (type != 'challenge') {
 				if (otheruserconnections == 0) {
-					var del = new Element('img',{'style':'float:left;cursor: pointer;margin-top:10px;padding-left:5px;','alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
+					var del = new Element('img',{'class':'exploreToolbarIcon', 'alt':'<?php echo $LNG->DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->DELETE_BUTTON_HINT;?>', 'src': '<?php echo $HUB_FLM->getImagePath("delete.png"); ?>'});
 					Event.observe(del,'click',function (){
 						deleteNode(node.nodeid, node.name, node.role.name, 'gotoHomeList', type);
 					});
 					container.appendChild(del);
 				} else {
-					var del = new Element('img',{'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'style':'padding-left:5px;float:left;margin-top:10px;', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
+					var del = new Element('img',{'alt':'<?php echo $LNG->NO_DELETE_BUTTON_ALT;?>', 'title': '<?php echo $LNG->NO_DELETE_BUTTON_HINT;?>', 'class':'exploreToolbarIcon', 'src': '<?php echo $HUB_FLM->getImagePath("delete-off.png"); ?>'});
 					container.appendChild(del);
 				}
 			}
 		}
 	}
 
-	/*if (type != "idea") {
-		if (USER != "") {
-			var followbutton = new Element('img', {'style':'float:left;padding-top:0px;margin-left: 10px;margin-top:10px;'});
-			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-			followbutton.setAttribute('alt', 'Follow');
-			followbutton.setAttribute('id','follow'+nodeid);
-			followbutton.nodeid = nodeid;
-			followbutton.style.marginRight="3px";
-			followbutton.style.cursor = 'pointer';
-
-			container.insert(followbutton);
-
-			if (node.userfollow && node.userfollow == "Y") {
-				Event.observe(followbutton,'click',function (){ unfollowNode(node, this, "refreshWidgetFollowers()") } );
-				followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-				followbutton.setAttribute('title', '<?php echo $LNG->NODE_UNFOLLOW_ITEM_HINT; ?>');
-			} else {
-				Event.observe(followbutton,'click',function (){ followNode(node, this, "refreshWidgetFollowers()") } );
-				followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-				followbutton.setAttribute('title', '<?php echo $LNG->NODE_FOLLOW_ITEM_HINT; ?>');
-			}
-		} else {
-			container.insert("<img style='float:left;padding-top:0px;margin-top:10px;cursor:pointer' onclick='$(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' border='0' />");
-		}
-	}*/
-
 	if (from != 'explore') {
-		var explore = new Element('a',{'style':'float:left;margin-left:20px;margin-right:5px;margin-bottom:5px;'});
+		var explore = new Element('a',{'class':'exploreToolbarIcon'});
 		explore.href="<?php echo $CFG->homeAddress; ?>explore.php?id="+nodeid;
 		if (IS_SLIM) {
 			explore.target="_blank";
 		}
 
-		var image = new Element('img',{'class':'active','border':'0','src': '<?php echo $HUB_FLM->getImagePath("explore.png"); ?>', 'style':'margin-right: 5px;width:26px; height:26px;padding:3px;'});
+		var image = new Element('img',{'class':'active exploreToolbarIcon','src': '<?php echo $HUB_FLM->getImagePath("explore.png"); ?>'});
 		explore.insert(image);
 		explore.title = '<?php echo $LNG->NODE_DETAIL_BUTTON_HINT;?>';
 		container.appendChild(explore);
@@ -250,7 +200,7 @@ function buildExploreToolbar(container, name, type, node, from) {
 		//}
 	}
 
-	var chat = new Element('a',{'style':'float:left;margin-right:5px;margin-bottom:5px;'});
+	var chat = new Element('a',{'class':'exploreToolbarIcon'});
 	if (from == 'explore') {
 		chat.style.marginLeft ='20px';
 	}
@@ -258,7 +208,7 @@ function buildExploreToolbar(container, name, type, node, from) {
 	if (IS_SLIM) {
 		chat.target="_blank";
 	}
-	var image = new Element('img',{'class':'active','border':'0','src': '<?php echo $HUB_FLM->getImagePath("chat.png"); ?>', 'style':'margin-right: 5px;width:26px; height:26px;padding:3px;'});
+	var image = new Element('img',{'class':'active','src': '<?php echo $HUB_FLM->getImagePath("chat.png"); ?>', 'alt':'chat'});
 	chat.insert(image);
 	chat.title = '<?php echo $LNG->VIEWS_CHAT_HINT;?>';
 	container.appendChild(chat);
@@ -266,12 +216,12 @@ function buildExploreToolbar(container, name, type, node, from) {
 		image.style.border = "1px dashed blue";
 	}
 
-	var tree = new Element('a',{'style':'float:left;margin-right:5px;margin-bottom:5px;'});
+	var tree = new Element('a',{'class':'exploreToolbarIcon'});
 	tree.href="<?php echo $CFG->homeAddress; ?>knowledgetrees.php?id="+nodeid;
 	if (IS_SLIM) {
 		tree.target="_blank";
 	}
-	var image = new Element('img',{'class':'active','border':'0','src': '<?php echo $HUB_FLM->getImagePath("knowledge-tree.png"); ?>', 'style':'margin-right: 5px;width:26px; height:26px;padding:3px;'});
+	var image = new Element('img',{'class':'active','src': '<?php echo $HUB_FLM->getImagePath("knowledge-tree.png"); ?>', 'alt':'knowledgetree'});
 	tree.insert(image);
 	tree.title = '<?php echo $LNG->VIEWS_LINEAR_HINT;?>';
 	container.appendChild(tree);
@@ -279,12 +229,12 @@ function buildExploreToolbar(container, name, type, node, from) {
 		image.style.border = "1px dashed blue";
 	}
 
-	var net = new Element('a',{'style':'float:left;margin-right:0px;margin-bottom:5px;'});
+	var net = new Element('a',{'class':'exploreToolbarIcon'});
 	net.href="<?php echo $CFG->homeAddress; ?>networkgraph.php?id="+nodeid;
 	if (IS_SLIM) {
 		net.target="_blank";
 	}
-	var image = new Element('img',{'class':'active','border':'0','src': '<?php echo $HUB_FLM->getImagePath("network-graph.png"); ?>', 'style':'margin-right: 5px;width:26px; height:26px;padding:3px;'});
+	var image = new Element('img',{'class':'active exploreToolbarIcon','src': '<?php echo $HUB_FLM->getImagePath("network-graph.png"); ?>', 'alt':'network graph'});
 	net.insert(image);
 	net.title = '<?php echo $LNG->VIEWS_EVIDENCE_MAP_HINT;?>';
 	container.appendChild(net);
@@ -293,39 +243,33 @@ function buildExploreToolbar(container, name, type, node, from) {
 	}
 }
 
-function buildChatHeader() {
-
-	var keyDiv = new Element("div", {'style':'float:left;margin-left:40px;padding:2px;'});
-	keyDiv.className = 'plainborder';
-	keyDiv.style.borderWidth = "1px";
-	keyDiv.style.borderStyle = "dotted";
+function buildChatHeader() {	
+	var keyDiv = new Element("div");
+	keyDiv.className = 'plainborder col-auto recentReply';
 	keyDiv.insert('<?php echo $LNG->CHAT_HIGHLIGHT_NEWEST_TEXT; ?>');
 
+
 	if (USER != "") {
-		var toolbar = new Element("div", {'id':'commenttoolbar', 'class':'widgetheaderinner ', 'style':'padding-top:10px;padding-left:10px;'});
-		var link = new Element("a", {'title':'<?php echo $LNG->CHAT_ADD_BUTTON_HINT; ?>', 'style':'float:left;cursor:pointer'});
-		link.insert('<span id="linkbutton"><img style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" border="0" width="20" height="20" style="margin:0px;padding:0px" /> <?php echo $LNG->CHAT_ADD_BUTTON_TEXT; ?></span>');
+		var toolbar = new Element("div", {'id':'commenttoolbar', 'class':'widgetheaderinner widgetheaderinnerChat row'});
+		var link = new Element("a", {'title':"<?php echo $LNG->CHAT_ADD_BUTTON_HINT; ?>", 'class':'col-auto'});
+		link.insert('<span id="linkbutton"><img src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" alt="" /> <?php echo $LNG->CHAT_ADD_BUTTON_TEXT; ?></span>');
 		Event.observe(link,"click", function(){
 			$('commenthidden').style.display = 'block';
-			$('commenthidden').style.height = "95px";
-			$('comment').style.height = "60px";
 			$('commenttoolbar').style.display = 'none';
 			$('comment').focus();
 		});
 		toolbar.insert(link);
-
 		toolbar.insert(keyDiv);
 
 		$('chattoolbar').update(toolbar);
 
-		var hidden = new Element("div", {'class':'widgetheaderinner', 'id':'commenthidden','class':'commentdiv', 'style':'background:#E8E8E8 ;display:none;width:100%'});
+		var hidden = new Element("div", {'class':'widgetheaderinner', 'id':'commenthidden','class':'commentdiv', 'style':'display:none;'});
 		$('chattoolbar').insert(hidden);
 
-		var box = new Element("textarea", {'value':'', 'id':'comment', 'rows':'1'});
-		box.style.width = "98%";
+		var box = new Element("textarea", {'value':'', 'id':'comment', 'class':'form-control', 'aria-label':'enter comment'});
 		hidden.insert(box);
 
-		var button = new Element("input", {'value':'<?php echo $LNG->WIDGET_ADD_BUTTON; ?>', 'type':'button', 'style':'vertical-align: bottom'});
+		var button = new Element("input", {'value':'<?php echo $LNG->WIDGET_ADD_BUTTON; ?>', 'type':'button', 'class':'btn btn-primary m-2 ms-0'});
 		Event.observe(button,"click", function(){
 			var comment = $('comment').value;
 			$('comment').value = "";
@@ -350,7 +294,7 @@ function buildChatHeader() {
 
 		hidden.insert(button);
 
-		var button = new Element("input", {'value':'<?php echo $LNG->FORM_BUTTON_CLOSE; ?>', 'type':'button', 'style':'vertical-align: bottom'});
+		var button = new Element("input", {'value':'<?php echo $LNG->FORM_BUTTON_CLOSE; ?>', 'type':'button', 'class':'btn btn-secondary m-2'});
 		Event.observe(button,"click", function(){
 			$('comment').value = "";
 			$('chatarea').style.display = 'block';
@@ -360,8 +304,11 @@ function buildChatHeader() {
 
 		hidden.insert(button);
 	} else {
-		var toolbar = new Element("div", {'id':'commenttoolbar', 'class':'widgetheaderinner ', 'style':'float:left;padding-top:10px;padding-left:10px;'});
-		toolbar.insert('<span style="float:left;cursor:pointer" onclick="$(\'loginsubmit\').click(); return true;" title="<?php echo $LNG->WIDGET_SIGNIN_HINT; ?>"><img style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath('addgrey.png'); ?>" border="0" width="16" height="16" style="margin:0px;margin-left: 5px;padding:0px" /> <?php echo $LNG->CHAT_ADD_BUTTON_TEXT; ?></span>');
+		var toolbar = new Element("div", {'id':'commenttoolbar', 'class':'widgetheaderinner '});
+		let spancontent = '<span onclick="$(\'loginsubmit\').click(); return true;" title="';
+		spancontent += "<?php echo $LNG->WIDGET_SIGNIN_HINT; ?>";
+		spancontent += '"><img src="<?php echo $HUB_FLM->getImagePath('addgrey.png'); ?>" alt="" /> <?php echo $LNG->CHAT_ADD_BUTTON_TEXT; ?></span>';
+		toolbar.insert(spancontent);
 		toolbar.insert(keyDiv);
 		$('chattoolbar').insert(toolbar);
 	}

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -42,14 +42,13 @@
         die;
     }
 ?>
-<div style="margin-left:20px;">
+<div style="margin-left:20px;margin-top:50px;">
 	<h1><?php echo $LNG->ADMIN_TITLE; ?></h1>
 	<br>
 
 	<?php
 		include($HUB_FLM->getCodeDirPath('ui/admin/menulist.php'));
 	?>
-
 </div>
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

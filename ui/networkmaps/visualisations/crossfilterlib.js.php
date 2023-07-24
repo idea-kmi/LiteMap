@@ -143,10 +143,10 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(monthGroup)
 		.dimension(monthFilter)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key.split(".")[1]; })
 		.labelOffsetX(5)
-		.labelOffsetY(13)
+		.labelOffsetY(10)
 		.elasticX(true)
 		.title(function (d) { return d.value; })
 		.renderTitle(true)
@@ -175,10 +175,10 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(dayOfWeekGroup)
 		.dimension(dayOfWeek)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key.split(".")[1]; })
 		.labelOffsetX(5)
-		.labelOffsetY(13)
+		.labelOffsetY(10)
 		.elasticX(true)
 		.title(function (d) { return d.value; })
 		.renderTitle(true)
@@ -204,21 +204,24 @@ function displayActivityCrossFilterD3Vis(data, width) {
 	});
 	var nodetypeGroup = nodetype.group();
 
-	// ITEM TYPE AS PIE
+	// ITEM TYPE
 	itemTypeChart
 		.width(180)
 		.height(180)
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(nodetypeGroup)
 		.dimension(nodetype)
-		.colors(colorChoice)
+		.ordinalColors(colorChoice)
 		.colorAccessor(function(d) {
 			 var key = parseInt(d.key.split(".")[0]);
 			 return key;
          })
+         .ordering(function(d){
+		      return parseInt(d.key.split(".")[0]);
+ 		 })
 		.label(function (d) { return d.key.split(".")[1];  })
 		.labelOffsetX(5)
-		.labelOffsetY(20)
+		.labelOffsetY(10)
 		.elasticX(true)
 		.title(function (d) { return d.value; })
 		.renderTitle(true)
@@ -235,10 +238,10 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.margins({top: 10, left: 10, right: 15, bottom: 20})
 		.group(activitytypeGroup)
 		.dimension(activitytype)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		.label(function (d) { return d.key; })
 		.labelOffsetX(5)
-		.labelOffsetY(20)
+		.labelOffsetY(10)
 		.title(function (d) { return d.value; })
 		.elasticX(true)
 		.renderTitle(true)
@@ -250,7 +253,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.width(180)
 		.height(180)
 		.transitionDuration(500)
-		.colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+		.ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
 		// (optional) define color domain to match your data domain if you want to bind data or color
 		.colorDomain([-1750, 1644])
 		// (optional) define color value accessor
@@ -309,7 +312,7 @@ function displayActivityCrossFilterD3Vis(data, width) {
 			function(d) { return getNodeTitleAntecedence(d.nodetype, false); },
 			function(d) { return d.type }
 		])
-		.sortBy(function(d){ return d.date; })
+		.sortBy(function(d){  return -d.date;  })
 		.order(d3.ascending);
 
 	dc.dataCount("#data-count")
@@ -317,6 +320,23 @@ function displayActivityCrossFilterD3Vis(data, width) {
 		.group(all);
 
 	dc.renderAll();
+
+	// Want the labels to be black not white in the node type graph or you can't read them for small quantities.
+	var labels = document.getElementById("nodetype-chart").getElementsByTagName("text");
+	for (var i=0; i<labels.length; i++) {
+	    labels[i].style.fill = "black";
+ 	}
+
+	var labels = document.getElementById("days-of-week-chart").getElementsByTagName("text");
+	for (var i=0; i<labels.length; i++) {
+	    labels[i].style.fill = "black";
+ 	}
+
+
+	var labels = document.getElementById("type-chart").getElementsByTagName("text");
+	for (var i=0; i<labels.length; i++) {
+	    labels[i].style.fill = "black";
+ 	}
 
 	//dc.renderAll(chartGroup1);
 	//dc.renderAll(chartGroup2);
@@ -330,19 +350,12 @@ function displayActivityCrossFilterD3Vis(data, width) {
  	$('messagearea').innerHTML="";
 }
 
+
 function displayUserActivityCrossFilterD3Vis(data, width) {
-
-	var color = d3.scale.linear()
-		.domain([-1, 5])
-		.range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-		.interpolate(d3.interpolateHcl);
-
 
 	var formatDateGroup = d3.time.format("%B %Y");
 	var formatDate = d3.time.format("%B %d, %Y");
 	var formatTime = d3.time.format("%a %d %Y %I:%M %p");
-
-	var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>','<?php echo $CFG->issueback; ?>', '<?php echo $CFG->solutionback; ?>', '<?php echo $CFG->proback; ?>', '<?php echo $CFG->conback; ?>', '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#F9B257", "#E1E353"];
 
 	data.forEach(function(d, i) {
 		d.index = i;
@@ -369,6 +382,8 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 				d.color = "<?php echo $CFG->challengebackpale; ?>";
 			} else if (d.nodetype == "Argument") {
 				d.color = "<?php echo $CFG->argumentbackpale; ?>";
+			} else if (d.nodetype == "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>") {
+				d.color = "#E1E353";
 			} else {
 				d.color = d.children ? color(d.depth) : null;
 			}
@@ -386,6 +401,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 	var usersGrouped = user.group().reduce(
 		function(p, v) {
 			p.totalAll++;
+
 			if (v.nodetype == "Issue") {
 				p.totalIssue++;
 			} else if (v.nodetype == "Map") {
@@ -446,22 +462,18 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		}
 	);
 
-	var widtha = 0;
-	var usercount = users.size();
-	if (usercount > 10) {
-		widtha = usercount*30;
-	} else {
-		widtha = usercount*90;
-	}
+	//var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>','<?php echo $CFG->issueback; ?>', '<?php echo $CFG->solutionback; ?>', '<?php echo $CFG->proback; ?>', '<?php echo $CFG->conback; ?>', '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#F9B257", "#E1E353"];
+	var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#E1E353"];
 
 	dc.barChart("#user-chart")
 		.width(width)
 		.height(300)
 		.transitionDuration(500)
+		.ordinalColors(colorChoice)
 		.margins({top: 10, right: 30, bottom: 20, left: 40})
-		.group(usersGrouped, getNodeTitleAntecedence("Issue", false))
+		.group(usersGrouped, getNodeTitleAntecedence("Map", false))
 		.valueAccessor(function(d) { return d.value.totalMap;	})
-		.stack(usersGrouped, getNodeTitleAntecedence("Challenge", false), function(d){return d.value.totalChallenge;})
+		.stack(usersGrouped, getNodeTitleAntecedence("Challenge", false), function(d){ return d.value.totalChallenge;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Issue", false), function(d){return d.value.totalIssue;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Solution", false), function(d){return d.value.totalIdea;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Pro", false), function(d){return d.value.totalPro;})
@@ -469,56 +481,42 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 		.stack(usersGrouped, getNodeTitleAntecedence("Argument", false), function(d){return d.value.totalArguement;})
 		.stack(usersGrouped, getNodeTitleAntecedence("Idea", false), function(d){return d.value.totalComment;})
 		.stack(usersGrouped, "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>", function(d){return d.value.totalVote;})
-		.colors(colorChoice)
 		.dimension(user)
 		.elasticY(false)
 		.yAxisPadding(0)
 		.elasticX(false)
 		.xAxisPadding(0)
-		.x(d3.scale.ordinal())
+		.x(d3.scale.ordinal().domain(data.map( function(d){ return d.userid;})))
 		.xUnits(dc.units.ordinal)
 		.centerBar(true)
 		.renderHorizontalGridLines(true)
 		.renderVerticalGridLines(false)
 		.ordering(function(d){ return -d.value.totalAll; })
 		.title(function(d) {
-
-			if (d.layer == 0 && d.data.value.totalMap != 0) {
-				return d.data.value.totalMap +" of "+d.data.value.totalAll;
-			} else if (d.layer == 1 && d.data.value.totalChallenge != 0) {
-				return d.data.value.totalChallenge +" of "+d.data.value.totalAll;
-			} else if (d.layer == 2 && d.data.value.totalIssue != 0) {
-				return d.data.value.totalIssue +" of "+d.data.value.totalAll;
-			} else if (d.layer == 3 && d.data.value.totalIdea != 0) {
-				return d.data.value.totalIdea +" of "+d.data.value.totalAll;
-			} else if (d.layer == 4 && d.data.value.totalPro != 0) {
-				return d.data.value.totalPro +" of "+d.data.value.totalAll;
-			} else if (d.layer == 5 && d.data.value.totalCon != 0) {
-				return d.data.value.totalPro +" of "+d.data.value.totalAll;
-			} else if (d.layer == 6 && d.data.value.totalArguement != 0) {
-				return d.data.value.totalArguement +" of "+d.data.value.totalAll;
-			} else if (d.layer == 7 && d.data.value.totalComment != 0) {
-				return d.data.value.totalComment +" of "+d.data.value.totalAll;
-			} else if (d.layer == 8 && d.data.value.totalVote != 0) {
-				return d.data.value.totalVote +" of "+d.data.value.totalAll;
+			if (this.layer == getNodeTitleAntecedence("Map", false)) {
+				return this.layer+": "+this.data.value.totalMap +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Challenge", false)) {
+				return this.layer+": "+this.data.value.totalChallenge +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Issue", false)) {
+				return this.layer+": "+this.data.value.totalIssue +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Solution", false)) {
+				return this.layer+": "+this.data.value.totalIdea +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Pro", false)) {
+				return this.layer+": "+this.data.value.totalPro +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Con", false)) {
+				return this.layer+": "+this.data.value.totalCon +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Argument", false)) {
+				return this.layer+": "+this.data.value.totalArguement +" of "+this.data.value.totalAll;
+			} else if (this.layer == getNodeTitleAntecedence("Idea", false)) {
+				return this.layer+": "+this.data.value.totalComment +" of "+this.data.value.totalAll;
+			} else if (this.layer == "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>") {
+				return this.layer+": "+this.data.value.totalVote +" of "+this.data.value.totalAll;
 			} else {
-				return "";
+				return this.layer;
 			}
 		})
-		.renderTitle(true);
-
-		//.legend(dc.legend().x(10).y(10).itemHeight(13).gap(5));
-
-	// Hide labels.
-	//userChart.xAxis().tickFormat(function(v) { return ""; });
-
-	//	.mouseZoomable(true)
-
-	//d3.select("#user-chart")
-    //	.selectAll("text")
-	//    .attr("transform", function(d) {
-    //    	return "rotate(-90)"
-    //	});
+		.renderTitle(true)
+		;
 
 	/*** NODE TYPES ***/
 	var nodetype = activities.dimension(function(d) {
@@ -533,27 +531,33 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 			case "Argument": return "6."+getNodeTitleAntecedence(d.nodetype, false);
 			case "Idea": return "7."+getNodeTitleAntecedence(d.nodetype, false);
 			case "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>": return "8."+d.nodetype;
-			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return "9."+d.nodetype;
-			case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return "10."+d.nodetype;
+			//case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return "9."+d.nodetype;
+			//case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return "10."+d.nodetype;
 			default: return "11."+type;
 		}
 	});
 	var nodetypeGroup = nodetype.group();
 
+	//var colorChoice = ['<?php echo $CFG->claimbackpale; ?>','<?php echo $CFG->challengebackpale; ?>',"#DFC7EB", "#A4AED4", "#A9C89E", "#D46A6A", '<?php echo $CFG->argumentbackpale; ?>', '<?php echo $CFG->commentbackpale; ?>', "#E1E353"];
+
+	// it was calling but no applying colorAccessor below so added ordering function so this made the colours correct even if the orderding was no longer highest count at the top.
 	dc.rowChart("#nodetype-chart")
 		.width(350)
 		.height(200)
 		.margins({top: 10, left: 40, right: 0, bottom: 20})
 		.group(nodetypeGroup)
 		.dimension(nodetype)
-		.colors(colorChoice)
+		.ordinalColors(colorChoice)
 		.colorAccessor(function(d) {
 			 var key = parseInt(d.key.split(".")[0]);
 			 return key;
          })
+         .ordering(function(d){
+		      return parseInt(d.key.split(".")[0]);
+ 		 })
 		.label(function (d) { return d.key.split(".")[1];  })
 		.labelOffsetX(5)
-		.labelOffsetY(20)
+		.labelOffsetY(10)
 		.elasticX(true)
 		.title(function (d) { return d.value; })
 		.renderTitle(true)
@@ -583,14 +587,14 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 					case "Argument": return "Added "+getNodeTitleAntecedence(type, false);
 					case "Idea": return "Added "+getNodeTitleAntecedence(type, false);
 					case "<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>": return type;
-					case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return type;
-					case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return type;
+					//case "<?php echo $LNG->STATS_ACTIVITY_VOTED_FOR; ?>": return type;
+					//case "<?php echo $LNG->STATS_ACTIVITY_VOTED_AGAINST; ?>": return type;
 					default: return type;
 				}
 			},
 			function(d) { return d.title; }
 		])
-		.sortBy(function(d){ return d.userid; })
+		.sortBy(function(d){ return -d.date; })
 		.order(d3.ascending);
 
 	dc.dataCount("#data-count")
@@ -599,32 +603,11 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	dc.renderAll();
 
-	//ADD TOOLTIPS
-    /*var tipCrossFilter = d3.tip()
-		.attr('class', 'd3-tip')
-		.offset([10, 50])
-		.html(function(d) {
-			alert('d:'+d.toSource());
-			//var hint = '<div class="selectedback" style="padding:2px;border:1px solid dimgray">';
-			//if (d.id != d.name) {
-			//	hint += d.name + " (click to view)";
-			//} else {
-			//	hint += d.name;
-			//}
-			//hint += '</div>';
-
-			//return hint;
-		})
-
-	d3.select("svg").call(tipCrossFilter);
-    d3.select("#user-chart .bar")
-		.on('mouseover', function (d,i) {
-			tipCrossFilter.show(d)
-		})
-		.on('mouseout', function (d,i) {
-		  	tipCrossFilter.hide(d)
-		});
-	*/
+	// Want the labels to be black not white in the node type graph or you can not read them for small quantities.
+	var labels = document.getElementById("nodetype-chart").getElementsByTagName("text");
+	for (var i=0; i<labels.length; i++) {
+	    labels[i].style.fill = "black";
+ 	}
 
 	/** LEGEND **/
 	var legend = d3LegendInactive();
@@ -634,7 +617,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
         .margin({top: 0, right: 0, bottom: 10, left: 15});
 
 	var legendData = flatten(data)
-	var priorities = ['Map','Challenge','Issue','Solution','Pro','Con', 'Vote'];
+	var priorities = ['Map','Challenge','Issue','Solution','Pro','Con', 'Argument','Idea',"<?php echo $LNG->STATS_ACTIVITY_VOTE; ?>"];
 	var nest = d3.nest().key(function(d) { return d.nodetype; })
 		.sortKeys(function(a,b) {return priorities.indexOf(a) - priorities.indexOf(b);});
 
@@ -647,7 +630,7 @@ function displayUserActivityCrossFilterD3Vis(data, width) {
 
 	d3.select('.legendWrap')
           .datum(nest.entries(data))
-          .attr('transform', 'translate(' + -((width/2)-120) + ',' + 2 +')')
+          .attr('transform', 'translate(' + -((width/2)-100) + ',' + 2 +')')
           .call(legend);
 
  	$('messagearea').innerHTML="";

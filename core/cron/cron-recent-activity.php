@@ -42,7 +42,7 @@ if ($domain == "") {
 
 include_once("../../config.php");
 
-global $CFG,$USER,$LNG,$HUB_FLM;
+global $CFG,$USER,$LNG;
 
 if ($argv[2] != $CFG->CRON_KEY) {
 	return;
@@ -67,12 +67,16 @@ $currentUser = $USER;
 
 $us = getRecentActivityEmailUsers('daily');
 $users = $us->users;
-$count = count($users);
+
+$count = 0;
+if (is_countable($users)){
+	$count = count($users);
+}
 
 //echo "Users=".$count."\n";
 
 foreach($users as $user) {
-	if (!$user instanceof Error) {
+	if (!$user instanceof Hub_Error) {
 		$USER = $user;
 
 	//echo $user->userid.":Starting"."\n";
@@ -87,7 +91,12 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -99,7 +108,11 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -110,7 +123,11 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes  > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -122,7 +139,11 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -134,7 +155,11 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -146,7 +171,11 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'explore.php?id='.$node->nodeid.'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
@@ -158,11 +187,16 @@ foreach($users as $user) {
 		foreach($nodes as $node) {
 			$nextSet .= '<a style="font-size:8pt;" href="'.$CFG->homeAddress.'index.php?q='.urlencode($node->name).'">'.($node->name).'</a><br />';
 		}
-		if (count($nodes) > 0) {
+		$countnodes = 0;
+		if (is_countable($nodes)){
+			$countnodes = count($nodes);
+		}
+		if ($countnodes > 0) {
 			$nextMessage .= $nextSet;
 		}
 
 		// user
+		/* NOT GOOD FOR GDPR
 		$userSet = getUsersByGlobal(false,0,5);
 		$innerusers = $userSet->users;
 		$nextSet = "";
@@ -172,9 +206,14 @@ foreach($users as $user) {
 		}
 
 		// Don't send if there are only users
-		if (count($innerusers) > 0 && $nextMessage != "") {
+		$countusers = 0;
+		if (is_countable($innerusers)){
+			$countusers = count($innerusers);
+		}
+		if ($countusers > 0 && $nextMessage != "") {
 			$nextMessage .= $nextSet;
 		}
+		*/
 
 	//echo $user->userid.":BEFORE SEND message=".$nextMessage."\n";
 

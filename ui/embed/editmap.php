@@ -31,7 +31,7 @@ include_once($HUB_FLM->getCodeDirPath("ui/headerembededit.php"));
 
 $nodeid = required_param("id",PARAM_ALPHANUMEXT);
 $node = getNode($nodeid);
-if($node instanceof Error){
+if($node instanceof Hub_Error){
 	echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
 	include_once($HUB_FLM->getCodeDirPath("ui/footerembed.php"));
 	die;
@@ -50,14 +50,14 @@ if ($nodetype != "Issue") {
 		$connSet = getConnectionsByNode($node->nodeid,0,1,'date','ASC', 'all','','Issue');
 		$con = $connSet->connections[0];
 		$node = $con->to;
-		if($node instanceof Error){
+		if($node instanceof Hub_Error){
 			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
 			include_once($HUB_FLM->getCodeDirPath("ui/footerembed.php"));
 			die;
 		} else {
 			$nodeid = $node->nodeid;
 			$node = getNode($nodeid);
-			if($node instanceof Error){
+			if($node instanceof Hub_Error){
 				echo "<h1>".$LNG->ISSUE_NAME." ".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
 				include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 				die;
@@ -70,14 +70,14 @@ if ($nodetype != "Issue") {
 		$consSet = getConnectionsByNode($nodesol->nodeid,0,1,'date','ASC', 'all', '', 'Issue');
 		$con = $consSet->connections[0];
 		$node = $con->to;
-		if($node instanceof Error){
+		if($node instanceof Hub_Error){
 			echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
 			include_once($HUB_FLM->getCodeDirPath("ui/footerembed.php"));
 			die;
 		} else {
 			$nodeid = $node->nodeid;
 			$node = getNode($nodeid);
-			if($node instanceof Error){
+			if($node instanceof Hub_Error){
 				echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
 				include_once($HUB_FLM->getCodeDirPath("ui/footerembed.php"));
 				die;
@@ -99,14 +99,17 @@ if ($groupid == "" && isset($node->groups)) {
 if (isset($groupid) && $groupid != "") {
 	$group = getGroup($groupid);
 	//getGroup does not return group properties apart from its members
-	if($group instanceof Error){
+	if($group instanceof Hub_Error){
 		echo "<h1>Group not found</h1>";
 		include_once("includes/footerembed.php");
 		die;
 	} else {
 		$userset = $group->members;
 		$members = $userset->users;
-		$memberscount = sizeof($members);
+		$memberscount = 0;
+		if (is_countable($members)) {
+			$memberscount = count($members);
+		}
 	}
 }
 
@@ -117,7 +120,10 @@ if (isset($USER) && $USER != "" && isset($group)
 	$group = $group->addmember($USER->userid);
 	$userset = $group->members;
 	$members = $userset->users;
-	$memberscount = count($members);
+	$memberscount = 0;
+	if (is_countable($members)) {
+		$memberscount = count($members);
+	}
 }
 
 $canAdd = false;
@@ -178,9 +184,13 @@ $CONTEXT = $CFG->NODE_CONTEXT;
 
 $argsStr = "{";
 $keys = array_keys($args);
-for($i=0;$i< sizeof($keys); $i++){
+$countkeys = 0;
+if (is_countable($keys)) {
+	$countkeys = count($keys);
+}
+for($i=0;$i< $countkeys; $i++){
 	$argsStr .= '"'.$keys[$i].'":"'.$args[$keys[$i]].'"';
-	if ($i != (sizeof($keys)-1)){
+	if ($i != ($countkeys-1)){
 		$argsStr .= ',';
 	}
 }
@@ -189,7 +199,7 @@ $argsStr .= "}";
 include_once($HUB_FLM->getCodeDirPath("ui/popuplib.php"));
 
 try {
-	$jsonnode = json_encode($node);
+	$jsonnode = json_encode($node, JSON_INVALID_UTF8_IGNORE);
 } catch (Exception $e) {
 	echo 'Caught exception: ',  $e->getMessage(), "<br>";
 }
@@ -221,9 +231,7 @@ Event.observe(window, 'load', function() {
 	//var itemobj = renderEmbedMapNode(nodeObj, 'mainnode', nodeObj.role, true, 'active', false, false, false, true, false);
 	//$('mainnodediv').insert(itemobj);
 
-	var bObj = new JSONscriptRequest('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/embed-editmap-net.js.php"); ?>');
-    bObj.buildScriptTag();
-    bObj.addScriptTag();
+	addScriptDynamically('<?php echo $HUB_FLM->getCodeWebPath("ui/networkmaps/embed-editmap-net.js.php"); ?>', 'embed-editmap-net-script');
 });
 
 </script>

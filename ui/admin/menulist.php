@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -24,8 +24,7 @@
  ********************************************************************************/
  ?>
 
-<div id="tagcloud" style="background:transparent;clear:both; float:left; width: 100%;">
-	<ul>
+<div id="tagcloud" class="d-flex flex-row">
 	<?php
 		$items = array();
 
@@ -41,11 +40,15 @@
 		$next[2] = $LNG->ADMIN_BUTTON_HINT;
 		array_push($items, $next);
 
-		$next = array();
-		$next[0] = $LNG->ADMIN_MANAGE_NEWS_LINK;
-		$next[1] = "javascript:loadDialog('managethemes','".$CFG->homeAddress."ui/admin/newsmanager.php', 750, 600);";
-		$next[2] = $LNG->ADMIN_BUTTON_HINT;
-		array_push($items, $next);
+		$admin = new User($CFG->ADMIN_USERID);
+		$admin = $admin->load();
+		if (!$admin instanceof Hub_Error) {
+			$next = array();
+			$next[0] = $LNG->ADMIN_MANAGE_NEWS_LINK;
+			$next[1] = "javascript:loadDialog('managenews','".$CFG->homeAddress."ui/admin/newsmanager.php', 750, 600);";
+			$next[2] = $LNG->ADMIN_BUTTON_HINT;
+			array_push($items, $next);
+		}
 
 		$next = array();
 		$next[0] = $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK;
@@ -103,5 +106,4 @@
 			echo '<div class="'.$classes.'" style="margin-right:10px;" onclick=".$item[1]." onmouseover="this.className=\'themelist plainbackgradient plainborder plainback \';" onmouseout="this.className=\''.$classes.'\';" title="'.$item[2].'"><div class="'.$classes2.'" onclick="'.$item[1].'" onmouseover="this.className=\'themelistinner plainbackgradient\';" onmouseout="this.className=\''.$classes2.'\';"><table style="text-align:center;font-weight:bold;width:100%;height:100%" class="themebutton"><tr><td valign="middle">'.$item[0].'</td></tr></table></div></div>';
 		}
 	?>
-	</ul>
 </div>

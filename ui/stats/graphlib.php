@@ -1058,7 +1058,11 @@ function init_x_axis() {
 
   // check whether to treat x axis as numeric
   if ($this->parameter['x_axis_gridlines'] == 'auto') { // auto means text based x_axis, not numeric...
-    $this->calculated['x_axis']['num_ticks'] = sizeof($this->x_data);
+  	$countx = 0;
+  	if (is_countable($this->x_data)) {
+  		$countx = count($this->x_data);
+  	}
+    $this->calculated['x_axis']['num_ticks'] = $countx;
       $data = $this->x_data;
       for ($i=0; $i < $this->calculated['x_axis']['num_ticks']; $i++) {
         $value = array_shift($data); // grab value from begin of array
@@ -1116,7 +1120,12 @@ function init_x_axis() {
 
 // find max and min values for a data array given the resolution.
 function find_range($data, $min, $max, $resolution) {
-  if (sizeof($data) == 0 ) return array('min' => 0, 'max' => 0);
+	$count = 0;
+	if (is_countable($data)) {
+		$count = count($data);
+	}
+
+  if ($count == 0 ) return array('min' => 0, 'max' => 0);
   foreach ($data as $key => $value) {
     if ($value=='none') continue;
     if ($value > $max) $max = $value;

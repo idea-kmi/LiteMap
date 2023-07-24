@@ -53,7 +53,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -68,7 +68,10 @@ class Voting {
 		$params[1] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
         		$this->positivevotes = $array['VoteCount'];
@@ -83,7 +86,10 @@ class Voting {
 		$params[1] = 'N';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
         		$this->negativevotes = $array['VoteCount'];
@@ -102,7 +108,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -113,7 +119,10 @@ class Voting {
 		$params[1] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_USER_LOAD, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$vi = new Vote();
@@ -135,7 +144,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -146,7 +155,10 @@ class Voting {
 		$params[1] = 'N';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_USER_LOAD, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$vi = new Vote();
@@ -168,7 +180,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -184,7 +196,10 @@ class Voting {
 		$params[2] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_CONN_LOAD, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
        			$this->positiveconnvotes = $array['VoteCount'];
@@ -202,7 +217,10 @@ class Voting {
 		$params[2] = 'N';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_CONN_LOAD, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$this->negativeconnvotes = $array['VoteCount'];
@@ -216,7 +234,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -228,7 +246,10 @@ class Voting {
 		$params[2] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_USER_CONN, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$vi = new Vote();
@@ -250,7 +271,7 @@ class Voting {
         global $DB,$USER,$HUB_SQL;
 
         //$loggedin = api_check_login();
-        //if($loggedin instanceof Error){
+        //if($loggedin instanceof Hub_Error){
         //    return $loggedin;
         //}
 
@@ -262,7 +283,10 @@ class Voting {
 		$params[2] = 'N';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VOTING_USER_CONN, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$vi = new Vote();

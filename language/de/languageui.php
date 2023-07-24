@@ -31,16 +31,20 @@
 
 /** HOMEPAGE **/
 $LNG->HOMEPAGE_TITLE = 'Willkommen zur Übersichtskarte';
-$LNG->HOMEPAGE_FIRST_PARA = '<b>Diese Übersichtskarte</b> ermöglicht es Online-Communities, eine Diskussion, die innerhalb anderer Foren oder Websites stattfindet, zu visualisieren. Die zentralen Themen, Fragestellungen, Aspekt, Pro- und Contra Argumente einer Online-Debatte sollen hier zusammengeführt, verbunden und in Form von Netzwerkdiagrammen visualisiert werden.';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 = 'Die Übersichtskarte verfügt über ein Lesezeichen, um Inhalte aus dem Netz zu sammeln, und zweidimensionale Karten, in denen zusammengetragener Inhalt in Verbindung gesetzt werden kann.';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>Für Community Manager:</b><br>LiteMap hilft Ihnen, den Status einer Debatte zusammenzufassen und ihn der Community zu präsentieren. Litemap ist außerdem ein Tool, um die Beiträge Ihrer Community zu organisieren, es reduziert die Doppelungen von Ideen und unterstützt inhaltliche Analysen sowie Zusammenfassungen. Das analytische Instrumentenbrett auf Ihren Karten ist Ihnen dabei behilflich, Verbindungen zwischen Ideen zu schaffen, Wissenslücken herauszustellen, neue Muster zu entdecken und Zusammenfassungen der Community-Diskussion zu visualisieren.</p>';
-$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p><b>Für Community Mitglieder:</b><br>Litemap gibt ihnen die Möglichkeit, nicht nur an Diskussionen teilzunehmen sondern diese auch zu moderieren. Mit Litemap können Sie Ihre eigenen Ansichten einer Onlinedebatte visualisieren und Sie können diese Darstellung nutzen, um anderen ihre Ideen zu kommunizieren.</p>';
+
+$LNG->HOMEPAGE_FIRST_PARA = '<b>'.$CFG->SITE_TITLE.'</b> ist ein kollaboratives Online-Tool, das hilft komplexe Probleme visuell zu strukturieren und zu verstehen. Mit '.$CFG->SITE_TITLE.' können Face-to-Face- und Online-Diskussionen mit Wissenskarten visuell abgebildet werden, wie zum Beispiel Konzeptkarten, Argumentationskarten, oder auch Problemkarten. Dies sind Netzwerkkarten mit unterschiedlichen semantische Datenmodellen. Diese können für unterschiedliche Bedürfnisse der kollektiven Wissenskonstruktion benutzt werden (wie z.B. Brainstorming, kollaborative Diskussion und Aufbau von gegenseitigem Verständnis).';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 = '<p>Die Verwendung von '.$CFG->SITE_TITLE.' kann face-to-face Konversationen mit Dialogabbildungsfunktionen erleichtern und macht die Vermischung der online und offline Teilnahme an kollektiven Denkprozessen möglich.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' wurde im Rahmen eines kürzlich durchgeführten FP7-Projekts CATALYST (<a href="http://catalyst-fp7.eu/">http://catalyst-fp7.eu/</a>) - Collective Applied Intelligence and Analytics for Social Innovation - entwickelt. Seit der ersten Veröffentlichung in 2015 wurde '.$CFG->SITE_TITLE.' von mehr als 1300 Nutzern in 10 verschiedenen Ländern von 100 verschiedenen Gruppen genutzt. Diese erstellten mehr als 500 Wissenskarten. Dies zeigt den Einfluss von '.$CFG->SITE_TITLE.' auf Öffentlichkeit und Bildung.</p>';
+$LNG->HOMEPAGE_SECOND_PARA_PART2 .= '<p>'.$CFG->SITE_TITLE.' wurde in verschiedenen Bereichen eingesetzt: soziale Innovation, soziales Unternehmertum, europäische Forschung, naturwissenschaftlicher Unterricht und Sekundarschulbildung. '.$CFG->SITE_TITLE.' war auch Gegenstand eines von der Europäischen Kommission veröffentlichten Politikberichts über verantwortungsvolle Forschung und Innovation.</p>';
+
 $LNG->HOMEPAGE_KEEP_READING = 'Weiterlesen';
 $LNG->HOMEPAGE_READ_LESS = 'Weniger lesen';
 $LNG->HOMEPAGE_TOOLS_TITLE = 'Tools:';
 $LNG->HOMEPAGE_TOOLS_LINK = 'Die LiteMap Toolbar herunterladen';
 $LNG->HOMEPAGE_VIEW_ALL = 'Alles anzeigen ';
 $LNG->HOMEPAGE_NEWS_TITLE = 'Die neuesten Nachrichten';
+
+$LNG->HOMEPAGE_MOST_POPULAR_GROUPS_TITLE = 'Beliebteste '.$LNG->GROUPS_NAME;
 $LNG->HOMEPAGE_MOST_RECENT_GROUPS_TITLE = 'Die neuesten '.$LNG->GROUPS_NAME;
 $LNG->HOMEPAGE_MOST_RECENT_MAPS_TITLE = 'Die neuesten '.$LNG->MAPS_NAME;
 
@@ -395,6 +399,7 @@ $LNG->TAB_PRO = $LNG->PROS_NAME;
 $LNG->TAB_CON = $LNG->CONS_NAME;
 
 //explore
+$LNG->VIEWS_LINEAR_TITLE = "Wissensbäume";
 $LNG->VIEWS_LINEAR_HINT = "Klicken um sämtliche Listenansichten zu diesem Punkt zu sehen";
 $LNG->VIEWS_WIDGET_TITLE = "Alle Details";
 $LNG->WIDGET = "Klicken Sie hier, um sämtliche Listenansichten zu diesem Thema zu sehen";
@@ -440,6 +445,7 @@ $LNG->SORT_MODDATE = 'Veränderungsdatum';
 $LNG->SORT_TITLE = 'Titel';
 $LNG->SORT_URL = 'Website';
 $LNG->SORT_NAME = 'Name';
+$LNG->SORT_MEMBERS = 'Mitgliederzahl';
 $LNG->SORT_CONNECTIONS = 'Verbindungen';
 $LNG->SORT_VOTES = 'Votes';
 $LNG->SORT_LAST_LOGIN = 'Letzter Log-In';
@@ -987,6 +993,7 @@ $LNG->MAP_MEDIA_IMPORT_YOUTUBE_HELP = "Klicken Sie auf die Schaltfläche \'Von Y
 $LNG->MAP_MEDIA_IMPORT_YOUTUBE_PROMPT = "Füge deinen YouTube-Film \'Embed\' Code ein:";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_HELP = "Klicken Sie auf die Schaltfläche \'Von Vimeo importieren\', um Ihren Vimeo-Film einzuschaden. Die Breite, die Höhe und die Film-ID werden extrahiert und verwendet, um den Film in die Karte zu laden.";
 $LNG->MAP_MEDIA_IMPORT_VIMEO_PROMPT = "Füge deinen Vimeo-Film \'Embed\' Code ein:";
+$LNG->MAP_MOVIE_SIZE_MESSAGE = "Für Ihren YouTube-Film können keine Höhen- und Breitenangaben ermittelt werden";
 
 $LNG->MAP_MEDIA_NODE_JUMP_HINT = "Springe zur angegebenen Medienindexzeit";
 $LNG->MAP_MEDIA_NODE_JUMP = "Springen";

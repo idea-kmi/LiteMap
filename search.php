@@ -73,9 +73,14 @@
    // now trigger the js to load data
 	$argsStr = "{";
 	$keys = array_keys($args);
-	for($i=0;$i< sizeof($keys); $i++){
+
+	$keycount = 0;
+	if (is_countable($keys)) {
+		$keycount = count($keys);
+	}
+ 	for($i=0;$i< $keycount; $i++){
 		$argsStr .= '"'.$keys[$i].'":"'.addslashes($args[$keys[$i]]).'"';
-		if ($i != (sizeof($keys)-1)){
+		if ($i != ($keycount-1)){
 			$argsStr .= ',';
 		}
 	}

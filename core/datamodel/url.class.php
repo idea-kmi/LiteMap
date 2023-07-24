@@ -91,9 +91,12 @@ class URL {
 		$params[0] = $this->urlid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_SELECT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUrlNotFoundError($this->urlid);
 				return $ERROR;
 			} else {
@@ -134,9 +137,12 @@ class URL {
 		// Was originally part of the select.
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_IDEA_COUNT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUrlNotFoundError($this->urlid);
 				return $ERROR;
 			} else {
@@ -155,7 +161,10 @@ class URL {
 			$params[0] = $this->urlid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_TAGS_SELECT, $params);
 			if ($resArray !== false) {
-				$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
 				if ($count > 0) {
 					$this->tags = array();
 					for ($i=0; $i<$count; $i++) {
@@ -173,7 +182,10 @@ class URL {
 			$params[0] = $this->urlid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_GROUPS_SELECT, $params);
 			if ($resArray !== false) {
-				$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
 				if ($count > 0) {
 					$this->groups = array();
 					for ($i=0; $i<$count; $i++) {
@@ -237,7 +249,10 @@ class URL {
 
 		$resArray = $DB->select($qry1, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -323,7 +338,10 @@ class URL {
 
 		$resArray = $DB->select($qry1, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
         	$runUpdate = false;
 			if ($count > 0) {
 				for ($i=0; $i<$count; $i++) {
@@ -342,7 +360,6 @@ class URL {
 
             if ($runUpdate) {
 
-                $this->urlid = getUniqueID();
 				$params = array();
 				$params[0] = $dt;
 				$params[1] = $url;
@@ -398,7 +415,10 @@ class URL {
 		if (!$resArray) {
             return database_error();
         } else {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
                 $this->nodeid = $array['NodeID'];
@@ -533,7 +553,10 @@ class URL {
 		$params[1] = $groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_GROUP_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 				$dt = time();
 				$params = array();
@@ -657,7 +680,10 @@ class URL {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_TAG_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 				$params = array();
 				$params[0] = $currentuser;
@@ -762,7 +788,10 @@ class URL {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_IDEA_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 				$params = array();
 				$params[0] = $currentuser;
@@ -903,7 +932,10 @@ class URL {
 		$params[4] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_CAN_VIEW, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -920,7 +952,7 @@ class URL {
     function canadd(){
     	global $LNG;
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }
@@ -932,7 +964,7 @@ class URL {
      */
     function canedit(){
         global $DB,$USER,$HUB_SQL,$LNG;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception("access denied");
         }
 
@@ -947,7 +979,10 @@ class URL {
 		$params[1] = $this->urlid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_CAN_EDIT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
@@ -963,7 +998,7 @@ class URL {
      */
     function candelete(){
         global $DB,$USER,$HUB_SQL,$LNG;
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -978,7 +1013,10 @@ class URL {
 		$params[1] = $this->urlid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_URL_CAN_DELETE, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }

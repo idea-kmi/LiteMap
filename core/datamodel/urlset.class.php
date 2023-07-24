@@ -88,7 +88,10 @@ class URLSet {
 		$resArray = $DB->select($sql, $params);
 
         //create new nodeset and loop to add each node to the set
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalconns;
         $this->start = $start;
         $this->count = $count;

@@ -32,7 +32,6 @@
 	}
 
 	checkLogin();
-    array_push($HEADER,"<script src='".$HUB_FLM->getCodeWebPath("ui/lib/scriptaculous/scriptaculous.js")."' type='text/javascript'></script>");
 
     include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 
@@ -67,8 +66,6 @@
     	$('dialogheader').insert(title);
 
 		loadPickerNodes('<?php echo($USER->userid); ?>', 0, 10, 'date', 'DESC');
-
-    	new Ajax.Autocompleter("itemsearch", "item_choices", "<?php echo $CFG->homeAddress; ?>api/service.php?method=getnodesbyfirstcharacters&format=list&scope=all&filternodetypes="+filternodetypes, {paramName: "q", minChars: 1});
 	}
 
 	/**
@@ -98,6 +95,12 @@
 		if(characterCode == 13) {
 			runPickerSearch('0', '10', 'date', 'DESC')
 		}
+	}
+
+	function clearPickerSearch() {
+		$('itemsearch').value = "";
+		$('search-item-list-count').innerHTML = "0";
+		$("item-search-list").innerHTML = "<?php echo $LNG->FORM_SELECTOR_SEARCH_EMPTY_MESSAGE; ?>";
 	}
 
    	function runPickerSearch(start, max, orderby, sort) {
@@ -222,7 +225,7 @@
 				if (nodes[i].cnode.nodeid != '<?php echo $excludenodeid; ?>') {
 					var iUL = new Element("li", {'id':nodes[i].cnode.nodeid, 'class':'idea-list-li', 'style':'padding-bottom: 5px;'});
 					lOL.insert(iUL);
-					var blobDiv = new Element("div", {'style':'margin: 2px; width: 335px'});
+					var blobDiv = new Element("div", {'class':'me-4'});
 
 					var blobNode = renderPickerNode(nodes[i].cnode, nodes[i].cnode.role[0].role,includeUser);
 					blobDiv.insert(blobNode);
@@ -250,13 +253,14 @@
 	 */
 	function displaySortForm(sortOpts, handler, type, orderby, sort){
 
-		var sbTool = new Element("span", {'class':'sortback toolbar2'});
+		var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
 		sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
 
 		var selOrd = new Element("select");
 		selOrd.id = "select-orderby-node-"+type;
-		selOrd.className = "toolbar";
+    	selOrd.className = "toolbar form-select";
 		selOrd.name = "orderby";
+    	selOrd.setAttribute("aria-label","Sort by");
 		sbTool.insert(selOrd);
 		Event.observe(selOrd,'change',handler);
 		for(var key in sortOpts){
@@ -271,8 +275,9 @@
 		var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
 		var sortBy = new Element("select");
 		sortBy.id = "select-sort-node-"+type;
-		sortBy.className = "toolbar";
+    	sortBy.className = "toolbar form-select";
 		sortBy.name = "sort";
+    	sortBy.setAttribute("aria-label","Order by");
 		sbTool.insert(sortBy);
 		Event.observe(sortBy,'change',handler);
 		for(var key in sortBys){
@@ -287,102 +292,121 @@
 
 		return sbTool;
 	}
+
+
 	/**
 	 * display Nav
 	 */
-	function createNav(total, count, start, max, type, orderby, sort){
+	function createNav( total, count, start, max, type, orderby, sort ) {
 
-   	   var nav = new Element ("div",{'id':'page-nav', 'class':'toolbarrow', 'style':'padding-top: 3px;'});
+		var mainnav = new Element ("div",{'class':'mb-3'});
 
-   	   var header = createNavCounter(total, start, count);
-   	   nav.insert(header);
+		var header = createNavCounter(total, start, count);
+		mainnav.insert(header);
 
-   	   var clearnav = new Element ("div",{'style':'clear: both; margin: 3px; height: 3px;'});
-   	   nav.insert(clearnav);
+		var outernav = new Element ("div",{'class':'border-bottom'});
+		var nav = new Element ("div",{'id':'page-editbar-nav'+type, 'class':'toolbarrow pb-1', 'style':'white-space: nowrap;' });
+		outernav.insert(nav);
+		mainnav.insert(outernav);
 
-   	   if (total > parseInt( max )) {
-   	   		//previous
-   	   	    var prevSpan = new Element("span", {'id':'nav-previous', 'style':'background:transparent;'});
-   	   	    if(start > 0){
-   	   			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' alt='<?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-left2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
-   	   	        prevSpan.addClassName("active");
-   	   	        Event.observe(prevSpan,"click", function(){
-   	   		    	var newArr = {"max":max, "start":start};
-   	   	            newArr["start"] = parseInt(start) - newArr["max"];
-   	   	            if (type=="node") {
-   	   	            	loadPickerNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
-   	   	            } else if (type=="search") {
-   	   	            	runPickerSearch(newArr["start"], newArr["max"], orderby, sort);
-   	   	            }
-   	   	        });
-   	   	    } else {
-   	   			prevSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' alt='<?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?>' disabled src='<?php echo $HUB_FLM->getImagePath("arrow-left2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
-   	   	        prevSpan.addClassName("inactive");
-   	   	    }
+		var pageNav = new Element ("nav",{'aria-label':'Page navigation' });
+		var pageUL = new Element ("ul",{'id':'page-editbar-nav'+type, 'class':'pagination mb-0' });
 
-   	   	    //pages
-   	   	    var pageSpan = new Element("span", {'id':'nav-pages', 'style':'background:transparent;'});
-   	   	    var totalPages = Math.ceil(total/max);
-   	   	    var currentPage = (start/max) + 1;
-   	   	    for (var i = 1; i<totalPages+1; i++){
-   	   	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
-   	   	    	if(i != currentPage){
-   	   		    	page.addClassName("active");
-   	   		    	var newArr = {"max":max, "start":start};
-   	   		    	newArr["start"] = newArr["max"] * (i-1) ;
-   	   		    	Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,newArr));
-   	   	    	} else {
-   	   	    		page.addClassName("currentpage");
-   	   	    	}
-   	   	    	pageSpan.insert(page);
-   	   	    }
+		if (total > max) {
+			var prevSpan = new Element("li", {'id':"nav-previous", "class": "page-link", "style":"padding: 0.2rem 0.5rem;"});
 
-   	   	    //next
-   	   	    var nextSpan = new Element("span", {'id':'nav-next', 'style':'background:transparent;'});
-   	   	    if(parseInt(start)+parseInt(count) < parseInt(total)){
-   	   		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' alt='<?php echo $LNG->LIST_NAV_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-right2.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
-   	   	        nextSpan.addClassName("active");
-   	   	        Event.observe(nextSpan,"click", function(){
-   	   		    	var newArr = {"max":max, "start":start};
-   	   	            newArr["start"] = parseInt(start) + parseInt(newArr["max"]);
-   	   	            if (type=="node") {
-   	   	            	loadPickerNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
-   	   	            } else if (type=="search") {
-   	   	            	runPickerSearch(newArr["start"], newArr["max"], orderby, sort);
-   	   	            }
-   	   	        });
-   	   	    } else {
-   	   		    nextSpan.update("<img title='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' alt='<?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("arrow-right2-disabled.png"); ?>' class='toolbar' style='padding-right: 0px;' />");
-   	   	        nextSpan.addClassName("inactive");
-   	   	    }
+			if(start > 0){
+				prevSpan.update("<i class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_PREVIOUS_HINT; ?></span>");
+				prevSpan.addClassName("active");
+				Event.observe(prevSpan,"click", function(){
+					let newArr = new Object();
+					newArr.max = max;
+					newArr.start = parseInt(start) - newArr["max"];
+					if (type=="node") {
+						loadPickerNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
+ 					} else if (type=="search") {
+						runPickerSearch(newArr["start"], newArr["max"], orderby, sort);
+					}
+					this.scrollIntoView();
+				});
+			} else {
+				prevSpan.update("<i disabled class=\"fas fa-chevron-left\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_PREVIOUS_HINT; ?></span>");
+				prevSpan.addClassName("inactive");
+			}
 
-   	   	    if( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))){
-   	   	    	nav.insert(prevSpan).insert(pageSpan).insert(nextSpan);
-   	   	    }
-   	   	}
+			pageUL.insert(prevSpan)
 
-   	   	return nav;
-       }
+			//pages
+			var totalPages = Math.ceil(total/max);
+			var currentPage = (start/max) + 1;
+			for (let i = 1; i < totalPages+1; i++) {
+				var page = new Element("span", {'class':'page-link', "style":"padding: 0.2rem 0.5rem;" } ).insert(i);
+				if ( i != currentPage ) {
+					page.addClassName( "active" );
+					let newArr = new Object();
+					newArr.max = max;
+					newArr.start = newArr[ "max" ] * (i-1) ;
+					Event.observe(page,"click", Pages.next.bindAsEventListener(Pages,type,newArr,orderby,sort));
+				} else {
+					page.addClassName("currentpage");
+					page.scrollIntoView(true);
+				}
 
-       var Pages = {
-   			next: function(e){
-   				var data = $A(arguments);
-   				var type = data[1];
-   				var arrayData = data[2];
-      	            if (type=="node") {
-      	            	loadPickerNodes('<?php echo($USER->userid); ?>', arrayData['start'], arrayData['max'], orderby, sort);
-      	            } else if (type=="search") {
-      	            	runPickerSearch(arrayData['start'], arrayData['max'], orderby, sort);
-      	            }
-   			}
-   	};
+				pageUL.insert(page);
+			}
+
+			//next
+			var nextSpan = new Element("li", {'id':"nav-next", "class": "page-link", "style":"padding: 0.2rem 0.5rem;"});
+			if(parseInt(start)+parseInt(count) < parseInt(total)) {
+				nextSpan.update("<i class=\"fas fa-chevron-right\" aria-hidden=\"true\"></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NEXT_HINT; ?></span>");
+				nextSpan.addClassName("active");
+				Event.observe(nextSpan,"click", function() {
+					let newArr = new Object();
+					newArr.max = max;
+					newArr.start = parseInt(start) + parseInt(newArr["max"]);
+					if (type=="node") {
+						loadPickerNodes('<?php echo($USER->userid); ?>', newArr["start"], newArr["max"], orderby, sort)
+ 					} else if (type=="search") {
+						runPickerSearch(newArr["start"], newArr["max"], orderby, sort);
+					}
+				});
+			} else {
+				nextSpan.update("<i class=\"fas fa-chevron-right\" aria-hidden=\"true\" disabled></i><span class=\"sr-only\"><?php echo $LNG->LIST_NAV_NO_NEXT_HINT; ?></span>");
+				nextSpan.addClassName("inactive");
+			}
+
+			pageUL.insert(nextSpan);
+
+			if ( start>0 || (parseInt(start)+parseInt(count) < parseInt(total))) {
+				pageNav.insert(pageUL);
+				nav.insert(pageNav);
+			}
+		}
+
+		return mainnav;
+	}
+
+    var Pages = {
+		next: function(e){
+			var data = $A(arguments);
+			var type = data[1];
+			var arrayData = data[2];
+			var orderby = data[3];
+		    var sort = data[4];
+				if (type=="node") {
+					loadPickerNodes('<?php echo($USER->userid); ?>', arrayData['start'], arrayData['max'], orderby, sort);
+				} else if (type=="search") {
+					runPickerSearch(arrayData['start'], arrayData['max'], orderby, sort);
+				}
+		}
+	};
 
 	/**
 	* display nav header
 	*/
 	function createNavCounter(total, start, count, type){
 		if(count != 0){
-			var objH = new Element("span",{'class':'nav', 'style':'background:transparent;'});
+			var objH = new Element("span",{'class':'nav' });
 			var s1 = parseInt(start)+1;
 			var s2 = parseInt(start)+parseInt(count);
 			objH.insert("<b>" + s1 + " to " + s2 + " (" + total + ")</b>");
@@ -394,82 +418,88 @@
 	}
 
 	function viewNodes() {
-   	   	$("tab-item-node").removeClassName("unselected");
-   	   	$("tab-item-node").addClassName("current");
+   	   	$("tab-item-node").addClassName("active");
    	   	$("item-idea-list").style.display = 'block';
 
- 	   	$("tab-item-search").removeClassName("current");
- 	   	$("tab-item-search").addClassName("unselected");
+ 	   	$("tab-item-search").removeClassName("active");
  	   	$("item-search-list").style.display = 'none';
 	}
 
  	function viewSearch() {
-   	   	$("tab-item-node").removeClassName("current");
-   	   	$("tab-item-node").addClassName("unselected");
+   	   	$("tab-item-node").removeClassName("active");
    	   	$("item-idea-list").style.display = 'none';
 
-   	   	$("tab-item-search").removeClassName("unselected");
-   	   	$("tab-item-search").addClassName("current");
+   	   	$("tab-item-search").addClassName("active");
    	   	$("item-search-list").style.display = 'block';
   	}
-
    	window.onload = init;
-
-
 </script>
 
-<div id="nodepicker" style="clear: both;float: left; width: 380px; margin-left: 10px; display: block;">
+<div class="container-fluid popups nodeadder">
+	<div class="row p-4 justify-content-center">	
+		<div class="col">
+			<div id="nodepicker">
 
-	<div style="float:left;width:100%">
-		<label for="itemsearch" style="float: left; margin-right: 3px; margin-top: 3px;"><?php echo $LNG->FORM_SELECTOR_SEARCH_LABEL; ?></label>
-		<div style="float: left;">
-			<input type="text" onkeyup="if (checkKeyPressed(event)) { $('selector-go-button').onclick();}" style=" margin-right:3px; width:280px" id="itemsearch" name="itemsearch" value="" onkeypress="pickerSearchKeyPressed(event)" />
-			<div id="item_choices" class="autocomplete" style="border-color: white;"></div>
-		</div>
-		<div style="float:left;">
-			<img src="<?php echo $HUB_FLM->getImagePath('search.png'); ?>" class="active" width="20" height="20" onclick="javascript: runPickerSearch('0', '10', 'date', 'DESC');" title="<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>" alt="<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>" />
-		</div>
-	</div>
+				<div class="container-fluid px-0 py-1 mx-0 my-0">
+					<div class="col- d-inline-flex px-1">
+						<input class="form-control" type="text" onkeyup="if (checkKeyPressed(event)) { $('selector-go-button').onclick();}" aria-label="search" id="itemsearch" name="itemsearch" value="" onkeypress="pickerSearchKeyPressed(event)" />
+						<div id="item_choices" class="autocomplete" style="border-color: white;"></div>
+					</div>
+					<img class="col- gap-1 active" src="<?php echo $HUB_FLM->getImagePath('search.png'); ?>" width="20" height="20" onclick="javascript: runPickerSearch('0', '10', 'date', 'DESC');" title="<?php echo $LNG->HEADER_SEARCH_RUN_ICON_HINT; ?>" alt="<?php echo $LNG->HEADER_SEARCH_RUN_ICON_ALT; ?>" />
+					<img class="col- mx-2 active" width=20 height="20", id='edit-map-clear-button', onclick="javascript: clearPickerSearch();" src="<?php echo $HUB_FLM->getImagePath('search-clear.png'); ?>" title="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" alt="<?php echo $LNG->TAB_SEARCH_CLEAR_SEARCH_BUTTON; ?>" />
+				</div>
+				
+				<div>
+					<label style="font-size: 0.8em;" class="mb-3"><?php echo $LNG->FORM_SELECTOR_SEARCH_MESSAGE; ?></label>
+				</div>
+
+				<div id="tabber" class="tabber-user my-4" role="navigation">
+					<ul id="tabs" class="nav nav-tabs" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link p-1 px-2 active" id="tab-item-node" href="#" onclick="javascript: viewNodes();">
+								<span class="tab"><?php echo $LNG->FORM_SELECTOR_TAB_MINE; ?> (<span id="node-item-list-count">0</span>)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link p-1 px-2" id="tab-item-search" href="#" onclick="javascript: viewSearch();">
+								<span class="tab"><?php echo $LNG->FORM_SELECTOR_TAB_SEARCH_RESULTS; ?> (<span id="search-item-list-count">0</span>)</span>
+							</a>
+						</li>
+					</ul>
+					<div id="tabs-content">
+						<div id='item-idea-list' class='tabcontent boxborder p-3' style="min-height: 400px;"></div>
+						<div id='item-search-list' class='tabcontent boxborder p-3' style="min-height: 400px; display: none;">
+							<?php echo $LNG->FORM_SELECTOR_SEARCH_EMPTY_MESSAGE; ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+
+					<?php if ($filternodetypes == "Issue") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('issueadd',URL_ROOT+'ui/popups/issueadd.php?handler=reloadItems', 750,540)" />
+					<?php } else if ($filternodetypes == "Solution") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('solutionadd',URL_ROOT+'ui/popups/solutionadd.php?handler=reloadItems', 750,540)" />
+					<?php } else if ($filternodetypes == "Argument") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Argument', 750,540)" />
+					<?php } else if ($filternodetypes == "Pro") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Pro', 750,540)" />
+					<?php } else if ($filternodetypes == "Con") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Con', 750,540)" />
+					<?php } else if ($filternodetypes == "Map") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('mapadd',URL_ROOT+'ui/popups/mapadd.php?handler=reloadItems&nodetypename=Map', 750,540)" />
+					<?php } else if ($filternodetypes == "Idea") { ?>
+						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" name="addnew" onclick="loadDialog('mapadd',URL_ROOT+'ui/popups/commentadd.php?handler=reloadItems&nodetypename=Idea', 750,540)" />
+					<?php } ?>
 
 
-	<label style="clear:both; float: left; margin-bottom:15px;width:100%"><?php echo $LNG->FORM_SELECTOR_SEARCH_MESSAGE; ?></label>
+				</div>
 
-	<div id="tabber" style="clear:both;float:left;width:350px;">
-		<div style="float:left;">
-			<ul id="tabs" class="tab2">
-				<li class="tab"><a class="tab current" id="tab-item-node" href="javascript:void(0)" onclick="javascript: viewNodes();"><span class="tab"><?php echo $LNG->FORM_SELECTOR_TAB_MINE; ?> <span id="catheading"></span> (<span id="node-item-list-count">0</span>)</span></a></li>
-				<li class="tab"><a class="tab unselected" id="tab-item-search" href="javascript:void(0)" onclick="javascript: viewSearch();"><span class="tab"><?php echo $LNG->FORM_SELECTOR_TAB_SEARCH_RESULTS; ?> (<span id="search-item-list-count">0</span>)</span></a></li>
-			</ul>
-		</div>
-		<div id="tabs-content" style="clear:both; float:left;height:480px;">
-			<div id='item-idea-list' class='tabcontent boxborder' style="width: 360px; height: 480px;"></div>
-			<div id='item-search-list' class='tabcontent boxborder' style="width: 360px; height: 480px; display: none;">
-				 <?php echo $LNG->FORM_SELECTOR_SEARCH_EMPTY_MESSAGE; ?>
 			</div>
 		</div>
 	</div>
-
-    <div style="clear:both;float:left;margin-top:30px; padding-top:0px;width:100%">
-	<?php if ($filternodetypes == "Issue") { ?>
-		<input type="button" onclick="loadDialog('issueadd',URL_ROOT+'ui/popups/issueadd.php?handler=reloadItems', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Solution") { ?>
-		<input type="button" onclick="loadDialog('solutionadd',URL_ROOT+'ui/popups/solutionadd.php?handler=reloadItems', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Argument") { ?>
-		<input type="button" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Argument', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Pro") { ?>
-		<input type="button" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Pro', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Con") { ?>
-		<input type="button" onclick="loadDialog('evidenceadd',URL_ROOT+'ui/popups/evidenceadd.php?handler=reloadItems&nodetypename=Con', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Map") { ?>
-		<input type="button" onclick="loadDialog('mapadd',URL_ROOT+'ui/popups/mapadd.php?handler=reloadItems&nodetypename=Map', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } else if ($filternodetypes == "Idea") { ?>
-		<input type="button" onclick="loadDialog('mapadd',URL_ROOT+'ui/popups/commentadd.php?handler=reloadItems&nodetypename=Idea', 750,540)" value="<?php echo $LNG->FORM_ADD_NEW; ?>" id="addnew" />
-	<?php } ?>
-		<input style="float:right;margin-right:30px;" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-	</div>
-
 </div>
-
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

@@ -147,7 +147,10 @@ class DataModel {
 		$matches = false;
 
 		$i=0;
-		$count=count($this->hubmodel);
+		$count = 0;
+		if (is_countable($this->hubmodel)) {
+			$count = count($this->hubmodel);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$next = $this->hubmodel[$i];
 			//echo $i." ";

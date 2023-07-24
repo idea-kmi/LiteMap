@@ -32,6 +32,18 @@
 $LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Carregamento de uma exibição ao vivo de <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 $LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Carregando Visual Analytics direto de <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 
+$LNG->STATS_GO_BACK = "Volte";
+
+$LNG->STATS_AVAILABLE_FROM = "Intervalo de datas disponível de";
+$LNG->STATS_AVAILABLE_TO = "para";
+$LNG->STATS_START_DATE = "Mostrar dados de";
+$LNG->STATS_END_DATE = "Mostrar dados para";
+$LNG->STATS_LOAD_BUTTON = "Carregar dados";
+$LNG->STATS_ACTIVITY_WARNING = "Se houver muitos dados para carregar, sua conexão pode expirar. Se isso acontecer, reduza o intervalo de datas selecionado.";
+$LNG->STATS_START_END_DATE_ERROR = "A data inicial deve ser anterior à data final";
+$LNG->STATS_START_DATE_ERROR = "Selecione uma data para carregar os dados a partir de";
+$LNG->STATS_END_DATE_ERROR = "Selecione uma data para carregar os dados até";
+
 /** STATE PAGE NAMES **/
 $LNG->STATS_TAB_MAP = 'Mapa';
 $LNG->STATS_TAB_VIS = 'Número de visitas';

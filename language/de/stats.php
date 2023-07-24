@@ -31,6 +31,18 @@
 $LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Laden einer Live Visualisierung von <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 $LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Laden Live Visual Analytics von <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
 
+$LNG->STATS_GO_BACK = "Geh zurück";
+
+$LNG->STATS_AVAILABLE_FROM = "Verfügbarer Datumsbereich von";
+$LNG->STATS_AVAILABLE_TO = "an";
+$LNG->STATS_START_DATE = "Daten anzeigen von";
+$LNG->STATS_END_DATE = "Daten anzeigen an";
+$LNG->STATS_LOAD_BUTTON = "Lade Daten";
+$LNG->STATS_ACTIVITY_WARNING = "Wenn viele Daten geladen werden müssen, kann Ihre Verbindung unterbrochen werden. Reduzieren Sie in diesem Fall den ausgewählten Zeitraum.";
+$LNG->STATS_START_END_DATE_ERROR = "Das Von-Datum muss vor dem Bis-Datum liegen";
+$LNG->STATS_START_DATE_ERROR = "Bitte wählen Sie ein Datum aus, von dem Daten geladen werden sollen";
+$LNG->STATS_END_DATE_ERROR = "Bitte wählen Sie ein Datum aus, zu dem die Daten geladen werden sollen";
+
 /** STATE PAGE NAMES **/
 $LNG->STATS_TAB_MAP = 'Karte';
 $LNG->STATS_TAB_VIS = 'Alternative Ansichten';

@@ -42,6 +42,7 @@ class CNode {
 	public $properties;
 	public $mapcount = 0;
 	public $style = 'long';
+	public $imagedir = "";
 
 	public $procount = 0;
 	public $concount = 0;
@@ -102,12 +103,16 @@ class CNode {
 	 * 'map' includes 'mini' plus voting, websites.
      * 'long' includes 'short' and associated website objects, tag objects, group onjects, votes, view counts and extra properties.
      * 'full' includes 'long' and all activity and voting data. This is likely to be very heavy. Use wisely.
-     * 'shortactivity' includes 'short' plus the activity and voting data.
+     * 'shortactivity' includes 'short' plus the activity and voting data. It can have a colon separated start and end date appended to reduce data pulled
      * 'cif' just what is needed for cif.
      * @return Node object (this)
      */
     function load($style = 'long') {
         global $DB,$CFG, $USER,$ERROR,$HUB_FLM,$HUB_SQL;
+
+		// for shortactivity you can append from and to timestamps
+		$styleArray = explode(':', $style);
+		$style = $styleArray[0];
 
         try {
             $this->canview();
@@ -121,9 +126,12 @@ class CNode {
 
   		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createNodeNotFoundError($this->nodeid);
 				return $ERROR;
 			} else {
@@ -160,13 +168,13 @@ class CNode {
 
 						if($array['Image']){
 							$this->filename = $array['Image'];
-							$imagedir = $HUB_FLM->getUploadsNodeDir($this->nodeid, $array['UserID']);
-							$originalphotopath = $HUB_FLM->createUploadsDirPath($imagedir."/".stripslashes($array['Image']));
+							$this->imagedir = $HUB_FLM->getUploadsNodeDir($this->nodeid, $array['UserID']);
+							$originalphotopath = $HUB_FLM->createUploadsDirPath($this->imagedir."/".stripslashes($array['Image']));
 							if (file_exists($originalphotopath)) {
-								$this->image =  $HUB_FLM->getUploadsWebPath($imagedir."/".stripslashes($array['Image']));
-								$this->thumb =  $HUB_FLM->getUploadsWebPath($imagedir."/".str_replace('.','_thumb.', stripslashes($array['Image'])));
+								$this->image =  $HUB_FLM->getUploadsWebPath($this->imagedir."/".stripslashes($array['Image']));
+								$this->thumb =  $HUB_FLM->getUploadsWebPath($this->imagedir."/".str_replace('.','_thumb.', stripslashes($array['Image'])));
 								if (!file_exists($this->thumb)) {
-									create_image_thumb($array['Image'], $CFG->IMAGE_THUMB_WIDTH, $imagedir);
+									create_image_thumb($array['Image'], $CFG->IMAGE_THUMB_WIDTH, $this->imagedir);
 								}
 							} else {
 								if ($this->role->name == 'Map') {
@@ -178,6 +186,9 @@ class CNode {
 							if ($this->role->name == 'Map') {
 								$this->image =  $HUB_FLM->getUploadsWebPath($CFG->DEFAULT_ISSUE_PHOTO);
 								$this->thumb =  $HUB_FLM->getUploadsWebPath(str_replace('.','_thumb.', stripslashes($CFG->DEFAULT_ISSUE_PHOTO)));
+							} else {
+								$this->image = "";
+								$this->thumb = "";
 							}
 						}
 
@@ -248,7 +259,11 @@ class CNode {
 			$params[2] = $currentuser;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_EXTERNAL_CONNECTIONS, $params);
 			if ($resArray !== false) {
-				if(count($resArray) > 0 ){
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
+				if($count > 0 ){
 					$this->otheruserconnections = $resArray[0]['connectedness'];
 				} else {
 					$this->otheruserconnections = 0;
@@ -262,7 +277,11 @@ class CNode {
 			$params[1] = $this->nodeid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_USER_FOLLOW, $params);
 			if ($resArray !== false) {
-				if(count($resArray) > 0 ){
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
+				if($count > 0 ){
 					$this->userfollow = "Y";
 				}
 			}
@@ -284,7 +303,15 @@ class CNode {
         }
 
 		if ($style == 'full' || $style == 'shortactivity') {
-			$this->activity = getAllNodeActivity($this->nodeid, 0, 0, -1);
+
+			$startActivityDate = 0;
+			$endActivityDate = 0;
+			if (is_countable($styleArray) && count($styleArray) > 2) {
+				$startActivityDate = intval($styleArray[1]);
+				$endActivityDate = intval($styleArray[2]);
+			}
+	
+			$this->activity = getAllNodeActivity($this->nodeid, $startActivityDate, $endActivityDate);
 			$this->votes = getVotes($this->nodeid);
 		}
 
@@ -292,7 +319,7 @@ class CNode {
 		/*if ($this->role->name == "Solution") {
 			$this->haschildren = 'N';
 			$conSetKids = getConnectionsByNode($this->nodeid,0,0,'date','ASC', 'all', '', 'Pro,Con,Comment');
-			if (!$conSetKids instanceof Error) {
+			if (!$conSetKids instanceof Hub_Error) {
 				if ($conSetKids->totalno > 0) {
 					$this->haschildren = 'Y';
 				}
@@ -311,7 +338,10 @@ class CNode {
 		$params[0] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_VIEW_COUNT, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count > 0 ){
 				$array = $resArray[0];
 				$this->viewcount = $array['ViewCount'];
@@ -330,7 +360,10 @@ class CNode {
 		$params[0] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_PROPERTY_LOAD, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count > 0 ){
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -355,7 +388,11 @@ class CNode {
 		$params[1] = 'Y';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_VOTES, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
         		$this->positivevotes = $resArray[0]['VoteCount'];
         	}
 		} else {
@@ -368,7 +405,11 @@ class CNode {
 		$params[1] = 'N';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_VOTES, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
         		$this->negativevotes = $resArray[0]['VoteCount'];
         	}
 		} else {
@@ -387,7 +428,11 @@ class CNode {
 		$params[1] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_VOTES_USER, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
             	$this->uservote = $resArray[0]['VoteType'];
             }
        	}
@@ -405,7 +450,10 @@ class CNode {
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_URLS, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count > 0 ){
 				$this->urls = array();
 				for ($i=0; $i<$count; $i++) {
@@ -439,8 +487,11 @@ class CNode {
 		$params[0] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_TAGS, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
             	$this->tags = array();
 				for ($i=0; $i<$count; $i++) {
 					$array = $resArray[$i];
@@ -463,7 +514,10 @@ class CNode {
 		$params[0] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_GROUPS, $params);
 		if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if($count > 0 ){
             	$this->groups = array();
 				for ($i=0; $i<$count; $i++) {
@@ -518,7 +572,11 @@ class CNode {
 		$params[2] = $nodetypeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
 		    	 $this->nodeid = $resArray[0]["NodeID"];
 			} else {
 				$dt = time();
@@ -654,7 +712,11 @@ class CNode {
 		$params[3] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_EDIT_CHECK, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
 	            return duplication_error("A node with this label and type already exists.");
 			} else {
 	        	$dt = time();
@@ -676,8 +738,8 @@ class CNode {
 					if (isset($this->filename) && $this->filename !="" && $this->filename != $image
 							&& $this->filename != $CFG->DEFAULT_ISSUE_PHOTO && $this->filename != $CFG->DEFAULT_GROUP_PHOTO) {
 
-						$originalphotopath = $HUB_FLM->createUploadsDirPath($imagedir."/".stripslashes($this->filename));
-						$originalphotopaththumb = $HUB_FLM->createUploadsDirPath($imagedir."/".str_replace('.','_thumb.', stripslashes($this->filename)));
+						$originalphotopath = $HUB_FLM->createUploadsDirPath($this->imagedir."/".stripslashes($this->filename));
+						$originalphotopaththumb = $HUB_FLM->createUploadsDirPath($this->imagedir."/".str_replace('.','_thumb.', stripslashes($this->filename)));
 						unlink('\''.$originalphotopath.'\'');
 						unlink('\''.$originalphotopaththumb.'\'');
 					}
@@ -736,7 +798,10 @@ class CNode {
 
 			// find the challenge node in the map to delete afterwards.
 			$viewnodes = $view->nodes;
-			$count = count($viewnodes);
+			$count = 0;
+			if (is_countable($viewnodes)) {
+				$count = count($viewnodes);
+			}
 			for ($i = 0; $i < $count; $i++) {
 				$next = $viewnodes[$i];
 				$nextnode = $next->node;
@@ -747,7 +812,10 @@ class CNode {
 
 			// get the Connections in the Map to delete afterwards
 			$viewconns = $view->connections;
-			$count = count($viewconns);
+			$count = 0;
+			if (is_countable($viewconns)) {
+				$count = count($viewconns);
+			}
 			for ($i = 0; $i < $count; $i++) {
 				$next = $viewconns[$i];
 				$nextcon = $next->connection;
@@ -768,7 +836,10 @@ class CNode {
 			$params[1] = $this->nodeid;
 			$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_DELETE_TRIPLE, $params);
             if($resArray !== false){
-            	$count = count($resArray);
+				$count = 0;
+				if (is_countable($resArray)) {
+					$count = count($resArray);
+				}
             	for ($i=0; $i<$count; $i++) {
             		$array = $resArray[$i];
                     $conn = new Connection($array['TripleID']);
@@ -791,7 +862,10 @@ class CNode {
 			$params = array();
 			$res4Array = $DB->select($HUB_SQL->DATAMODEL_NODE_DELETE_URLS_CLEAN, $params);
             if ($res4Array !== false ) {
-            	$count = count($res4Array);
+				$count = 0;
+				if (is_countable($res4Array)) {
+					$count = count($res4Array);
+				}
             	for ($i=0; $i<$count; $i++) {
             		$array = $res4Array[$i];
                     $url = new URL($array['URLID']);
@@ -804,7 +878,10 @@ class CNode {
 			if ($role->name == "Map" && $challengenode != "") {
 				$challengenode->delete();
 
-				$count = count($deleteconnections);
+				$count = 0;
+				if (is_countable($deleteconnections)) {
+					$count = count($deleteconnections);
+				}
 				for ($i = 0; $i < $count; $i++) {
 					$nextcon = $deleteconnections[$i];
 
@@ -849,7 +926,11 @@ class CNode {
 		$params[1] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_VOTE_CHECK, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 				$dt = time();
 				$params = array();
 				$params[0] = $currentuser;
@@ -947,7 +1028,11 @@ class CNode {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_URL_ADD_CHECK, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 		        $dt = time();
 				$params = array();
 				$params[0] = $currentuser;
@@ -1076,7 +1161,11 @@ class CNode {
 		$params[1] = $groupid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_GROUP_ADD_CHECK, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 	            $dt = time();
 				$params = array();
 				$params[0] = $this->nodeid;
@@ -1188,7 +1277,11 @@ class CNode {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_TAG_ADD_CHECK, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 				$params = array();
 				$params[0] = $currentuser;
 				$params[1] = $tagid;
@@ -1327,7 +1420,10 @@ class CNode {
 		$params[0] = $this->nodeid;
   		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_SELECT, $params);
     	if ($resArray !== false) {
-			$loop = count($resArray);
+			$loop = 0;
+			if (is_countable($resArray)) {
+				$loop = count($resArray);
+			}
 			for ($i=0; $i<$loop; $i++) {
 				$array = $resArray[$i];
 				$this->connectedness = $array['connectedness'];
@@ -1519,7 +1615,11 @@ class CNode {
 		$params[1] = 'Person';
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_DEFAULT_USER_NODE_ROLE, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 				return database_error();
             }
             $roleid = stripslashes($resArray[0]['NodeTypeID']);
@@ -1558,7 +1658,7 @@ class CNode {
      * @return Node object (this) (or Error object)
      */
     function updateImage($image){
-        global $DB,$HUB_SQL,$CFG,$HUB_FLM;
+        global $DB,$HUB_SQL,$CFG,$HUB_FLM,$USER;
 
         try {
             $this->canedit();
@@ -1580,8 +1680,8 @@ class CNode {
 				if (isset($this->filename) && $this->filename !="" && $this->filename != $image
 						&& $this->filename != $CFG->DEFAULT_ISSUE_PHOTO && $this->filename != $CFG->DEFAULT_GROUP_PHOTO) {
 
-					$originalphotopath = $HUB_FLM->createUploadsDirPath($imagedir."/".stripslashes($this->filename));
-					$originalphotopaththumb = $HUB_FLM->createUploadsDirPath($imagedir."/".str_replace('.','_thumb.', stripslashes($this->filename)));
+					$originalphotopath = $HUB_FLM->createUploadsDirPath($this->imagedir."/".stripslashes($this->filename));
+					$originalphotopaththumb = $HUB_FLM->createUploadsDirPath($this->imagedir."/".str_replace('.','_thumb.', stripslashes($this->filename)));
 					unlink('\''.$originalphotopath.'\'');
 					unlink('\''.$originalphotopaththumb.'\'');
 				}
@@ -1620,7 +1720,11 @@ class CNode {
 		$params[1] = $property;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_PROPERTY_ADD_CHECK, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ) {
 				$params[0] = $value;
 				$params[1] = $dt;
 				$params[2] = $this->nodeid;
@@ -1706,7 +1810,11 @@ class CNode {
 		$params[4] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_CAN_VIEW, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
         } else {
@@ -1744,7 +1852,11 @@ class CNode {
 		$params[1] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_CAN_EDIT, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
         } else {
@@ -1772,7 +1884,11 @@ class CNode {
 		$params[1] = $this->nodeid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_CAN_EDIT, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count  == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
         } else {
@@ -1799,7 +1915,11 @@ class CNode {
 		$params[1] = $this->userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_CONNECTION_USAGE_FROM, $params);
 		if($resArray !== false){
-			if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count > 0) {
 	            $usage = $resArray[0]['nodecount'];
 	        }
         }
@@ -1810,7 +1930,11 @@ class CNode {
 		$params[1] = $this->userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_CONNECTION_USAGE_TO, $params);
 		if($resArray !== false){
-			if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count > 0) {
 	            $usage = $usage+$resArray[0]['nodecount'];
 	        }
         }
@@ -1832,7 +1956,12 @@ class CNode {
 		$params[1] = $this->userid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_NODE_ENTRY_USAGE, $params);
 		if($resArray !== false){
-			if (count($resArray) > 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+
+			if ($count > 0) {
    	        	$usage = $resArray[0]['nodecount'];
    	        }
         }

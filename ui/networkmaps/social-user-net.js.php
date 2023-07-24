@@ -125,23 +125,26 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 				//$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
       			//alert("connection count = "+conns.length);
+				let concount = 0;
       			if (conns.length > 0) {
       				var connectionadded = false;
 	      			for(var i=0; i< conns.length; i++){
 	      				var c = conns[i].connection;
 						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
-							connectionadded = true;
+							concount++;
 						}
 	      			}
+	      		}
 
-					if (connectionadded) {
-						computeMostConnectedNode(forcedirectedGraph);
-						layoutAndAnimateSocial(forcedirectedGraph, messagearea);
-						toolbar.style.display = 'block';
-					} else {
-						messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-						toolbar.style.display = 'none';
-					}
+				let socialcount = 0;
+				for(var i in forcedirectedGraph.graph.nodes) {
+					socialcount++;
+				}
+
+				if (concount > 0 && socialcount > 0) {
+					computeMostConnectedNode(forcedirectedGraph);
+					layoutAndAnimateSocial(forcedirectedGraph, messagearea);
+					toolbar.style.display = 'block';
 				} else {
 					messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
 					toolbar.style.display = 'none';

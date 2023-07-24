@@ -30,79 +30,70 @@ if ($CFG->privateSite) {
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $CFG->language; ?>">
-<head>
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title><?php echo $CFG->SITE_TITLE; ?></title>
+	<head>
+		<?php
+			if ($CFG->GOOGLE_ANALYTICS_ON) {
+				include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
+			}
+		?>
 
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
-<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
+		<meta http-equiv="Content-Type" content="text/html" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title><?php echo $CFG->SITE_TITLE; ?></title>
 
-<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("bootstrap.css"); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("all.css"); ?>" type="text/css" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("tabber.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("node.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("dialogstyle.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("stylecustom.css"); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $HUB_FLM->getStylePath("widget.css"); ?>" type="text/css" media="screen" />
 
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/popuputil.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
-<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/widget.js.php'); ?>" type="text/javascript"></script>
+		<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
 
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/jsr_class.js" type="text/javascript"></script>
-<script src='<?php echo $CFG->homeAddress; ?>ui/lib/scriptaculous/scriptaculous.js' type="text/javascript"></script>
-<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/popuputil.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/node.js.php'); ?>" type="text/javascript"></script>
+		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/widget.js.php'); ?>" type="text/javascript"></script>
 
-<?php
-$custom = $HUB_FLM->getCodeDirPath("ui/headerdialogCustom.php");
-if (file_exists($custom)) {
-    include_once($custom);
-}
-?>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/ckeditor/ckeditor.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/prototype.js" type="text/javascript"></script>
+		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/dateformat.js" type="text/javascript"></script>
 
-<?php
-    global $HEADER,$BODY_ATT, $CFG;
-    if(is_array($HEADER)){
-        foreach($HEADER as $header){
-            echo $header;
-        }
-    }
-?>
-<?php
-	if ($CFG->GOOGLE_ANALYTICS_ON) {
-		include_once($HUB_FLM->getCodeDirPath("ui/analyticstracking.php"));
-	}
-?>
-</head>
+		<?php
+		$custom = $HUB_FLM->getCodeDirPath("ui/headerdialogCustom.php");
+		if (file_exists($custom)) {
+			include_once($custom);
+		}
+		?>
 
-<body>
+		<?php
+			global $HEADER,$BODY_ATT, $CFG;
+			if(is_array($HEADER)){
+				foreach($HEADER as $header){
+					echo $header;
+				}
+			}
+		?>
+	</head>
 
-<div id="header">
-	<table style="border-collapse: collapse;padding:0px;margin:0px;width:90%">
-	<tr>
-	<td width="20%">
-    	<a id="dialoglogo" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" href="<?php print($CFG->homeAddress);?>">
-        <img border="0" alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
-		</a>
-   </td>
-   <td width="80%">
-		<h1 style="text-align:center; margin: 0px; padding: 0px;margin-top:10px;" id="dialogheader"></h1>
-   </td>
-   </tr>
-   </table>
-</div>
+	<body>
+        <header class="py-3 mb-0 border-bottom" id="header">
+			<div class="container-fluid d-flex flex-wrap justify-content-between">
+				<div id="dialoglogo" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+					<a href="<?php print($CFG->homeAddress);?>" title="<?php echo $LNG->HEADER_LOGO_HINT; ?>" class="text-decoration-none">
+						<img alt="<?php echo $LNG->HEADER_LOGO_ALT; ?>" src="<?php echo $HUB_FLM->getImagePath('evidence-hub-logo-dialog.png'); ?>" />
+					</a>
+				</div>
+				<h1 id="dialogheader"></h1>
+			</div>
+		</header>
+		<div id="hgrhint" class="hintRollover">
+			<span id="resourceMessage"></span>
+		</div>
+		<div id="prompttext" style="display: none;"></div>
 
-<div id="hgrhint" class="hintRollover" style="position: absolute; visibility:hidden; border: 1px solid gray">
-	<table width="350" border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFED9">
-		<tr width="350">
-			<td width="350" align="left">
-				<span id="resourceMessage"></span>
-			</td>
-		</tr>
-	</table>
-</div>
-
-<div id="prompttext" style="z-index:200;background: #E8E8E8; border: 1px solid gray;padding:5px; width: 400px; height: 200px; position: absolute; left:0px; top:0px; overflow: auto; display: none; font-face: Arial;"></div>
-<div id="main">
-<div id="content">
+        <div id="main" class="main">
+			<div id="content" class="content">

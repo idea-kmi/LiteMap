@@ -760,15 +760,19 @@ function computeMostConnectedNode(graphview) {
 		FD_MOST_CONNECTED_NODE = connectedNode;
 		if (!graphview.root) {
 			graphview.root = connectedNode.id;
+			return connectedNode.id;
 		}
 	} else {
 		//if all else fails, just pick the first node
+		var root = -1;
 		for(var i in graphview.graph.nodes) {
 			var n = graphview.graph.nodes[i];
 			FD_MOST_CONNECTED_NODE = n;
 			graphview.root = n.id;
+			root = n.id;
 			break;
 		}
+		return root;
 	}
 }
 
@@ -917,7 +921,7 @@ function d3LegendInactive() {
 
       seriesEnter.append('circle')
           .style('fill', function(d, i){ if (d.values[0].color) {return d.values[0].color;} else {return color[i];} })
-          .style('stroke', function(d, i){ if (d.values[0].color) {return d.values[0].color;} else {return color[i];}  })
+          .style('stroke', function(d, i){ if (d.values[0].color) {return colorLuminance(d.values[0].color, -0.1);} else {return colorLuminance(color[i], -0.1);}  })
           .attr('r', 5);
 
       seriesEnter.append('text')
@@ -990,7 +994,7 @@ function d3LegendInactive() {
 
 function sparklineDateNVD3(container, data, width, height) {
 
-	var margin = {top: 15, right: 50, bottom: 10, left: 60};
+	var margin = {top: 15, right: 80, bottom: 10, left: 60};
 	var width = width - (margin.left+margin.right);
 
 	var formatDate = d3.time.format("%e %b %y");
@@ -1001,11 +1005,10 @@ function sparklineDateNVD3(container, data, width, height) {
 	  .y(function(d) { return d.y })
 	  .width(width)
 	  .height(height)
-	  ;
-
-  	chart.xTickFormat(function(d) {
+	  .showLastValue(true)
+	  .xTickFormat(function(d) {
           return formatDate(new Date(d));
-    });
+      });
 
 	var svg = d3.select(container).append("svg");
 	svg.datum(data)
@@ -1045,15 +1048,14 @@ function simpleBarChartTypes(container, data, width, height) {
 	});
 
 	var chart = nv.models.discreteBarChart()
+	      .options({transition: 350})
 	      .width(width)
 	      .height(height)
 		  .margin({top: 15, right: 10, bottom: 30, left: 30})
 		  .x(function(d) { return d.label })
 		  .y(function(d) { return d.value })
 		  .staggerLabels(false)    //Too many bars and not enough room? Try staggering labels.
-		  .tooltips(true)        //Do not show tooltips
 		  .showValues(false)       //...instead, show the bar value right on top of each bar.
-		  .transitionDuration(350)
 		  .showXAxis(false)
 		  ;
 

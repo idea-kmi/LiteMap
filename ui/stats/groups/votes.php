@@ -1,51 +1,52 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
-include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
-include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015-2023 The Open University UK                              *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
+	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
-global $CFG,$LNG;
+	global $CFG,$LNG;
 
-$groupid = required_param("groupid",PARAM_ALPHANUMEXT);
+	$groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 
-$sort = optional_param("sort","vote",PARAM_ALPHANUM);
-$oldsort = optional_param("lastsort","",PARAM_ALPHANUM);
-$direction = optional_param("lastdir","DESC",PARAM_ALPHANUM);
+	$sort = optional_param("sort","vote",PARAM_ALPHANUM);
+	$oldsort = optional_param("lastsort","",PARAM_ALPHANUM);
+	$direction = optional_param("lastdir","DESC",PARAM_ALPHANUM);
 
-$totalsItems = getTotalItemVotesByGroup($groupid);
-$totalsConns = getTotalConnectionVotesByGroup($groupid);
-$totals = getTotalVotesByGroup($groupid);
+	$totalsItems = getTotalItemVotesByGroup($groupid);
+	$totalsConns = getTotalConnectionVotesByGroup($groupid);
+	$totals = getTotalVotesByGroup($groupid);
 
-$topVotedNodes = getTotalTopVotesByGroup(10,$groupid);
-$topVotedForNodes = getTopNodeForVotesByGroup(10,$groupid);
-$topVotedAgainstNodes = getTopNodeAgainstVotesByGroup(10,$groupid);
+	$topVotedNodes = getTotalTopVotesByGroup(10,$groupid);
+	$topVotedForNodes = getTopNodeForVotesByGroup(10,$groupid);
+	$topVotedAgainstNodes = getTopNodeAgainstVotesByGroup(10,$groupid);
 
-$topVoters = getTopVotersByGroup(10,$groupid);
-$topVotersFor = getTopForVotersByGroup(10,$groupid);
-$topVotersAgainst = getTopAgainstVotersByGroup(10,$groupid);
+	$topVoters = getTopVotersByGroup(10,$groupid);
+	$topVotersFor = getTopForVotersByGroup(10,$groupid);
+	$topVotersAgainst = getTopAgainstVotersByGroup(10,$groupid);
 
-$allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
+	$allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
+
 ?>
 
 <h3 style="margin-top:0px;"><?php echo $LNG->STATS_GLOBAL_VOTES_MENU_TITLE; ?></h3>
@@ -102,19 +103,26 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedNodes->nodes[$i];
-			$nodetype = $n->role->name;
-			$title = $n->name;
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-				<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
+				}
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+					<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="votingfor"></a>
@@ -134,17 +142,24 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedForNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedForNodes->nodes[$i];
-			$nodetype = $n->role->name;
-			$title = $n->name;
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-				<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
+				}
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+					<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="votingagainst"></a>
@@ -164,17 +179,25 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 		$count = $topVotedAgainstNodes->count;
 		for ($i=0; $i<$count; $i++) {
 			$n = $topVotedAgainstNodes->nodes[$i];
-			$nodetype = $n->role->name;
-			$title = $n->name;
-			?>
-			<tr>
-				<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-				<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-				<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-				<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-				<td align="right"><b><?php echo $n->vote ?></b></td>
-			</tr>
-	<?php } ?>
+			if (!$n instanceof Hub_Error) {
+				$nodetype = "";
+				$title="";
+				if (isset($n)) {
+					$title = $n->name;
+					if (isset($n->role)) {
+						$nodetype = $n->role->name;
+					}
+				}
+
+				?>
+				<tr>
+					<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+					<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+					<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+					<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+					<td align="right"><b><?php echo $n->vote ?></b></td>
+				</tr>
+	<?php } } ?>
 </table>
 
 <a name="voters"></a>
@@ -193,16 +216,20 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVoters);
+					$count = 0;
+					if (is_countable($topVoters)) {
+						$count = count($topVoters);
+					}
 					for ($i=0; $i<$count; $i++) {
-						$n = $topVoters[$i]; ?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $n['Name']; ?></a></td>
-							<td align="right"><span style="color: green"><?php echo $n['up'] ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n['down'] ?></span></td>
-							<td align="right"><b><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						$n = $topVoters[$i];
+						if (!$n instanceof Hub_Error) { ?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $n['Name']; ?></a></td>
+								<td align="right"><span style="color: green"><?php echo $n['up'] ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n['down'] ?></span></td>
+								<td align="right"><b><?php echo $n['vote'] ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 
@@ -214,16 +241,20 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVotersFor);
+					$count = 0;
+					if (is_countable($topVotersFor)) {
+						$count = count($topVotersFor);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersFor[$i];
-						$title = $n['Name'];
-						?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><b style="color: green"><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Hub_Error) {
+							$title = $n['Name'];
+							?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><b style="color: green"><?php echo $n['vote'] ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 
@@ -235,16 +266,20 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					<td align="right" width="10%"><b><?php echo $LNG->STATS_GLOBAL_VOTES_TOP_NODES_TOTAL_HEADING; ?></b></td>
 				</tr>
 				<?php
-					$count = count($topVotersAgainst);
+					$count = 0;
+					if (is_countable($topVotersAgainst)) {
+						$count = count($topVotersAgainst);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$n = $topVotersAgainst[$i];
-						$title = $n['Name'];
-						?>
-						<tr>
-							<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><b style="color: red"><?php echo $n['vote'] ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Hub_Error) {
+							$title = $n['Name'];
+							?>
+							<tr>
+								<td><a href="<?php echo $CFG->homeAddress;?>user.php?id=<?php echo $n['UserID']; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><b style="color: red"><?php echo $n['vote'] ?></b></td>
+							</tr>
+					<?php } } ?>
 			</table>
 		</td>
 	</tr>
@@ -329,24 +364,33 @@ $allNodeVotes = getAllVotingByGroup($direction, $sort, $oldsort, $groupid);
 					$count = $allNodeVotes->count;
 					for ($i=0; $i<$count; $i++) {
 						$n = $allNodeVotes->nodes[$i];
-						$nodetype = $n->role->name;
-						$title = $n->name;
-						?>
-						<tr>
-							<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
-							<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
-							<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
-							<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
-							<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
-							<td align="right"><b><?php echo $n->vote ?></b></td>
-						</tr>
-				<?php } ?>
+						if (!$n instanceof Hub_Error) {
+							$title = "Unknown";
+							$nodetype = "Unknown";
+							if (isset($n)) {
+								if (isset($n->role)) {
+									$nodetype = $n->role->name;
+								}
+								if (isset($n->name)) {
+									$title = $n->name;
+								}
+							}
+							?>
+							<tr>
+								<td align="left"><?php echo getNodeTypeText($nodetype, false); ?></td>
+								<td><a href="<?php echo $CFG->homeAddress;?>explore.php?id=<?php echo $n->nodeid; ?>" target="_blank"><?php echo $title ?></a></td>
+								<td align="right"><span style="color: green"><?php echo $n->up ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->down ?></span></td>
+								<td align="right"><span style="color: green"><?php echo $n->cup ?></span></td>
+								<td align="right"><span style="color: red"><?php echo $n->cdown ?></span></td>
+								<td align="right"><b><?php echo $n->vote ?></b></td>
+							</tr>
+				<?php } } ?>
 			</table>
 		</td>
 	</tr>
 </table>
 
 <?php
-include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
 ?>

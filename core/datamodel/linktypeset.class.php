@@ -61,7 +61,10 @@ class LinkTypeSet {
 		}
 
 		$resArray = $DB->select($sql, $params);
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
             $lt = new LinkType($array['LinkTypeID']);

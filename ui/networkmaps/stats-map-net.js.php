@@ -55,12 +55,12 @@ function loadExploreMapNet(){
 	outerDiv.insert(graphDiv);
 	$("network-map-div").insert(outerDiv);
 
-	forcedirectedGraph = createNewForceDirectedGraph('graphIssueDiv', NODE_ARGS['nodeid']);
+	forcedirectedGraph = createNewForceDirectedGraph('graphIssueDiv', "");
 
 	// THE KEY
 	var keybar = createNetworkGraphKey();
 	// THE TOOLBAR
-	var toolbar = createGraphToolbar(forcedirectedGraph, "network-map-div");
+	var toolbar = createBasicGraphToolbar(forcedirectedGraph, "network-map-div");
 
 	$("network-map-div").insert({top: toolbar});
 	$("network-map-div").insert({top: keybar});
@@ -102,6 +102,7 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 			$('graphConnectionCount').innerHTML = "";
 			$('graphConnectionCount').insert('<span style="font-size:10pt;color:black;float:left;margin-left:20px"><?php echo $LNG->GRAPH_CONNECTION_COUNT_LABEL; ?> '+conns.length+'</span>');
 
+			console.log(conns.length);
 			if (conns.length > 0) {
 				for(var i=0; i< conns.length; i++){
 					var viewconnection = conns[i].viewconnection;
@@ -109,7 +110,15 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 					//var c = conns[i].connection;
 					addConnectionToFDGraph(c, forcedirectedGraph.graph);
 				}
+			}
 
+			// were any nodes actually added regardless of what came in?
+			let netcount = 0;
+			for(var i in forcedirectedGraph.graph.nodes) {
+				netcount++;
+			}
+
+			if (netcount > 0) {
 				var nodes = json.view[0].nodes;
 				if (nodes.length > 0) {
 					for(var i=0; i< nodes.length; i++){
@@ -128,6 +137,7 @@ function loadIssueData(forcedirectedGraph, toolbar, messagearea) {
 				if (!forcedirectedGraph.root || forcedirectedGraph.root == "") {
 					computeMostConnectedNode(forcedirectedGraph);
 				}
+
 				layoutAndAnimateFD(forcedirectedGraph, messagearea);
 				toolbar.style.display = 'block';
 			} else {

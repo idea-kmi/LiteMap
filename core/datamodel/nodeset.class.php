@@ -87,7 +87,10 @@ class NodeSet {
 		$resArray = $DB->select($sql, $params);
 
         //create new nodeset and loop to add each node to the set
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
         $this->totalno = $totalconns;
         $this->start = $start;
         $this->count = $count;
@@ -117,7 +120,10 @@ class NodeSet {
 
 		$resArray = $DB->select($sql, $params);
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			$this->count = $count;
 			$this->totalno = $count;
 			$this->start = 0;
@@ -149,7 +155,10 @@ class NodeSet {
 
 		$resArray = $DB->select($sql, $params);
         if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			$this->count = $count;
 			$this->totalno = $count;
 			$this->start = 0;

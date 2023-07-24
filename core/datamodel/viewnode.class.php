@@ -73,9 +73,12 @@ class ViewNode {
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWNODE_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createNodeNotFoundError($this->nodeid);
 				return $ERROR;
 			} else {
@@ -127,7 +130,11 @@ class ViewNode {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWNODE_SELECT, $params);
 		if ($resArray !== false) {
-			if(count($resArray) > 0 ){
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if($count > 0 ){
 		    	$this->viewid = $resArray[0]["ViewID"];
 		    	$this->nodeid = $resArray[0]["NodeID"];
 		    	$this->userid = $resArray[0]["UserID"];
@@ -372,7 +379,11 @@ class ViewNode {
 		$params[2] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEWNODE_CAN_EDIT, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 	            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 	        }
         } else {

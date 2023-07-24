@@ -88,6 +88,36 @@
 			<h2><?php echo $LNG->HELP_BUILDER_GET_TITLE_EXTENSION; ?></h2>
 
 			<div>Due to circumstances beyond our crontrol our Browser specific plugins no longer work. We will be looking to replace these in the future.</div>
+
+			<!-- div style="float:left;clear:both;width:230px;margin-top:10px;"><a rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/cbldafekifnfloekildckikenmilgkll"><img src="<?php echo $HUB_FLM->getImagePath('help/chrome-icon-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_CHROME; ?></a></div>
+			<div style="float:left;margin-top:10px;">
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/chrome-bar.png'); ?>" border="0" />
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/chrome-bar-on.png'); ?>" border="0" />
+			</div>
+
+			<div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="http://crossrider.com/download/ff/70627"><img src="<?php echo $HUB_FLM->getImagePath('help/firefox-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_FIREFOX; ?></a></div>
+			<div style="float:left;margin-top:20px;">
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/firefox-bar.png'); ?>" border="0" />
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/firefox-bar-on.png'); ?>" border="0" />
+			</div>
+
+			<div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="http://crossrider.com/download/safari/70627"><img src="<?php echo $HUB_FLM->getImagePath('help/safari-icon-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_SAFARI; ?></a></div>
+			<div style="float:left;margin-top:20px;">
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/safari_button_preview.png'); ?>" border="0" />
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/safari-bar-on.png'); ?>" border="0" />
+			</div>
+			<div style="float:left;clear:both;margin-top:10px;margin-left:250px;"><span style="font-size:9pt"><?php echo $LNG->HELP_BUILDER_EXTENSION_SAFARI_MESSAGE; ?></span></div>
+
+			<div style="float:left;clear:both;width:230px;margin-top:20px;"><a rel="corssrider-firefox-extension" href="http://crossrider.com/download/ie/70627"><img src="<?php echo $HUB_FLM->getImagePath('help/ie-icon-64.png'); ?>" style="vertical-align:middle;padding-right:5px;" width="32" border="0"/><?php echo $LNG->HELP_BUILDER_EXTENSION_IE; ?></a></div>
+			<div style="float:left;margin-top:20px;">
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/ie-bar.png'); ?>" border="0" />
+				<img style="padding-left:20px;vertical-align:middle" src="<?php echo $HUB_FLM->getImagePath('help/ie-bar-on.png'); ?>" border="0" />
+			</div>
+			<div style="float:left;clear:both;margin-top:10px;margin-left:250px;"><span style="font-size:9pt"><?php echo $LNG->HELP_BUILDER_EXTENSION_IE_MESSAGE; ?></span></div -->
+
+			<!-- div style="float:left;clear:both;margin-top:20px;"><span style="font-size:9pt"><?php echo $LNG->HELP_BUILDER_EXTENSION_MESSAGE2; ?></span></div -->
+
+			<!-- div style="float:left;clear:both;margin-top:20px;"><span><?php echo $LNG->HELP_BUILDER_EXTENSION_MESSAGE; ?></span></div -->
 		</div>
 	</div>
 </div>

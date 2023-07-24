@@ -62,9 +62,11 @@ class format_simile extends format_base {
         foreach ($nodes as $node){
             // can only display if the node has at least a start date
             if (isset($node->startdatetime)){
-                $doc .= "<event start='". date(r,$node->startdatetime)."'";
+               	$startdatestr = date("r",$node->startdatetime);
+                $doc .= "<event start='".$startdatestr."'";
                 if ($node->enddatetime){
-                    $doc .= " end='".date(r,$node->enddatetime)."'";
+                	$enddatestr = date("r",$node->enddatetime);
+                    $doc .= " end='".$enddatestr."'";
                     // work out if it's a duration or not
                     if($node->startdatetime != $node->enddatetime){
                         $doc .= " isDuration='true'";

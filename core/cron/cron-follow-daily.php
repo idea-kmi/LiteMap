@@ -63,11 +63,14 @@ $currentUser = $USER;
 
 $us = getFollowEmailUsers('daily');
 $users = $us->users;
-$count = count($users);
 
+$count = 0;
+if (is_countable($users)){
+	$count = count($users);
+}
 for ($i=0; $i<$count; $i++) {
 	$user = $users[$i];
-	if (!$user instanceof Error) {
+	if (!$user instanceof Hub_Error) {
 		$userid = $user->userid;
 		$USER = $user;
 
@@ -82,7 +85,11 @@ for ($i=0; $i<$count; $i++) {
 
 		// GET PEOPLE THEY FOLLOW
 		$followingusers = getUsersBeingFollowedByMe($userid);
-		$countj = count($followingusers);
+
+		$countj = 0;
+		if (is_countable($followingusers)){
+			$countj = count($followingusers);
+		}
 		for ($j=0; $j<$countj;$j++) {
 			$next = $followingusers[$j];
 			$name = $next['Name'];
@@ -97,7 +104,10 @@ for ($i=0; $i<$count; $i++) {
 		// GET ITEMS THEY FOLLOW
 		$itemArray = getItemsBeingFollowedByMe($userid);
 		$k=0;
-		$countk = count($itemArray);
+		$countk = 0;
+		if (is_countable($itemArray)){
+			$countk = count($itemArray);
+		}
 		for ($k = 0; $k<$countk; $k++) {
 			$array = $itemArray[$k];
 
@@ -224,5 +234,5 @@ for ($i=0; $i<$count; $i++) {
 
 $USER = $currentUser;
 
-echo "\r\n".$LNG->ADMIN_CRON_FOLLOW_DAILY_DIGEST_RUN."\r\n";;
+echo "\r\n".$LNG->ADMIN_CRON_FOLLOW_DAILY_DIGEST_RUN."\r\n";
 ?>

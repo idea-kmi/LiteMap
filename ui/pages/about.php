@@ -33,11 +33,11 @@
 	}
 
 	include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
-
-	echo '<div style="margin:20px;">';
-    echo '<h1>'.$LNG->PAGE_ABOUT_TITLE.'</h1>';
-	echo '<div style="margin-top:20px;">'.$LNG->PAGE_ABOUT_BODY.'</div>';
-	echo '</div>';
-
+?>
+<div class="mt-4 px-4">
+	<h1><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h1>
+	<?php echo $LNG->PAGE_ABOUT_BODY; ?>
+</div>
+<?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

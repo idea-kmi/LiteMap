@@ -31,7 +31,8 @@
  *
  */
 
-include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+include_once(__DIR__ . '/../config.php');
+
 global $USER,$CFG,$LNG;
 
 //send the header info
@@ -60,13 +61,23 @@ if (isset($responseParsed["query"])) {
 	//error_log($query);
 	if (isset($query) && $query !="") {
 		$queryBitsArray = explode('&', $query);
-		$countq = count($queryBitsArray);
+
+		$countq = 0;
+		if (is_countable($queryBitsArray)) {
+			$countq = count($queryBitsArray);
+		}
+
 		for ($q=0; $q<$countq; $q++) {
 			$nextbit = $queryBitsArray[$q];
 			$nextArray = explode('=', $nextbit);
-			if (count($nextArray) > 1 && $nextArray[0] == 'id') {
+
+			$count = 0;
+			if (is_countable($nextArray)) {
+				$count = count($nextArray);
+			}
+			if ($count > 1 && $nextArray[0] == 'id') {
 				$unobfuscationid = $nextArray[1];
-			} else if (count($nextArray) > 1 && $nextArray[0] == 'callback') {
+			} else if ($count > 1 && $nextArray[0] == 'callback') {
 				$callback = $nextArray[1];
 			}
 		}
@@ -108,13 +119,16 @@ if ($jsonld === FALSE) {
 	}
 
 	$type = check_param($parts[1], PARAM_ALPHA);
-	$len = count($parts);
+	$len = 0;
+	if (is_countable($parts)) {
+		$len = count($parts);
+	}
 	$cipher = "";
 
 	// Do we have a data unobfuscation id to get the cipher key?
 	if ($unobfuscationid != "" && $type != "unobfuscatedusers") {
 		$keyArray = getObfuscationKeyByDataID($unobfuscationid, $request);
-		if (!$keyArray instanceof Error) {
+		if (!$keyArray instanceof Hub_Error) {
 			$key = $keyArray['ObfuscationKey'];
 			$iv = $keyArray['ObfuscationIV'];
 			//error_log("key for data=".$key);
@@ -159,7 +173,7 @@ if ($jsonld === FALSE) {
 			if ($len == 2) {
 				if (isset($unobfuscationid) && $unobfuscationid != "") {
 					$keyArray = getObfuscationKey($unobfuscationid, $request);
-					if (!$keyArray instanceof Error) {
+					if (!$keyArray instanceof Hub_Error) {
 						$key = $keyArray['ObfuscationKey'];
 						$iv = $keyArray['ObfuscationIV'];
 						//error_log("key for users=".$key);
@@ -188,7 +202,10 @@ if ($jsonld === FALSE) {
 
 						$userArray = explode(',', $users);
 
-						$count = count($userArray);
+						$count = 0;
+						if (is_countable($userArray)) {
+							$count = count($userArray);
+						}
 						for($i=0; $i<$count; $i++) {
 							$userid = $userArray[$i];
 							if ($userid == 'anonymous') {
@@ -293,7 +310,7 @@ if ($jsonld === FALSE) {
 			} else if ($len > 2){
 				$id = check_param($parts[2], PARAM_TEXT);
 				$view = getView($id, 'cif');
-				if (isset($view) && !$view instanceof Error) {
+				if (isset($view) && !$view instanceof Hub_Error) {
 					$view->cipher = $cipher;
 					if (isset($unobfuscationid) && $unobfuscationid != "") {
 						$view->unobfuscationid = $unobfuscationid;
@@ -330,19 +347,29 @@ if ($jsonld === FALSE) {
 				global $HUB_SQL, $DB;
 
 				$group = getGroup($id);
-				if($group instanceof Error){
+				if($group instanceof Hub_Error){
 					// Check if Users table has OriginalID field and if so check if this groupid is an old ID and adjust.
 					$params = array();
 					$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
 					if ($resArray !== false) {
-						if (count($resArray) > 0) {
+						$count = 0;
+						if (is_countable($resArray)) {
+							$count = count($resArray);
+						}
+
+						if ($count > 0) {
 							$array = $resArray[0];
 							if (isset($array['OriginalID'])) {
 								$params = array();
 								$params[0] = $id;
 								$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
 								if ($resArray2 !== false) {
-									if (count($resArray2) > 0) {
+									$count2 = 0;
+									if (is_countable($resArray2)) {
+										$count2 = count($resArray2);
+									}
+
+									if ($count2 > 0) {
 										$array2 = $resArray2[0];
 										$groupid = $array2['UserID'];
 										header("Location: ".$CFG->homeAddress."api/conversations/".$groupid);
@@ -426,7 +453,10 @@ class UnobfuscatedUserSet {
      */
     function add($user){
         array_push($this->users,$user);
-        $this->count = count($this->users);
+		$this->count = 0;
+		if (is_countable($this->users)) {
+			$this->count = count($this->users);
+		}
     }
 }
 
@@ -438,14 +468,21 @@ function getConversationSetData($parts) {
 	$groupSet = new GroupSet();
 
 	$allGroups = getGroupsByGlobal(0,-1,'date','ASC');
-	if (!$allGroups instanceof Error) {
-		$count = count($allGroups->groups);
+	if (!$allGroups instanceof Hub_Error) {
+		$count = 0;
+		if (is_countable($allGroups->groups)) {
+			$count = count($allGroups->groups);
+		}
 
 		for ($i=0; $i<$count; $i++) {
 			$group = $allGroups->groups[$i];
-			if (!$group instanceof Error) {
+			if (!$group instanceof Hub_Error) {
 				$groupdata = getConversationData($group->groupid);
-				if (count($parts) > 3) {
+				$partscount = 0;
+				if (is_countable($parts)) {
+					$partscount = count($parts);
+				}
+				if ($partscount > 3) {
 					$subtype = check_param($parts[3], PARAM_ALPHA);
 					$group->filter = $subtype;
 				}
@@ -473,9 +510,12 @@ function getConversationData($groupid) {
 
 	$view = new View($groupid);
 
-	if (!$mapNodes instanceof Error) {
+	if (!$mapNodes instanceof Hub_Error) {
 		$nodes = $mapNodes->nodes;
-		$count = count($nodes);
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		for ($i=0; $i<$count; $i++) {
 			if (isset($nodes[$i])) {
 				$node = $nodes[$i];
@@ -491,11 +531,14 @@ function getConversationData($groupid) {
 				$nextmap = getView($node->nodeid, 'cif');
 
 				$innernodes = $nextmap->nodes;
-				$countk = count($innernodes);
+				$countk = 0;
+				if (is_countable($innernodes)) {
+					$countk = count($innernodes);
+				}
 				for ($k=0; $k<$countk;$k++) {
 					$viewnode = $innernodes[$k];
 					$innernode = $viewnode->node;
-					if (!$innernode instanceof Error) {
+					if (!$innernode instanceof Hub_Error) {
 						if (array_key_exists($innernode->nodeid, $checkNodes) === FALSE) {
 							$checkNodes[$innernode->nodeid] = $innernode->nodeid;
 							array_push($view->nodes,$viewnode);
@@ -504,11 +547,14 @@ function getConversationData($groupid) {
 				}
 
 				$connections = $nextmap->connections;
-				$countj = count($connections);
+				$countj = 0;
+				if (is_countable($connections)) {
+					$countj = count($connections);
+				}
 				for ($j=0; $j<$countj;$j++) {
 					$viewcon = $connections[$j];
 					$con = $viewcon->connection;
-					if (!$con instanceof Error &&
+					if (!$con instanceof Hub_Error &&
 							array_key_exists($con->connid, $checkConns) === FALSE) {
 						$checkConns[$con->connid] = $con->connid;
 						array_push($view->connections,$viewcon);

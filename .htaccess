@@ -1,3 +1,7 @@
+
+#For HSTS
+Header always set Strict-Transport-Security "max-age=3600" "expr=%{HTTPS} == 'on'"
+
 #<Files *.php>
 #SetOutputFilter DEFLATE
 #</Files>
@@ -34,14 +38,20 @@ AddOutputFilterByType DEFLATE font/opentype
 AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
 </IfModule>
 
+###################################################
+## MAINTENACE MODE ##
+
 #RewriteEngine on
 
-#RewriteCond %{HTTP_HOST} ^hubtesting1.kmi.open.ac.uk$ [NC]
-#RewriteCond %{HTTP_HOST} ^hubtesting2.kmi.open.ac.uk$ [NC]
-#RewriteCond %{HTTP_HOST} ^hubdev2.kmi.open.ac.uk$ [NC]
+## This is for if you want to only put certain sites into maintenance mode.
+##RewriteCond %{HTTP_HOST} ^hubtesting1.kmi.open.ac.uk$ [NC]
+##RewriteCond %{HTTP_HOST} ^hubtesting2.kmi.open.ac.uk$ [NC]
+##RewriteCond %{HTTP_HOST} ^hubdev2.kmi.open.ac.uk$ [NC]
 
 #RewriteCond %{REQUEST_URI} !/index-maintenance.php$ 
 #RewriteRule $ /index-maintenance.php [R=302,L]
+
+###################################################
 
 ErrorDocument 404 /404-error-page.php
 ErrorDocument 403 /403-error-page.php

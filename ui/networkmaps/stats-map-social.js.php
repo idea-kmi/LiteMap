@@ -100,25 +100,28 @@ function loadSocialData(forcedirectedGraph, toolbar, messagearea) {
 				//var nodes = json.view[0].nodes;
 
       			if (conns.length > 0) {
-      				var connectionadded = false;
+      				var concount = false;
 	      			for(var i=0; i< conns.length; i++){
 						var viewconnection = conns[i].viewconnection;
 						var c = viewconnection.connection[0].connection;
 						if (addConnectionToFDGraphSocial(c, forcedirectedGraph)) {
-							connectionadded = true;
+							concount++;
 						}
 	      			}
+	      		}
 
-					if (connectionadded) {
-						if (!forcedirectedGraph.root) {
-							computeMostConnectedNode(forcedirectedGraph);
-						}
-						layoutAndAnimateSocial(forcedirectedGraph, messagearea);
-						toolbar.style.display = 'block';
-					} else {
-						messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
-						toolbar.style.display = 'none';
+				// but how many social connections are there from these connections?
+				let socialcount = 0;
+				for(var i in forcedirectedGraph.graph.nodes) {
+					socialcount++;
+				}
+
+				if (concount > 0 && socialcount > 0) {
+					if (!forcedirectedGraph.root) {
+						computeMostConnectedNode(forcedirectedGraph);
 					}
+					layoutAndAnimateSocial(forcedirectedGraph, messagearea);
+					toolbar.style.display = 'block';
 				} else {
 					messagearea.innerHTML="<?php echo $LNG->NETWORKMAPS_NO_RESULTS_MESSAGE; ?>";
 					toolbar.style.display = 'none';

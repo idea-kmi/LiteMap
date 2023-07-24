@@ -40,7 +40,7 @@ function loadExploreMapNet(){
 
 	$("network-map-div").innerHTML = "";
 
-	var topBitDiv = new Element("div", {'id':'topbit', 'style':'float:left;width:100%;height:100%'} );
+	var topBitDiv = new Element("div", {'id':'topbit', 'style':'width:100%;height:100%'} );
 	$("network-map-div").insert(topBitDiv);
 
 	/**** CHECK GRAPH SUPPORTED ****/

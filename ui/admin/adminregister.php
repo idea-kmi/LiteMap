@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -56,10 +56,6 @@
     $loccountry = optional_param("loccountry","",PARAM_TEXT);
 
     $privatedata = optional_param("defaultaccess","N",PARAM_ALPHA);
-    $recentactivitiesemail = optional_param("recentactivitiesemail",$CFG->RECENT_EMAIL_SENDING_SELECTED,PARAM_TEXT);
-    if ($recentactivitiesemail == "") {
-    	$recentactivitiesemail = 'N';
-    }
 
     if(isset($_POST["register"])){
         // check email, password & full name provided
@@ -98,11 +94,6 @@
 					$u->updatePrivate($privatedata);
 					$u->updateLocation($location,$loccountry);
 
-					// Recent Activities Email
-					if ($CFG->RECENT_EMAIL_SENDING_ON) {
-						$u->updateRecentActivitiesEmail($recentactivitiesemail);
-					}
-
 					//send email to welcome
 					$paramArray = array ($fullname,$CFG->SITE_TITLE,$CFG->homeAddress,$u->userid,$u->getRegistrationKey(),$password);
 					sendMail("validateadmin",$LNG->WELCOME_REGISTER_CLOSED_SUBJECT,$email,$paramArray);
@@ -110,7 +101,7 @@
 					if(empty($errors)){
 						echo "<h1>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_TITLE_ADMIN."</h1>";
 						echo "<p>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE_ADMIN."<p><br><br>";
-						echo '<div class="formrow">';
+						echo '<div class="mb-3 row">';
 						echo '<input type="button" value="'.$LNG->FORM_BUTTON_CLOSE.'" onclick="window.close();"/>';
 						echo '</div>';
 
@@ -127,85 +118,98 @@
 ?>
 
 <script type="text/javascript">
-
 	function init() {
 		$('dialogheader').insert('<?php echo $LNG->FORM_REGISTER_ADMIN_TITLE; ?>');
 	}
-
 	window.onload = init;
-
 </script>
 
-<?php
-    if(!empty($errors)){
-        echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE."<ul>";
-        foreach ($errors as $error){
-            echo "<li>".$error."</li>";
-        }
-        echo "</ul></div>";
-    }
-?>
+<div class="container-fluid popups">
+	<div class="row p-4 justify-content-center">
+		<div class="col">
+			<?php
+				if(!empty($errors)){ ?>
+					<div class="alert alert-info">
+						<?php echo $LNG->FORM_ERROR_MESSAGE; ?>
+						<ul>
+							<?php
+								foreach ($errors as $error){
+									echo "<li>".$error."</li>";
+								}
+							?>
+						</ul>
+					</div>
+			<?php } ?>
 
-<p><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
+			<p><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
 
-<form name="register" action="adminregister.php" method="post" enctype="multipart/form-data">
+			<form name="register" action="adminregister.php" method="post" enctype="multipart/form-data">
 
-    <div class="formrow">
-        <label class="formlabel" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?><span class="required">*</span></label>
-        <input class="forminput" id="email" name="email" size="40" value="<?php print $email; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabel" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?><span class="required">*</span></label>
-        <input class="forminput" id="password" name="password" type="password"  size="30" value="<?php print $password; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabel" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?><span class="required">*</span></label>
-        <input class="forminput" id="confirmpassword" name="confirmpassword" type="password" size="30" value="<?php print $confirmpassword; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabel" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?><span class="required">*</span></label>
-        <input class="forminput" type="text" id="fullname" name="fullname" size="40" value="<?php print $fullname; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabel" for="description"><?php echo $LNG->FORM_REGISTER_DESC; ?></label>
-        <textarea class="forminput" id="description" name="description" cols="40" rows="5"><?php print $description; ?></textarea>
-    </div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?><span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input class="form-control" id="email" name="email" size="40" value="<?php print $email; ?>">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?><span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input class="form-control" id="password" name="password" type="password"  size="30" value="<?php print $password; ?>">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?><span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input class="form-control" id="confirmpassword" name="confirmpassword" type="password" size="30" value="<?php print $confirmpassword; ?>">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?><span class="required">*</span></label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" id="fullname" name="fullname" size="40" value="<?php print $fullname; ?>">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="description"><?php echo $LNG->FORM_REGISTER_DESC; ?></label>
+					<div class="col-sm-9">
+						<textarea class="form-control" id="description" name="description" cols="40" rows="5"><?php print $description; ?></textarea>
+					</div>
+				</div>
 
-    <div class="formrow">
-		<label class="formlabel" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
-		<input class="forminput" id="location" name="location" style="width:160px;" value="<?php echo $location; ?>">
-		<select id="loccountry" name="loccountry" style="margin-left: 5px;width:160px;">
-	        <option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
-	        <?php
-	            foreach($countries as $code=>$c){
-	                echo "<option value='".$code."'";
-	                if($code == $loccountry){
-	                    echo " selected='true'";
-	                }
-	                echo ">".$c."</option>";
-	            }
-	        ?>
-	    </select>
-	</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
+					<div class="col-sm-9 d-flex flex-row">
+						<input class="form-control w-25 me-2" id="location" name="location" value="<?php echo $location; ?>">
+						<select id="loccountry" name="loccountry" class="form-select">
+							<option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
+							<?php
+								foreach($countries as $code=>$c){
+									echo "<option value='".$code."'";
+									if($code == $loccountry){
+										echo " selected='true'";
+									}
+									echo ">".$c."</option>";
+								}
+							?>
+						</select>
+					</div>
+				</div>
 
-	<div class="formrow">
-        <label class="formlabel" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
-        <input class="forminput" type="text" id="homepage" name="homepage" size="40" value="<?php print $homepage; ?>">
-    </div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" id="homepage" name="homepage" size="40" value="<?php print $homepage; ?>">
+					</div>
+				</div>
 
-	<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
-		<div class="formrow">
-			<label class="formlabel" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
-			<input class="forminput" type="checkbox" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" /> <?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?>
+				<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+					<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
+				</div>
+			</form>
 		</div>
-	<?php } ?>
-
-    <div class="formrow">
-        <input class="formsubmit" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
-	    <input style="margin-left:30px;" type="button" value="<?php echo $LNG->FORM_BUTTON_CANCEL; ?>" onclick="window.close();"/>
-    </div>
-
-</form>
+	</div>
+</div>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));

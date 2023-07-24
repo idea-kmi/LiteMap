@@ -154,7 +154,7 @@ function callAnalyticsAPIWithURL($method, $requests, $url, $timeout=60) {
 	$postfields['requests'] = $requests;
 	$postfields['recency'] = $timeout;
 
-	error_log(print_r($postfields, true));
+	//error_log(print_r($postfields, true));
 
     curl_setopt($curl, CURLOPT_URL, $serviceRootAnalytics);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $postfields);
@@ -169,10 +169,9 @@ function callAnalyticsAPIWithURL($method, $requests, $url, $timeout=60) {
 	$httpCode = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
 	curl_close($curl);
 
-	error_log(print_r("RESPONSE=".$response, true));
-	error_log("code=".$httpCode);
-
 	if($httpCode != 200 || $response === false) {
+		error_log(print_r("RESPONSE=".$response, true));
+		error_log("code=".$httpCode);
 		return false;
     } else {
 		return $response;
@@ -305,8 +304,11 @@ function callAnalyticsAPIWithZip($method, $metrics, $zipfilepath, $timeout=60) {
 function createMetricRequestPostField($metrics) {
 	$requests = '[';
 	$metricspieces = explode(",",$metrics);
-	if(sizeof($metricspieces) != 0){
-		$count = sizeof($metricspieces);
+	$count = 0;
+	if ( is_countable($metricspieces) ){
+		$count = count($metricspieces);
+	}
+	if($count != 0){
 		for($i=0; $i<$count; $i++){
 			$metric = $metricspieces[$i];
 			if (isset($metric) && $metric != "") {
@@ -342,8 +344,11 @@ function createAlertMetricRequestPostField($alerttypes, $cipher, $userids="", $r
 	if ($alerttypes != "") {
 		$alerts .= '[';
 		$alerttypespieces = explode(",",$alerttypes);
-		if(sizeof($alerttypespieces) != 0){
-			$count = sizeof($alerttypespieces);
+		$count = 0;
+		if ( is_countable($alerttypespieces) ){
+			$count = count($alerttypespieces);
+		}
+		if($count != 0){
 			for($i=0; $i<$count; $i++){
 				$alert = $alerttypespieces[$i];
 				if (isset($alert) && $alert != "") {

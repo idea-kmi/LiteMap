@@ -60,9 +60,12 @@ class UserAuthentication {
 		$params[0] = $this->authid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_AUTH_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUserNotFoundError($this->authid);
 				return $ERROR;
 			} else {
@@ -97,9 +100,12 @@ class UserAuthentication {
 		$params[1] = $userproviderid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_AUTH_LOAD_BY_PROVIDER, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count == 0) {
-				$ERROR = new error;
+				$ERROR = new Hub_Error;
 				$ERROR->createUserNotFoundError($this->authid);
 				return $ERROR;
 			} else {
@@ -169,7 +175,10 @@ class UserAuthentication {
 		$params[0] = $this->authid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_AUTH_REGISTRATION_KEY_SELECT, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			if ($count > 0) {
         		return $resArray[0]['RegistrationKey'];
 			}
@@ -192,7 +201,10 @@ class UserAuthentication {
 		$params[1] = $this->authid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_AUTH_REGISTRATION_KEY_VALIDATE, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
             if($count == 0){
             	return false;
             } else {
@@ -233,7 +245,10 @@ class UserAuthentication {
 		$params[0] = $this->authid;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_USER_AUTH_IS_EMAIL_VERIFIRED, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$registrationKey = $array['RegistrationKey'];

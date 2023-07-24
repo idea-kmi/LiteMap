@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -75,7 +75,10 @@
 	$us = getUsersByStatus($CFG->USER_STATUS_REPORTED, 0,-1,'name','ASC','long');
     $users = $us->users;
 
-    $count = count($users);
+	$count = 0;
+	if (is_countable($users)) {
+		$count = count($users);
+	}
     for ($i=0; $i<$count;$i++) {
     	$user = $users[$i];
     	$reporterid = getSpamReporter($user->userid);
@@ -176,7 +179,11 @@ if(!empty($errors)){
         <div id="users" class="forminput">
         <?php
 
-        	if (count($users) == 0) {
+			$count = 0;
+			if (is_countable($users)) {
+				$count = count($users);
+			}
+        	if ($count == 0) {
 				echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_MESSAGE."</p>";
         	} else {
 				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
@@ -246,7 +253,11 @@ if(!empty($errors)){
 
         <?php
 
-        	if (count($userssuspended) == 0) {
+			$countu = 0;
+			if (is_countable($userssuspended)) {
+				$countu = count($userssuspended);
+			}
+        	if ($countu == 0) {
 				echo "<p>".$LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE."</p>";
         	} else {
 				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
@@ -294,7 +305,7 @@ if(!empty($errors)){
    </div>
 
     <div class="formrow" style="margin-top:20px;">
-    <input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>

@@ -64,7 +64,10 @@
 	$ns = getNodesByStatus($CFG->STATUS_SPAM, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
 
-    $count = count($nodes);
+	$count = 0;
+	if (is_countable($nodes)) {
+		$count = count($nodes);
+	}
     for ($i=0; $i<$count;$i++) {
     	$node = $nodes[$i];
     	$reporterid = getSpamReporter($node->nodeid);
@@ -159,8 +162,11 @@ if(!empty($errors)){
         <div id="nodes" class="forminput">
 
         <?php
-
-        	if (count($nodes) == 0) {
+			$count = 0;
+			if (is_countable($nodes)) {
+				$count = count($nodes);
+			}
+        	if ($count == 0) {
 				echo "<p>".$LNG->SPAM_ADMIN_NONE_MESSAGE."</p>";
         	} else {
 				echo "<table width='700' class='table' cellspacing='0' cellpadding='3' border='0' style='margin: 0px;'>";
@@ -217,7 +223,7 @@ if(!empty($errors)){
    </div>
 
     <div class="formrow">
-    <input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+	<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
     </div>
 
 </div>

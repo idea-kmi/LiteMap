@@ -76,12 +76,15 @@ class View {
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
 
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = new ViewNode($array['ViewID'], $array['NodeID'], $array['UserID']);
 				$next = $next->load($style);
-				if (!$next instanceof Error) {
+				if (!$next instanceof Hub_Error) {
 					array_push($this->nodes, $next);
 				} else {
 					//return $next;
@@ -94,12 +97,15 @@ class View {
 		// load connections
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_CONNECTIONS, $params);
     	if ($resArray !== false) {
-			$count = count($resArray);
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = new ViewConnection($array['ViewID'], $array['TripleID'], $array['UserID']);
 				$next = $next->load($style);
-				if (!$next instanceof Error) {
+				if (!$next instanceof Hub_Error) {
 					array_push($this->connections, $next);
 				} else {
 					//return $next;
@@ -140,7 +146,7 @@ class View {
 
    		$this->nodes = array();
 
-		if (!$this->viewnode instanceof Error) {
+		if (!$this->viewnode instanceof Hub_Error) {
 			$this->nodeid = $this->viewnode->nodeid;
 
 			if (isset($groupid) && $groupid != "") {
@@ -182,7 +188,10 @@ class View {
 
 		// delete any connections before you delete the map node
 		// and it cascades and we don't know which connections where in the map.
-		$count = count($this->connections);
+		$count = 0;
+		if (is_countable($this->connections)) {
+			$count = count($this->connections);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$viewconnection = $this->connections[$i];
 			$viewconnection->delete();
@@ -190,7 +199,7 @@ class View {
 
 		$reply = $this->viewnode->delete();
 
-		if (!$reply instanceof Error) {
+		if (!$reply instanceof Hub_Error) {
 
 			// delete all ViewNode entries (and ViewConnection is for some reason this didn't work above)
 			$params = array();
@@ -236,7 +245,7 @@ class View {
 		$viewnode = new ViewNode();
 		$viewnode = $viewnode->add($this->nodeid, $nodeid, $xpos, $ypos, $mediaindex);
 		$viewnode = $viewnode->load();
-		if (!$viewnode instanceof Error) {
+		if (!$viewnode instanceof Hub_Error) {
 			array_push($this->nodes, $viewnode);
 		}
 
@@ -260,9 +269,9 @@ class View {
 
 		$viewconn = new ViewConnection();
 		$viewconn = $viewconn->add($this->nodeid, $connid);
-		if (!$viewconn instanceof Error) {
+		if (!$viewconn instanceof Hub_Error) {
 			$viewconn = $viewconn->load();
-			if (!$viewconn instanceof Error) {
+			if (!$viewconn instanceof Hub_Error) {
 				array_push($this->connections, $viewconn);
 			}
 		}
@@ -279,7 +288,7 @@ class View {
 	    $vn = new ViewNode($this->nodeid, $nodeid, $userid);
 	    $vn = $vn->delete();
 
-		if (!$vn instanceof Error) {
+		if (!$vn instanceof Hub_Error) {
 			// delete any associated connections.
 
 			if (!isset($this->connections)) {
@@ -288,12 +297,15 @@ class View {
 				$params[0] = $this->nodeid;
 				$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_CONNECTIONS, $params);
 				if ($resArray !== false) {
-					$count = count($resArray);
+					$count = 0;
+					if (is_countable($resArray)) {
+						$count = count($resArray);
+					}
 					for ($i=0; $i<$count; $i++) {
 						$array = $resArray[$i];
 						$next = new ViewConnection($array['ViewID'], $array['TripleID'], $array['UserID']);
 						$next = $next->load($style);
-						if (!$next instanceof Error) {
+						if (!$next instanceof Hub_Error) {
 							array_push($this->connections, $next);
 						}
 					}
@@ -302,13 +314,16 @@ class View {
 				}
 			}
 
-			$count = count($this->connections);
+			$count = 0;
+			if (is_countable($this->connections)) {
+				$count = count($this->connections);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$viewconnection = $this->connections[$i];
 				$connection = $viewconnection->connection;
 				$from = $connection->from;
 				$to = $connection->to;
-				if (!$from instanceof Error && !$to instanceof Error) {
+				if (!$from instanceof Hub_Error && !$to instanceof Hub_Error) {
 					if ($to->nodeid == $nodeid || $from->nodeid == $nodeid) {
 						$viewconnection->delete();
 					}
@@ -370,7 +385,11 @@ class View {
 		$params[3] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_CAN_EDIT, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 				throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 			}
 		} else {
@@ -390,7 +409,7 @@ class View {
         global $DB,$USER,$HUB_SQL,$LNG;
 
         // needs to be logged in and in group and check privacy etc.
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
 
@@ -411,7 +430,11 @@ class View {
 		$params[3] = $currentuser;
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_CAN_EDIT, $params);
 		if($resArray !== false){
-			if (count($resArray) == 0) {
+			$count = 0;
+			if (is_countable($resArray)) {
+				$count = count($resArray);
+			}
+			if ($count == 0) {
 				throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
 			}
 		} else {
@@ -428,7 +451,7 @@ class View {
     	global $LNG, $USER;
 
         // needs to be logged in that's all!
-        if(api_check_login() instanceof Error){
+        if(api_check_login() instanceof Hub_Error){
             throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
         }
     }

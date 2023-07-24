@@ -63,16 +63,16 @@ function getIsOpen(div, isopen, nodetofocusid) {
 
 function buildWidgetExploreNodeHeader(node, container, label, color, type, icon, height, key) {
 
-	var widgetHeader = new Element("div", { 'class':'widgetheadernode '+color, 'id':'widgetnodeheader'});
+	var widgetHeader = new Element("div", { 'class':'widgetheadernode d-flex justify-content-between px-3 py-1 mx-0 '+color, 'id':'widgetnodeheader'});
 
 	if ($('widgettable')) {
-		var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
+		var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
 		Event.observe(widgetHeaderControlButton,'click',function (){toggleExpandWidget(this, key, height)});
 	}
 
-	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinnernode', 'id':key+'headerinner', 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>', 'Style':'width:90%'});
+	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinnernode col', 'id':key+'headerinner', 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>'});
 
-	var widgetHeaderLabel = new Element("label", {'class':'widgetnodeheaderlabel', 'id':'widgetheaderlabel'});
+	var widgetHeaderLabel = new Element("label", {'class':'widgetnodeheaderlabel col-auto', 'id':'widgetheaderlabel'});
 	widgetInnerHeader.insert(widgetHeaderLabel);
 
 	if ($('widgettable')) {
@@ -80,12 +80,12 @@ function buildWidgetExploreNodeHeader(node, container, label, color, type, icon,
 	}
 
 	if (icon) {
-		var iconObj = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'alt':type+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'border':'0','src':icon});
+		var iconObj = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'alt':type+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'src':icon});
 		iconObj.align='left';
 		widgetHeaderLabel.appendChild(iconObj);
 	}
 
-	widgetHeaderLabel.insert('<span style="padding-top:3px;">'+label+'</span>');
+	widgetHeaderLabel.insert(label);
 	widgetHeader.insert(widgetInnerHeader);
 
 	if (node.private == "Y") {
@@ -118,38 +118,37 @@ function buildWidgetHeader(title, height, isOpen, color, key, icon, withAdjust) 
 		withAdjust = true;
 	}
 
-	var widgetHeader = new Element("div", {'class':'widgetheader '+color, 'id':key+"header"});
+	var widgetHeader = new Element("div", {'class':'row m-0 p-0 widgetheader '+color, 'id':key+"header"});
 
-	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinner ', 'id':key+"headerinner", 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>'});
+	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinner col', 'id':key+"headerinner", 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>'});
 	var widgetHeaderLabel = new Element("label", {'class':'widgetheaderlabel widgettextcolor ', 'id':key+"headerlabel"});
 
 	if (icon) {
-		var icon = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'alt':title+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'border':'0','src':icon});
+		var icon = new Element('img',{'class':'widgetTitleIcon', 'alt':title+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'src':icon});
 		icon.align='left';
 		widgetInnerHeader.appendChild(icon);
 	}
 
-	widgetHeaderLabel.insert(title+"<span style='margin-left:5px'>(0)</span>");
+	widgetHeaderLabel.insert(title+"<span class='widgetcountlabel'>(0)</span>");
 
 	widgetInnerHeader.insert(widgetHeaderLabel);
 	widgetHeader.insert(widgetInnerHeader);
 
-	if (withAdjust) {
-		var widgetInnerHeaderControl = new Element("div", {'class':'widgetheadercontrol '});
-
+	if (withAdjust) {		
+		var widgetInnerHeaderControl = new Element("div", {'class':'widgetheadercontrol col-auto'});
 		if ($('widgettable')){
-			var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
+			var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
 			Event.observe(widgetHeaderLabel,'mouseover',function (){widgetHeaderLabel.style.cursor = 'pointer'});
 			Event.observe(widgetHeaderLabel,'mouseout',function (){widgetHeaderLabel.style.cursor = 'normal'});
 
 			Event.observe(widgetInnerHeader,'mouseover',function (){widgetInnerHeader.style.cursor = 'pointer'});
 			Event.observe(widgetInnerHeader,'mouseout',function (){widgetInnerHeader.style.cursor = 'normal'});
 			Event.observe(widgetInnerHeader,'click',function (){toggleExpandWidget(widgetHeaderControlButton, key, height)});
-			Event.observe(widgetHeaderControlButton,'click',function (){toggleExpandWidget(this, key, height)});
+			Event.observe(widgetHeaderControlButton,'click',function (){toggleExpandWidget(this, key, height)});	
 			widgetInnerHeaderControl.insert(widgetHeaderControlButton);
 		}
 
-		var widgetHeaderControlButton2 = new Element('img',{ 'style':'cursor: pointer;visibility:visible', 'alt':'<?php echo $LNG->WIDGET_OPEN_CLOSE_ALT; ?>', 'id':key+'buttonarrow', 'title': '<?php echo $LNG->WIDGET_OPEN_CLOSE_HINT; ?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>'});
+		var widgetHeaderControlButton2 = new Element('img',{ 'style':'cursor: pointer;display: inline', 'alt':'<?php echo $LNG->WIDGET_OPEN_CLOSE_ALT; ?>', 'id':key+'buttonarrow', 'title': '<?php echo $LNG->WIDGET_OPEN_CLOSE_HINT; ?>', 'src': '<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>'});
 		Event.observe(widgetHeaderControlButton2,'click',function (){toggleWidget(this, key, height)});
 		widgetInnerHeaderControl.insert(widgetHeaderControlButton2);
 
@@ -182,7 +181,7 @@ function adjustForExpand(button, key, mainheight) {
 		} else {
 			$(key+"buttonarrow").isClosed = 'false';
 		}
-		$(key+"buttonarrow").style.visibility = 'hidden';
+		$(key+"buttonarrow").style.display = 'none';
 	}
 
 	var height = mainheight;
@@ -222,7 +221,7 @@ function adjustForContract(button, key, mainheight) {
 	}
 
 	if ($(key+"buttonarrow")) {
-		$(key+"buttonarrow").style.visibility = 'visible';
+		$(key+"buttonarrow").style.display = 'inline';
 	}
 
 	$(key+"body").style.height = (mainheight-$(key+"header").offsetHeight-10)+"px";
@@ -268,9 +267,8 @@ function adjustForContractNode(button, key, mainheight) {
  * Expand/contract widgets
  */
 function toggleExpandWidget(button, key, mainheight) {
-
 	if (key == nodekey) {
-		if ($('widgettable').style.display == 'block') {
+		if ($('widgettable').style.display == 'flex') {
 			$('widgetareadiv').insert($('nodearea'));
 			adjustForExpand(button, key, mainheight);
 			$('widgettable').style.display='none';
@@ -278,9 +276,9 @@ function toggleExpandWidget(button, key, mainheight) {
 				$('widgetextrastable').style.display='none';
 			}
 		} else {
-			$('widgettable').style.display='block';
+			$('widgettable').style.display='flex';
 			if ($('widgetextrastable')) {
-				$('widgetextrastable').style.display='block';
+				$('widgetextrastable').style.display='flex';
 			}
 			$('widgetcolnode').insert({'top':$('nodearea')});
 			adjustForContractNode(button, key, mainheight);
@@ -301,11 +299,11 @@ function toggleExpandWidget(button, key, mainheight) {
 		}
 
 		if (currentArray != "") {
-			if ($(key+"buttonarrow").style.visibility == 'visible') {
+			if ($(key+"buttonarrow").style.display == 'inline') {
 				for (var nextkey in currentArray) {
 					if (nextkey == key) {
 						$(currentArray[nextkey]).className = 'tabletop';
-						$(currentArray[nextkey]).style.display = 'block';
+						$(currentArray[nextkey]).style.display = 'flex';
 					} else {
 						$(currentArray[nextkey]).style.display = 'none';
 					}
@@ -319,7 +317,7 @@ function toggleExpandWidget(button, key, mainheight) {
 					} else {
 						$(currentArray[nextkey]).className = 'tablelower';
 					}
-					$(currentArray[nextkey]).style.display = 'block';
+					$(currentArray[nextkey]).style.display = 'flex';
 					i++;
 				}
 				adjustForContract(button, key, mainheight);
@@ -329,19 +327,6 @@ function toggleExpandWidget(button, key, mainheight) {
 }
 
 function resizeNodeWidget(key, height) {
-	/*if ($('widgetcolleft') && $('widgetcolright')) {
-		var lheight = $('widgetcolleft').offsetHeight;
-		var rheight = $('widgetcolright').offsetHeight;
-		var height = lheight;
-		if (lheight < rheight) {
-			height = rheight;
-		}
-	} else if ($('widgetcolleft')) {
-		height = $('widgetcolleft').offsetHeight;
-	} else if ($('widgetcolright')) {
-		height = $('widgetcolright').offsetHeight;
-	}*/
-
 	var headerheight = $(key+'header').offsetHeight;
 	$(key+'div').style.height = height-6 +"px";
 	$(key+'innerbody').style.height = height-headerheight-27 +"px"; //54
@@ -391,7 +376,7 @@ function resizeKeyWidget(key) {
 }
 
 function toggleWidget(button, key, mainheight) {
-	if ( $(key+"body").style.display == "block") {
+	if ( $(key+"body").style.display == "flex") {
 		$(key+"body").style.display = "none";
 		button.isClosed = 'true';
 		button.src='<?php echo $HUB_FLM->getImagePath("arrow-down2.png"); ?>';
@@ -403,7 +388,7 @@ function toggleWidget(button, key, mainheight) {
 			$(key+"div").style.height = headerinner+"px";
 		}
 	} else {
-		$(key+"body").style.display = "block";
+		$(key+"body").style.display = "flex";
 		button.src='<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>';
 		button.isClosed = 'false';
 		$(key+"div").style.height = mainheight+"px";
@@ -459,7 +444,7 @@ function buildNodeWidgetNew(node, height, type, key, color) {
 
 	buildWidgetExploreNodeHeader(node, widgetHeader, title+name, color, type, icon, height, key);
 
-	var toolbar = new Element("div", {'class':'nodewidgettoolbar', 'style':'margin-bottom:5px;'});
+	var toolbar = new Element("div", {'class':'nodewidgettoolbar d-flex gap-4 align-items-center px-1 py-2'});
 	buildExploreToolbar(toolbar, title+name, type, node, 'explore');
 
 	widgetHeader.insert(toolbar);
@@ -472,7 +457,7 @@ function buildNodeWidgetNew(node, height, type, key, color) {
 
 	var userbar = new Element("div", {'style':'clear:both;margin-bottom:5px;'} );
 	var iuDiv = new Element("div", {'class':'idea-user2', 'style':'clear:both;float:left;'});
-	var userimageThumb = new Element('img',{'alt':username, 'title': username, 'style':'padding-right:5px;', 'border':'0','src': userimage});
+	var userimageThumb = new Element('img',{'alt':username, 'title': username, 'style':'padding-right:5px;', 'src': userimage});
 
 	var imagelink = new Element('a', {'href':URL_ROOT+"user.php?userid="+userid, 'title':username});
 
@@ -641,17 +626,7 @@ function buildMapWidget(nodeid, title, height, isOpen, color, key, nodetofocusid
 		var hint = '<?php echo $LNG->GROUP_MAP_CREATE_BUTTON; ?>';
 		var toolbar = new Element("div", {'class':'widgetheaderinner', 'style':'padding-top:0px;'});
 
-		/*
-		var addButton = new Element("span", {'title':hint, 'class':'active', 'style':'margin-right:5px;'} );
-		addButton.insert('<img style="vertical-align:bottom" src="<?php echo $HUB_FLM->getImagePath('add.png'); ?>" border="0" width="18" height="18" style="margin:0px;margin-left: 5px;padding:0px" /> <?php echo $LNG->GROUP_MAP_CREATE_BUTTON; ?>');
-		Event.observe(addButton,'click',function () {
-			loadDialog('createmap', URL_ROOT+"ui/popups/mapadd.php", 720,500);
-		});
-		toolbar.insert(addButton);
-		toolbar.insert(' / ');
-		*/
-
-		var addButton = new Element("span", {'title':hint, 'class':'active', 'style':'margin-left:5px;'} );
+		var addButton = new Element("span", {'title':hint, 'class':'active span-link'} );
 		addButton.insert('<?php echo $LNG->MAP_ADD_EXISTING_BUTTON; ?>');
 		Event.observe(addButton,'click',function () {
 			loadDialog('selector', URL_ROOT+"ui/popups/selector.php?filternodetypes=Map&handler=addFocalNodeToMap&focalnodeid="+nodeid, 420, 730);
@@ -712,13 +687,13 @@ function followUsersWidget(focalnodeid, title, height, isOpen, color, key) {
 	widgetDiv.style.height = height+"px";
 
 	// WIDGET HEADER
-	var widgetHeader = new Element("div", {'class':'widgetheader '+color, 'id':key+"header"});
+	var widgetHeader = new Element("div", {'class':'widgetheader row m-0 p-0 '+color, 'id':key+"header"});
 
-	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinner ', 'id':key+"headerinner", 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>'});
+	var widgetInnerHeader = new Element("div", {'class':'widgetheaderinner col', 'id':key+"headerinner", 'title':'<?php echo $LNG->WIDGET_EXPAND_HINT; ?>'});
 	var widgetHeaderLabel = new Element("label", {'class':'widgetheaderlabel widgettextcolor ', 'id':key+"headerlabel"});
 
 	if (icon) {
-		var icon = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'alt':title+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'border':'0','src':icon});
+		var icon = new Element('img',{'style':'text-align: middle;margin-right: 5px; width:24px; height:24px;', 'alt':title+' <?php echo $LNG->WIDGET_ICON_ALT; ?>', 'src':icon});
 		icon.align='left';
 		widgetInnerHeader.appendChild(icon);
 	}
@@ -734,7 +709,7 @@ function followUsersWidget(focalnodeid, title, height, isOpen, color, key) {
 
 	var widgetInnerHeaderControl = new Element("div", {'class':'widgetheadercontrol '});
 	if ($('widgettable')){
-		var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
+		var widgetHeaderControlButton = new Element('img',{ 'style':'cursor: pointer;', 'alt':'<?php echo $LNG->WIDGET_RESIZE_ITEM_ALT; ?>', 'id':key+'buttonresize', 'title': '<?php echo $LNG->WIDGET_RESIZE_ITEM_HINT; ?>', 'src': '<?php echo $HUB_FLM->getImagePath("enlarge2.gif"); ?>'});
 
 		Event.observe(widgetHeaderLabel,'mouseover',function (){widgetHeaderLabel.style.cursor = 'pointer'});
 		Event.observe(widgetHeaderLabel,'mouseout',function (){widgetHeaderLabel.style.cursor = 'normal'});
@@ -746,7 +721,7 @@ function followUsersWidget(focalnodeid, title, height, isOpen, color, key) {
 		widgetInnerHeaderControl.insert(widgetHeaderControlButton);
 	}
 
-	var widgetHeaderControlButton2 = new Element('img',{ 'style':'cursor: pointer;visibility:visible', 'alt':'<?php echo $LNG->WIDGET_OPEN_CLOSE_ALT; ?>', 'id':key+'buttonarrow', 'title': '<?php echo $LNG->WIDGET_OPEN_CLOSE_HINT; ?>', 'border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>'});
+	var widgetHeaderControlButton2 = new Element('img',{ 'style':'cursor: pointer;visibility:visible', 'alt':'<?php echo $LNG->WIDGET_OPEN_CLOSE_ALT; ?>', 'id':key+'buttonarrow', 'title': '<?php echo $LNG->WIDGET_OPEN_CLOSE_HINT; ?>', 'src': '<?php echo $HUB_FLM->getImagePath("arrow-up2.png"); ?>'});
 	Event.observe(widgetHeaderControlButton2,'click',function (){toggleWidget(this, key, height)});
 	widgetInnerHeaderControl.insert(widgetHeaderControlButton2);
 
@@ -773,37 +748,6 @@ function followUsersWidget(focalnodeid, title, height, isOpen, color, key) {
 		widgetBody.style.display = 'none';
 		widgetDiv.style.height =  widgetHeader.offsetHeight;
 	}
-
-
-	/* IF LOGGED IN, ADD FOLLOW BUTTON */
-	/*if (USER != "") {
-		var toolbar = new Element("div", {'id':'commenttoolbar', 'class':'widgetheaderinner', 'style':'padding-top:0px;'});
-		widgetHeader.insert(toolbar);
-
-		var followbutton = document.createElement('img');
-		followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-		followbutton.setAttribute('alt', 'Follow');
-		followbutton.setAttribute('id','follow'+nodeid);
-		followbutton.nodeid = focalnodeid;
-		followbutton.style.marginRight="3px";
-		followbutton.style.cursor = 'pointer';
-
-		toolbar.insert(followbutton);
-
-		if (nodeObj.userfollow && nodeObj.userfollow == "Y") {
-			Event.observe(followbutton,'click',function (){ unfollowNode(nodeObj, this, "loadfollowUsersWidget('"+focalnodeid+"', '"+title+"', '"+key+"')") } );
-			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-			followbutton.setAttribute('title', '<?php echo $LNG->NODE_UNFOLLOW_ITEM_HINT; ?>');
-		} else {
-			Event.observe(followbutton,'click',function (){ followNode(nodeObj, this, "loadfollowUsersWidget('"+focalnodeid+"', '"+title+"', '"+key+"')") } );
-			followbutton.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("follow.png"); ?>');
-			followbutton.setAttribute('title', '<?php echo $LNG->NODE_FOLLOW_ITEM_HINT; ?>');
-		}
-	} else {
-		var toolbar = new Element("div", {'class':'widgetheaderinner', 'style':'padding-top:0px;'});
-		toolbar.insert("<img style='cursor:pointer' onclick='$(\"loginsubmit\").click(); return true;' title='<?php echo $LNG->WIDGET_FOLLOW_SIGNIN_HINT; ?>' src='<?php echo $HUB_FLM->getImagePath("followgrey.png"); ?>' border='0' />");
-		widgetHeader.insert(toolbar);
-	}*/
 
 	loadfollowUsersWidget(focalnodeid, title, key, widgetBody);
 

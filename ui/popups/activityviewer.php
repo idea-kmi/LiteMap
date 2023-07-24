@@ -66,7 +66,7 @@
 			$i=0;
             foreach($activities as $activity) {
 
-				$userObj = json_encode($activity->user);
+				$userObj = json_encode($activity->user, JSON_INVALID_UTF8_IGNORE);
                 echo "<script type='text/javascript'>";
 				echo "var user = ";
 				echo $userObj;
@@ -143,7 +143,7 @@
 						) {
 
 						try {
-							$jsonnode = json_encode($innernode);
+							$jsonnode = json_encode($innernode, JSON_INVALID_UTF8_IGNORE);
 						} catch (Exception $e) {
 							echo 'Caught exception: ',  $e->getMessage(), "<br>";
 						}
@@ -190,15 +190,14 @@
 							}
 							echo "</ul></div></td></tr>";
 						}
-					} else if ((in_array($con->from->role->name, $CFG->BASE_TYPES) ||
-							in_array($con->from->role->name, $CFG->EVIDENCE_TYPES))
+					} else if (
+							( in_array($con->from->role->name, $CFG->BASE_TYPES) || in_array($con->from->role->name, $CFG->EVIDENCE_TYPES) )
 						&&
-							(in_array($con->to->role->name, $CFG->BASE_TYPES) ||
-							in_array($con->to->role->name, $CFG->EVIDENCE_TYPES))
+							( in_array($con->to->role->name, $CFG->BASE_TYPES) || in_array($con->to->role->name, $CFG->EVIDENCE_TYPES) )
 						) {
 
 						try {
-							$jsoncon = json_encode($con);
+							$jsoncon = json_encode($con, JSON_INVALID_UTF8_IGNORE);
 						} catch (Exception $e) {
 							echo 'Caught exception:'.$e->getMessage()."<br>";
 						}

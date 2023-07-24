@@ -1,0 +1,218 @@
+svg {
+  font: 10px sans-serif;
+  padding: 10px;
+}
+
+/* CIRCLE PACKING */
+.node {
+  cursor: pointer;
+  stroke: #C0C0C0;
+  stroke-width: 0.5px;
+}
+
+.node:hover {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node--leaf {
+  fill: white;
+}
+
+.label {
+  font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+}
+
+.label,
+.node--root {
+  pointer-events: none;
+}
+
+/* STREAM GRAPH */
+.streamaxis path, .streamaxis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+
+/* SCATTERPLOT */
+.axis,
+.frame {
+  shape-rendering: crispEdges;
+}
+
+.axis line {
+  stroke: #ddd;
+}
+
+.axis path {
+  display: none;
+}
+
+.frame {
+  fill: none;
+  stroke: #aaa;
+}
+
+circle {
+  fill-opacity: .7;
+}
+
+circle.hidden {
+  fill: #ccc !important;
+}
+
+.extent {
+  fill: #000;
+  fill-opacity: .125;
+  stroke: #fff;
+}
+
+/* CROSS FILTER */
+#charts {
+  padding: 10px 0;
+}
+
+.chart {
+  display: inline-block;
+  height: 151px;
+  margin-bottom: 20px;
+}
+
+.reset {
+  padding-left: 1em;
+  font-size: smaller;
+  color: #ccc;
+}
+
+.background.bar {
+  fill: #ccc;
+}
+
+.foreground.bar {
+  fill: steelblue;
+}
+
+.filteraxis path, .filteraxis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.filteraxis text {
+  font: 10px sans-serif;
+}
+
+.brush rect.extent {
+  fill: steelblue;
+  fill-opacity: .125;
+}
+
+.brush .resize path {
+  fill: #eee;
+  stroke: #666;
+}
+
+#hour-chart {
+  width: 260px;
+}
+
+#delay-chart {
+  width: 230px;
+}
+
+#distance-chart {
+  width: 420px;
+}
+
+#date-chart {
+  width: 920px;
+}
+
+#flight-list {
+  min-height: 1024px;
+}
+
+#flight-list .date,
+#flight-list .day {
+  margin-bottom: .4em;
+}
+
+#flight-list .flight {
+  line-height: 1.5em;
+  background: #eee;
+  width: 100%;
+  margin-bottom: 1px;
+}
+
+#activity-list div.flight  {
+  float:left;
+  clear:both;
+  width: 100%;
+}
+
+#activity-list div.day {
+  color: black;
+  font-weight:bold;
+  background: #E8E8E8;
+}
+
+#activity-list div.date {
+  float:left;
+  width: 100%;
+  text-align: left;
+}
+
+#activity-list div.time {
+  color: #999;
+  float:left;
+  width: 100px;
+  margin-right:20px;
+  text-align: left;
+}
+
+#activity-list div.title {
+  float:left;
+  width: 400px;
+  margin-right:20px;
+  text-align: left;
+}
+
+#activity-list div.type {
+  float:left;
+  width: 100px;
+  margin-right:20px;
+  text-align: left;
+}
+#activity-list div.nodetype {
+  float:left;
+  width: 100px;
+  text-align: left;
+}
+
+#activity-list .early {
+  color: green;
+}
+
+aside {
+  position: absolute;
+  left: 740px;
+  font-size: smaller;
+  width: 220px;
+}
+
+/* LEGENDS */
+.legend .series {
+  cursor: pointer;
+}
+
+.legend circle {
+  stroke-width: 2px;
+}
+
+.legend .disabled circle {
+  fill-opacity: 0;
+}

@@ -42,7 +42,7 @@ class format_xml extends format_base {
         $doc = "<?xml version=\"1.0\"?>";
 
         if(!$object){
-            $ERROR = new error;
+            $ERROR = new Hub_Error;
             $ERROR->message = "Error in service.";
             $ERROR->code = "9999";
             include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
@@ -54,7 +54,11 @@ class format_xml extends format_base {
         $attr = get_object_vars($object);
         if(is_array($attr)){
             $keys = array_keys($attr);
-            for($i=0;$i< sizeof($keys); $i++){
+			$keycount = 0;
+			if ( is_countable($keys) ){
+				$keycount = count($keys);
+			}
+            for($i=0;$i< $keycount; $i++){
 
 				$next = $attr[$keys[$i]];
 				$isArray = false;
@@ -96,8 +100,11 @@ class format_xml extends format_base {
 					if(is_array($attr)){
 						$doc .= "<".strtolower(get_class($object)).">";
 						$keys = array_keys($attr);
-
-						for($i=0;$i< sizeof($keys); $i++){
+						$keycount = 0;
+						if ( is_countable($keys) ){
+							$keycount = count($keys);
+						}
+						for($i=0;$i< $keycount; $i++){
 
 							$next = $attr[$keys[$i]];
 							$isArray = false;
@@ -131,7 +138,11 @@ class format_xml extends format_base {
             if(is_array($attr)){
                 $doc .= "<".strtolower(get_class($objects)).">";
                 $keys = array_keys($attr);
-                for($i=0;$i< sizeof($keys); $i++){
+				$keycount = 0;
+				if ( is_countable($keys) ){
+					$keycount = count($keys);
+				}
+                for($i=0;$i< $keycount; $i++){
 					$next = $attr[$keys[$i]];
 					$isArray = false;
 					if (is_array($next)) {

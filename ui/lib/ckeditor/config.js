@@ -1,13 +1,14 @@
 /**
- * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md or http://ckeditor.com/license
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html
 
+	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
@@ -25,12 +26,12 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about' }
 	];
 
-	config.filebrowserBrowseUrl = '/ui/lib/kcfinder-3.12/browse.php?type=files';
-	config.filebrowserImageBrowseUrl = '/ui/lib/kcfinder-3.12/browse.php?type=images';
-	config.filebrowserFlashBrowseUrl = '/ui/lib/kcfinder-3.12/browse.php?type=flash';
-	config.filebrowserUploadUrl = '/ui/lib/kcfinder-3.12/upload.php?type=files';
-	config.filebrowserImageUploadUrl = '/ui/lib/kcfinder-3.12/upload.php?type=images';
-	config.filebrowserFlashUploadUrl = '/ui/lib/kcfinder-3.12/upload.php?type=flash';
+	// ONLY IMAGES should be uploaded. Don't want upload tab appearing on 'link' popup
+	//config.filebrowserBrowseUrl = '/ui/lib/kcfinder/browse.php?type=files';
+	//config.filebrowserUploadUrl = '/ui/lib/kcfinder/upload.php?type=files';
+
+	config.filebrowserImageBrowseUrl = '/ui/lib/kcfinder/browse.php?type=images';
+	config.filebrowserImageUploadUrl = '/ui/lib/kcfinder/upload.php?type=images';
 
    	CKEDITOR.config.toolbar = [
 	   ['Styles','Format','Font','FontSize','Bold','Italic','Underline','Subscript','Superscript','-','TextColor','BGColor','-','RemoveFormat'],
@@ -41,8 +42,16 @@ CKEDITOR.editorConfig = function( config ) {
 	   ['Image','Table','-','Link','Source','-','Maximize']
 	] ;
 
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	//config.removeButtons = 'Underline,Subscript,Superscript';
+
 	// Set the most common block elements.
 	config.format_tags = 'p;h1;h2;h3;pre';
 
-	config.allowedContent = true;
+	// needed to stop error message 'incorrect server response'
+	config.filebrowserUploadMethod = 'form';
+
+	// Simplify the dialog windows.
+	//config.removeDialogTabs = 'image:advanced;link:advanced';
 };

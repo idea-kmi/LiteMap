@@ -309,9 +309,9 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 	// if groupid given, check current user in group before going any further.
 	if ($groupid != "") {
 		$group = new Group($groupid);
-		if (!$group instanceof Error) {
+		if (!$group instanceof Hub_Error) {
 			if (!$group->ismember($USER->userid)) {
-				$error = new Error();
+				$error = new Hub_Error();
 				return $error->createNotInGroup($group->name);
 			}
 		} else {
@@ -321,13 +321,13 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 
 	$r = getRoleByName($nodetypename);
 
-	if (!$r instanceof Error) {
+	if (!$r instanceof Hub_Error) {
 		$nodetypeid = $r->roleid;
 
 		$n = new CNode();
 		$node = $n->add($name,$desc,$private,$nodetypeid,$imageurlid,$imagethumbnail);
 
-		if (!$node instanceof Error) {
+		if (!$node instanceof Hub_Error) {
 			// Add to group
 			if (isset($groupid) && $groupid != "") {
 				addGroupToNode($node->nodeid,$groupid);
@@ -339,7 +339,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 
 					$urlobj = new URL();
 					$urlobj = $urlobj->add($url, $title, "", $private, "", "");
-					if (!$urlobj instanceof Error) {
+					if (!$urlobj instanceof Hub_Error) {
 						$node->addURL($urlobj->urlid, "");
 					} else {
 						return $urlobj;
@@ -350,7 +350,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 			// Connect to focal node
 			$focalnode = new CNode($focalnodeid);
 			$focalnode = $focalnode->load();
-			if (!$focalnode instanceof Error) {
+			if (!$focalnode instanceof Hub_Error) {
 
 				$focalrole = getRoleByName($focalnode->role->name);
 				$focalroleid = $focalrole->roleid;
@@ -363,7 +363,7 @@ function addNodeAndConnect($name,$desc,$nodetypename,$focalnodeid,$linktypename,
 				} else {
 					$connection = addConnection($focalnodeid, $focalroleid, $linkType, $node->nodeid, $nodetypeid, $private, $conndesc);
 				}
-				if (!$connection instanceof Error) {
+				if (!$connection instanceof Hub_Error) {
 					// add to group
 					if (isset($groupid) && $groupid != "") {
 						addGroupToConnection($connection->connid,$groupid);
@@ -404,7 +404,11 @@ function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",
     $n = $n->load();
     $node = $n->edit($name,$desc,$private,$nodetypeid,$imageurlid,$imagethumbnail);
 
-    if (isset($resources) && $resources !== "" && count($resources) > 0) {
+	$count = 0;
+	if (is_countable($resources)) {
+		$count = count($resources);
+	}
+    if (isset($resources) && $resources !== "" && $count > 0) {
 
 		// remove all the existing urls
 		$node = $node->removeAllURLs();
@@ -423,7 +427,7 @@ function editNode($nodeid,$name,$desc,$private="",$nodetypeid="",$imageurlid="",
 
 				$urlobj = new URL();
 				$urlobj = $urlobj->add($url, $title, "", $private, "", "");
-				if (!$urlobj instanceof Error) {
+				if (!$urlobj instanceof Hub_Error) {
 					$node->addURL($urlobj->urlid, "");
 				} else {
 					return $urlobj;
@@ -547,6 +551,7 @@ function getNodesByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC',
         $sqlList = "";
 		$loopCount = 0;
         foreach ($pieces as $value) {
+			$value = trim($value);
         	$params[count($params)] = $value;
         	if ($loopCount == 0) {
         		$sqlList .= "?";
@@ -668,7 +673,7 @@ function getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='
     }
 
 	// FILTER BY USER
-	$params[count($params)] = $userid;
+ 	$params[count($params)] = $userid;
     $sql .= $HUB_SQL->FILTER_USER;
 
 	// PERMISSIONS
@@ -732,7 +737,7 @@ function getNodesByDate($date,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
     $sql = $HUB_SQL->APILIB_NODES_BY_DATE;
 
 	// FILTER STATUS
-	$params[count($params)] = $status;
+	$params[4] = $status;
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
     $ns = new NodeSet();
@@ -768,7 +773,7 @@ function getNodesByName($name,$start = 0,$max = 20 ,$orderby = 'date',$sort ='AS
     $sql = $HUB_SQL->APILIB_NODES_BY_NAME;
 
 	// FILTER STATUS
-	$params[count($params)] = $status;
+	$params[4] = $status;
 	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
 
     $ns = new NodeSet();
@@ -922,6 +927,7 @@ function getNodesByURL($url,$start = 0,$max = 20 ,$orderby = 'date', $sort ='ASC
         $sqlList = "";
 		$loopCount = 0;
         foreach ($pieces as $value) {
+			$value = trim($value);
         	$params[count($params)] = $value;
         	if ($loopCount == 0) {
         		$sqlList .= "?";
@@ -1554,7 +1560,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 	// CREATE THE solution NODE
 	$solutionnode = addNode($title,$desc, 'N', $rolesolution);
-	if (!$solutionnode instanceof Error) {
+	if (!$solutionnode instanceof Hub_Error) {
 
 		// Add to group
 		if (isset($groupid) && $groupid != "") {
@@ -1571,7 +1577,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 		$connection = addConnection($solutionnode->nodeid, $rolesolution, $linkType, $issuenodeid, $focalroleid, "N", $conndesc);
 
-		if (!$connection instanceof Error) {
+		if (!$connection instanceof Hub_Error) {
 
 			// add to group
 			if (isset($groupid) && $groupid != "") {
@@ -1584,7 +1590,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 			//error_log(print_r($linkTypeBuiltFrom, true));
 
-			$nodesArr = split(",",$ids);
+			$nodesArr = explode(",",$ids);
 			foreach ($nodesArr as $nodeid2){
 				$n = new CNode($nodeid2);
 				$n = $n->load();
@@ -1595,7 +1601,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 				//error_log(print_r($connection2, true));
 
-				if (!$connection2 instanceof Error) {
+				if (!$connection2 instanceof Hub_Error) {
 
 					// add to group
 					if (isset($groupid) && $groupid != "") {
@@ -1621,7 +1627,7 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
 
 						// Connect the children of each node being merged to the new node
 						$connection3 = addConnection($from->nodeid, $from->role->roleid, $linkType3, $solutionnode->nodeid, $rolesolution, "N", $conndesc);
-						if (!$connection3 instanceof Error) {
+						if (!$connection3 instanceof Hub_Error) {
 							// add to group
 							if (isset($groupid) && $groupid != "") {
 								addGroupToConnection($connection3->connid,$groupid);
@@ -1675,13 +1681,13 @@ function mergeSelectedNodes($issuenodeid,$groupid,$ids,$title,$desc) {
  */
 function addWebResource($url, $title, $desc, $private='Y', $clip="", $clippath="") {
 	$r = getRoleByName('Web Resource');
-	if (!$r instanceof Error) {
+	if (!$r instanceof Hub_Error) {
 		$refrole = $r->roleid;
 		$refnode = addNode($url, $title, $private, $refrole);
-		if (!$refnode instanceof Error) {
+		if (!$refnode instanceof Hub_Error) {
     		$urlobj = new URL();
     		$urlobj = $urlobj->add($url, $title, $desc, $private, $clip, $clippath, "", "", "");
-	    	if (!$urlobj instanceof Error) {
+	    	if (!$urlobj instanceof Hub_Error) {
 	    		$refnode->addURL($urlobj->urlid, "");
 	    	}
 		}
@@ -1875,16 +1881,16 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 
 	//error_log($linkType->label);
 
-	if ($fromNode instanceof Error) {
-		$ERROR = new Error();
+	if ($fromNode instanceof Hub_Error) {
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("fromnodeid:".$fromnodeid);
 	}
-	if ($toNode instanceof Error) {
-		$ERROR = new Error();
+	if ($toNode instanceof Hub_Error) {
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("tonodeid:".$tonodeid);
 	}
 
-	if (!$linkType instanceof Error) {
+	if (!$linkType instanceof Hub_Error) {
 		if ($fromNode->role->name == $fromRole->name && $toNode->role->name == $toRole->name) {
 			//error_log("HERE1");
 			//error_log($fromRole->name);
@@ -1902,7 +1908,7 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 
 		if (!$allowed) {
 			//error_log("NOT ALLOWED");
-			$ERROR = new Error();
+			$ERROR = new Hub_Error();
 			return $ERROR->createInvalidConnectionError();
 		} else {
 			//error_log("ALLOWED");
@@ -1911,7 +1917,7 @@ function addConnection($fromnodeid,$fromroleid,$linktypeid,$tonodeid,$toroleid,$
 	    }
 	} else {
 		//error_log("NOT ALLOWED - LINK ERROR");
-		$ERROR = new Error();
+		$ERROR = new Hub_Error();
 		return $ERROR->createInvalidConnectionError("linktypeid".$linktypeid);
 	}
 }
@@ -2640,7 +2646,11 @@ function getConnectionsByPath($nodeid, $linklabels, $userid, $scope='all', $link
 		$params[0] = $nodeid;
 		$qry = $HUB_SQL->APILIB_NODE_NAME_BY_ID_SELECT;
 		$resArray = $DB->select($sql, $params);
-		if ($resArray !== false && count($resArray) > 0) {
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
+		if ($resArray !== false && $count > 0) {
 			$text = $resArray[0]['Name'];
 		} else {
 			return database_error();
@@ -2850,7 +2860,10 @@ function getActiveConnectionUsers($start = 0,$max = 20,$style='long') {
 	$resArray = $DB->select($sql, $params);
 
     $us = new UserSet();
-	$count = count($resArray);
+	$count = 0;
+	if (is_countable($resArray)) {
+		$count = count($resArray);
+	}
 	$us->totalno = $count;
 	$us->start = $start;
 	$us->count = $count;
@@ -2885,7 +2898,10 @@ function getActiveIdeaUsers($start = 0,$max = 20,$style='long') {
 	$resArray = $DB->select($sql, $params);
 
     $us = new UserSet();
-	$count = count($resArray);
+	$count = 0;
+	if (is_countable($resArray)) {
+		$count = count($resArray);
+	}
 	$us->totalno = $count;
 	$us->start = $start;
 	$us->count = $count;
@@ -3060,7 +3076,7 @@ function validateUserSession($userid){
 	$validateSession = validateSession($userid);
 
 	if(strcmp($validateSession,$LNG->CORE_SESSION_OK) != 0) {
-		$ERROR = new error();
+		$ERROR = new Hub_Error();
 		$ERROR->createValidateSessionError($validateSession);
 		return $ERROR;
     }
@@ -3081,19 +3097,19 @@ function login($username,$password){
 	global $CFG;
 
     if($password == "" || $username == ""){
-       $ERROR = new Error();
+       $ERROR = new Hub_Error();
        $ERROR->createLoginFailedError();
        return $ERROR;
     }
 
     $user = userLogin($username,$password);
-    if($user instanceof Error){
+    if($user instanceof Hub_Error){
        	return $user;
     } else if ($user instanceof User) {
     	$user->setPHPSessID(session_id());
     	return $user;
 	} else {
-        $ERROR = new Error();
+        $ERROR = new Hub_Error();
         return $ERROR->createLoginFailedError();
 	}
 }
@@ -3169,7 +3185,7 @@ function connectNodeToComment($nodeid, $nodetypename, $comment, $parentconnid=''
 
 		$conn = new Connection($parentconnid);
 		$conn = $conn->load();
-		if (!$conn instanceof Error) {
+		if (!$conn instanceof Hub_Error) {
 			$description = $conn->description;
 			$description = $commentnode->nodeid.":".$description;
 			$dt = time();
@@ -3213,7 +3229,7 @@ function deleteComment($nodeid, $parentconnid='') {
 
 		$conn = new Connection($parentconnid);
 		$conn = $conn->load();
-		if (!$conn instanceof Error) {
+		if (!$conn instanceof Hub_Error) {
 			$description = $conn->description;
 			$pos = strpos($description, $nodeid);
 			if ($pos === false) {
@@ -3479,7 +3495,7 @@ function addGroupToNode($nodeid,$groupid){
  * @return Result or Error
  */
 function addGroupToNodes($nodeids,$groupid){
-    $nodesArr = split(",",$nodeids);
+    $nodesArr = explode(",",$nodeids);
     foreach ($nodesArr as $nodeid){
         $n = new CNode($nodeid);
         $n = $n->load();
@@ -3509,7 +3525,7 @@ function removeGroupFromNode($nodeid,$groupid){
  * @return Result or Error
  */
 function removeGroupFromNodes($nodeids,$groupid){
-    $nodesArr = split(",",$nodeids);
+    $nodesArr = explode(",",$nodeids);
     foreach ($nodesArr as $nodeid){
         $n = new CNode($nodeid);
         $n = $n->load();
@@ -3555,7 +3571,10 @@ function setGroupPrivacy($groupid,$private){
     $sql = $HUB_SQL->APILIB_NODE_GROUP_PRIVACY_SELECT;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$n = new CNode($array['NodeID']);
@@ -3568,7 +3587,10 @@ function setGroupPrivacy($groupid,$private){
     $sql = APILIB_CONNECTION_GROUP_PRIVACY_SELECT;
 	$resArray = $DB->select($sql, $params);
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$c = new Connection($array['TripleID']);
@@ -3601,7 +3623,7 @@ function addGroupToConnection($connid,$groupid){
  * @return Result or Error
  */
 function addGroupToConnections($connids,$groupid){
-    $connsArr = split(",",$connids);
+    $connsArr = explode(",",$connids);
     foreach ($connsArr as $connid){
         $c = new Connection($connid);
         $c = $c->load();
@@ -3630,7 +3652,7 @@ function removeGroupFromConnection($connid,$groupid){
  * @return Result or Error
  */
 function removeGroupFromConnections($connids,$groupid){
-    $connsArr = split(",",$connids);
+    $connsArr = explode(",",$connids);
     foreach ($connsArr as $connid){
         $c = new Connection($connid);
    		$c = $c->load();
@@ -3911,6 +3933,8 @@ function getGroupsByGlobal($start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC'
 		$sql .= $HUB_SQL->AND.$querySQL;
 	}
 
+	$sql .= $HUB_SQL->APILIB_GROUPS_BY_GLOBAL_PART2;
+
     $gs = new GroupSet();
     return $gs->loadFromUsers($sql,$params,$start,$max,$orderby,$sort,$style);
 }
@@ -4134,12 +4158,15 @@ function getViewNodes($viewid, $style="long") {
 	$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
 
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$next = new CNode($array['NodeID']);
 			$next = $next->load($style);
-			if (!$next instanceof Error) {
+			if (!$next instanceof Hub_Error) {
 				$ns->add($next);
 			}
 		}
@@ -4173,15 +4200,21 @@ function getViewNodesByGroup($groupid, $style="long") {
 	$resArray = $DB->select($sql, $params);
 
 	if ($resArray !== false) {
-		$count = count($resArray);
+		$count = 0;
+		if (is_countable($resArray)) {
+			$count = count($resArray);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
 			$nodeset = getViewNodes($array['ViewID'], $style);
-			if (!$nodeset instanceof Error) {
-				$countj = count($nodeset->nodes);
+			if (!$nodeset instanceof Hub_Error) {
+				$countj = 0;
+				if (is_countable($nodeset->nodes)) {
+					$countj = count($nodeset->nodes);
+				}
 				for ($j=0; $j < $countj; $j++) {
 					$nextnode = $nodeset->nodes[$j];
-					if (!$nextnode instanceof Error) {
+					if (!$nextnode instanceof Hub_Error) {
 						// filter duplicates.
 						if (in_array($nextnode->nodeid, $checkNodes) === FALSE) {
 							array_push($checkNodes, $nextnode->nodeid);
@@ -4197,7 +4230,10 @@ function getViewNodesByGroup($groupid, $style="long") {
 		return database_error();
 	}
 
-	$ns->count = count($ns->nodes);
+	$ns->count = 0;
+	if (is_countable($ns->nodes)) {
+		$ns->count = count($ns->nodes);
+	}
 	$ns->totalno = $ns->count;
 
 	return $ns;
@@ -4271,7 +4307,6 @@ function getViewsByNode($nodeid, $style="long") {
 	//	$params[count($params)] = currentuser;
 	//	$sql .= $HUB_SQL->APILIB_NODES_PERMISSIONS_MY;
 	//} else {
-
 		$params[count($params)] = 'N';
 		$params[count($params)] = $currentuser;
 		$params[count($params)] = $currentuser;
@@ -4323,7 +4358,7 @@ function editViewNodePosition($viewid,$nodeid,$userid,$xpos,$ypos) {
     global $USER;
 
 	$viewnode = new ViewNode($viewid,$nodeid,$userid);
-	if (isset($viewnode) && !$viewnode instanceof Error) {
+	if (isset($viewnode) && !$viewnode instanceof Hub_Error) {
 		$viewnode = $viewnode->editPosition($xpos,$ypos);
 	}
 	return $viewnode;
@@ -4333,7 +4368,7 @@ function editViewNodeMediaIndex($viewid,$nodeid,$userid,$mediaindex=-1) {
     global $USER;
 
 	$viewnode = new ViewNode($viewid,$nodeid,$userid);
-	if (isset($viewnode) && !$viewnode instanceof Error) {
+	if (isset($viewnode) && !$viewnode instanceof Hub_Error) {
 		$viewnode = $viewnode->editMediaIndex($mediaindex);
 	}
 	return $viewnode;
@@ -4351,19 +4386,22 @@ function removeNodeFromView($viewid,$nodeid,$userid) {
     global $USER, $HUB_SQL, $DB;
 
 	$view = new View($viewid);
-    if (!$view instanceof Error) {
+    if (!$view instanceof Hub_Error) {
 		$view = $view->load(); // so it loads the connections
 
 	    // First try and delete the connections.
 	    // Deleting them from inside the view->removeNode function did not always work.
 	    // Don't know why
-		$count = count($view->connections);
+		$count = 0;
+		if (is_countable($view->connections)) {
+			$count = count($view->connections);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$viewconnection = $view->connections[$i];
 			$connection = $viewconnection->connection;
 			$from = $connection->from;
 			$to = $connection->to;
-			if (!$from instanceof Error && !$to instanceof Error) {
+			if (!$from instanceof Hub_Error && !$to instanceof Hub_Error) {
 				if ($to->nodeid == $nodeid || $from->nodeid == $nodeid) {
 					$view->removeConnection($connection->connid, $userid);
 				}
@@ -4395,11 +4433,17 @@ function cleanNodeGroups($nodeid) {
 
 	// get a list of all groups that the maps that the node is in, are in.
 	$allmaps = $nodeset->nodes;
-	$count = count($allmaps);
+	$count = 0;
+	if (is_countable($allmaps)) {
+		$count = count($allmaps);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$next = $allmaps[$i];
 		$nextgroups = $next->groups;
-		$countj = count($nextgroups);
+		$countj = 0;
+		if (is_countable($nextgroups)) {
+			$countj = count($nextgroups);
+		}
 		for ($j=0; $j<$countj; $j++) {
 			$nextgroup = $nextgroups[$j];
 			if (!in_array($nextgroup->groupid, $allGroups)) {
@@ -4408,7 +4452,10 @@ function cleanNodeGroups($nodeid) {
 		}
 	}
 
-	$count = count($nodegroups);
+	$count = 0;
+	if (is_countable($nodegroups)) {
+		$count = count($nodegroups);
+	}
 	for ($i=0; $i<$count; $i++) {
 		$nextgroup = $nodegroups[$i];
 		if (!in_array($nextgroup->groupid, $allGroups)) {
@@ -4453,10 +4500,10 @@ function addNodeToView($viewid,$nodeid,$xpos, $ypos, $mediaindex=-1, $groupid=""
 
     $v = new View($viewid);
     $viewnode = $v->addNode($nodeid, $xpos, $ypos, $mediaindex);
-	if (!$viewnode instanceof Error) {
+	if (!$viewnode instanceof Hub_Error) {
 		if (isset($groupid) && $groupid != "") {
 			$group = new Group($groupid);
-			if (!$group instanceof Error) {
+			if (!$group instanceof Hub_Error) {
 				if ($group->ismember($USER->userid)) {
 					$node = new CNode($nodeid);
 					$node->addGroup($groupid);
@@ -4468,7 +4515,11 @@ function addNodeToView($viewid,$nodeid,$xpos, $ypos, $mediaindex=-1, $groupid=""
 			$mapnode = $mapnode->load();
 			if (isset($mapnode->groups)) {
 				$groups = $mapnode->groups;
-				$count = count($groups);
+
+				$count = 0;
+				if (is_countable($groups)) {
+					$count = count($groups);
+				}
 				for ($i=0; $i<$count;$i++) {
 					$nextgroup = $groups[$i];
 					if (isset($nextgroup)) {
@@ -4505,13 +4556,13 @@ function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $media
 	$roleid = $r->roleid;
 	$node = addNode($title,"",$private,$roleid);
 
-	if (!$node instanceof Error) {
+	if (!$node instanceof Hub_Error) {
 	    $v = new View($viewid);
 		$viewnode = $v->addNode($node->nodeid, $xpos, $ypos, $mediaindex);
-		if (!$viewnode instanceof Error) {
+		if (!$viewnode instanceof Hub_Error) {
 			if (isset($groupid) && $groupid != "") {
 				$group = new Group($groupid);
-				if (!$group instanceof Error) {
+				if (!$group instanceof Hub_Error) {
 					if ($group->ismember($USER->userid)) {
 						$node->addGroup($groupid);
 					}
@@ -4522,7 +4573,10 @@ function addNewNodeToView($viewid,$title,$rolename,$private,$xpos, $ypos, $media
 				$mapnode = $mapnode->load();
 				if (isset($mapnode->groups)) {
 					$groups = $mapnode->groups;
-					$count = count($groups);
+					$count = 0;
+					if (is_countable($groups)) {
+						$count = count($groups);
+					}
 					for ($i=0; $i<$count;$i++) {
 						$nextgroup = $groups[$i];
 						if (isset($nextgroup)) {
@@ -4558,9 +4612,9 @@ function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$link
 	// make sure current user in group, if group set.
 	if (isset($groupid) && $groupid != "") {
 		$group = new Group($groupid);
-		if (!$group instanceof Error) {
+		if (!$group instanceof Hub_Error) {
 			if (!$group->ismember($USER->userid)) {
-				$error = new Error();
+				$error = new Hub_Error();
 				return $error->createNotInGroup($group->name);
 			}
 		}
@@ -4568,23 +4622,23 @@ function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$link
 
 	$node = new CNode($nodeid);
 	$node = $node->load();
-	if (!$node instanceof Error) {
+	if (!$node instanceof Hub_Error) {
 		if (isset($groupid) && $groupid != "") {
 			$node->addGroup($groupid);
 		}
 
 		$view = new View($viewid);
 		$viewnode = $view->addNode($nodeid, $xpos, $ypos, $mediaindex);
-		if (!$viewnode instanceof Error) {
+		if (!$viewnode instanceof Hub_Error) {
 
 			// Connect to focal node
 			$focalnode = new CNode($focalnodeid);
 			$focalnode = $focalnode->load();
-			if (!$focalnode instanceof Error) {
+			if (!$focalnode instanceof Hub_Error) {
 				$focalrole = getRoleByName($focalnode->role->name);
 				$focalroleid = $focalrole->roleid;
 				$role = getRoleByName($node->role->name);
-				if ($role instanceof Error) {
+				if ($role instanceof Hub_Error) {
 					$role = addRole($node->role->name);
 				}
 				$roleid = $role->roleid;
@@ -4598,7 +4652,7 @@ function addNodeToViewAndConnect($viewid,$focalnodeid,$nodeid,$xpos, $ypos,$link
 				} else {
 					$connection = addConnection($focalnodeid, $focalroleid, $linkType, $node->nodeid, $roleid, 'N', "");
 				}
-				if (!$connection instanceof Error) {
+				if (!$connection instanceof Hub_Error) {
 					// add to group
 					if (isset($groupid) && $groupid != "") {
 						$connection->addGroup($groupid);
@@ -4694,9 +4748,12 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 	$data = array();
 
 	$view = getView($mapid);
-	if (!$view instanceof Error) {
+	if (!$view instanceof Hub_Error) {
 		$nodes = $view->nodes;
-		$count = count($nodes);
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		$nodeArray = array();
 		$userArray = array();
 		for ($i=0; $i<$count; $i++) {
@@ -4709,7 +4766,11 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 
 		// Add any users on connections but not on nodes (brokers).
 		$conns = $view->connections;
-		$countj = count($conns);
+
+		$countj = 0;
+		if (is_countable($conns)) {
+			$countj = count($conns);
+		}
 		for ($j=0; $j<$countj; $j++) {
 			$viewcon = $conns[$j];
 			$con = $viewcon->connection;
@@ -4724,6 +4785,10 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 		$obfuscationkey = $cipher->getKey();
 		$obfuscationiv = $cipher->getIV();
 		$reply = createObfuscationEntry($obfuscationkey, $obfuscationiv, $url);
+		if ($reply instanceof Hub_Error) {
+			return $data;
+		}
+
 		$url = $url."/?id=".$reply['dataid'];
 
 		// GET METRICS
@@ -4732,8 +4797,18 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 
    		// { warnings : [ string,* ], results : [ result,* ] }
 		$replyObj = json_decode($reply);
-		$results = $replyObj->responses;
 
+		// check if something went wrong getting alert data.
+   		if (!$replyObj) {
+   			return $data;
+   		}
+
+		if (isset($replyObj->responses)) {
+			$results = $replyObj->responses;
+		} else {
+			$results = [];
+		}
+		
 		if (!isset($results[0]->error) && isset($results[0]->data)) {
 			$replydata = $results[0]->data;
 
@@ -4743,14 +4818,21 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 			$finalUserArray = new UserSet();
 			$finalUserCheckArray = array();
 
-			$count = count($replydata);
+			$count = 0;
+			if (is_countable($replydata)) {
+				$count = count($replydata);
+			}
 			for ($i=0; $i<$count; $i++) {
 				$next = $replydata[$i];
 				$userid = $next->userID;
 
 				if ($userid != '*') {
 					$bits = explode('/', $userid);
-					$userid = $bits[count($bits)-1];
+					$bitscount = 0;
+					if (is_countable($bits)) {
+						$bitscount = count($bits);
+					}
+					$userid = $bits[$bitscount-1];
 					//I encode psuedo user ids on the way out.
 					//Not sure why. Possibly something to do with the cipher encoding.
 					$userid = urldecode($userid);
@@ -4760,7 +4842,7 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 					} else {
 						$user = getUser($userid);
 					}
-					if (!$user instanceof Error ) {
+					if (!$user instanceof Hub_Error ) {
 						if (!isset($finalUserCheckArray[$userid])) {
 							$finalUserArray->add($user);
 							$finalUserCheckArray[$userid] = $userid;
@@ -4773,7 +4855,10 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 
 				$suggestionsArray = $next->suggestions;
 
-				$countj = count($suggestionsArray);
+				$countj = 0;
+				if (is_countable($suggestionsArray)) {
+					$countj = count($suggestionsArray);
+				}
 				for ($j=0; $j<$countj; $j++) {
 					$suggestion = $suggestionsArray[$j];
 					$alertype = $suggestion->{'@type'};
@@ -4788,7 +4873,11 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 
 					//strip the id off the end of the post id (userid will need decrypting)
 					$bits = explode('/', $nextpost);
-					$nextpost = $bits[count($bits)-1];
+					$bitscount = 0;
+					if (is_countable($bits)) {
+						$bitscount = count($bits);
+					}
+					$nextpost = $bits[$bitscount-1];
 					$targetType = $suggestion->targetType;
 
 					//I encode psuedo user ids on the way out.
@@ -4811,7 +4900,7 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 							} else {
 								//error_log("USER not found for:".$nextpost);
 								$user = getUser($nextpost);
-								if (!$user instanceof Error ) {
+								if (!$user instanceof Hub_Error ) {
 									$finalUserArray->add($user);
 									$finalUserCheckArray[$nextpost] = $nextpost;
 								} else {
@@ -4903,9 +4992,6 @@ function getMapAlertsData($mapid,$url,$alerttypes,$timeout=60,$userids="",$root=
 			$data->nodes = $finalNodeArray;
 			$data->users = $finalUserArray;
 			//$data->users = $reader->userSet; //users
-
-			//error_log(count($finalNodeArray->nodes));
-			//error_log(print_r($data, true));
 		}
 	} else {
 		//error_log("DATA FOUND: getUserAlertData");
@@ -4943,8 +5029,13 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
 	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
-	if (count($selectedids) > $CFG->ImportLimit) {
-		$ERROR = new error();
+	$count = 0;
+	if (is_countable($selectedids)) {
+		$count = count($selectedids);
+	}
+
+	if ($count > $CFG->ImportLimit) {
+		$ERROR = new Hub_Error();
 		$ERROR->createAccessDeniedError();
 		return $ERROR;
 	}
@@ -4954,12 +5045,16 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
 	$reader = new catalyst_jsonld_reader();
 	$reader = $reader->load($url, $withhistory, $withvotes);
 
-	if (!$reader instanceof Error) {
+	if (!$reader instanceof Hub_Error) {
 		$nodeset = $reader->nodeSet;
 		$nodes = $nodeset->nodes;
-		$count = count($nodes);
+
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		if ($count > $CFG->ImportLimit) {
-			$ERROR = new error();
+			$ERROR = new Hub_Error();
 			$ERROR->createAccessDeniedError();
 			return $ERROR;
 		}
@@ -4972,7 +5067,7 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
 				if (in_array($node->nodeid, $selectedids)) {
 					$role = getRoleByName($node->rolename);
 					$newnode = addNode($node->name,$node->description,$private,$role->roleid);
-					if (!$newnode instanceof Error) {
+					if (!$newnode instanceof Hub_Error) {
 						if (isset($node->homepage) && $node->homepage != "") {
 							$URLValidator = new mrsnk_URL_validation($node->homepage, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
 							if($URLValidator->isValid()){
@@ -5012,7 +5107,7 @@ function addNodesFromJsonld($url, $private, $selectedids="") {
 				$node = $nodes[$i];
 				$role = getRoleByName($node->rolename);
 				$newnode = addNode($node->name,$node->description,$private,$role->roleid);
-				if (!$newnode instanceof Error) {
+				if (!$newnode instanceof Hub_Error) {
 					if (isset($node->homepage) && $node->homepage != "") {
 						$URLValidator = new mrsnk_URL_validation($node->homepage, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
 						if($URLValidator->isValid()){
@@ -5074,8 +5169,12 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
 
 	//error_log(print_r($selectedids, true));
-	if (count($selectedids) > $CFG->ImportLimit) {
-		$ERROR = new error();
+	$count = 0;
+	if (is_countable($selectedids)) {
+		$count = count($selectedids);
+	}
+	if ($count > $CFG->ImportLimit) {
+		$ERROR = new Hub_Error();
 		$ERROR->createAccessDeniedError();
 		return $ERROR;
 	}
@@ -5086,10 +5185,14 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 	$groupid = "";
     $v = new View($mapid);
     $view = $v->load();
-	if (!$view instanceof Error) {
+	if (!$view instanceof Hub_Error) {
 		if (isset($view->viewnode->groups)) {
 			$groups = $view->viewnode->groups;
-			if (count($groups) > 0) {
+			$countgroups = 0;
+			if (is_countable($groups)) {
+				$countgroups = count($groups);
+			}
+			if ($countgroups > 0) {
 				$groupid = $groups[0]->groupid;
 			}
 		}
@@ -5100,9 +5203,9 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 	// make sure current user in group, if group set.
 	if ($groupid != "") {
 		$group = new Group($groupid);
-		if (!$group instanceof Error) {
+		if (!$group instanceof Hub_Error) {
 			if (!$group->ismember($USER->userid)) {
-				$error = new Error();
+				$error = new Hub_Error();
 				return $error->createNotInGroup($group->name);
 			}
 		}
@@ -5113,10 +5216,14 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 	$reader = new catalyst_jsonld_reader();
 	$reader = $reader->load($url, $withhistory, $withvotes);
 
-	if (!$reader instanceof Error) {
+	if (!$reader instanceof Hub_Error) {
 		$nodeset = $reader->nodeSet;
 		$nodes = $nodeset->nodes;
-		$count = count($nodes);
+
+		$count = 0;
+		if (is_countable($nodes)) {
+			$count = count($nodes);
+		}
 		$newnodeSet = new NodeSet();
 		$newNodeCheck = array();
 
@@ -5130,7 +5237,12 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 				$positemArray = explode(":", $positem);
 				$xpos = "";
 				$ypos = "";
-				if (count($positemArray) == 2) {
+
+				$countj = 0;
+				if (is_countable($positemArray)) {
+					$countj = count($positemArray);
+				}
+				if ($countj == 2) {
 					$xpos = $positemArray[0];
 					$ypos = $positemArray[1];
 				}
@@ -5145,14 +5257,14 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 
 				$newnode = addNode($node->name,$description,$private,$role->roleid);
 				//error_log(print_r($newnode, true));
-				if (!$newnode instanceof Error) {
+				if (!$newnode instanceof Hub_Error) {
 					$newNodeCheck[$node->nodeid] = $newnode;
 					//error_log($node->nodeid);
 
 					// if we have positioning information add the node to the map.
 					if ($xpos != "" && $ypos != "") {
 				    	$viewnode = $view->addNode($newnode->nodeid, $xpos, $ypos);
-						//if (!$viewnode instanceof Error) {
+						//if (!$viewnode instanceof Hub_Error) {
 					}
 
 					if (isset($node->homepage) && $node->homepage != "") {
@@ -5192,7 +5304,11 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 
 		$connectionset = $reader->connectionSet;
 		$connections = $connectionset->connections;
-		$count = count($connections);
+
+		$count = 0;
+		if (is_countable($connections)) {
+			$count = count($connections);
+		}
 		for ($i=0; $i<$count; $i++) {
 			$conn = $connections[$i];
 			$from = $conn->from;
@@ -5213,7 +5329,7 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 				$linklabelname = $conn->linklabelname;
 				//error_log($linklabelname);
 				$lt = getLinkTypeByLabel($linklabelname);
-				if (!$lt instanceof Error) {
+				if (!$lt instanceof Hub_Error) {
 					$linkType = $lt->linktypeid;
 
 					//$frole = getRoleByName($fromrole->name);
@@ -5221,7 +5337,7 @@ function addNodesAndConnectionsFromJsonld($url, $mapid, $selectedids, $poses, $p
 
 					$connection = addConnection($newFromNode->nodeid, $newFromNode->role->roleid, $linkType, $newToNode->nodeid, $newToNode->role->roleid, 'N', "");
 					//error_log(print_r($connection, true));
-					if (!$connection instanceof Error) {
+					if (!$connection instanceof Hub_Error) {
 						// add to group
 						if (isset($groupid) && $groupid != "") {
 							$connection->addGroup($groupid);

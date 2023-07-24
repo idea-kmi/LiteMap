@@ -46,7 +46,7 @@
 
     $node = getNode($nodeid);
 
-    if($node instanceof Error){
+    if($node instanceof Hub_Error){
         echo "<h1>".$LNG->ITEM_NOT_FOUND_ERROR."</h1>";
         include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
         die;
@@ -65,9 +65,15 @@
    // now trigger the js to load data
     $argsStr = "{";
     $keys = array_keys($args);
-    for($i=0;$i< sizeof($keys); $i++){
+
+	$keycount = 0;
+	if (is_countable($keys)) {
+		$keycount = count($keys);
+	}
+
+    for($i=0;$i< $keycount; $i++){
         $argsStr .= '"'.$keys[$i].'":"'.addslashes($args[$keys[$i]]).'"';
-        if ($i != (sizeof($keys)-1)){
+        if ($i != ($keycount-1)){
             $argsStr .= ',';
         }
     }
@@ -80,7 +86,7 @@
 	echo "</script>";
 
 	try {
-		$jsonnode = json_encode($node);
+		$jsonnode = json_encode($node, JSON_INVALID_UTF8_IGNORE);
 	} catch (Exception $e) {
 		echo 'Caught exception: ',  $e->getMessage(), "<br>";
 	}
@@ -92,114 +98,103 @@
 	echo "</script>";
 ?>
 
-<script type='text/javascript'>
+<div class="container-fluid">
+	<div class="row p-3">		
+		<div class="col">
+			<script type='text/javascript'>
+				Event.observe(window, 'load', function() {
+					buildNodeTitle('chat');
 
-Event.observe(window, 'load', function() {
-	buildNodeTitle('chat');
+					if (NODE_ARGS['nodetype'] == 'Challenge') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/challengechatstree.js.php", 'chatchallenge');
+					} else if (NODE_ARGS['nodetype'] == 'Issue') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/issuechatstree.js.php", 'chatissue');
+					} else if (NODE_ARGS['nodetype'] == 'Solution') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/solutionchatstree.js.php", 'chatsolution');
+					} else if (NODE_ARGS['nodetype'] == 'Pro') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/prochatstree.js.php", 'chatpro');
+					} else if (NODE_ARGS['nodetype'] == 'Con') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/conchatstree.js.php", 'chatcon');
+					} else if (NODE_ARGS['nodetype'] == 'Argument') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/argumentchatstree.js.php", 'chatargument');
+					} else if (NODE_ARGS['nodetype'] == 'Idea') {
+						addScriptDynamically(URL_ROOT+"ui/explore/chat/commentchatstree.js.php", 'chatcomment');
+					}
+				});
 
-	if (NODE_ARGS['nodetype'] == 'Challenge') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/challengechatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Issue') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/issuechatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Solution') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/solutionchatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Pro') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/conchatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Con') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/prochatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Argument') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/argumentchatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	} else if (NODE_ARGS['nodetype'] == 'Idea') {
-		var bObj = new JSONscriptRequest(URL_ROOT+"ui/explore/chat/commentchatstree.js.php");
-		bObj.buildScriptTag();
-		bObj.addScriptTag();
-	}
-});
+				/**
+				 * Refresh Chats sections after update.
+				 */
+				function refreshExploreChats() {
+					getAllChatConnections();
+				}
+			</script>
 
-/**
- * Refresh Chats sections after update.
- */
-function refreshExploreChats() {
-	getAllChatConnections();
-}
+			<?php if ($nodetype == 'Challenge') { ?>
+				<div id="nodearealineartitle" class="challengeback challengeborder nodearealineartitle">
+					<div class="challengeback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Issue') { ?>
+				<div id="nodearealineartitle" class="issueback issueborder nodearealineartitle">
+					<div class="issueback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Solution') { ?>
+				<div id="nodearealineartitle" class="solutionback solutionborder nodearealineartitle">
+					<div class="solutionback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Argument') { ?>
+				<div id="nodearealineartitle" class="evidenceback evidenceborder nodearealineartitle">
+					<div class="evidenceback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Pro') { ?>
+				<div id="nodearealineartitle" class="proback proborder nodearealineartitle">
+					<div class="proback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Con') { ?>
+				<div id="nodearealineartitle" class="conback conborder nodearealineartitle">
+					<div class="conback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } else if ($nodetype == 'Idea') { ?>
+				<div id="nodearealineartitle" class="plainback plainborder nodearealineartitle">
+					<div class="plainback tabtitlebar">
+						<label class="linearnodeheaderlabel", id="exploreheaderlabel">
+						</label>
+					</div>
+				</div>
+			<?php } ?>
 
-</script>
+			<div class="p-1 border-bottom d-block">
+				<div id="headertoolbar" class="d-flex gap-4 headertoolbar align-items-center px-1 py-2"></div>
+			</div>
 
-<?php if ($nodetype == 'Challenge') { ?>
-	<div id="nodearealineartitle" class="challengeback challengeborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="challengeback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Issue') { ?>
-	<div id="nodearealineartitle" class="issueback issueborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="issueback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Solution') { ?>
-	<div id="nodearealineartitle" class="solutionback solutionborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="solutionback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Argument') { ?>
-	<div id="nodearealineartitle" class="evidenceback evidenceborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="evidenceback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Pro') { ?>
-	<div id="nodearealineartitle" class="proback proborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="proback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Con') { ?>
-	<div id="nodearealineartitle" class="conback conborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="conback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } else if ($nodetype == 'Idea') { ?>
-	<div id="nodearealineartitle" class="plainback plainborder" style="color:white;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-		<div class="plainback tabtitlebar" style="padding:10px;margin:0px;font-size:9pt">
-			<label class="linearnodeheaderlabel", id="exploreheaderlabel">
-			</label>
-		</div>
-	</div>
-<?php } ?>
-
-<div style="border-bottom:1px solid #E8E8E8; width:100%;clear:both; float:left;width:100%;margin:0px;padding:0px;">
-	<div id="headertoolbar" style="clear:both;float:left;margin-top:10px;margin-left:5px;"></div>
-</div>
-
-<div id="tabber" style="clear:both;float:left;width:100%;">
-    <div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
-		<div id='tab-content-explore-chat' class='explorepagesection' style="display:block">
-			<img class="active" border="0" src="<?php echo $HUB_FLM->getImagePath("chat.png"); ?>"  />
-			<h2 style="margin:5px;font-size:14pt;font-style: italic;float:left; "><?php echo $LNG->VIEWS_CHAT_TITLE; ?></h2>
-			<span id="chattoolbar" style="clear:both; float:left; width:100%"></span><br/>
-			<div id="chatloading" style="width:100%;clear:both;float:left;display: block;padding-left:10px;"></div>
-			<div id="chatarea" style="width:100%;min-height:400px;clear:both;float:left;display: block;margin-top:5px;padding-left:10px;"></div>
+			<div id="tabber" role="navigation">
+				<div id="tabs-content" class="tabcontentexplore" style="min-height:400px;">
+					<div id='tab-content-explore-chat' class='explorepagesection'>
+						<h2 class="mt-3"><img src="<?php echo $HUB_FLM->getImagePath("chat.png"); ?>" alt="" /> <?php echo $LNG->VIEWS_CHAT_TITLE; ?></h2>
+						<span id="chattoolbar" class="d-block"></span>
+						<div id="chatloading" class="d-block"></div>
+						<div id="chatarea" class="d-block"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

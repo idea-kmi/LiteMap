@@ -31,7 +31,7 @@
 		die;
 	}
 
-    include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 ?>
 
 <div class="container-fluid">

@@ -1,0 +1,11 @@
+# Items to ignore
+#
+# Folders
+.well-known
+**/uploads
+# Files
+setup.php
+*.DS_Store
+._*
+.vs
+.vscode

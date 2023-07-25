@@ -314,8 +314,8 @@ div.idea-li-wrapper{
 .add-another-url { font-size: 0.9em; }
 
 ul.widget-list-ideas { list-style-type: none; padding: 0; }
-ul.widget-list-ideas .textdivcomment .textdivcomment-title { color: #7FAE0E !important; font-size: 1.2em; position: relative; margin-left: 20px; }
-ul.widget-list-ideas .textdivcomment .textdivcomment-title::after { content: "●"; font-size: 0.7em; position: absolute; left: -20px; color: #696969 !important; }
+ul.widget-list-ideas .textdivcomment .textdivcomment-title { color: #7FAE0E !important; font-size: 1.2em; position: relative; margin-left: 20px; display: block; }
+ul.widget-list-ideas .textdivcomment .textdivcomment-title::after { content: "●"; font-size: 0.7em; position: absolute; left: -20px; top: 3px; color: #696969 !important; }
 ul.widget-list-ideas .textdivcomment .idea-desc { margin-bottom: 10px; margin-left: 20px; }
 
 .my-groups { display: flex; flex-wrap: wrap; gap: 1em; }

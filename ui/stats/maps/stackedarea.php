@@ -23,6 +23,7 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('MAP');
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);

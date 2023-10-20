@@ -31,7 +31,7 @@
 				<div class="d-flex d-column p-4 justify-content-between">
 					<div class="d-block px-4">
 						<span><?php echo $LNG->FOOTER_DEVELOPED_BY; ?> </span>
-						<a href="http://idea.kmi.open.ac.uk/" title="<?php echo $LNG->FOOTER_HINT; ?>">
+						<a href="http://idea.kmi.open.ac.uk/">
 							<img alt="Idea logo" class="footer-logo" src="<?php echo $HUB_FLM->getImagePath('IDea-logo-URL-hi-res.png'); ?>" />
 						</a>
 					</div>

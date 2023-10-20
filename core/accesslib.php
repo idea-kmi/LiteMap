@@ -239,4 +239,16 @@ function checkLogin(){
         exit();
     }
 }
+
+function checkDashboardAccess($page){
+    global $USER,$CFG;
+
+	$setting = $page.'_DASHBOARD_VIEW';
+	echo $setting;
+		
+	if (($CFG->$setting != 'public') || ((!isset($USER->userid) || $USER->userid == "") && ($CFG->$setting != 'public'))) {
+		header("Location: ".$CFG->homeAddress); 
+	 	exit;
+	}
+}
 ?>

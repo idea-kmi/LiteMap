@@ -295,7 +295,7 @@ class CNode {
 	        $this->loadTags();
 	        $this->loadGroups();
         	$this->loadProperties();
-			$this->loadViewCount();
+			//$this->loadViewCount(); // many sql calls to this kill the website
         }
 
         if ($style == 'map' || $style == 'long' || $style == 'full'){

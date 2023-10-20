@@ -25,6 +25,7 @@
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GROUP');
 	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/analyticservices.php"));
 	require_once($HUB_FLM->getCodeDirPath("core/io/catalyst/catalyst_jsonld_reader.class.php"));
 

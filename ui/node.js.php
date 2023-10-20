@@ -1199,14 +1199,17 @@ function renderMapNodeHeading(width, height, node, uniQ, role, includeUser, type
 	var nextCell = new Element("div", {'class':'nodetablecelltop'} );
 	nextRow.insert(nextCell);
 
-	var dashboardLink = new Element("a", {'style':'clear:both;width:100%;', 'title':'<?php echo $LNG->MAP_BLOCK_STATS_LINK_HINT; ?>'} );
-	dashboardLink.href = "<?php echo $CFG->homeAddress; ?>ui/stats/maps/index.php?nodeid="+node.nodeid;
+	const mapDashBtn = '<?php echo $CFG->MAP_DASHBOARD_VIEW ?>';
+	const isLoggedIn = '<?php echo $USER->userid ?>';
 
-	var dashboardimg = new Element("img", {'alt':'', 'style':'margin-right:5px;vertical-align:bottom','src':'<?php echo $HUB_FLM->getImagePath("charts.png"); ?>'} );
-	dashboardLink.insert(dashboardimg);
-	dashboardLink.insert('<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>');
-
-	nextCell.insert(dashboardLink);
+	if ((mapDashBtn == 'public') || ((isLoggedIn) && (mapDashBtn == 'private'))) {
+		var dashboardLink = new Element("a", {'style':'clear:both;width:100%;', 'title':'<?php echo $LNG->MAP_BLOCK_STATS_LINK_HINT; ?>'} );
+		dashboardLink.href = "<?php echo $CFG->homeAddress; ?>ui/stats/maps/index.php?nodeid="+node.nodeid;
+		var dashboardimg = new Element("img", {'alt':'', 'style':'margin-right:5px;vertical-align:bottom','src':'<?php echo $HUB_FLM->getImagePath("charts.png"); ?>'} );
+		dashboardLink.insert(dashboardimg);
+		dashboardLink.insert('<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>');
+		nextCell.insert(dashboardLink);
+	}
 
 	if (type == "active") {
 		var nextRow = new Element( 'div', {'class':'nodetablerow'} );
@@ -1396,12 +1399,18 @@ function renderEmbedMapNode(node, uniQ, role, includeUser, type, includeconnecte
 
 	exploreButton.insert(title);
 
-	var dashboardLink = new Element("a", {'style':'margin-left:10px;', 'title':'<?php echo $LNG->MAP_BLOCK_STATS_LINK_HINT; ?>'} );
-	dashboardLink.href = "<?php echo $CFG->homeAddress; ?>ui/stats/maps/index.php?nodeid="+node.nodeid;
 
-	var dashboardimg = new Element("img", {'alt':'', 'style':'margin-right:5px;vertical-align:bottom','src':'<?php echo $HUB_FLM->getImagePath("charts.png"); ?>'} );
-	dashboardLink.insert(dashboardimg);
-	dashboardLink.insert('<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>');
+	const mapDashBtn2 = '<?php echo $CFG->MAP_DASHBOARD_VIEW ?>';
+	const isLoggedIn2 = '<?php echo $USER->userid ?>';
+
+	if ((mapDashBtn2 == 'public') || ((isLoggedIn2) && (mapDashBtn2 == 'private'))) {
+		var dashboardLink = new Element("a", {'style':'margin-left:10px;', 'title':'<?php echo $LNG->MAP_BLOCK_STATS_LINK_HINT; ?>'} );
+		dashboardLink.href = "<?php echo $CFG->homeAddress; ?>ui/stats/maps/index.php?nodeid="+node.nodeid;
+
+		var dashboardimg = new Element("img", {'alt':'', 'style':'margin-right:5px;vertical-align:bottom','src':'<?php echo $HUB_FLM->getImagePath("charts.png"); ?>'} );
+		dashboardLink.insert(dashboardimg);
+		dashboardLink.insert('<?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?>');
+	}
 
 	return iDiv;
 }

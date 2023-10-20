@@ -24,8 +24,8 @@
 	 ********************************************************************************/
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
-	require_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
-
+	require_once($_SERVER['DOCUMENT_ROOT'].'/config.php');	
+	checkDashboardAccess('GLOBAL');
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 ?>
 

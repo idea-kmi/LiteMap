@@ -25,6 +25,7 @@
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GROUP');
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 	$groupid = required_param("groupid",PARAM_ALPHANUMEXT);

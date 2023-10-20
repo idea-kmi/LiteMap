@@ -25,6 +25,7 @@
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
 	require_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('MAP');
 	require_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 	$sdt = trim(optional_param("startdate","",PARAM_TEXT));

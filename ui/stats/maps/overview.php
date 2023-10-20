@@ -25,7 +25,7 @@
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
-
+	checkDashboardAccess('MAP');
 	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
 
 	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));

@@ -23,7 +23,7 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
-
+	checkDashboardAccess('MAP');
 	$nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
 
 	include_once('visdata.php');
@@ -49,7 +49,7 @@
 
 			$inner++;
 			?>
-				<a href="<?php echo $nextitem[4]; ?>page=<?php echo $nextitem[6]; ?>&groupid=<?php echo $groupid; ?>" class="dashboard-link-btn" style="width: 250px;">
+				<a href="<?php echo $nextitem[4]; ?>page=<?php echo $nextitem[6]; ?>&nodeid=<?php echo $nodeid; ?>" class="dashboard-link-btn" style="width: 250px;">
 				<div class="text-center">
 					<h2 class="fw-bold" style="font-size:12pt"><?php echo $nextitem[0]; ?></h2>
 					<div>

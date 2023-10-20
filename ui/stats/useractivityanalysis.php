@@ -25,13 +25,14 @@
 	 /** Author: Michelle Bachler, KMi, The Open University **/
 
 	require_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GLOBAL');
 	require_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
 
 	$sdt = trim(optional_param("startdate","",PARAM_TEXT));
 	$edt = trim(optional_param("enddate","",PARAM_TEXT));
 
 	$data = [];
-	$nodes = new array();
+	$nodes = array();
 
 	if ($sdt != "" && $edt != "") {
 

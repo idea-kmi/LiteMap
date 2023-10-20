@@ -23,6 +23,7 @@
 	 *                                                                              *
 	 ********************************************************************************/
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GROUP');
 
 	$groupid = required_param("groupid",PARAM_ALPHANUMEXT);
 

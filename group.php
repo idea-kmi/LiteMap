@@ -252,9 +252,12 @@
 				<?php } ?>
 			</fieldset>
 
-			<div id="radiobuttonsum" class="d-grid gap-2 m-2">
-				<a class="btn btn-secondary text-dark fw-bold" href="<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></a>
-			</div>
+			<?php if (($CFG->GROUP_DASHBOARD_VIEW == 'public') || (isset($USER->userid) && ($CFG->GROUP_DASHBOARD_VIEW == 'private')) ) { ?>
+				<div id="radiobuttonsum" class="d-grid gap-2 m-2">
+					<a class="btn btn-secondary text-dark fw-bold" href="<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></a>
+				</div>
+			<?php } ?>
+
 		</div>
 	</div>
 					

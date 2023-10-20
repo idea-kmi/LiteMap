@@ -25,6 +25,7 @@
 
 	require_once('../lib/graphlib.php');
 	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	checkDashboardAccess('GLOBAL');
 	include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
 
 	$time = required_param("time",PARAM_ALPHANUM);

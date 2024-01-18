@@ -850,34 +850,11 @@ function renderMapNode(width, height, node, uniQ, role, includeUser, type, inclu
 		}
 	}
 
-	/*if (type == "active") {
-		if (USER != "") { // IF LOGGED IN
-			// Add spam icon
-			var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
-			if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
-				spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
-				spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-				spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
-			} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
-				if(USER != ""){
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, type, node); } );
-				} else {
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
-				}
-			}
-			toolbarDiv.insert(spaming);
-		} else {
-
-		}
-	}*/
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	if (type == "active" && USER != "") { // IF LOGGED IN
+		toolbarDiv.insert(createSpamButton(node, role));
+	}
+	<?php } ?>		
 
 	if (type == "active") {
 		if (USER != "") {
@@ -1238,32 +1215,11 @@ function renderMapNodeHeading(width, height, node, uniQ, role, includeUser, type
 			}
 		}
 
-		/*
+		<?php if ($CFG->SPAM_ALERT_ON) { ?>
 		if (USER != "") { // IF LOGGED IN
-			// Add spam icon
-			var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
-			if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
-				spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
-				spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-				spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
-			} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
-				if(USER != ""){
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, type, node); } );
-				} else {
-					spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
-					spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-					spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
-					spaming.style.cursor = 'pointer';
-					Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
-				}
-			}
-			toolbarDiv.insert(spaming);
+			nextCell.insert(createSpamButton(node, role));
 		}
-		*/
+		<?php } ?>
 
 		if (USER != "") {
 			var followbutton = new Element('img', {'style':''});
@@ -4862,6 +4818,7 @@ function reportNodeSpamAlert(obj, nodetype, node) {
  * Create a span menu option to report spam / show spam reported / or say login to report.
  *
  * @param node the node to report
+ * @param nodetype the nodetype of the node to report
  */
 function createSpamMenuOption(node, nodetype) {
 
@@ -4883,6 +4840,37 @@ function createSpamMenuOption(node, nodetype) {
 		}
 	}
 
+	return spaming;
+}
+
+/**
+ * Create a span button to report spam / show spam reported / or say login to report.
+ *
+ * @param node the node to report
+ * @param nodetype the nodetype of the node to report
+ */
+function createSpamButton(node, nodetype) {
+	// Add spam icon
+	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
+	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
+		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
+		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
+		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
+	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
+		if(USER != ""){
+			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
+			spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
+			spaming.style.cursor = 'pointer';
+			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
+		} else {
+			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
+			spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
+			spaming.style.cursor = 'pointer';
+			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
+		}
+	}
 	return spaming;
 }
 

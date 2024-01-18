@@ -40,6 +40,7 @@ class Connection {
     public $fromcontexttypeid;
     public $tocontexttypeid;
     public $linktypeid;
+    public $status = 0;
 
     public $linktype;
     public $fromrole;
@@ -113,6 +114,9 @@ class Connection {
             $this->linktypeid = trim($array['LinkTypeID']);
             $this->private = $array['Private'];
            	$this->description = $array['Description'];
+            if (isset($array['CurrentStatus'])) {
+                $this->status = $array['CurrentStatus'];
+            }
         }
 
         //now add in from/to nodes

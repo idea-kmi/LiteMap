@@ -660,7 +660,7 @@ function loadMapData(positionedMap, toolbar, messagearea) {
 function drawTree(allConnections, challengenodeid) {
 	$('treedata').update("");
 
-// GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
+    // GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
 
 	var treePaths = {};
 	var fromNodeCheck = new Array();

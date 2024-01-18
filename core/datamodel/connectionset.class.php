@@ -61,9 +61,10 @@ class ConnectionSet {
      * @param string $orderby the name of the field to sort by
      * @param string $sort 'ASC' or 'DESC' (ascending or descending ordering)
      * @param string the style of each record in the collection (defaults to 'long' , can be 'short');
+     * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
      * @return ConnectionSet (this)
      */
-    function load($sql, $params, $start, $max, $orderby, $sort, $style='long'){
+    function load($sql, $params, $start, $max, $orderby, $sort, $style='long', $status=0){
         global $DB,$HUB_SQL;
 
         if (!isset($params)) {
@@ -97,7 +98,12 @@ class ConnectionSet {
 			$array = $resArray[$i];
             $c = new Connection($array["TripleID"]);
             $conn = $c->load($style);
-            $this->add($conn);
+
+            // check the status of the node at each end matches the requested status - reject the connection if either end don't
+            // nodes are loaded by connection load class
+            if ($fromnode->status == $status && $tonode->status == $status) {  
+                $this->add($conn);
+            }            
         }
 
         return $this;

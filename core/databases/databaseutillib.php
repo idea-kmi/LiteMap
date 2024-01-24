@@ -2558,29 +2558,68 @@ function getNodesByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
  * <br>$CFG->USER_STATUS_UNVALIDATED = new user account that has not had the email address verified yet.
  * <br>$CFG->USER_STATUS_UNAUTHORIZED = new user account that has not been authorized yet.
  * <br>$CFG->USER_STATUS_SUSPENDED = user account that has been suspended.
+ * <br>$CFG->USER_STATUS_ARCHIVED = N/A only for Groups
  *
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20)
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @return NodeSet or Error
+ * @return UserSet or Error
  */
 function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long') {
     global $CFG,$USER,$HUB_SQL;
 
 	if ($USER->getIsAdmin() == "Y") {
 		$params = array();
-		$params[0] = $status;
+		$params[0] = $status;		
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
-	    $us = new UserSet();
-	    return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
-	 } else {
+		$params[1] = 'N';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
+		$us = new UserSet();
+	   	return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
         $ERROR = new Hub_Error();
         return $ERROR->createAccessDeniedError();
-	 }
+	}
 }
 
+/**
+ * Get the users with the given status. For admin area.
+ *
+ * @param integer $status
+ * <br>$CFG->USER_STATUS_ACTIVE = live and active group
+ * <br>$CFG->USER_STATUS_REPORTED = group has been reported as spammer (not used at present)
+ * <br>$CFG->USER_STATUS_UNVALIDATED = N/A only for users
+ * <br>$CFG->USER_STATUS_UNAUTHORIZED = N/A only for users
+ * <br>$CFG->USER_STATUS_SUSPENDED = N/A only for users
+ * <br>$CFG->USER_STATUS_ARCHIVED = group that has been archived.
+ *
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
+ * @return GroupSet or Error
+ */
+function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', $sort ='DESC', $style='long'){
+    global $CFG,$USER,$HUB_SQL;
+
+	if ($USER->getIsAdmin() == "Y") {
+		$params = array();
+		$params[0] = $status;
+		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+		$params[1] = 'Y';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
+		$gs = new GroupSet();
+		return $gs->loadFromUsers($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
+        $ERROR = new Hub_Error();
+        return $ERROR->createAccessDeniedError();
+	}
+}
 
 /**
  * Build the SQL query string for a search

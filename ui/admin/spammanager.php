@@ -61,7 +61,7 @@
     	}
     }
 
-	$ns = getNodesByStatus($CFG->STATUS_SPAM, 0,-1,'name','ASC','long');
+	$ns = getNodesByStatus($CFG->STATUS_REPORTED, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
 
 	$count = 0;

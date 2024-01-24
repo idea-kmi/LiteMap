@@ -24,7 +24,8 @@
  ********************************************************************************/
  ?>
 
-<div id="tagcloud" class="d-flex flex-row">
+
+<div id="tagcloud" class="d-flex flex-row">
 	<?php
 		$items = array();
 
@@ -57,6 +58,12 @@
 		array_push($items, $next);
 
 		$next = array();
+		$next[0] = $LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK;
+		$next[1] = "javascript:loadDialog('spamusermanager','".$CFG->homeAddress."ui/admin/spammanagergroups.php', 750, 600);";
+		$next[2] = $LNG->ADMIN_BUTTON_HINT;
+		array_push($items, $next);
+
+		$next = array();
 		$next[0] = $LNG->SPAM_USER_ADMIN_MANAGER_SPAM_LINK;
 		$next[1] = "javascript:loadDialog('spamusermanager','".$CFG->homeAddress."ui/admin/spammanagerusers.php', 750, 600);";
 		$next[2] = $LNG->ADMIN_BUTTON_HINT;
@@ -65,6 +72,12 @@
 		$next = array();
 		$next[0] = $LNG->ADMIN_NEWS_USERS;
 		$next[1] = "javascript:window.location.replace('".$CFG->homeAddress."ui/admin/userregistration.php');";
+		$next[2] = $LNG->ADMIN_BUTTON_HINT;
+		array_push($items, $next);
+
+		$next = array();
+		$next[0] = $LNG->ADMIN_NEWS_GROUPS;
+		$next[1] = "javascript:window.location.replace('".$CFG->homeAddress."ui/admin/groupslist.php');";
 		$next[2] = $LNG->ADMIN_BUTTON_HINT;
 		array_push($items, $next);
 

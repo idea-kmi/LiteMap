@@ -130,189 +130,182 @@
 				$time = "months";
 			?>
 
-			<div class="text-center"><img src="newIdeasGraph.php?time=months" alt="graph of items created" /></div>
+			<div class="text-center"><img class="img-fluid" src="newIdeasGraph.php?time=months" alt="graph of items created" /></div>
 		</div>
 
-		<div class="col-md-8 col-sm-12 m-auto mt-4">
+		<div class="col-lg-8 col-sm-12 m-auto mt-4">
 
-		<?php
-			/***** MONTHLY BY CATEOGRY TABLE ******/
-			$day   = 24*60*60; // 24 hours * 60 minutes * 60 seconds
-			$week  = $day * 7;
-			$month = $day * 30.5;
+			<?php
+				/***** MONTHLY BY CATEOGRY TABLE ******/
+				$day   = 24*60*60; // 24 hours * 60 minutes * 60 seconds
+				$week  = $day * 7;
+				$month = $day * 30.5;
 
-			// WE ONLY WANT THE LAST YEAR - OR PART THERE OF
-			if ($time === 'weeks') {
-				$count = ceil((mktime()-$startdate) / $week);
-			} else {
-				$dates = new DateTime();
-				$dates->setTimestamp($startdate);
-				$interval = date_create('now')->diff( $dates );
+				// WE ONLY WANT THE LAST YEAR - OR PART THERE OF
+				if ($time === 'weeks') {
+					$count = ceil((mktime()-$startdate) / $week);
+				} else {
+					$dates = new DateTime();
+					$dates->setTimestamp($startdate);
+					$interval = date_create('now')->diff( $dates );
 
-				$count = $interval->m;
-				$years = $interval->y;
-				if (isset($years) && $years > 0) {
-					$count = $count + ($interval->y * 12);
+					$count = $interval->m;
+					$years = $interval->y;
+					if (isset($years) && $years > 0) {
+						$count = $count + ($interval->y * 12);
+					}
+					$count = $count+1; //(to get it to this month too);
 				}
-				$count = $count+1; //(to get it to this month too);
-			}
-		?>
+			?>
 
-	echo '<div class="my-3">';
-	echo '<table class="table table-sm">';
-	echo '<tr>';
-	if ($time === 'weeks') {
-		echo '<th valign="top" style="font-weight:bold;">Week</th>';
-	} else {
-		echo '<th valign="top" style="font-weight:bold;">Month</th>';
-	}
+			<div class="my-3">
+				<table class="table table-sm table-hover table-striped">
+					<thead>
+						<tr>
+							<?php if ($time === 'weeks') { ?>
+								<th class="ps-4"><strong>Week</strong></th>
+							<?php } else { ?>
+								<th class="ps-4"><strong>Month</strong></th>
+							<?php } ?>
+							<td class="text-end"><strong><?= $LNG->MAPS_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->ISSUES_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->SOLUTIONS_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->PROS_NAME ?></strong></th>
+							<td class="text-end"><strong><?= $LNG->CONS_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->ARGUMENTS_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->COMMENTS_NAME ?></strong></th>
+							<th class="text-end"><strong><?= $LNG->CHATS_NAME ?></strong></th>
+							<th class="pe-4 text-end"><strong><?= $LNG->ADMIN_STATS_IDEAS_MONTHLY_TOTAL_LABEL ?></strong></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							$totalsArray = array();
+							for ($i=0; $i<$count; $i++) {
+						?>
+							<tr>
+								<?php
+									$monthlytotal = 0;
 
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->MAPS_NAME.'</th>';
-	echo '<td valign="top" style="font-weight:bold;" class="text-center">'.$LNG->ISSUES_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->SOLUTIONS_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->PROS_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->CONS_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->ARGUMENTS_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->COMMENTS_NAME.'</th>';
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->CHATS_NAME.'</th>';
+									if ($i < 1) {
+										$mintime= $startdate;
+									} else {
+										$mintime= $maxtime;
+									}
+									if ($time === 'weeks') {
+										//$maxtime=$startdate + ($week*($i+1));
+										$maxtime = strtotime( '+1 week', $mintime);
+										echo '<td>'.date("m / y", $mintime).'</td>';
+									} else {
+										$maxtime = strtotime( '+1 month', $mintime);
+										echo '<td>'.date("m / y", $mintime).'</td>';
+									}
 
-	echo '<th valign="top" style="font-weight:bold;" class="text-center">'.$LNG->ADMIN_STATS_IDEAS_MONTHLY_TOTAL_LABEL.'</th>';
+									$num7 = getNodeCreationCount("Map",$mintime, $maxtime);
+									echo '<td>'.$num7.'</td>';
+									if (isset($totalsArray[$LNG->MAPS_NAME])) {
+										$totalsArray[$LNG->MAPS_NAME] += $num7;
+									} else {
+										$totalsArray[$LNG->MAPS_NAME] = $num7;
+									}
+									$monthlytotal += $num7;
 
-	echo '</tr>';
+									$num2 = getNodeCreationCount("Issue",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num2.'</td>';
+									if (isset($totalsArray[$LNG->ISSUES_NAME])) {
+										$totalsArray[$LNG->ISSUES_NAME] += $num2;
+									} else {
+										$totalsArray[$LNG->ISSUES_NAME] = $num2;
+									}
+									$monthlytotal += $num2;
 
-	$totalsArray = array();
+									$num3 = getNodeCreationCount("Solution",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num3.'</td>';
+									if (isset($totalsArray[$LNG->SOLUTIONS_NAME])) {
+										$totalsArray[$LNG->SOLUTIONS_NAME] += $num3;
+									} else {
+										$totalsArray[$LNG->SOLUTIONS_NAME] = $num3;
+									}
+									$monthlytotal += $num3;
 
-	for ($i=0; $i<$count; $i++) {
-		echo '<tr>';
+									$num4 = getNodeCreationCount("Pro",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num4.'</td>';
+									if (isset($totalsArray[$LNG->PROS_NAME])) {
+										$totalsArray[$LNG->PROS_NAME] += $num4;
+									} else {
+										$totalsArray[$LNG->PROS_NAME] = $num4;
+									}
+									$monthlytotal += $num4;
 
-		$monthlytotal = 0;
+									$num5 = getNodeCreationCount("Con",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num5.'</td>';
+									if (isset($totalsArray[$LNG->CONS_NAME])) {
+										$totalsArray[$LNG->CONS_NAME] += $num5;
+									} else {
+										$totalsArray[$LNG->CONS_NAME] = $num5;
+									}
+									$monthlytotal += $num5;
 
-		if ($i < 1) {
-			$mintime= $startdate;
-		} else {
-			$mintime= $maxtime;
-		}
-		if ($time === 'weeks') {
-			//$maxtime=$startdate + ($week*($i+1));
-			$maxtime = strtotime( '+1 week', $mintime);
-			echo '<td>'.date("m / y", $mintime).'</td>';
-		} else {
-			$maxtime = strtotime( '+1 month', $mintime);
-			echo '<td>'.date("m / y", $mintime).'</td>';
-		}
+									$num6 = getNodeCreationCount("Argument",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num6.'</td>';
+									if (isset($totalsArray[$LNG->ARGUMENTS_NAME])) {
+										$totalsArray[$LNG->ARGUMENTS_NAME] += $num6;
+									} else {
+										$totalsArray[$LNG->ARGUMENTS_NAME] = $num6;
+									}
+									$monthlytotal += $num6;
 
-		$num7 = getNodeCreationCount("Map",$mintime, $maxtime);
-		echo '<td>'.$num7.'</td>';
-		if (isset($totalsArray[$LNG->MAPS_NAME])) {
-			$totalsArray[$LNG->MAPS_NAME] += $num7;
-		} else {
-			$totalsArray[$LNG->MAPS_NAME] = $num7;
-		}
-		$monthlytotal += $num7;
+									$num8 = getNodeCreationCount("Idea",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num8.'</td>';
+									if (isset($totalsArray[$LNG->COMMENTS_NAME])) {
+										$totalsArray[$LNG->COMMENTS_NAME] += $num8;
+									} else {
+										$totalsArray[$LNG->COMMENTS_NAME] = $num8;
+									}
+									$monthlytotal += $num8;
 
-		$num2 = getNodeCreationCount("Issue",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num2.'</td>';
-		if (isset($totalsArray[$LNG->ISSUES_NAME])) {
-			$totalsArray[$LNG->ISSUES_NAME] += $num2;
-		} else {
-			$totalsArray[$LNG->ISSUES_NAME] = $num2;
-		}
-		$monthlytotal += $num2;
+									$num9 = getNodeCreationCount("Comment",$mintime, $maxtime);
+									echo '<td class="text-end">'.$num9.'</td>';
+									if (isset($totalsArray[$LNG->CHATS_NAME])) {
+										$totalsArray[$LNG->CHATS_NAME] += $num9;
+									} else {
+										$totalsArray[$LNG->CHATS_NAME] = $num9;
+									}
+									$monthlytotal += $num9;
+								?>
 
-		$num3 = getNodeCreationCount("Solution",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num3.'</td>';
-		if (isset($totalsArray[$LNG->SOLUTIONS_NAME])) {
-			$totalsArray[$LNG->SOLUTIONS_NAME] += $num3;
-		} else {
-			$totalsArray[$LNG->SOLUTIONS_NAME] = $num3;
-		}
-		$monthlytotal += $num3;
+								<td class="text-end pe-4"><strong><?= $monthlytotal ?></strong></td>						
+							</tr>
+						<?php } ?>
 
-		$num4 = getNodeCreationCount("Pro",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num4.'</td>';
-		if (isset($totalsArray[$LNG->PROS_NAME])) {
-			$totalsArray[$LNG->PROS_NAME] += $num4;
-		} else {
-			$totalsArray[$LNG->PROS_NAME] = $num4;
-		}
-		$monthlytotal += $num4;
+						<tr class="table-secondary fw-bold">
+							<?php $grandtotal = 0; ?>
+							<td valign="top" class="ps-4">Total</td>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->MAPS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->MAPS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->ISSUES_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->ISSUES_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->SOLUTIONS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->SOLUTIONS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->PROS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->PROS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->CONS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->CONS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->ARGUMENTS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->ARGUMENTS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->COMMENTS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->COMMENTS_NAME]; ?>
+							<td valign="top" class="text-end"><?= $totalsArray[$LNG->CHATS_NAME] ?></td>
+							<?php $grandtotal += $totalsArray[$LNG->CHATS_NAME]; ?>
+							<td valign="top" class="text-end pe-4"><?= $grandtotal ?></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
-		$num5 = getNodeCreationCount("Con",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num5.'</td>';
-		if (isset($totalsArray[$LNG->CONS_NAME])) {
-			$totalsArray[$LNG->CONS_NAME] += $num5;
-		} else {
-			$totalsArray[$LNG->CONS_NAME] = $num5;
-		}
-		$monthlytotal += $num5;
-
-		$num6 = getNodeCreationCount("Argument",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num6.'</td>';
-		if (isset($totalsArray[$LNG->ARGUMENTS_NAME])) {
-			$totalsArray[$LNG->ARGUMENTS_NAME] += $num6;
-		} else {
-			$totalsArray[$LNG->ARGUMENTS_NAME] = $num6;
-		}
-		$monthlytotal += $num6;
-
-		$num8 = getNodeCreationCount("Idea",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num8.'</td>';
-		if (isset($totalsArray[$LNG->COMMENTS_NAME])) {
-			$totalsArray[$LNG->COMMENTS_NAME] += $num8;
-		} else {
-			$totalsArray[$LNG->COMMENTS_NAME] = $num8;
-		}
-		$monthlytotal += $num8;
-
-		$num9 = getNodeCreationCount("Comment",$mintime, $maxtime);
-		echo '<td class="text-end">'.$num9.'</td>';
-		if (isset($totalsArray[$LNG->CHATS_NAME])) {
-			$totalsArray[$LNG->CHATS_NAME] += $num9;
-		} else {
-			$totalsArray[$LNG->CHATS_NAME] = $num9;
-		}
-		$monthlytotal += $num9;
-
-		echo '<td style="font-weight:bold;" class="text-end">'.$monthlytotal.'</td>';
-		echo '</tr>';
-	}
-
-	echo '<tr>';
-
-	$grandtotal = 0;
-
-	echo '<td valign="top" style="font-weight:bold;">Total</td>';
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->MAPS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->MAPS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->ISSUES_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->ISSUES_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;;">'.$totalsArray[$LNG->SOLUTIONS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->SOLUTIONS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->PROS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->PROS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->CONS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->CONS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->ARGUMENTS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->ARGUMENTS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->COMMENTS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->COMMENTS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$totalsArray[$LNG->CHATS_NAME].'</td>';
-	$grandtotal += $totalsArray[$LNG->CHATS_NAME];
-
-	echo '<td valign="top" style="font-weight:bold;">'.$grandtotal.'</td>';
-
-	echo '</tr>';
-	echo '</table>';
-	echo '</div>';
-
-	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
-
+<?php
+	include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>

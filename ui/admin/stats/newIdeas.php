@@ -195,14 +195,14 @@
 									if ($time === 'weeks') {
 										//$maxtime=$startdate + ($week*($i+1));
 										$maxtime = strtotime( '+1 week', $mintime);
-										echo '<td>'.date("m / y", $mintime).'</td>';
+										echo '<td class="ps-4">'.date("m / y", $mintime).'</td>';
 									} else {
 										$maxtime = strtotime( '+1 month', $mintime);
-										echo '<td>'.date("m / y", $mintime).'</td>';
+										echo '<td class="ps-4">'.date("m / y", $mintime).'</td>';
 									}
 
 									$num7 = getNodeCreationCount("Map",$mintime, $maxtime);
-									echo '<td>'.$num7.'</td>';
+									echo '<td class="text-end">'.$num7.'</td>';
 									if (isset($totalsArray[$LNG->MAPS_NAME])) {
 										$totalsArray[$LNG->MAPS_NAME] += $num7;
 									} else {

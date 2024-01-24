@@ -330,3 +330,23 @@ hr.urldivider { background: #40B5B2; border: 0px; padding: 0px; height: 1px; wid
 .searchborder { border:1px solid #C0C0C0; font-family:"Trebuchet MS", Helvetica, sans-serif; font-size:10pt; }
 
 .promptbox { z-index:200; background: #E8E8E8;  border: 1px solid #C0C0C0; padding:5px;  width: 400px;  height: 200px;  position: absolute;  left:0px;  top:0px;  overflow: auto;  display: none;  font-family: Arial; } */
+
+
+/* Admin page */
+
+.btn-admin { background-color: #ddd; border-color: #ddd; color: #555 !important; font-weight: bold; }
+.btn-admin:hover { background-color: #a91a70; border-color: #a91a70; color: #fff !important; }
+.btn-admin.active { background-color: #a91a70; border-color: #a91a70; color: #fff !important; }
+
+.admin-index .card .card-body a { color: inherit; }
+.admin-index .card .card-body a:hover { color: inherit; }
+th.sorting_disabled::before { display: none !important; }
+th.sorting_disabled::after { display: none !important; }
+.dataTable { color: #696969; width: 100%; table-layout: auto; }
+.dataTable th { color: #212529; font-size: 1em; border-color: rgb(222, 226, 230) !important; padding: 0.5rem; }
+.dataTable td { padding: 0.5rem; }
+
+.grayline { border-color: #ddd !important; }
+.graylinewide { background-color: #ddd !important; height: 1px !important; }
+
+.spamdiv table.toConnectionsTable tbody tr td div:first-child { display: flex; justify-content: start; }

@@ -277,7 +277,6 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 /****************************************/
 
 .page { margin-left:20px; margin-right:20px; }
-.paraindent1 {  }
 .paraindent2 { margin-left: 48.0pt; text-indent: -18.0pt; }
 
 /*******************/
@@ -341,7 +340,7 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 .mainnodediv .nodetableGroup { display: table; height:100%; width:100%; background: #F4F5F7; }
 
 /** MB: was messing up the 'Manage Group' link - squashing it up **/
-.nodetableGroup .nodetablecellbottom { display: block; vertical-align: bottom; }
+.nodetableGroup .nodetablecellbottom { display: block; }
 
 /** MB: Want fixed Heights on group boxes as it looks better / more consistent */
 /** MB: added background to stand out against the white - used to be reversed - white boxes against light gray - in old sight. **/

@@ -4824,7 +4824,7 @@ function createSpamMenuOption(node, nodetype) {
 
 	var spaming = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;font-size:10pt'} );
 
-	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.insert("<?php echo $LNG->SPAM_REPORTED_TEXT; ?>");
 		spaming.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
 		spaming.className = "";
@@ -4852,7 +4852,7 @@ function createSpamMenuOption(node, nodetype) {
 function createSpamButton(node, nodetype) {
 	// Add spam icon
 	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
-	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
 		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
 		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');

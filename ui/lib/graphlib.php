@@ -151,6 +151,8 @@ var $offset_relation   =   null;         // array of offsets for different sets 
 function init() {
 
   $currlang = 'english';
+  $fontpath = $_SERVER['DOCUMENT_ROOT']."/ui/lib/";
+  $this->parameter['path_to_fonts'] = $fontpath;
 
   $this->calculated['outer_border'] = $this->calculated['boundary_box'];
 
@@ -272,7 +274,8 @@ function draw_set($order, $set, $offset) {
     //print "$thisX, $thisY <br />";
 
     if (($bar!='none') && (string)$thisY != 'none') {
-        if ($relatedset = $this->offset_relation[$set]) {                               // Moodle
+        if ($this->offset_relation != null 
+                && $relatedset = $this->offset_relation[$set]) {                        // Moodle
             $yoffset = $this->calculated['y_plot'][$relatedset][$index];                // Moodle
         } else {                                                                        // Moodle
             $yoffset = 0;                                                               // Moodle
@@ -1054,9 +1057,13 @@ function init_x_axis() {
   $axis_colour     = $this->parameter['axis_colour'];
   $axis_angle      = $this->parameter['x_axis_angle'];
 
+ 
   // check whether to treat x axis as numeric
   if ($this->parameter['x_axis_gridlines'] == 'auto') { // auto means text based x_axis, not numeric...
-    $this->calculated['x_axis']['num_ticks'] = count($this->x_data);
+ 
+    $count = (is_countable($this->x_data)) ? count($this->x_data) : 0;
+ 
+    $this->calculated['x_axis']['num_ticks'] = $count;
       $data = $this->x_data;
       for ($i=0; $i < $this->calculated['x_axis']['num_ticks']; $i++) {
         $value = array_shift($data); // grab value from begin of array
@@ -1114,7 +1121,9 @@ function init_x_axis() {
 
 // find max and min values for a data array given the resolution.
 function find_range($data, $min, $max, $resolution) {
-  if (count($data) == 0 ) return array('min' => 0, 'max' => 0);
+	$count = (is_countable($data)) ? count($data) : 0;
+
+  if ($count == 0 ) return array('min' => 0, 'max' => 0);
   foreach ($data as $key => $value) {
     if ($value=='none') continue;
     if ($value > $max) $max = $value;
@@ -1415,7 +1424,7 @@ function init_colours() {
   $this->colour['gray66']   = ImageColorAllocate ($this->image, 0x66, 0x66, 0x66);
   $this->colour['gray99']   = ImageColorAllocate ($this->image, 0x99, 0x99, 0x99);
 
-  // DEBATE HUB
+// LITEMAP HUB
   $challenge = $this->hex2rgb($CFG->challengeback);
   $issue = $this->hex2rgb($CFG->issueback);
   $solution = $this->hex2rgb($CFG->solutionback);
@@ -1445,6 +1454,7 @@ function init_colours() {
   $this->colour['plain'] = ImageColorAllocate ($this->image, $plain[0], $plain[1], $plain[2]);
 
   $this->colour['none']   = 'none';
+
   return true;
 }
 
@@ -1498,6 +1508,8 @@ function output() {
           ImageJPEG($this->image);
           break;
        default:
+          //error_log(ob_get_contents()); // something adding '\r\n\r\n\r\n' to the buffer
+          ob_end_clean(); // suggested by Bard when outputting to a file worked, but back to the browser didn't - 17/01/2024
           Header("Content-type: image/png");  // preferred output format
           ImagePNG($this->image);
           break;
@@ -1779,6 +1791,4 @@ function draw_brush($x, $y, $size, $type, $colour) {
 }
 
 } // class graph
-
-
 ?>

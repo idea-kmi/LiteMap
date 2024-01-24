@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
+ *  (c) Copyright 2015 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -101,6 +101,7 @@ class GroupSet {
 		$csql = $HUB_SQL->DATAMODEL_GROUP_LOAD_PART1;
 		$csql .= $sql;
 		$csql .= $HUB_SQL->DATAMODEL_GROUP_LOAD_PART2;
+
 		$carray = $DB->select($csql, $params);
         $totalconns = $carray[0]["totalusers"];
 
@@ -112,6 +113,7 @@ class GroupSet {
         $sql = $DB->addLimitingResults($sql, $start, $max);
 
 		$resArray = $DB->select($sql, $params);
+
 		$count = 0;
 		if (is_countable($resArray)) {
 			$count = count($resArray);

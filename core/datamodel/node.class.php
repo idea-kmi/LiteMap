@@ -148,7 +148,9 @@ class CNode {
 					if (trim($array['Description']) != "") {
 						$this->hasdesc = true;
 					}
-
+					if (isset($array['CurrentStatus'])) {
+						$this->status = $array['CurrentStatus'];
+					}
 					if ($style == 'long' || $style == 'cif'){
 						$this->description = stripslashes(trim($array['Description']));
 					}
@@ -235,9 +237,6 @@ class CNode {
 							}
 							if (isset($array['AdditionalIdentifier'])) {
 								$this->identifier = $array['AdditionalIdentifier'];
-							}
-							if (isset($array['CurrentStatus'])) {
-								$this->status = $array['CurrentStatus'];
 							}
 						}
 					}

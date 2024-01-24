@@ -109,6 +109,36 @@ $LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE = 'Derzeit ist kein Nutzer suspendi
 $LNG->SPAM_USER_ADMIN_SPAM_TITLE = 'Gemeldete Nutzer';
 $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE = 'Nutzer suspendiert';
 
+$LNG->SPAM_GROUP_REPORTED = 'Die Gruppe wurde als Spammer/Unangemessen gemeldet';
+$LNG->SPAM_GROUP_REPORT = 'Melden Sie diese Gruppe als Spam/Unangemessen';
+$LNG->SPAM_GROUP_LOGIN_REPORT = 'Melden Sie sich an, um diese Gruppe als Spam/Unangemessen zu melden';
+$LNG->SPAM_GROUP_REPORTED_ALT = 'Gemeldet';
+$LNG->SPAM_GROUP_REPORT_ALT = 'Bericht';
+$LNG->SPAM_GROUP_LOGIN_REPORT_ALT = 'Zum Melden anmelden';
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0 = "Berichtet von";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 = "Gruppenname";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 = "Aktion";
+$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON = "Gruppe anzeigen";
+$LNG->SPAM_GROUP_ADMIN_VIEW_HINT = "Öffnen Sie ein neues Fenster mit der Homepage dieser Gruppe";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON = "Gruppe wiederherstellen";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT = "Setzen Sie diese Gruppe wieder auf aktiv";
+$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON = "Gruppe löschen";
+$LNG->SPAM_GROUP_ADMIN_DELETE_HINT = "Diese Gruppe löschen";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON = "Archivieren Sie diese Gruppe";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_HINT = "Archivieren Sie diese Gruppe und alle darin enthaltenen Karten";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART1 = "Sind Sie sicher, dass Sie die Gruppe löschen möchten:";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART2 = "Seien Sie gewarnt: Gruppenmitglieder werden aus der Gruppe entfernt und mit der Gruppe verbundene Knoten und Triples verlieren diese Verbindung. Wenn Sie dies noch nicht getan haben, sollten Sie zunächst die Gruppenmitglieder und Inhalte durch Klicken überprüfen '".$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON."'";;
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART1 = "Sind Sie sicher, dass Sie die Gruppe wiederherstellen möchten: ";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART2 = "Dadurch wird diese Gruppe aus dieser Liste entfernt";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_CHECK_MESSAGE = "Sind Sie sicher, dass Sie die Gruppe archivieren möchten:";
+$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE = 'Derzeit sind keine Gruppen als Spammer/Unangemessen gemeldet';
+$LNG->SPAM_GROUP_ADMIN_TITLE = "Gruppenberichtsmanager";
+$LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK = "Gemeldete Gruppen";
+$LNG->SPAM_GROUP_ADMIN_ID_ERROR = "Die Anfrage kann nicht verarbeitet werden, da die Gruppen-ID fehlt";
+$LNG->SPAM_GROUP_ADMIN_NONE_ARCHIVED_MESSAGE = 'Derzeit sind keine Gruppen archiviert';
+$LNG->SPAM_GROUP_ADMIN_SPAM_TITLE = 'Gemeldete Gruppen';
+$LNG->SPAM_GROUP_ADMIN_ARCHIVED_TITLE = 'Gruppen archiviert';
+
 /** NEWS ADMINSTRATION **/
 $LNG->ADMIN_MANAGE_NEWS_LINK = "Verwalte ".$LNG->NEWSS_NAME;
 $LNG->ADMIN_MANAGE_NEWS_DELETE_ERROR = 'Es gab ein Problem bei der L&ouml;schen von '.$LNG->NEWS_NAME.' mit der ID:';
@@ -129,4 +159,5 @@ $LNG->ADMIN_NEWS_DELETE_LINK = 'l&ouml;schen';
 
 /** USER STATS **/
 $LNG->ADMIN_NEWS_USERS = 'Benutzerliste';
+$LNG->ADMIN_NEWS_GROUPS = 'Gruppenliste';
 ?>

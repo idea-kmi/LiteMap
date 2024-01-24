@@ -108,6 +108,36 @@ $LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE = 'Actualmente no hay usuarios susp
 $LNG->SPAM_USER_ADMIN_SPAM_Título = 'Usuario reportado';
 $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE = 'Usuario suspendido';
 
+$LNG->SPAM_GROUP_REPORTED = 'El grupo ha sido reportado como Spammer/Inapropiado';
+$LNG->SPAM_GROUP_REPORT = 'Reportar este grupo como spam/inapropiado';
+$LNG->SPAM_GROUP_LOGIN_REPORT = 'Inicie sesión para reportar este grupo como spam/inapropiado';
+$LNG->SPAM_GROUP_REPORTED_ALT = 'Reportada';
+$LNG->SPAM_GROUP_REPORT_ALT = 'Informe';
+$LNG->SPAM_GROUP_LOGIN_REPORT_ALT = 'Inicie sesión para informar';
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0 = "Reportado por";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 = "Nombre del grupo";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 = "Acción";
+$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON = "Ver grupo";
+$LNG->SPAM_GROUP_ADMIN_VIEW_HINT = "Abrir una nueva ventana que muestra la página de inicio de este grupo.";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON = "Restaurar grupo";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT = "Restaurar este grupo a activo";
+$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON = "Eliminar grupo";
+$LNG->SPAM_GROUP_ADMIN_DELETE_HINT = "Eliminar este grupo";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON = "Archivar este grupo";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_HINT = "Archivar este grupo y todos los mapas que contiene.";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART1 = "¿Estás seguro de que deseas eliminar el grupo: ";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART2 = "Tenga cuidado: los miembros del grupo serán eliminados del grupo y los nodos y triples asociados con el grupo perderán esa asociación. Si no lo ha hecho, primero debe verificar los miembros y el contenido del grupo haciendo clic en '".$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON."'";;
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART1 = "¿Estás segura de que quieres restaurar el grupo: ";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART2 = "Esto eliminará este grupo de esta lista.";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_CHECK_MESSAGE = "¿Estás segura de que quieres archivar el grupo: ";
+$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE = 'Actualmente no hay grupos reportados como spammers/inapropiados';
+$LNG->SPAM_GROUP_ADMIN_TITLE = "Administrador de informes grupales";
+$LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK = "Grupos reportados";
+$LNG->SPAM_GROUP_ADMIN_ID_ERROR = "No se puede procesar la solicitud porque falta groupid";
+$LNG->SPAM_GROUP_ADMIN_NONE_ARCHIVED_MESSAGE = 'Actualmente no hay grupos archivados';
+$LNG->SPAM_GROUP_ADMIN_SPAM_TITLE = 'Groups Reported';
+$LNG->SPAM_GROUP_ADMIN_ARCHIVED_TITLE = 'Grupos reportados';
+
 /** NEWS ADMINSTRATION **/
 $LNG->ADMIN_MANAGE_NEWS_LINK = "Gestionar ".$LNG->NEWSS_NAME;
 $LNG->ADMIN_MANAGE_NEWS_DELETE_ERROR = 'Había un problema para eliminar '.$LNG->NEWS_NAME.' con el id:';
@@ -128,4 +158,5 @@ $LNG->ADMIN_NEWS_DELETE_LINK = 'borrar';
 
 /** USER STATS **/
 $LNG->ADMIN_NEWS_USERS = 'Lista de usuarios';
+$LNG->ADMIN_NEWS_GROUPS = 'Lista de grupos';
 ?>

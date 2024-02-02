@@ -72,14 +72,19 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Thank you for requesting registrat
 
 /** SPAM MANAGEMENT **/
 $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Reported Items";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Reported Items";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Archived Items";
 $LNG->SPAM_ADMIN_TITLE = "Item Report Manager";
 $LNG->SPAM_ADMIN_ID_ERROR = "Can not process request as nodeid is missing";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Reported By";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Title";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Action";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Node Type";
 $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "Are you sure you want to delete the item?: ";
 $LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "Are you sure you want to set as NOT SPAM?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Not Spam";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "Are you sure you want to archive this item?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Restore";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Archive";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "Delete";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "View Details";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'There are currently no items reported as Spam / Inappropriate';
@@ -157,8 +162,9 @@ $LNG->ADMIN_NEWS_EDIT_LINK = 'edit';
 $LNG->ADMIN_NEWS_DELETE_LINK = 'delete';
 
 /** USER STATS **/
-$LNG->ADMIN_NEWS_USERS = 'User List';
-$LNG->ADMIN_NEWS_GROUPS = 'Group List';
+$LNG->ADMIN_NEWS_USERS = 'Users';
+$LNG->ADMIN_NEWS_GROUPS = 'Groups';
+$LNG->ADMIN_DASHBOARD = 'Admin Dashboard';
 
 /** GLOBAL STATS **/
 $LNG->HOMEPAGE_STATS_LINK = "Analytics";

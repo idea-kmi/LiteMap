@@ -71,15 +71,20 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REQUEST_SUBJECT = "Solicitud de inscripción para
 $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Gracias por solicitar la inscripción en el %s.<br>Desafortunadamente, en esta ocasión, su solicitud de una cuenta de usuario no ha sido exitosa.';
 
 /** SPAM MANAGEMENT **/
-$LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Items reportados";
+$LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Artículos reportados";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Artículos reportados";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Artículos Archivados";
 $LNG->SPAM_ADMIN_TITLE = "Item Administrador de informes";
 $LNG->SPAM_ADMIN_ID_ERROR = "No se puede procesar la solicitud, la ID del nodo no se encuentra";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Informado por";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Título";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Acción";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Tipo de nodo";
 $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "¿Está seguro que quiere eliminar este ítem?: ";
 $LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "¿Seguro que lo quiere establecer como no Spam?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "No Spam";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "¿Estás segura de que quieres archivar este artículo?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Restaurar";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Archivo";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "Borrar";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "Ver detalles";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'Actualmente no hay elementos denunciados como spam / inapropiados';
@@ -157,6 +162,7 @@ $LNG->ADMIN_NEWS_EDIT_LINK = 'editar';
 $LNG->ADMIN_NEWS_DELETE_LINK = 'borrar';
 
 /** USER STATS **/
-$LNG->ADMIN_NEWS_USERS = 'Lista de usuarios';
-$LNG->ADMIN_NEWS_GROUPS = 'Lista de grupos';
+$LNG->ADMIN_NEWS_USERS = 'Usuarios';
+$LNG->ADMIN_NEWS_GROUPS = 'Grupos';
+$LNG->ADMIN_DASHBOARD = 'Panel de administración';
 ?>

@@ -40,7 +40,12 @@
     $fromtime = optional_param("fromtime","0",PARAM_TEXT);
     $user = getUser($userid);
 
-    $as = getUserActivity($userid, $fromtime, 0, -1);
+	if ($USER->userid == $userid || $USER->getIsAdmin() == "Y") {					
+		$as = getAdminUserActivity($userid, $fromtime, 0, -1);
+	} else {
+		$as = getUserActivity($userid, $fromtime, 0, -1);
+	}
+
     $activities = $as->activities;
 
 	$userObj = json_encode($user, JSON_INVALID_UTF8_IGNORE);
@@ -75,10 +80,10 @@
 
 					foreach($activities as $activity) {
 						if ($activity->type == 'Follow') {
-							$follownode = getNode($activity->itemid);
+							$follownode = getNode($activity->itemid); // filters archived
 
 							if (!$follownode instanceof CNode) {
-								$followuser = getUser($activity->itemid);
+								$followuser = getUser($activity->itemid); // filters archived
 
 								if ($followuser instanceof User) {
 
@@ -155,7 +160,7 @@
 						} else if ($activity->type == 'Vote') {
 
 							//check if the item voted on was a node
-							$voteobj = getNode($activity->itemid);
+							$voteobj = getNode($activity->itemid); // filters archived
 							if ($voteobj instanceof CNode) {
 
 								try {
@@ -227,7 +232,7 @@
 								echo "</td>";
 
 								//check if the item voted on was a connection
-								$voteobj = getConnection($activity->itemid);
+								$voteobj = getConnection($activity->itemid); // filters archived
 								if ($voteobj instanceof Connection) {
 									$con = $voteobj;
 									if ( $con->private == 'N' || $con->userid == $USER->userid ) {

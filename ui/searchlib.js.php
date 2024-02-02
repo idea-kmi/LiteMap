@@ -1,30 +1,31 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
-header('Content-Type: text/javascript;');
-include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 - 2024 The Open University UK                            *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
+	header('Content-Type: text/javascript;');
+	include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 ?>
+
 /**
  * Functions for the search results page 'search.php'.
  */
@@ -33,7 +34,7 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
  *	Add the filter and sort controls for the page.
  */
 function addControls(container) {
-	var tb3 = new Element("div", {'class':'toolbarrowsearch'});
+	var tb3 = new Element("div", {'class':'toolbarrowsearch row d-inline-block'});
 	var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_TITLE; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>',connectedness:'<?php echo $LNG->SORT_CONNECTIONS; ?>', vote:'<?php echo $LNG->SORT_VOTES; ?>'};
 	tb3.insert(displaySortForm(sortOpts));
 	container.insert(tb3);
@@ -217,8 +218,6 @@ function loadpros(context,args){
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
 
-	console.log(reqUrl);
-
 	new Ajax.Request(reqUrl, { method:'get',
 		onSuccess: function(transport){
 
@@ -302,8 +301,6 @@ function loadcons(context,args) {
 	$("content-con-list").update(getLoading("<?php echo $LNG->LOADING_CONS; ?>"));
 
 	var reqUrl = SERVICE_ROOT + "&method=getnodesby" + context + "&" + Object.toQueryString(args);
-
-	console.log(reqUrl);
 
 	new Ajax.Request(reqUrl, { method:'get',
 		onSuccess: function(transport){
@@ -600,7 +597,6 @@ function loadusers(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'user',reorderUsers));
 					$("content-user-list").insert(tb2);
-					$("content-user-list").insert("<br><br>");
 				}
 
 				displayUsers($("content-user-list"),json.userset[0].users,parseInt(args['start'])+1);
@@ -690,7 +686,6 @@ function loadgroups(context,args){
 					var sortOpts = {date: '<?php echo $LNG->SORT_CREATIONDATE; ?>', name: '<?php echo $LNG->SORT_NAME; ?>', moddate: '<?php echo $LNG->SORT_MODDATE; ?>'};
 					tb2.insert(displaySortForm(sortOpts,args,'group',reorderGroups));
 					$("content-group-list").insert(tb2);
-					$("content-group-list").insert("<br><br>");
 				}
 
 				displayGroups($("content-group-list"),json.groupset[0].groups,parseInt(args['start'])+1, "400px","200px", false, true);
@@ -963,12 +958,12 @@ function reorderUsers(){
  */
 function displayUserSortForm(sortOpts,args,tab,handler){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
 
     var selOrd = new Element("select");
     selOrd.id = "select-orderby-"+tab;
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
  	Event.observe(selOrd,'change',handler);
     sbTool.insert(selOrd);
@@ -984,7 +979,7 @@ function displayUserSortForm(sortOpts,args,tab,handler){
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
     sortBy.id = "select-sort-"+tab;
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
  	Event.observe(sortBy,'change',handler);
     sbTool.insert(sortBy);
@@ -1051,12 +1046,12 @@ function handleSort() {
  */
 function displaySortForm(sortOpts){
 
-	var sbTool = new Element("span", {'class':'sortback toolbar2'});
+	var sbTool = new Element("span", {'class':'sortback toolbar2 col-auto'});
     sbTool.insert("<?php echo $LNG->SORT_BY; ?>: ");
 
     var selOrd = new Element("select");
     selOrd.id = "select-orderby-node";
-    selOrd.className = "toolbar";
+    selOrd.className = "toolbar form-select";
     selOrd.name = "orderby";
     sbTool.insert(selOrd);
  	Event.observe(selOrd,'change',handleSort);
@@ -1072,7 +1067,7 @@ function displaySortForm(sortOpts){
     var sortBys = {ASC: '<?php echo $LNG->SORT_ASC; ?>', DESC: '<?php echo $LNG->SORT_DESC; ?>'};
     var sortBy = new Element("select");
     sortBy.id = "select-sort-node";
-    sortBy.className = "toolbar";
+    sortBy.className = "toolbar form-select";
     sortBy.name = "sort";
     sbTool.insert(sortBy);
  	Event.observe(sortBy,'change',handleSort);
@@ -1121,10 +1116,11 @@ function createNav(total, start, count, argArray, context, type){
 		pageUL.insert(prevSpan);
 
 	    //pages
+	    var pageSpan = new Element("span", {'id':"nav-pages"});
 	    var totalPages = Math.ceil(total/argArray["max"]);
 	    var currentPage = (start/argArray["max"]) + 1;
 	    for (var i = 1; i < totalPages+1; i++){
-	    	var page = new Element("span", {'class':"nav-page"}).insert(i);
+	    	var page = new Element("li", {'class':"nav-page"}).insert(i);
 	    	if(i != currentPage){
 		    	page.addClassName("active");
 		    	var newArr = Object.clone(argArray);

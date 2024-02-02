@@ -34,6 +34,7 @@
     checkLogin();
 
     include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
+	include_once($HUB_FLM->getCodeDirPath("core/formats/json.php"));
 
     if($USER == null || $USER->getIsAdmin() == "N"){
         echo "<div class='errors'>.".$LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE."</div>";
@@ -74,13 +75,14 @@
 	else if(isset($_POST["restorearchivedgroup"])){
 		$groupid = optional_param("groupid","",PARAM_ALPHANUMEXT);
     	if ($groupid != "") {
-			restoreArchivedGroupAndChildren($groupid);
+			restoreGroupAndChildren($groupid);
     	} else {
             array_push($errors,$LNG->SPAM_GROUP_ADMIN_ID_ERROR);
     	}
     }
 
 	$allGroups = array();
+	$format_json = new format_json();
 
 	$gs = getGroupsByStatus($CFG->USER_STATUS_REPORTED, 0, -1, 'name', 'ASC','long');
     $groups = $gs->groups;
@@ -88,15 +90,16 @@
 	$count = (is_countable($groups)) ? count($groups) : 0;
     for ($i=0; $i<$count;$i++) {
     	$group = $groups[$i];
-		$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ACTIVE);
+		$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ACTIVE);
 		$reporterid = getSpamReporter($group->groupid);
 		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			$group->istop = true;	// only top if it was the reported item
     	}
-		$allGroups[$group->groupid] = $group;
+		$jsongroupstr = $format_json->format($group);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsongroupstr); // in case older data has some
+		$allGroups[$group->groupid] =  json_decode($stripped_of_invalid_utf8_chars_string);
     }
 
 	// groups are really user record entries
@@ -107,22 +110,25 @@
 	$count2 = (is_countable($groupssarchivedinitial)) ? count($groupssarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
     	$group = $groupssarchivedinitial[$i];
-    	$reporterid = getSpamReporter($group->groupid);
+		$reporterid = getSpamReporter($group->groupid);
     	if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			$group->children = loadGroupChildDebates($group->groupid, $CFG->STATUS_ARCHIVED);
-			$group->istop = true; // only top if it was the reported item
+			$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ARCHIVED);
 			array_push($archivedgroups, $group);
-   		}
-		$allGroups[$group->groupid] = $group;
+		}		
+		$jsongroupstr = $format_json->format($group);
+		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsongroupstr); // in case older data has some
+		$allGroups[$group->groupid] =  json_decode($stripped_of_invalid_utf8_chars_string);
     }
+
+	//echo print_r($allGroups, true);
 ?>
 
 <script type="text/javascript">
 
-	const allgroups = <?php echo json_encode($allGroups); ?>;
+	const allgroups = <?php echo json_encode($allGroups, JSON_INVALID_UTF8_IGNORE); ?>;
 
 	function getParentWindowHeight(){
 		var viewportHeight = 900;
@@ -207,6 +213,66 @@
 			row.style.display = "none";
 		}
 
+		// only draw the tree once, then after that just show it
+		const containerObj = document.getElementById(containerid);	
+		if (containerObj.innerHTML == "&nbsp;") {
+			containerObj.innerHTML = "";
+
+			console.log(allgroups);
+
+			var group = allgroups[groupid].group[0];
+			const childmaps = group.children;
+
+			// process each maps child connections and nodes ready for drawing.
+			for (let i=0; i< childmaps.length; i++) {
+
+				let mapnode = childmaps[i];
+				const allConnections = childmaps[i].cnode.connections[0].connectionset.connections;
+
+				// sort the connections into trees
+				if (allConnections && Array.isArray(allConnections)) {
+					childmaps[i].cnode.children = getTreeMap(allConnections);
+				}
+
+				const lonenodes = childmaps[i].cnode.nodes[0].nodeset.nodes;
+				if (lonenodes &&  Array.isArray(lonenodes)) {
+					// add in any lone nodes - not part of a connection in the map
+					for (let j=0; j<lonenodes.length; j++) {
+						childmaps[i].cnode.children.push(lonenodes[j]);
+					}
+				}
+
+				//console.log(childmaps[i].cnode.children.length);
+				if (childmaps[i].cnode.children.length > 0) {
+					childmaps[i].cnode.istop = true;
+				}
+			}
+
+			if (childmaps.length > 0) {
+				displayConnectionNodes(containerObj, childmaps, parseInt(0), true, groupid+"tree");
+			}	
+		}
+	}
+
+	/*
+	function viewGroupTree(groupid, containerid, rootname, toggleRow) {
+
+		// close any opened divs
+		const divsArray = document.getElementsByName(rootname);
+		for (let i=0; i < divsArray.length; i++) {
+			if (divsArray[i].id !== toggleRow) {
+				divsArray[i].style.display = 'none';
+			}
+		}
+		
+		// Toggle row
+		const row = document.getElementById(toggleRow);
+		if (row.style.display == "none") {
+			row.style.display = "";
+		} else {
+			row.style.display = "none";
+		}
+
 		var group = allgroups[groupid];
 
 		const containerObj = document.getElementById(containerid);	
@@ -216,7 +282,8 @@
 				displayConnectionNodes(containerObj, group.children, parseInt(0), true, groupid+"tree");
 			}					
 		}
-	}
+	} */
+
 	window.onload = init;
 </script>
 
@@ -257,7 +324,15 @@
 											<tr>
 												<td><?= $group->name ?></td>
 												<td>
-													<?php echo '<span class="active" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; ?>
+													<?php 
+														echo '<span class="active" onclick="viewGroupTree(
+															\''.$group->groupid.'\', 
+															\''.$group->groupid.'treediv\', 
+															\'treediv\', 
+															\''.$group->groupid.'treeRow\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
+													?>
+
+													<?php //echo '<span class="active" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; ?>
 												</td>
 												<td>
 													<?php echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">'; ?>
@@ -283,7 +358,12 @@
 													?>
 												</td>
 											</tr>
-										<?php } ?>
+											<!-- add the tree display area row -->
+											<tr id="<?= $group->groupid ?>treeRow" name="treediv" style="display:none">
+												<td colspan="6">
+													<div id="<?= $group->groupid ?>treediv">&nbsp;</div>
+												</td>
+											</tr>										<?php } ?>
 									</table>
 								<?php }
         					?>
@@ -319,9 +399,9 @@
 													<?php 
 														echo '<span class="active" onclick="viewGroupTree(
 															\''.$group->groupid.'\', 
-															\''.$group->groupid.'treediv\', 
-															\'treediv\', 
-															\''.$group->groupid.'treeRow\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
+															\''.$group->groupid.'treediv2\', 
+															\'treediv2\', 
+															\''.$group->groupid.'treeRow2\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
 												<td>
@@ -346,9 +426,9 @@
 											</tr>
 										
 											<!-- add the tree display area row -->
-											<tr id="<?= $group->groupid ?>treeRow" name="treediv" style="display:none">
+											<tr id="<?= $group->groupid ?>treeRow2" name="treediv2" style="display:none">
 												<td colspan="6">
-													<div id="<?= $group->groupid ?>treediv">&nbsp;</div>
+													<div id="<?= $group->groupid ?>treediv2">&nbsp;</div>
 												</td>
 											</tr>
 										<?php } ?>

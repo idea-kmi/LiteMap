@@ -14,6 +14,19 @@ body { color: #696969; font-family: "Avant Garde", Avantgarde, "Century Gothic",
 
 .required { color: red; font-weight:bold; }
 
+/* MB: We seem to have lost this class - matches a span to look like an anchor */
+.active {
+    color: #a91a70;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.active:hover {
+    color: #4E725F;
+    cursor: pointer;
+    font-weight: bold;
+}
+
 /*******/
 /* Nav */
 /*******/
@@ -109,9 +122,6 @@ span.page-nav i.fa-lg { font-size: 0.9em !important; }
 .toptreecount { font-size: 0.9em; }
 
 #toggleDebateButton { font-size: 0.8em; }
-
-.searchresultcontent .ideadata { font-size: 0.9em; }
-.searchresultcontent .ideadata a { font-size: 1em; }
 
 /**********/
 /* tables */
@@ -222,7 +232,24 @@ div.loading { width: 100%; text-align: center; }
 /*****************/
 /** Search page **/
 /*****************/
-.searchresulttitle { font-weight: bold; padding-left: 0 !important; }
+.searchresulttitle { font-size: 1.5em; font-weight: bold; padding-left: 0 !important; }
+.searchresultblock { border: 1px solid #ddd; display: block; margin: 15px auto; padding: 10px 20px; width: 100%; }
+.searchresultcontent { margin: 0px; padding: 0px; }
+.searchresultuparrow { vertical-align: middle; margin-left: 5px; }
+
+.searchResultsMenu { margin-top: 10px; }
+.nodeIcon { height: auto; max-width: 20px; margin-left: 10px; padding: 0; }
+.nodeComment { margin-left: 30px; }
+ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
+
+
+.searchresultcontent .idea-wrapper { display: block; }
+.searchresultcontent .idea-wrapper .idea-main { display: block; }
+.searchresultcontent .idea-wrapper .idea-main .idea-detail .ideadata .commentdiv { display: block !important; height: unset; margin-bottom: 20px; }
+.searchresultcontent .idea-wrapper .idea-main .idea-detail .ideadata .commentdiv a img.nodeIcon { margin-left: 0; margin-right: 10px; }
+.searchresultcontent .idea-wrapper .idea-main .idea-detail .ideadata .commentdiv .nodeComment { display: block !important; }
+
+/* .searchresulttitle { font-weight: bold; padding-left: 0 !important; }
 .searchresultblock { width: 100%; display: block; margin-bottom: 15px; }
 .searchresultcontent { margin: 0px; padding: 0px; }
 .searchresultuparrow { vertical-align: middle; margin-left: 5px; }
@@ -246,7 +273,7 @@ ol.user-list-tab-view li:last-child { border-bottom: 0px !important; }
 .searchresultcontent ul .idea-blob-list .idea-user2 { margin-right: 10px; text-align: left; width: 30px; }
 .searchresultcontent ul .idea-blob-list .idea-user2 img { height: auto; width: 100%; }
 
-.searchresultcontent ul .idea-blob-list .toConnectionsTable tbody tr td:first-child { width: 40px; }
+.searchresultcontent ul .idea-blob-list .toConnectionsTable tbody tr td:first-child { width: 40px; } */
 
 /* Network Graph */
 .nodearealineartitle { color: #fff; padding: 10px; }

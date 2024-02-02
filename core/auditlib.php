@@ -253,12 +253,15 @@ function getSpamReporter($itemid) {
 	$sql = $DB->addLimitingResults($sql, 0, 1);
 
     $resArray = $DB->select($sql, $params);
-    if ($resArray !== false) {
-    	// only expect 1 row
-        return $resArray[0]["ReporterID"];
-    } else {
-        return false;
-    }
+   if ($resArray !== false) {
+		$count = is_countable($resArray) ? count($resArray) : 0;
+		if ($count > 0) {
+			// only expect 1 row
+        	return $resArray[0]["ReporterID"];
+		}
+    } 
+	
+    return false;
 }
 
 /**

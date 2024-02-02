@@ -86,7 +86,7 @@
 		<script src="<?php echo $CFG->homeAddress; ?>ui/lib/bootstrap/bootstrap.bundle.min.js" type="text/javascript"></script>
 
 		<?php
-			$custom = $HUB_FLM->getCodeDirPath("ui/dialogheaderCustom.php");
+			$custom = $HUB_FLM->getCodeDirPath("ui/dialogadminCustom.php");
 			if (file_exists($custom)) {
 				include_once($custom);
 			}
@@ -231,20 +231,21 @@
 							<div class="row p-4">		
 								<div class="col">
 									<div class="d-flex flex-wrap w-100 gap-2 border-bottom pb-4">
-										<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin <?=($pg=="/ui/admin/index.php" ? 'active' : '')?> ">Admin Dashboard</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/stats" class="btn btn-admin <?=($pg=="/ui/admin/stats/" ? 'active' : '')?> ">Analytics</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin <?=($pg=="/ui/admin/userregistration.php" ? 'active' : '')?> ">Users</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/groupslist.php" class="btn btn-admin <?=($pg=="/ui/admin/groupslist.php" ? 'active' : '')?> ">Groups</a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> ">Registration requests <?=($registrationRequests > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $registrationRequests .'</span>' : '')?></a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> ">Reported items <?=($reportedItemsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedItemsCount .'</span>' : '')?></a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> ">Reported groups <?=($reportedGroupsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedGroupsCount .'</span>' : '')?></a>
-										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagerusers.php" ? 'active' : '')?> ">Reported users <?=($reportedUsersCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedUsersCount .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/index.php" class="btn btn-admin <?=($pg=="/ui/admin/index.php" ? 'active' : '')?> "><?= $LNG->ADMIN_DASHBOARD ?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/stats/index.php" class="btn btn-admin <?=($pg=="/ui/admin/stats/index.php" ? 'active' : '')?> "><?= $LNG->HOMEPAGE_STATS_LINK ?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/adminregister.php" class="btn btn-admin <?=($pg=="/ui/admin/adminregister.php" ? 'active' : '')?> "><?= $LNG->ADMIN_REGISTER_NEW_USER_LINK ?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/userregistration.php" class="btn btn-admin <?=($pg=="/ui/admin/userregistration.php" ? 'active' : '')?> "><?= $LNG->ADMIN_NEWS_USERS ?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/groupslist.php" class="btn btn-admin <?=($pg=="/ui/admin/groupslist.php" ? 'active' : '')?> "><?= $LNG->ADMIN_NEWS_GROUPS ?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/registrationmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/registrationmanager.php" ? 'active' : '')?> "><?= $LNG->REGSITRATION_ADMIN_MANAGER_LINK ?> <?=($registrationRequests > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $registrationRequests .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanager.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanager.php" ? 'active' : '')?> "><?= $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK?> <?=($reportedItemsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedItemsCount .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagergroups.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagergroups.php" ? 'active' : '')?> "><?= $LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK?><?=($reportedGroupsCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedGroupsCount .'</span>' : '')?></a>
+										<a href="<?= $CFG->homeAddress ?>ui/admin/spammanagerusers.php" class="btn btn-admin <?=($pg=="/ui/admin/spammanagerusers.php" ? 'active' : '')?> "><?= $LNG->SPAM_USER_ADMIN_MANAGER_SPAM_LINK ?> <?=($reportedUsersCount > 0 ? '<span class="badge rounded-pill" style="background-color: #fff; border: 1px solid #a91a70; color: #a91a70; margin-left: 5px;">'. $reportedUsersCount .'</span>' : '')?></a>
 										<?php 
 											if (isset($CFG->adminUserID)) {
 												$admin = new User($CFG->adminUserID);
 												$admin = $admin->load();
 												if (!$admin instanceof Hub_Error) { ?>
-													<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/newsmanager.php" ? 'active' : '')?> ">Manage news</a>
+													<a href="<?= $CFG->homeAddress ?>ui/admin/newsmanager.php" class="btn btn-admin <?=($pg=="/ui/admin/newsmanager.php" ? 'active' : '')?> "><?= $LNG->ADMIN_MANAGE_NEWS_LINK ?></a>
 											<?php }
 										} ?>
 									</div>

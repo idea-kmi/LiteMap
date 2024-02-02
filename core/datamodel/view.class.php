@@ -76,10 +76,7 @@ class View {
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
 
     	if ($resArray !== false) {
-			$count = 0;
-			if (is_countable($resArray)) {
-				$count = count($resArray);
-			}
+			$count = (is_countable($resArray)) ? count($resArray) : 0;
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = new ViewNode($array['ViewID'], $array['NodeID'], $array['UserID']);
@@ -97,10 +94,7 @@ class View {
 		// load connections
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_CONNECTIONS, $params);
     	if ($resArray !== false) {
-			$count = 0;
-			if (is_countable($resArray)) {
-				$count = count($resArray);
-			}
+			$count = (is_countable($resArray)) ? count($resArray) : 0;
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
 				$next = new ViewConnection($array['ViewID'], $array['TripleID'], $array['UserID']);

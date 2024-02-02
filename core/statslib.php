@@ -1628,7 +1628,7 @@
 		$sql .= $HUB_SQL->STATSLIB_GLOBAL_NODETYPE_SELECT_PART2;
 
 		$roleCount = 0;
-		$role->name = "";
+		$roleName = "";
 
 		$resArray = $DB->select($sql, $params);
 		if ($resArray !== false) {
@@ -1675,7 +1675,7 @@
 							$counts = $array2['num'];
 							if ($counts > $roleCount) {
 								$roleCount = $counts;
-								$role->name = $previousName;
+								$roleName = $previousName;
 							}
 						}
 					}
@@ -1693,7 +1693,7 @@
 			}
 		}
 
-		return array($roleCount, $role->name);
+		return array($roleCount, $roleName);
 	}
 
 	/**
@@ -2215,7 +2215,7 @@
 		$sql .= $HUB_SQL->STATSLIB_GLOBAL_NODETYPE_SELECT_PART2;
 
 		$roleCount = 0;
-		$role->name = "";
+		$roleName = "";
 
 		$resArray = $DB->select($sql, $params);
 		if ($resArray !== false) {
@@ -2266,7 +2266,7 @@
 							$counts = $array2['num'];
 							if ($counts > $roleCount) {
 								$roleCount = $counts;
-								$role->name = $previousName;
+								$roleName = $previousName;
 							}
 						}
 					}
@@ -2283,7 +2283,7 @@
 				}
 			}
 		}
-		return array($roleCount, $role->name);
+		return array($roleCount, $roleName);
 	}
 
 	/**

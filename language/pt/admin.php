@@ -73,14 +73,19 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Agradecemos por solicitar a inscri
 
 /** SPAM MANAGEMENT **/
 $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Itens relatados";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Itens relatados";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Itens arquivados";
 $LNG->SPAM_ADMIN_TITLE = "Item Administrador de informes";
 $LNG->SPAM_ADMIN_ID_ERROR = "Não se pode processar a solicitação, o ID do node não se encontra";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Informado por";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Título";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Ação";
-$LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "¿Está seguro que queres eliminar este item?: ";
-$LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "¿Está seguro que queres estabelecer como não Spam?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Não Spam";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Tipo de nó";
+$LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "Tem certeza de que deseja excluir o item?: ";
+$LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "Tem certeza de que deseja definir como NÃO SPAM?: ";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "Tem certeza de que deseja arquivar este item?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Restaurar";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Arquivo";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "Apagar";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "Ver detalhes";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'Atualmente não há elementos denunciados como spam / inapropriados';
@@ -158,6 +163,7 @@ $LNG->ADMIN_NEWS_EDIT_LINK = 'editar';
 $LNG->ADMIN_NEWS_DELETE_LINK = 'excluir';
 
 /** USER STATS **/
-$LNG->ADMIN_NEWS_USERS = 'Lista de usuários';
-$LNG->ADMIN_NEWS_GROUPS = 'Lista de grupos';
+$LNG->ADMIN_NEWS_USERS = 'Usuárias';
+$LNG->ADMIN_NEWS_GROUPS = 'Grupos';
+$LNG->ADMIN_DASHBOARD = 'Painel de administração';
 ?>

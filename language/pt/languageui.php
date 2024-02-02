@@ -408,6 +408,7 @@ $LNG->VIEWS_EVIDENCE_MAP_HINT="Click para ver o gráfico das redes de trabalho d
 /** ERROR MESSAGES */
 $LNG->DATABASE_CONNECTION_ERROR = 'Não se pode conectar à base de dados - por favor, confira a configuração do servidor.';
 $LNG->ITEM_NOT_FOUND_ERROR = 'Item não encontrado';
+$LNG->ITEM_NOT_AVAILABLE_ERROR = 'Item não disponível';
 
 /** BUTTONS AND LINK HINTS **/
 $LNG->SIGN_IN_HINT = 'Entre para adicionar a LiteMap';

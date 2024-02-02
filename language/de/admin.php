@@ -72,15 +72,20 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REQUEST_SUBJECT = "Registrierungsanfrage f&uuml;r
 $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Vielen Dank f&uumlr; Ihre Registrierungsanfrage f&uuml;r %s.<br>Leider war Ihre Registrierungsanfrage f&uuml;r einen Benutzeraccount derzeit nicht erfolgreich.';
 
 /** SPAM MANAGEMENT **/
-$LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Gemeldete Eintr&auml;ge";
+$LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Gemeldete Artikel";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Gemeldete Artikel";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Archivierte Elemente";
 $LNG->SPAM_ADMIN_TITLE = "Gemeldete Eintr&auml;ge Manager";
 $LNG->SPAM_ADMIN_ID_ERROR = "Konnte die Anfrage nicht verarbeiten, da die Knoten ID fehlte";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Gemeldet von";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Titel";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Aktion";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Knotentyp";
 $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "Sind Sie sicher, dass Sie diesen Eintrag l&ouml;schen wollen?: ";
 $LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "Sind Sie sicher, dass Sie dies als kein Spam setzen m&ouml;chten?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Kein Spam";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "Sind Sie sicher, dass Sie dieses Element archivieren möchten?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Wiederherstellen";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Archiv";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "L&ouml;schen";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "Details anschauen";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'Derzeit gibt es keine Eintr&auml;ge, die als SPAM / nicht geeignet gemeldet wurden';
@@ -158,6 +163,7 @@ $LNG->ADMIN_NEWS_EDIT_LINK = 'editieren';
 $LNG->ADMIN_NEWS_DELETE_LINK = 'l&ouml;schen';
 
 /** USER STATS **/
-$LNG->ADMIN_NEWS_USERS = 'Benutzerliste';
-$LNG->ADMIN_NEWS_GROUPS = 'Gruppenliste';
+$LNG->ADMIN_NEWS_USERS = 'Benutzer';
+$LNG->ADMIN_NEWS_GROUPS = 'Gruppen';
+$LNG->ADMIN_DASHBOARD = 'Admin-Dashboard';
 ?>

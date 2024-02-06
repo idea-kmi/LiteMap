@@ -1,7 +1,7 @@
 <?php
 	/********************************************************************************
 	 *                                                                              *
-	 *  (c) Copyright 2015 The Open University UK                                   *
+	 *  (c) Copyright 2015 - 2024 The Open University UK                            *
 	 *                                                                              *
 	 *  This software is freely distributed in accordance with                      *
 	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -80,6 +80,16 @@
 		include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 		die;
 	} else {
+		// reported groups are still visible - in case maliciously reported. Which would take out too much content
+		// even admins can't see archived groups - have to look at the content through the reported groups admin screen
+		if (($group->status != $CFG->USER_STATUS_ACTIVE && $group->status != $CFG->USER_STATUS_REPORTED) 
+					&& (!isset($USER->userid) || $USER->getIsAdmin() == "N" || $group->status == $CFG->STATUS_ARCHIVED)) {
+			include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+			echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+			die;
+		} 
+
 		$userid = "";
 		if (isset($USER->userid)) {
 			$userid = $USER->userid;
@@ -300,15 +310,15 @@
 	<div id="searchmap" class="col-12 toolbarIcons">
 		<div class="row">
 			<div class="col-lg-4 col-md-12">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('map-go-button').onclick();}" id="qmap" name="q" value="<?php print( htmlspecialchars($gq) ); ?>" />
-					<div id="q_choices" class="autocomplete"></div>
-					<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="refreshGroupSearch();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
-				</div>
 				<?php
 					// if search term is present in URL then show in search box
 					$q = stripslashes(optional_param("q","",PARAM_TEXT));
 				?>
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" aria-label="<?php echo $LNG->TAB_SEARCH_ISSUE_LABEL; ?>" onkeyup="if (checkKeyPressed(event)) { $('map-go-button').onclick();}" id="qmap" name="q" value="<?php print( htmlspecialchars($q) ); ?>" />
+					<div id="q_choices" class="autocomplete"></div>
+					<button class="btn btn-outline-dark bg-light text-dark" type="button" onclick="refreshGroupSearch();"><?php echo $LNG->TAB_SEARCH_GO_BUTTON; ?></button>
+				</div>
 			</div>
 		</div>
 	</div>

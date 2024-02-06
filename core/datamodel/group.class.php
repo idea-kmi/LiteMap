@@ -41,6 +41,8 @@ class Group {
     public $negativevotes = 0;
     public $votes = 0;
     public $isopenjoining = 'N';
+    
+    public $status = 0;
 
     //public $location;
     //public $countrycode;
@@ -82,8 +84,9 @@ class Group {
 			}
             if($count==0){
 				global $ERROR;
-				$ERROR = new Hub_Error;
-				return $ERROR->createGroupNotFoundError($this->groupid);
+				$ERROR = new Hub_Error();
+				$ERROR->createGroupNotFoundError($this->groupid);
+				return $ERROR;
             }
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -91,6 +94,10 @@ class Group {
                 $this->description = stripslashes($array['Description']);
                 $this->website = stripslashes($array['Website']);
                 $this->isopenjoining = $array['IsOpenJoining'];
+
+                if (isset($array['CurrentStatus'])) {
+                    $this->status = (int) $array['CurrentStatus'];
+                }                 
 
 				if($array['Photo']){
 					//set user photo and thumb the thumb creation is done during registration
@@ -134,7 +141,7 @@ class Group {
                 }
                 if(isset($array['LocationLng'])){
                     $this->locationlng = $array['LocationLng'];
-                }
+                }               
             }
         } else {
             return database_error();
@@ -277,7 +284,7 @@ class Group {
      * @return User object (this) (or Error object)
      */
     function updateIsOpenJoining($isopen){
-        global $DB,$HUB_SQL,$USER,$HUB_CACHE;
+        global $DB,$HUB_SQL,$USER;
 
         //check user can add to the group
         if(!$this->isgroupadmin($USER->userid)){
@@ -295,6 +302,7 @@ class Group {
             return $this;
         }
     }
+
 
     /**
      * Checks whether the given user is a member of this group
@@ -446,6 +454,35 @@ class Group {
 
         return new Result("deleted","true");
     }
+
+	/**
+	 * Update the status for this group
+	 *
+	 * @return Group object (this) (or Error object)
+	 */
+	function updateStatus($status){
+	    global $DB,$CFG,$USER,$HUB_SQL,$HUB_CACHE;
+
+		if (isset($HUB_CACHE)) {
+			$HUB_CACHE->deleteData($this->groupid.$this->style);
+		}
+
+	    $dt = time();
+
+		$params = array();
+		$params[0] = $status;
+		$params[1] = $dt;
+		$params[2] = $this->groupid;
+
+        // users are groups so we can use the same SQL as users
+		$res = $DB->insert($HUB_SQL->DATAMODEL_USER_STATUS_UPDATE, $params);
+		if (!$res) {
+			return database_error();
+		} else {
+			$this->status = $status;
+		    return $this;
+		}
+	}
 
     /**
      * Adds a member to the group
@@ -626,7 +663,7 @@ class Group {
     }
 
     /**
-     * Remove a of the group
+     * Remove a member of the group
      *
      * @param string $userid
      * @return Group object (this)
@@ -647,7 +684,7 @@ class Group {
         }
 
         // remove them as admin (if they are already)
-        if( $this->isgroupadmin($userid) && ($this->removeadmin($userid) instanceof Hub_Error)){
+        if(($this->isgroupadmin($userid)) && ($this->removeadmin($userid) instanceof Hub_Error)){
 			global $ERROR;
 			$ERROR = new Hub_Error;
 			return $ERROR->createGroupLastAdmin($userid);
@@ -697,8 +734,8 @@ class Group {
         if(api_check_login() instanceof Hub_Error){
             return false;
         }
-        //can edit only if admin for the group
 
+        //can edit only if admin for the group
 		$params = array();
 		$params[0] = $this->groupid;
 		$params[1] = $userid;
@@ -741,7 +778,11 @@ class Group {
 	 * @return true if it all went well, else Error.
 	 */
 	 function joinrequest($userid) {
-		global $CFG, $DB, $USER,$HUB_SQL;
+		global $CFG, $DB, $USER, $HUB_SQL;
+
+        if(api_check_login() instanceof Hub_Error){
+            throw new Exception($LNG->ERROR_ACCESS_DENIED_MESSAGE);
+        }
 
 		// check user exists
 		$user = new User($userid);
@@ -762,7 +803,7 @@ class Group {
 		if ($res) {
 			return true;
 		} else {
-			return database_error();
+			return database_error($DB->conn);
 		}
 	}
 

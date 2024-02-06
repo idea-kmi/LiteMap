@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -64,10 +64,7 @@ class ViewSet {
 
 		$resArray = $DB->select($sql, $params);
 
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
         $this->count = $count;
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];
@@ -93,10 +90,7 @@ class ViewSet {
 
 		$resArray = $DB->select($sql, $params);
 
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
         $this->count = $count;
 		for ($i=0; $i<$count; $i++) {
 			$array = $resArray[$i];

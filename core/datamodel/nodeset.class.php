@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -74,7 +74,12 @@ class NodeSet {
 		$csql .= $sql;
 		$csql .= $HUB_SQL->DATAMODEL_NODE_LOAD_PART2;
 		$carray = $DB->select($csql, $params);
-        $totalconns = $carray[0]["totalnodes"];
+
+        if (is_countable($carray) && count($carray) > 0) {
+            $totalconns = $carray[0]["totalnodes"];
+        } else {
+            $totalconns = 0;
+        }        
 
         // ADD SORTING
        	$sql = $DB->nodeOrderString($sql, $orderby, $sort);

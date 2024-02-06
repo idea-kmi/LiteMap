@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -72,14 +72,19 @@ $LNG->REGSITRATION_ADMIN_EMAIL_REJECT_BODY = 'Thank you for requesting registrat
 
 /** SPAM MANAGEMENT **/
 $LNG->SPAM_ADMIN_MANAGER_SPAM_LINK = "Reported Items";
+$LNG->SPAM_ADMIN_SPAM_TITLE = "Reported Items";
+$LNG->SPAM_ADMIN_ARCHIVE_TITLE = "Archived Items";
 $LNG->SPAM_ADMIN_TITLE = "Item Report Manager";
 $LNG->SPAM_ADMIN_ID_ERROR = "Can not process request as nodeid is missing";
 $LNG->SPAM_ADMIN_TABLE_HEADING0 = "Reported By";
 $LNG->SPAM_ADMIN_TABLE_HEADING1 = "Title";
 $LNG->SPAM_ADMIN_TABLE_HEADING2 = "Action";
+$LNG->SPAM_ADMIN_TABLE_HEADING3 = "Node Type";
 $LNG->SPAM_ADMIN_DELETE_CHECK_MESSAGE = "Are you sure you want to delete the item?: ";
 $LNG->SPAM_ADMIN_RESTORE_CHECK_MESSAGE = "Are you sure you want to set as NOT SPAM?: ";
-$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Not Spam";
+$LNG->SPAM_ADMIN_ARCHIVE_CHECK_MESSAGE = "Are you sure you want to archive this item?: ";
+$LNG->SPAM_ADMIN_RESTORE_BUTTON = "Restore";
+$LNG->SPAM_ADMIN_ARCHIVE_BUTTON = "Archive";
 $LNG->SPAM_ADMIN_DELETE_BUTTON = "Delete";
 $LNG->SPAM_ADMIN_VIEW_BUTTON = "View Details";
 $LNG->SPAM_ADMIN_NONE_MESSAGE = 'There are currently no items reported as Spam / Inappropriate';
@@ -108,6 +113,36 @@ $LNG->SPAM_USER_ADMIN_NONE_SUSPENDED_MESSAGE = 'There are currently no users sus
 $LNG->SPAM_USER_ADMIN_SPAM_TITLE = 'Users Reported';
 $LNG->SPAM_USER_ADMIN_SUSPENDED_TITLE = 'Users Suspended';
 
+$LNG->SPAM_GROUP_REPORTED = 'Group has been reported as a Spammer / Inappropriate';
+$LNG->SPAM_GROUP_REPORT = 'Report this Group as Spam / Inappropriate';
+$LNG->SPAM_GROUP_LOGIN_REPORT = 'Login to report this Group as Spam / Inappropriate';
+$LNG->SPAM_GROUP_REPORTED_ALT = 'Reported';
+$LNG->SPAM_GROUP_REPORT_ALT = 'Report';
+$LNG->SPAM_GROUP_LOGIN_REPORT_ALT = 'Login to Report';
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING0 = "Reported By";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 = "Group Name";
+$LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 = "Action";
+$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON = "View Group";
+$LNG->SPAM_GROUP_ADMIN_VIEW_HINT = "Open a new Window showing this group's home page";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_BUTTON = "Restore Group";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_HINT = "Restore this group to active";
+$LNG->SPAM_GROUP_ADMIN_DELETE_BUTTON = "Delete Group";
+$LNG->SPAM_GROUP_ADMIN_DELETE_HINT = "Delete this group";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_BUTTON = "Archive Group";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_HINT = "Archive this group and all debates it contains";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART1 = "Are you sure you want to delete the group: ";
+$LNG->SPAM_GROUP_ADMIN_DELETE_CHECK_MESSAGE_PART2 = "Be warned: group members will be removed from the group and node and triple's associated with the group will lose that association. If you have not done so, you should check the group members and contents first by clicking '".$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON."'";;
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART1 = "Are you sure you want to restore the group: ";
+$LNG->SPAM_GROUP_ADMIN_RESTORE_CHECK_MESSAGE_PART2 = "This will remove this group from this list";
+$LNG->SPAM_GROUP_ADMIN_ARCHIVE_CHECK_MESSAGE = "Are you sure you want to Archive the group: ";
+$LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE = 'There are currently no groups reported as Spammers / Inappropriate';
+$LNG->SPAM_GROUP_ADMIN_TITLE = "Group Report Manager";
+$LNG->SPAM_GROUP_ADMIN_MANAGER_SPAM_LINK = "Reported Groups";
+$LNG->SPAM_GROUP_ADMIN_ID_ERROR = "Can not process request as groupid is missing";
+$LNG->SPAM_GROUP_ADMIN_NONE_ARCHIVED_MESSAGE = 'There are currently no groups archived';
+$LNG->SPAM_GROUP_ADMIN_SPAM_TITLE = 'Groups Reported';
+$LNG->SPAM_GROUP_ADMIN_ARCHIVED_TITLE = 'Groups Archived';
+
 /** NEWS ADMINSTRATION **/
 $LNG->ADMIN_MANAGE_NEWS_LINK = "Manage ".$LNG->NEWSS_NAME;
 $LNG->ADMIN_MANAGE_NEWS_DELETE_ERROR = 'There was an issue deleting the '.$LNG->NEWS_NAME.' with the id:';
@@ -127,7 +162,9 @@ $LNG->ADMIN_NEWS_EDIT_LINK = 'edit';
 $LNG->ADMIN_NEWS_DELETE_LINK = 'delete';
 
 /** USER STATS **/
-$LNG->ADMIN_NEWS_USERS = 'User List';
+$LNG->ADMIN_NEWS_USERS = 'Users';
+$LNG->ADMIN_NEWS_GROUPS = 'Groups';
+$LNG->ADMIN_DASHBOARD = 'Admin Dashboard';
 
 /** GLOBAL STATS **/
 $LNG->HOMEPAGE_STATS_LINK = "Analytics";

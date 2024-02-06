@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -2336,7 +2336,33 @@ function getConnectionsByNode($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$s
 		//error_log(print_r($sql, true));
 
 	    $cs = new ConnectionSet();
-	    return $cs->load($sql,$params,$start,$max,$orderby,$sort,$style);
+
+	    //echo $sql;
+		//echo print_r($params, true);
+
+	    $connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+		$conns = $connectionSet->connections;
+		$count = (is_countable($conns)) ? count($conns) : 0;
+	
+		// filter out connections with archived nodes as only connections being filtered by status
+		$cleanedarray = [];
+		for ($i=0;$i<$count;$i++) {
+			$con = $conns[$i];
+			if ($con->status != $CFG->STATUS_ARCHIVED 
+					&& $con->from->status != $CFG->STATUS_ARCHIVED 
+					&& $con->to->status != $CFG->STATUS_ARCHIVED
+					&& $con->status != $CFG->STATUS_SUSPENDED 
+					&& $con->from->status != $CFG->STATUS_SUSPENDED 
+					&& $con->to->status != $CFG->STATUS_SUSPENDED) {
+				array_push($cleanedarray, $con);
+			}
+		}
+	
+		$connectionSet->connections = $cleanedarray;
+		$connectionSet->count = (is_countable($cleanedarray)) ? count($cleanedarray) : 0;
+		$connectionSet->totalno = $count;
+			
+		return $connectionSet;		
 	} else {
 		return new ConnectionSet();
 	}
@@ -3404,7 +3430,7 @@ function getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort 
 	    $sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
     } else {
 		$params[count($params)] = $groupid;
-		$HUB_SQL->APILIB_NODES_BY_GROUP_NODETYPE_NONE.$HUB_SQL->AND;
+		$sql .= $HUB_SQL->APILIB_NODES_BY_GROUP_NODETYPE_NONE.$HUB_SQL->AND;
     }
 
     if ($filterusers != "") {
@@ -4155,7 +4181,7 @@ function getViewNodes($viewid, $style="long") {
 	$params = array();
 	$params[0] = $viewid;
 	$sql = $HUB_SQL->DATAMODEL_VIEW_SELECT_NODES;
-	$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
+	$resArray = $DB->select($sql, $params);
 
 	if ($resArray !== false) {
 		$count = 0;

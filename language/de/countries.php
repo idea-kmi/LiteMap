@@ -1,7 +1,7 @@
 <?php // $Id$
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -277,5 +277,9 @@ $LNG->COUNTRIES_LIST['YE'] = 'Yemen';
 $LNG->COUNTRIES_LIST['ZM'] = 'Zambia';
 $LNG->COUNTRIES_LIST['ZW'] = 'Zimbabwe';
 
+
+
+
+// Do not delete this when updating the above list of code.
 $LNG->DEFAULT_COUNTRY = $LNG->COUNTRIES_LIST['DE'];
 ?>

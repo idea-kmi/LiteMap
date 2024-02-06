@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -409,6 +409,7 @@ $LNG->VIEWS_EVIDENCE_MAP_HINT="Klicken Sie hier, um die Argument Map für dieses
 /** ERROR MESSAGES */
 $LNG->DATABASE_CONNECTION_ERROR = 'Konnte nicht mit Datenbank verbunden werden - bitte überprüfen Sie die Servereinstellung.';
 $LNG->ITEM_NOT_FOUND_ERROR = 'Das Item wurde nicht gefunden';
+$LNG->ITEM_NOT_AVAILABLE_ERROR = 'Objekt ist nicht verfügbar';
 
 /** BUTTONS AND LINK HINTS **/
 $LNG->SIGN_IN_HINT = 'Loggen Sie sich ein, um einen Beirag zu LiteMap hinzuzufügen';

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -2123,14 +2123,100 @@ function getAllNodeActivity($nodeid, $from = 0, $to = 0) {
 }
 
 /**
- * Return the Activity objects that represent the activity on the given nodeid
+ * Return the Activity objects that represent the all the activity on the given nodeid
  * @param string $nodeid the id of the node to get Activity for
- * @param integer $from a given modification date, (optional - default: 0)
- * @param integer $start (optional - default: 0) // not used
- * @param integer $max (optional - default: 20), -1 means all // not used
+ * @param integer $from (optional - default: 0)
+ * @param boolean $includeviews (optional - default: true)
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
  * @return ActivitySet or Error
  */
-function getNodeActivity($nodeid, $from = 0, $start = 0, $max = 20) {
+function getAdminNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max = 20, $style='long') {
+    global $DB, $CFG, $USER,$HUB_SQL;
+
+	$params = array();
+
+    $as = new ActivitySet();
+
+   	//"month"  => 2419200,  // seconds in a month  (4 weeks)
+   	// "week"   => 604800,  // seconds in a week   (7 days)
+   	//"day"    => 86400,    // seconds in a day    (24 hours)
+	/*if ($NoDays > 0) {
+		$timeback = $NoDays * 86400; //86400 = 24 hours or 1 Day
+		$now = time();
+		$startime = $now - $timeback;
+	}*/
+
+	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART1;
+
+	// NODES
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	// CONNECTIONS
+	$params[count($params)] = $nodeid;
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	// VOTING
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+
+	// FOLLOWING - does not have modification date, so needs different MOD date
+	$params[count($params)] = $nodeid;
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING;
+	}
+
+	// VIEWING
+	if ($includeviews) {
+		$params[count($params)] = $nodeid;
+		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART6;
+		if ($from > 0) {
+			$params[count($params)] = $from;
+			$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_MODE_DATE;
+		}
+	}
+
+	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_ADMIN_PART7;
+
+    if ($max > -1) {
+		// ADD LIMITING
+		$sql = $DB->addLimitingResults($sql, $start, $max);
+	}
+
+	$as->load($sql, $params, $style);
+
+    return $as;
+}
+
+/**
+ * Return the Activity objects that represent the activity of creating new content or connections for the given nodeid
+ * @param string $nodeid the id of the node to get Activity for
+ * @param integer $from (optional - default: 0)
+ * @param boolean $includeviews (optional - default: true)
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
+ * @return ActivitySet or Error
+ */
+function getNodeActivity($nodeid, $from=0, $includeviews=true, $start = 0, $max = 20, $style='long') {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -2148,42 +2234,18 @@ function getNodeActivity($nodeid, $from = 0, $start = 0, $max = 20) {
 
 	$sql = $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART1;
 
+	// NODES
 	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
 		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
 	}
 
+	// CONNECTIONS
 	$params[count($params)] = $nodeid;
 	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART3;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4_UNION;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART4;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5_UNION;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART5;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE_FOLLOWING;
-	}
-
-	$params[count($params)] = $nodeid;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6_UNION;
-	$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
 		$sql .= $HUB_SQL->UTILLIB_NODE_ACTIVITY_MODE_DATE;
@@ -2196,20 +2258,21 @@ function getNodeActivity($nodeid, $from = 0, $start = 0, $max = 20) {
 		$sql = $DB->addLimitingResults($sql, $start, $max);
 	}
 
-	$as->load($sql, $params);
+	$as->load($sql, $params, $style);
 
     return $as;
 }
 
 /**
- * Return the Activity objects that represent the activity on the given userid
+ * Return the Activity objects that represent all the activity on the given userid
  * @param string $userid the id of the user to get Activity for
  * @param number $from the time from which to get their activity, expressed in milliseconds.
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
  * @return ActivitySet or Error
  */
-function getUserActivity($userid, $from, $start = 0, $max = 20) {
+function getAdminUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
     global $DB, $CFG, $USER,$HUB_SQL;
 
 	$params = array();
@@ -2225,10 +2288,72 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 		$startime = $now - $timeback;
 	}*/
 
-	// Full call with UINIONs
+	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART1;
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART2;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART3;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART4;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART5;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE_FOLLOWING;
+	}
+
+	$params[count($params)] = $userid;
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART6;
+	if ($from > 0) {
+		$params[count($params)] = $from;
+		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_MODE_DATE;
+	}
+
+	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_ADMIN_PART7;
+
+    if ($max > -1) {
+		// ADD LIMITING
+		$sql = $DB->addLimitingResults($sql, $start, $max);
+	}
+
+	$as->load($sql, $params, $style);
+
+    return $as;
+}
+
+/**
+ * Return the Activity objects that represent the activity of creating new content on the given userid
+ * @param string $userid the id of the user to get Activity for
+ * @param number $from the time from which to get their activity, expressed in milliseconds.
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20), -1 means all
+ * @param String $style (optional - default 'long') may be 'short' or 'long' or 'cif'
+ * @return ActivitySet or Error
+ */
+function getUserActivity($userid, $from, $start = 0, $max = 20, $style='long') {
+    global $DB, $CFG, $USER,$HUB_SQL;
+
+	$params = array();
+
+    $as = new ActivitySet();
+
 	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART1;
 	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2_BRACKET;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2;
 	if ($from > 0) {
 		$params[count($params)] = $from;
@@ -2236,32 +2361,7 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 	}
 
 	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3_UNION;
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4_UNION;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5_UNION;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING;
-	}
-
-	$params[count($params)] = $userid;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6_UNION;
-	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
 	if ($from > 0) {
 		$params[count($params)] = $from;
 		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
@@ -2269,58 +2369,12 @@ function getUserActivity($userid, $from, $start = 0, $max = 20) {
 
 	$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_PART7;
 
-	// how do we do this when it is seprate calls?
     if ($max > -1) {
 		// ADD LIMITING
 		$sql = $DB->addLimitingResults($sql, $start, $max);
 	}
 
-	$as->load($sql, $params);
-
-
-	// make seprate calls to reduce database load and then join up
-	/*
-	$params = array();
-	$params[count($params)] = $userid;
-	if ($from > 0) {
-		$params[count($params)] = $from;
-	}
-
-	// load AuditNode records
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART2;
-	if ($from > 0) {
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-	$as->load($sql, $params);
-
-	// load AuditTriple records
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART3;
-	if ($from > 0) {
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-	$as->load($sql, $params);
-
-	// load AuditVoting records
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART4;
-	if ($from > 0) {
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-	$as->load($sql, $params);
-
-	// load Following records
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART5;
-	if ($from > 0) {
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE_FOLLOWING;
-	}
-	$as->load($sql, $params);
-
-	// load AuditNodeView records
-	$sql = $HUB_SQL->UTILLIB_USER_ACTIVITY_PART6;
-	if ($from > 0) {
-		$sql .= $HUB_SQL->UTILLIB_USER_ACTIVITY_MODE_DATE;
-	}
-	$as->load($sql, $params);
-	*/
+	$as->load($sql, $params, $style);
 
     return $as;
 }
@@ -2558,27 +2612,173 @@ function getNodesByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$s
  * <br>$CFG->USER_STATUS_UNVALIDATED = new user account that has not had the email address verified yet.
  * <br>$CFG->USER_STATUS_UNAUTHORIZED = new user account that has not been authorized yet.
  * <br>$CFG->USER_STATUS_SUSPENDED = user account that has been suspended.
+ * <br>$CFG->USER_STATUS_ARCHIVED = N/A only for Groups
  *
  * @param integer $start (optional - default: 0)
  * @param integer $max (optional - default: 20)
  * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
  * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
  * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
- * @return NodeSet or Error
+ * @return UserSet or Error
  */
 function getUsersByStatus($status=0, $start = 0, $max = 20 ,$orderby = 'date',$sort ='DESC', $style='long') {
     global $CFG,$USER,$HUB_SQL;
 
 	if ($USER->getIsAdmin() == "Y") {
 		$params = array();
-		$params[0] = $status;
+		$params[0] = $status;		
 		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
-	    $us = new UserSet();
-	    return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
-	 } else {
+		$params[1] = 'N';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
+		$us = new UserSet();
+	   	return $us->load($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
         $ERROR = new Hub_Error();
         return $ERROR->createAccessDeniedError();
-	 }
+	}
+}
+
+/**
+ * Get the users with the given status. For admin area.
+ *
+ * @param integer $status
+ * <br>$CFG->USER_STATUS_ACTIVE = live and active group
+ * <br>$CFG->USER_STATUS_REPORTED = group has been reported as spammer (not used at present)
+ * <br>$CFG->USER_STATUS_UNVALIDATED = N/A only for users
+ * <br>$CFG->USER_STATUS_UNAUTHORIZED = N/A only for users
+ * <br>$CFG->USER_STATUS_SUSPENDED = N/A only for users
+ * <br>$CFG->USER_STATUS_ARCHIVED = group that has been archived.
+ *
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'date', 'nodeid', 'name', 'connectedness' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param String $style (optional - default 'long') may be 'short' or 'long'  - how much of a nodes details to load (long includes: description, tags, groups and urls).
+ * @return GroupSet or Error
+ */
+function getGroupsByStatus($status=0, $start = 0, $max = 20, $orderby = 'date', $sort ='DESC', $style='long'){
+    global $CFG,$USER,$HUB_SQL;
+
+	if ($USER->getIsAdmin() == "Y") {
+		$params = array();
+		$params[0] = $status;
+		$sql = $HUB_SQL->UTILLIB_USERS_BY_STATUS;
+		$params[1] = 'Y';
+		$sql .= $HUB_SQL->UTILLIB_USERS_FILTER_GROUP;
+
+		$gs = new GroupSet();
+		return $gs->loadFromUsers($sql,$params,$start,$max,$orderby,$sort,$style);
+	} else {
+        $ERROR = new Hub_Error();
+        return $ERROR->createAccessDeniedError();
+	}
+}
+
+/**
+ * Get the connections for the node with the given nodeid and status
+ *
+ * @param string $nodeid
+ * @param integer $start (optional - default: 0)
+ * @param integer $max (optional - default: 20)
+ * @param string $orderby (optional, either 'vote', 'date', 'name' or 'moddate' - default: 'date')
+ * @param string $sort (optional, either 'ASC' or 'DESC' - default: 'DESC')
+ * @param string $filtergroup (optional, either 'all','selected','positive','negative' or 'neutral', default: 'all' - to filter the results by the link type group of the connection)
+ * @param string $filterlist (optional, comma separated strings of the connection labels to filter the results by, to have any effect filtergroup must be set to 'selected')
+ * @param string $filternodetypes (optional, a list of node type names to filter by)
+ * @param String $style (optional - default 'long') may be 'short' or 'long'
+ * @param integer $status, defaults to 0. (0 - active, 1 - reported, 2 - retired, 3 - discarded, 4 - suspended, 5 - archived)
+ * @return ConnectionSet or Error
+ */
+function getConnectionsByStatusAdmin($nodeid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='ASC', $filtergroup = 'all', $filterlist = '', $filternodetypes='', $style='long', $status=0){
+    global $USER,$CFG,$HUB_SQL;
+
+	$currentuser = '';
+	if (isset($USER->userid)) {
+		$currentuser = $USER->userid;
+	}
+
+	$params = array();
+
+    $list = getAggregatedNodeIDs($nodeid);
+	if ($list != "") {
+		$sql = $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_SELECT;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART1;
+		$sql .= $list;
+    	$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART2;
+		$sql .= $list;
+		$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_SELECT_PART3;		
+
+		// FILTER BY NODE TYPES - OR
+		if ($filternodetypes != "") {
+			$nodetypeArray = array();
+			$innersql = getSQLForNodeTypeIDsForLabels($nodetypeArray,$filternodetypes);
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART1;
+			$sql .= $innersql;
+
+			$params = array_merge($params, $nodetypeArray);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART2;
+			$sql .= $innersql;
+
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_NODE_NODETYPE_FILTER_PART3;
+		}
+
+		// FILTER BY LINK TYPES
+		if ($filtergroup != '' && $filtergroup != 'all' && $filtergroup != 'selected') {
+			$innersql = getSQLForLinkTypeIDsForGroup($params,$filtergroup);
+			$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+			$sql .= $HUB_SQL->OPENING_BRACKET;
+			$sql .= $innersql;
+			$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+		} else {
+			if ($filterlist != "") {
+				$innersql = getSQLForLinkTypeIDsForLabels($params,$filterlist);
+				$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_LINKTYPE_FILTER;
+				$sql .= $HUB_SQL->OPENING_BRACKET;
+				$sql .= $innersql;
+				$sql .= $HUB_SQL->CLOSING_BRACKET.$HUB_SQL->AND;
+			}
+		}
+
+		// PERMISSIONS
+		// not for admin functions. We just want everything?
+		// should we only handle public items?
+		//$params[count($params)] = 'N';
+		//$params[count($params)] = $currentuser;
+		//$params[count($params)] = $currentuser;
+		//$params[count($params)] = 'N';
+		//$params[count($params)] = $currentuser;
+		//$params[count($params)] = $currentuser;
+		//$params[count($params)] = 'N';
+		//$params[count($params)] = $currentuser;
+		//$params[count($params)] = $currentuser;
+		//$sql .= $HUB_SQL->APILIB_CONNECTIONS_BY_GLOBAL_PERMISSIONS;
+
+		// FILTER STATUS - ON THE CONNECTION
+		$params[count($params)] = $status;
+		$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
+
+		// ORDER BY VOTE
+		if ($orderby == 'vote') {
+			$sql = $HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_CONNECTION_ORDERBY_VOTE_PART2;
+		} else if ($orderby == 'ideavote') {
+			$sql = $HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART1.$sql.$HUB_SQL->APILIB_IDEA_CONNECTION_ORDERBY_VOTE_PART2;
+		}
+
+		//error_log(print_r($sql, true));
+
+		$connectionSet = new ConnectionSet();
+
+	    //echo $sql;
+		//echo print_r($params, true);
+
+	    $connectionSet->load($sql,$params,$start,$max,$orderby,$sort,$style,$status);
+		return $connectionSet;		
+	} else {
+		return new ConnectionSet();
+	}
 }
 
 
@@ -2613,6 +2813,10 @@ function getSearchQueryString(&$params, $q="", $includeTag=false, $includeClip=f
 	if ($startChar == "\"" && $lastChar == "\"") {
 		// remove speech marks before search
 		$q = mb_substr($q, 1, $len-2);
+
+		// remove question marks or it messes up the database manager processing for cleaning and replacing ? in the sql
+		$q = str_replace("?", "", $q);
+
 		$sql .= $HUB_SQL->OPENING_BRACKET;
 
 		//$params[count($params)] = $searchObj;
@@ -2647,6 +2851,9 @@ function getSearchQueryString(&$params, $q="", $includeTag=false, $includeClip=f
 			foreach ($pieces as $value) {
 				$value = trim($value);
 				$value = $DB->cleanString($value);
+
+				// remove question marks or it messes up the database manager processing for cleaning and replacing ? in the sql
+				$value = str_replace("?", "", $value);
 
 				if ($value != "") {
 
@@ -3217,4 +3424,354 @@ function getObfuscationUsers($obfuscationid) {
 	}
 }
 
+/*** FUNCTION FOR ADMIN MODERATION OF REPORTED AND ARCHIVED ITEMS ***/
+
+function adminLoadGroupMapData($groupid, $status) {	
+	global $HUB_SQL;
+
+	$childids = [];	// not used but needs to be pased in to functions called
+	$children = [];
+
+	//$mapNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Map', 'short', '', '', $status);
+	// need to bypass permissions and just get all maps
+	
+	$params = array();
+	$params[count($params)] = $groupid;
+	$params[count($params)] = $status;
+
+    $sql = $HUB_SQL->APILIB_NODES_BY_GROUP_SELECT;
+	$sql .= $HUB_SQL->APILIB_NODES_BY_GROUP_NODETYPE.$HUB_SQL->OPENING_BRACKET;
+	$sql .= "'Map'";
+	$sql .= $HUB_SQL->CLOSING_BRACKET;	
+
+	// FILTER STATUS
+	$params[count($params)] = $status;
+	$sql .= $HUB_SQL->AND.$HUB_SQL->APILIB_FILTER_STATUS;
+		
+	$mapNodes = new NodeSet();
+    $mapNodes = $mapNodes->load($sql,$params,0, -1,'date','DESC', 'short');
+
+	// For each map in the group, load the nodes and connections
+	if (!$mapNodes instanceof Hub_Error) {
+		$nodes = $mapNodes->nodes;
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$node = $nodes[$i];
+			if (!$node instanceof Hub_Error) {
+				loadMapData($node, $status, $childids);
+				array_push($children, $node);
+			}
+		}
+	}
+
+	return $children;
+}
+
+function loadMapData(&$node, $status, &$childids) {
+	global $HUB_SQL, $DB;
+	
+
+	$node->connections = new ConnectionSet();
+	$node->nodes = new NodeSet();
+
+	// load nodes
+	$params = array();
+	$params[0] = $node->nodeid;
+
+	$mapconnectionnodes = [];
+
+	// get all connection for the given map node id
+	$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_CONNECTIONS, $params);
+	if ($resArray !== false) {
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			$next = new Connection($array['TripleID']);
+			$next = $next->load();			
+			if (!$next instanceof Hub_Error) {
+				$node->connections->add($next);	
+				// error_log( $next->fromnode->nodeid); //getting nodeid of a non object
+				
+				array_push($mapconnectionnodes, $next->from->nodeid);
+				array_push($mapconnectionnodes, $next->to->nodeid);
+			}
+		}
+	} else {
+		return database_error();
+	}
+
+	// get all nodes for the given map node id NOT in a connection - so the single floating nodes
+	$resArray2 = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
+	if ($resArray2 !== false) {
+		$count = (is_countable($resArray2)) ? count($resArray2) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$array2 = $resArray2[$i];
+			if (!in_array($array2['NodeID'], $mapconnectionnodes)) {				
+				$next = getNode($array2['NodeID']);
+				$next = $next->load();
+				if (!$next instanceof Hub_Error) { 				
+					$node->nodes->add($next);
+				}
+			} 
+		}
+	} else {
+		return database_error();
+	}
+} 
+
+function archiveGroupAndChildren($groupid) {	
+	global $CFG;
+
+	if (isset($groupid) && $groupid !="") {
+		// getNodesByGroup($groupid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filterusers='', $filternodetypes='', $style='long', $q="", $connectionfilter='',$status=0){
+		// GET ACTIVE MAPS
+		$mapNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Map', 'short', '', '', $CFG->STATUS_ACTIVE);
+
+		if (!$mapNodes instanceof Hub_Error) {
+			$nodes = $mapNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archivedNodeAndConnections($node->nodeid);								
+				}
+			}
+		}
+
+		// GET REPORTED MAPS AS WELL IN CASE THERE ARE SOME OUTSTANDING
+		$mapNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Map', 'short', '', '', $CFG->STATUS_REPORTED);
+
+		if (!$mapNodes instanceof Hub_Error) {
+			$nodes = $mapNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archivedNodeAndConnections($node->nodeid);	
+				}
+			}
+		}	
+
+		// Groups are User records with isGroup set to 'Y'
+		$user = new User($groupid);
+		$user->updateStatus($CFG->USER_STATUS_ARCHIVED);
+	}
+}
+
+function restoreGroupAndChildren($groupid) {	
+	global $CFG;
+
+	if (isset($groupid) && $groupid !="") {
+		$mapNodes = getNodesByGroup($groupid, 0, -1,'date','DESC', '', 'Map', 'short', '', '', $CFG->STATUS_ARCHIVED);
+
+		if (!$mapNodes instanceof Hub_Error) {
+			$nodes = $mapNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					restoreNodeAndConnections($node->nodeid);
+				}
+			}
+		}
+
+		// Groups are User records with isGroup set to 'Y'
+		$user = new User($groupid);
+		$user->updateStatus($CFG->STATUS_ACTIVE);
+	}
+}
+
+function updateMapStatus($mapnode, $status) {
+	global $HUB_SQL, $DB;
+	
+	// load nodes
+	$params = array();
+	$params[0] = $mapnode->nodeid;
+
+	// get all connection for the given map node id and change their status
+	$resArray = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_CONNECTIONS, $params);
+	if ($resArray !== false) {
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$array = $resArray[$i];
+			$next = new Connection($array['TripleID']);
+			$next = $next->load();			
+			if (!$next instanceof Hub_Error) {
+				$next->updateStatus($status);	
+			}
+		}
+	} else {
+		return database_error();
+	}
+
+	// get all nodes for the given map node and change their status
+	$resArray2 = $DB->select($HUB_SQL->DATAMODEL_VIEW_SELECT_NODES, $params);
+	if ($resArray2 !== false) {
+		$count = (is_countable($resArray2)) ? count($resArray2) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$array2 = $resArray2[$i];
+			$next = getNode($array2['NodeID']);
+			$next = $next->load();
+			if (!$next instanceof Hub_Error) { 				
+				$next->updateStatus($status);
+			} 
+		}
+	} else {
+		return database_error();
+	}
+
+	return $mapnode;
+} 
+
+
+function loadChildren(&$node, $status, &$childids) {
+	$nodetype = $node->role->name;
+	if ($nodetype == 'Map') {
+		return loadMapData($node, $status, $childids);
+	} else {
+		return []; 
+	}
+}
+
+function archivedNodeAndConnections($nodeid) {
+	global $CFG;
+
+	if ($nodeid != "") {
+		$node = new CNode($nodeid);
+		$node = $node->load();
+		if (!$node instanceof Hub_Error) {
+			$nodetype = $node->role->name;
+			if ($nodetype == "Map") {
+				// take care of it's contents
+				updateMapStatus($node, $CFG->STATUS_ARCHIVED);
+			}
+			$connectionSet = getConnectionsByStatusAdmin($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', '', 'short', $CFG->STATUS_ACTIVE);				
+			if (isset($connectionSet->connections[0])) {
+				$count = is_countable($connectionSet->connections) ? count($connectionSet->connections) : 0;
+				for ($i=0; $i<$count; $i++) {
+					$con = $connectionSet->connections[$i];
+					$con->updateStatus($CFG->STATUS_ARCHIVED);
+				}
+			}
+			$node = $node->updateStatus($CFG->STATUS_ARCHIVED);
+		} else {
+			error_log("Error loading node: ".$nodeid);
+		}
+	}
+}
+
+function restoreNodeAndConnections($nodeid) {
+	global $CFG;
+
+	if ($nodeid != "") {
+		$node = new CNode($nodeid);
+		$node = $node->load();
+		if (!$node instanceof Hub_Error) {
+
+			$originalStatus = $node->status;
+
+			// only need to restore child nodes if we are dealing with an archived item
+			if ($originalStatus == $CFG->STATUS_ARCHIVED) {
+				$nodetype = $node->role->name;
+				if ($nodetype == "Map") {
+					// take care of it's contents
+					updateMapStatus($node, $CFG->STATUS_ACTIVE);
+				} 
+				$connectionSet = getConnectionsByStatusAdmin($node->nodeid, 0, -1, 'date', 'ASC', 'all', 'responds to', 'Solution', 'short', $CFG->STATUS_ACTIVE);				
+				if (isset($connectionSet->connections[0])) {
+					$count = is_countable($connectionSet->connections) ? count($connectionSet->connections) : 0;
+					for ($i=0; $i<$count; $i++) {
+						$con = $connectionSet->connections[$i];
+						$con->updateStatus($CFG->STATUS_ACTIVE);
+					}
+				}
+			}
+			$node = $node->updateStatus($CFG->STATUS_ACTIVE);
+		} else {
+			error_log("Error loading node: ".$nodeid);
+		}
+	} else {
+		array_push($errors,$LNG->SPAM_ADMIN_ID_ERROR);
+	}
+}
+
+/*
+function restoreArchivedUserAndChildren($userid) {
+	global $CFG;
+}
+*/
+
+/*
+function adminLoadUsersAndContent($userid, $status, &$childids) {	
+	global $CFG;
+
+	$children = [];
+
+	// get the user's content
+	$mapNodes = getNodesByUser($userid, 0, -1, 'date', 'DESC', '', 'short', '', '', $status);
+
+	if (!$mapNodes instanceof Hub_Error) {
+		$nodes = $mapNodes->nodes;
+		$count = (is_countable($nodes)) ? count($nodes) : 0;
+		for ($i=0; $i<$count; $i++) {
+			$node = $nodes[$i];
+			if (!$node instanceof Hub_Error) {
+				if ($node->role->name == 'Map') {
+					$node->children = array_merge($children, loadMapData($node, $status, $childids));
+				}
+				array_push($children, $node); // if the user owns the map - we don't archive all it's contents as such do we?
+				array_push($childids, $node->nodeid);
+			}
+		}
+	}
+
+	return $children;
+}
+*/
+
+/*
+function archiveUserAndContent($userid) {
+	global $CFG;
+
+	if (isset($userid) && $userid !="") {
+		$childids = [];
+
+		//Need to know all the child nodes being processed
+		loadGroupChildDebates($groupid, $CFG->STATUS_ACTIVE, &$childids);
+
+		// get the user's debates to start with
+		// getNodesByUser($userid,$start = 0,$max = 20 ,$orderby = 'date',$sort ='DESC', $filternodetypes="", $style='long', $q="", $connectionfilter='',$status=0){
+		// GET ACTIVE DEBATES
+		$issueNodes = getNodesByUser($userid, 0, -1, 'date', 'DESC', 'Issue', 'short', '', '', $CFG->STATUS_ACTIVE);
+
+		if (!$issueNodes instanceof Hub_Error) {
+			$nodes = $issueNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}	
+
+		// GET REPORTED MAPS AS WELL IN CASE THERE ARE SOME OUTSTANDING
+		$mapNodes = getNodesByUser($groupid, 0, -1,'date','DESC', '', 'Map', 'short', '', '', $CFG->STATUS_REPORTED);
+
+		$checkNodes = array();
+		$checkConns = array();
+
+		if (!$mapNodes instanceof Hub_Error) {
+			$nodes = $mapNodes->nodes;
+			$count = (is_countable($nodes)) ? count($nodes) : 0;
+			for ($i=0; $i<$count; $i++) {
+				$node = $nodes[$i];
+				if (!$node instanceof Hub_Error) {
+					archiveNodeAndChildren($node->nodeid);
+				}
+			}
+		}		
+	}
+}
+*/
 ?>

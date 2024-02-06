@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -306,10 +306,7 @@ class format_jsonld extends format_base {
 
 	function addGroups($groupset) {
 		$groups = $groupset->groups;
-		$count = 0;
-		if (is_countable($groups)) {
-			$count = count($groups);
-		}
+		$count = (is_countable($groups)) ? count($groups) : 0;
 		for ($i=0; $i<$count; $i++) {
 			$this->addGroup($groups[$i]);
 		}

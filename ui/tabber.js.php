@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -315,7 +315,7 @@ function loadgroups(context,args){
 
 				//display nav
 				if (total > parseInt( args["max"] )) {
-					$("tab-content-group-list").insert(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"users"));
+					$("tab-content-group-list").insert(createNav(total,json.groupset[0].start,json.groupset[0].count,args,context,"groups"));
 				}
     		}
   		});

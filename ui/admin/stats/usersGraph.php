@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2013 The Open University UK                                   *
+ *  (c) Copyright 2013-2023 The Open University UK                              *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -23,7 +23,7 @@
  *                                                                              *
  ********************************************************************************/
 
-require_once('graphlib.php');
+require_once('../../lib/graphlib.php');
 include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
 include_once($HUB_FLM->getCodeDirPath("core/statslib.php"));
 
@@ -37,7 +37,7 @@ if($USER->getIsAdmin() != "Y") {
 
 $time = required_param("time",PARAM_ALPHANUM);
 if ($time == null) {
-	$time = 'weeks';
+	$time = 'months'; // or weeks
 }
 
 $startdate = $CFG->START_DATE;
@@ -51,15 +51,6 @@ $graph = new graph(1000,600);
 
 $graph->parameter['title_size'] = 12;
 $graph->parameter['title_colour'] = 'black';
-
-// SET THE GRAPH LABELS AND PROPERTIES
-if ($time === 'weeks') {
-	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_WEEK_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';  			// if this is set then this text is printed on bottom axis of graph.
-	$graph->parameter['title'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_WEEK_TITLE;
-} else {
-	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_MONTH_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';			// if this is set then this text is printed on bottom axis of graph.
-	$graph->parameter['title'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_MONTH_TITLE;
-}
 
 $graph->parameter['y_label_left'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_X_LABEL;  	// if this is set then this text is printed on bottom axis of graph.
 $graph->parameter['y_label_right'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_X_LABEL;  	// if this is set then this text is printed on right axis of graph.
@@ -168,10 +159,28 @@ $month = $day * 30.5;
 // WE ONLY WANT THE LAST YEAR - OR PART THERE OF
 if ($time === 'weeks') {
 	$count = ceil((mktime()-$startdate) / $week);
-	//if ($count > 52) {
-	//	$startdate =  $startdate+($WEEK*($count - 52));
-	//	$count = 52;
-	//}
+
+	/*$dates = new DateTime();
+	$dates->setTimestamp($startdate);
+	$interval = date_create('now')->diff( $dates );
+
+	$count = $interval->W;
+	//$count = (int)date('W', $interval);
+	$years = $interval->y;
+	if (isset($years) && $years > 0) {
+		$count += ($interval->y * 52);
+	}
+	*/
+	
+	$count = $count+1; //(to get it to this week too);
+
+	$maxcount = 52; // in weeks
+	if ($count > $maxcount) {
+		//$startdate =  $startdate+($WEEK*($count - $maxcount));
+		$startdate = strtotime( '+'.($count - $maxcount).' week', $startdate);
+		$startdate = strtotime( 'first day of ' , $startdate);
+		$count = $maxcount;
+	}
 } else {
 	$dates = new DateTime();
 	$dates->setTimestamp($startdate);
@@ -184,12 +193,24 @@ if ($time === 'weeks') {
 	}
 	$count = $count+1; //(to get it to this month too);
 
-	//if ($count > 12) {
-	//	$startdate = strtotime( '+'.($count - 12).' month', $startdate);
-	//	$startdate = strtotime( 'first day of ' , $startdate);
-	//	$count = 12;
-	//}
+	// more than maxcount - limit to maxcount
+	$maxcount = 60; // in months
+	if ($count > $maxcount) {
+		$startdate = strtotime( '+'.($count - $maxcount).' month', $startdate);
+		$startdate = strtotime( 'first day of ' , $startdate);
+		$count = $maxcount;
+	}
 }
+
+// SET THE GRAPH LABELS AND PROPERTIES
+if ($time === 'weeks') {
+	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_WEEK_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';  			// if this is set then this text is printed on bottom axis of graph.
+	$graph->parameter['title'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_WEEK_TITLE;
+} else {
+	$graph->parameter['x_label'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_MONTH_Y_LABEL.' '.strftime( '%d %B %Y' ,$startdate).')';			// if this is set then this text is printed on bottom axis of graph.
+	$graph->parameter['title'] = $LNG->ADMIN_STATS_REGISTER_GRAPH_MONTH_TITLE;
+}
+
 
 for ($i=0; $i<$count; $i++) {
 	if ($i < 1) {
@@ -205,12 +226,13 @@ for ($i=0; $i<$count; $i++) {
 	}
 
 	$num = getRegisteredUserCount($mintime, $maxtime);
+
 	$graph->y_data['bar1'][$i] = $num;
 
 	if ($time === 'weeks') {
 		$thisweek = $startdate+($week*$i+1);
-		//$graph->x_data[$i] = date("m / y", $thisweek);//." (".$i+1.")";
-		$graph->x_data[$i] = $thisweek;
+		//$graph->x_data[$i] = $i+1;
+		$graph->x_data[$i] = date("d / m / Y", $thisweek);
 	} else {
 		$graph->x_data[$i] = date("m / y", $mintime);
 	}

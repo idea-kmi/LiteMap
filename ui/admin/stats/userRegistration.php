@@ -24,13 +24,13 @@
 	 ********************************************************************************/
 
 	include_once($_SERVER['DOCUMENT_ROOT']."/config.php");
-	include_once($HUB_FLM->getCodeDirPath("ui/headerstats.php"));
+	include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
 	global $CFG;
 
 	if($USER->getIsAdmin() != "Y") {
 		echo "<div class='errors'>".$LNG->FORM_ERROR_NOT_ADMIN."</div>";
-		include_once($HUB_FLM->getCodeDirPath("ui/dialogfooter.php"));
+		include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 		die;
 	}
 
@@ -66,196 +66,54 @@
 		$monthlytotal = getRegisteredUserCount($mintime, $maxtime);
 		$grandtotal += $monthlytotal;
 		$tabledata .= '<tr>';
-		$tabledata .= '<td>'.date("m / y", $mintime).'</td>';
-		$tabledata .= '<td align="right" style="font-weight:bold;">'.$monthlytotal.'</td>';
+		$tabledata .= '<td class="ps-4">'.date("m / y", $mintime).'</td>';
+		$tabledata .= '<td class="pe-4" align="right">'.$monthlytotal.'</td>';
 		$tabledata .= '</tr>';
 	}
 
-	echo '<div class="my-3"><p>'.$LNG->ADMIN_STATS_REGISTER_TOTAL_LABEL.' = '.$grandtotal.'</p><div>';
 ?>
 
-<div class="text-center"><img src="usersGraph.php?time=months" alt="user registration graph" /></div>
+<div class="container-fluid">
+	<div class="row p-4 pt-0">
+		<div class="col-12">		
 
-<!-- MONTHLY TOTALS -->
-<?php
-	echo '<div class="mb-5">';
-	echo '<table class="table table-sm table-hover">';
-	echo '<tr>';
-	echo '<th valign="top" style="font-weight:bold;">Month</th>';
-	echo '<th valign="top" style="font-weight:bold;">Monthly Total</th>';
-	echo '</tr>';
-
-	echo $tabledata;
-
-	echo '<tr>';
-	echo '<td valign="top" style="font-weight:bold;">Total</td>';
-	echo '<td align="right" valign="top" style="font-weight:bold;">'.$grandtotal.'</td>';
-	echo '</tr>';
-
-	echo '</table>';
-	echo '</div>';
-?>
-
-<!-- ALL USERS -->
-
-<div class="adminTableDiv">
-	<table class="table table-sm table-hover">
-		<?php
-			$registeredUsers = getRegisteredUsers($direction, $sort, $oldsort);
-
-			if ($sort) {
-				if ($direction) {
-					if ($oldsort === $sort) {
-						if ($direction === 'ASC') {
-							$direction = "DESC";
-						} else {
-							$direction = "ASC";
-						}
-					} else {
-						$direction = "ASC";
-					}
-				} else {
-					$direction = "ASC";
+			<?php
+				if (file_exists("menu.php") ) {
+					include("menu.php");
 				}
-			} else {
-				$sort='date';
-				$direction='DESC';
-			}
+			?>
 
-			echo '<tr><td class="adminTableHead"><a href="userRegistration.php?&sort=name&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_NAME.'</b>';
-			if ($sort === 'name') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=date&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_DATE.'</b>';
-			if ($sort === 'date') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=desc&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_DESC.'</b>';
-			if ($sort === 'desc') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
+			<h1 class="my-4 d-flex align-items-center gap-3">
+				<?php echo $LNG->ADMIN_STATS_REGISTER_TOTAL_LABEL; ?>
+				<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.7em;"><?=$grandtotal?></span>
+			</h1>		
+			<div class="text-center"><img class="img-fluid" src="usersGraph.php?time=months" alt="user registration graph" /></div>
+		</div>
+		<div class="col-lg-4 col-sm-6 col-xs-12 m-auto mt-4">
 
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=interest&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_INTEREST.'</b>';
-			if ($sort === 'interest') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
-
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=website&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_WEBSITE.'</b>';
-			if ($sort === 'website') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
-
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=location&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_LOCATION.'</b>';
-			if ($sort === 'location') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td>';
-
-			echo '<td class="adminTableHead"><a href="userRegistration.php?&sort=login&lastsort='.$sort.'&lastdir='.$direction.'">'.$LNG->ADMIN_STATS_REGISTER_HEADER_LAST_LOGIN.'</b>';
-			if ($sort === 'login') {
-				if ($direction === 'ASC') {
-					echo '<img border="0" src="/images/uparrow.gif" width="16" height="8" alt="asc" />';
-				} else {
-					echo '<img border="0" src="/images/downarrow.gif" width="16" height="8" alt="desc" />';
-				}
-			}
-			echo '</td></tr>';
-
-			$countUsers = 0;
-			if (is_countable($registeredUsers)) {
-				$countUsers = count($registeredUsers);
-			}
-			if ($countUsers > 0) {
-				for ($i=0; $i<$countUsers; $i++) {
-					$array = $registeredUsers[$i];
-					$name = $array['Name'];
-					$date = $array['CreationDate'];
-					$desc = $array['Description'];
-					$interest = $array['Interest'];
-					$website = $array['Website'];
-					$lastlogin = $array['LastLogin'];
-
-					$location = "";
-					$country="";
-					if(isset($array['LocationText'])){
-						$location = $array['LocationText'];
-					}
-					if(isset($array['LocationCountry'])){
-						$cs = getCountryList();
-						if (isset($cs[$array['LocationCountry']])) {
-							$country = $cs[$array['LocationCountry']];
-						}
-					}
-
-					echo '<tr>';
-						echo '<td valign="top">';
-							echo $name;
-						echo '</td>';
-						echo '<td valign="top">';
-							echo strftime( '%d/%m/%Y' ,$date);
-						echo '</td>';
-						echo '<td valign="top">';
-							echo $desc;
-						echo '</td>';
-						echo '<td valign="top">';
-							echo $interest;
-						echo '</td>';
-						echo '<td valign="top">';
-							if ($website != null && $website != "") {
-								echo '<a href="'.$website.'">Homepage</a>';
-							} else {
-								echo '&nbsp;';
-							}
-						echo '</td>';
-						echo '<td valign="top">';
-							if ($location != "" || $country != "") {
-								echo '<span>'.$location;
-								if ($location != "" && $country !="") {
-									echo ",";
-								}
-								echo $country.'</span>';
-							} else {
-								echo '&nbsp;';
-							}
-						echo '</td>';
-						echo '<td valign="top">';
-							echo strftime( '%d/%m/%Y' ,$lastlogin);
-						echo '</td>';
-					echo '</tr>';
-				}
-			}
-		?>
-	</table>
+			<!-- MONTHLY TOTALS -->
+			
+			<div class="mb-5">
+				<table class="table table-sm table-hover table-striped">
+					<thead>
+						<tr>
+							<th class="ps-4 w-50"><strong>Month</strong></th>
+							<th class="pe-4 w-50 text-end" style="max-width: 30px;"><strong>Monthly Total</strong></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php echo $tabledata; ?>
+						<tr class="table-secondary">
+							<td class="text-end"><strong>Total</strong></td>
+							<td class="text-end pe-4"><strong><?= $grandtotal ?></strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
+			
 <?php
 	include_once($HUB_FLM->getCodeDirPath("ui/footerstats.php"));
 ?>

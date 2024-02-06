@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -54,7 +54,7 @@ if ($CFG->SPAM_ALERT_ON) {
 	} else {
 		$node = new CNode($id);
 		$node = $node->load();
-		$node->updateStatus($CFG->STATUS_SPAM);
+		$node->updateStatus($CFG->STATUS_REPORTED);
 		$type = $node->role->name;
 	}
 

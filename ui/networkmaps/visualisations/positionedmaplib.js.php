@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -607,7 +607,8 @@ $jit.PositionedMapping.Plot.NodeTypes.implement({
 			// MENU ARROW
 			var mediaindex = node.getData('mediaindex');
 			var player = NODE_ARGS['mediaplayer'];
-			if ((USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') || (mediaindex >-1 && player)) {
+			//if ((USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') || (mediaindex >-1 && player)) {
+			if ((USER && USER != "") || (mediaindex >-1 && player)) {
 				var downarrowRect = new mapRectangle(nodeboxX+nodeboxWidth-20, pos.y+height-18, 20, 18);
 				node.setData('downrec', downarrowRect);
 				var downarrow = '<?php echo $HUB_FLM->getImagePath('rightarrowlarge.gif'); ?>';
@@ -2642,6 +2643,7 @@ function showMapMenu(graphview, type, node, evt) {
 	var user = node.getData('oriuser');
 	var rolename = orirole.name;
 	var userid = node.getData('userid');
+	var orinode = node.getData('orinode');
 
 	var panel = $('maparrowdiv');
 
@@ -2678,173 +2680,181 @@ function showMapMenu(graphview, type, node, evt) {
 	}
 
 	// To modify a map you need to be logged in and if the map is in a group, you need to be in the group
-	if (USER && USER != "" && NODE_ARGS['caneditmap'] == 'true') { 		// && rolename != "Pro" && rolename != "Con") {
+	if (USER && USER != "") { 		// && rolename != "Pro" && rolename != "Con") {
+		if (NODE_ARGS['caneditmap'] == 'true') {
+			if (NODE_ARGS) {
+				NODE_ARGS['blockednodeids'] = getMapNodeString(positionedMap);
+			}
 
-		if (NODE_ARGS) {
-			NODE_ARGS['blockednodeids'] = getMapNodeString(positionedMap);
-		}
+			if (player) {
+				if (player && currentindex != mediaindex) {
+					var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN_HINT; ?>'} );
+					var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+					newnode.insert(nodeicon);
+					newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN; ?>"+formatMovieTime(currentindex));
+					Event.observe(newnode,'click',function (){
+						hideBox('maparrowdiv');
+						updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, currentindex)
+					});
+					panel.insert(newnode);
+				}
 
-		if (player) {
-			if (player && currentindex != mediaindex) {
-				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN_HINT; ?>'} );
-				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				if (mediaindex && mediaindex != -1 && mediaindex != "") {
+					var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_REMOVE_HINT; ?>'} );
+					var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+					newnode.insert(nodeicon);
+					newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_REMOVE; ?>");
+					Event.observe(newnode,'click',function (){
+						hideBox('maparrowdiv');
+						updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, -1);
+					});
+					panel.insert(newnode);
+				}
+
+				panel.insert(createMenuSpacerSoftCompact());
+			}
+
+			if (rolename == "Challenge") {
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 				newnode.insert(nodeicon);
-				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_ASSIGN; ?>"+formatMovieTime(currentindex));
+				newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
 				Event.observe(newnode,'click',function (){
 					hideBox('maparrowdiv');
-					updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, currentindex)
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
+				});
+				panel.insert(newnode);
+			} else if (rolename == "Issue") {
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Solution", 410, 730);
+				});
+				panel.insert(newnode);
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
+				});
+				panel.insert(newnode);
+			} else if (rolename == "Solution") {
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Pro", 410, 730);
+				});
+				panel.insert(newnode);
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Con", 410, 730);
+				});
+				panel.insert(newnode);
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_ARGUMENT_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Con", 410, 730);
+				});
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Solution", 410, 730);
+				});
+				panel.insert(newnode);
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
+				});
+				panel.insert(newnode);
+			} else if (rolename == "Pro" || rolename == "Con" || rolename == "Argument") {
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
+				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Pro", 410, 730);
+				});
+				panel.insert(newnode);
+
+				newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Argument", 410, 730);
 				});
 				panel.insert(newnode);
 			}
 
-			if (mediaindex && mediaindex != -1 && mediaindex != "") {
-				var newnode = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_MEDIA_NODE_REMOVE_HINT; ?>'} );
-				var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('mediaicon.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+			if (rolename != "Map"){
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
 				newnode.insert(nodeicon);
-				newnode.insert("<?php echo $LNG->MAP_MEDIA_NODE_REMOVE; ?>");
+				newnode.insert("<?php echo $LNG->FORM_COMMENT_TITLE_ADD; ?>");
 				Event.observe(newnode,'click',function (){
 					hideBox('maparrowdiv');
-					updateNodeMediaIndex(node, NODE_ARGS['nodeid'], node.id, userid, -1);
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Idea&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
+				});
+				panel.insert(newnode);
+
+				var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
+				nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
+				newnode.insert(nodeicon);
+				newnode.insert("<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>");
+				Event.observe(newnode,'click',function (){
+					hideBox('maparrowdiv');
+					loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Map&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
 				});
 				panel.insert(newnode);
 			}
 
 			panel.insert(createMenuSpacerSoftCompact());
+
+			var connecttoselected = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_CONNECT_TO_SELECTED_HINT; ?>'} );
+			connecttoselected.insert("<?php echo $LNG->MAP_CONNECT_TO_SELECTED_LABEL; ?>");
+			Event.observe(connecttoselected,'click',function (){
+				hideBox('maparrowdiv');
+				connectSelectedNodesToMe(graphview, node);
+			});
+			panel.insert(connecttoselected);
 		}
 
-		if (rolename == "Challenge") {
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
-			});
-			panel.insert(newnode);
-		} else if (rolename == "Issue") {
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Solution", 410, 730);
-			});
-			panel.insert(newnode);
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
-			});
-			panel.insert(newnode);
-		} else if (rolename == "Solution") {
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Pro", 410, 730);
-			});
-			panel.insert(newnode);
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Con", 410, 730);
-			});
-			panel.insert(newnode);
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_CON_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/argument.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_ARGUMENT_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Con", 410, 730);
-			});
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_SOLUTION_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/solution.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_SOLUTION_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Solution", 410, 730);
-			});
-			panel.insert(newnode);
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ISSUE_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/issue.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_ISSUE_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Issue", 410, 730);
-			});
-			panel.insert(newnode);
-		} else if (rolename == "Pro" || rolename == "Con" || rolename == "Argument") {
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_PRO_TITLE_SECTION; ?>'} );
-			var nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/plus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_PRO_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Pro", 410, 730);
-			});
-			panel.insert(newnode);
-
-			newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_ARGUMENT_TITLE_SECTION; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/minus-32x32.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_CON_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Argument", 410, 730);
-			});
-			panel.insert(newnode);
+		<?php if ($CFG->SPAM_ALERT_ON) { ?>
+		if (USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
+			console.log(orinode);
+			panel.insert(createSpamMenuOption(orinode, orirole));
 		}
-
-		if (rolename != "Map"){
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/idea.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_COMMENT_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Idea&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
-			});
-			panel.insert(newnode);
-
-			var newnode = new Element("span", {'class':'active d-flex align-items-center gap-1 mb-2','style':'font-size: 0.8em; cursor: pointer;', 'title':'<?php echo $LNG->FORM_MAP_TITLE_ADD_HINT; ?>'} );
-			nodeicon = new Element("img", {'src':'<?php echo $HUB_FLM->getImagePath('nodetypes/Default/map.png'); ?>','class':'', 'style':'max-width: 20px; margin-right: 10px;'} );
-			newnode.insert(nodeicon);
-			newnode.insert("<?php echo $LNG->FORM_MAP_TITLE_ADD; ?>");
-			Event.observe(newnode,'click',function (){
-				hideBox('maparrowdiv');
-				loadDialog('nodeadder', URL_ROOT+"ui/popups/nodeadder.php?handler=addSelectedNodeToMap&position="+type+"&nodeid="+node.id+"&filternodetypes=Map&excludenodeid="+NODE_ARGS['nodeid'], 410, 730);
-			});
-			panel.insert(newnode);
-		}
-
-		panel.insert(createMenuSpacerSoftCompact());
-
-		var connecttoselected = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;float:left;font-size:10pt', 'title':'<?php echo $LNG->MAP_CONNECT_TO_SELECTED_HINT; ?>'} );
-		connecttoselected.insert("<?php echo $LNG->MAP_CONNECT_TO_SELECTED_LABEL; ?>");
-		Event.observe(connecttoselected,'click',function (){
-			hideBox('maparrowdiv');
-			connectSelectedNodesToMe(graphview, node);
-		});
-		panel.insert(connecttoselected);
+		<?php } ?>
 	}
 
 	adjustMenuPosition(panel, evt);

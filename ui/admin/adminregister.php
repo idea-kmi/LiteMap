@@ -33,11 +33,11 @@
 
     checkLogin();
 
-    include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/headeradmin.php"));
 
 	if($USER->getIsAdmin() != "Y"){
         echo "<div class='errors'>".$LNG->FORM_ERROR_NOT_ADMIN."</div>";
-        include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+        include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
         die;
 	}
 
@@ -105,7 +105,7 @@
 						echo '<input type="button" value="'.$LNG->FORM_BUTTON_CLOSE.'" onclick="window.close();"/>';
 						echo '</div>';
 
-						include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+						include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 						die;
 					}
 				}
@@ -119,7 +119,7 @@
 
 <script type="text/javascript">
 	function init() {
-		$('dialogheader').insert('<?php echo $LNG->FORM_REGISTER_ADMIN_TITLE; ?>');
+		$('dialogadmin').insert('<?php echo $LNG->FORM_REGISTER_ADMIN_TITLE; ?>');
 	}
 	window.onload = init;
 </script>
@@ -212,5 +212,5 @@
 </div>
 
 <?php
-    include_once($HUB_FLM->getCodeDirPath("ui/footerdialog.php"));
+    include_once($HUB_FLM->getCodeDirPath("ui/footeradmin.php"));
 ?>

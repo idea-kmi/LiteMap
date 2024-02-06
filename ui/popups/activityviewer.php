@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -38,11 +38,16 @@
     include_once($HUB_FLM->getCodeDirPath("ui/headerdialog.php"));
 
     $nodeid = required_param("nodeid",PARAM_ALPHANUMEXT);
-    $fromtime = optional_param("fromtime","0",PARAM_TEXT);
+    $fromtime = optional_param("fromtime","0",PARAM_ALPHANUMEXT);
     $node = getNode($nodeid);
 
-    $as = getNodeActivity($nodeid, $fromtime, 0, -1);
-    $activities = $as->activities;
+	if ($USER->getIsAdmin() == "Y") {					
+		$as = getAdminNodeActivity($nodeid, $fromtime, 0, -1);
+	} else {
+		$as = getNodeActivity($nodeid, $fromtime, 0, -1);
+	}
+
+	$activities = $as->activities;
 ?>
 <script type="text/javascript">
 	var activityitems = new Object();
@@ -283,9 +288,11 @@
         </div>
     </div>
 
-    <div class="formrow">
-   		<input type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
-    </div>
+	<div class="mb-3 row">
+		<div class="d-grid gap-2 d-md-flex justify-content-md-center mb-3">
+			<input class="btn btn-secondary" type="button" value="<?php echo $LNG->FORM_BUTTON_CLOSE; ?>" onclick="window.close();"/>
+		</div>
+	</div>
 
 </div>
 

@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -219,23 +219,112 @@ function unfollowMyUser(userid) {
 /**
  * Send a spam alert to the server.
  */
-function reportUserSpamAlert(obj, user) {
-	var ans = confirm("Are you sure you want to report \n\n"+obj.label+"\n\nas a Spammer / Inappropriate?\n\n");
+function reportGroupSpamAlert(obj, group) {
+	var ans = confirm("Are you sure you want to report \n\n"+group.name+"\n\nas an Inappropriate?\n\n");
 	if (ans){
-		var reqUrl = URL_ROOT + "spamalert.php?type=user&id="+obj.id;
+		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
+		new Ajax.Request(reqUrl, { method:'get',
+			onError: function(error) {
+			},
+			onSuccess: function(transport){
+				obj.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
+				obj.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
+				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
+				obj.style.cursor = 'auto';
+				$(obj).unbind("click");
+				Event.stopObserving(obj, 'click');
+				if (group !== undefined) {
+					group.status = 1;
+				}
+			}
+		});
+	}
+}
+
+/**
+ * Send a spam alert to the server.
+ */
+function reportUserSpamAlert(obj, user) {
+	var ans = confirm("Are you sure you want to report \n\n"+obj.dataset.label+"\n\nas a Spammer / Inappropriate?\n\n");
+	if (ans){
+		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=user&id="+obj.id;
 		new Ajax.Request(reqUrl, { method:'get',
 			onError: function(error) {
 			},
 			onSuccess: function(transport){
 				obj.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
 				obj.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
-				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("spam-reported.png"); ?>');
+				obj.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');				
 				obj.style.cursor = 'auto';
 				$(obj).unbind("click");
-				user.status = 1;
+				Event.stopObserving(obj, 'click');
+				if (user !== undefined) {
+					user.status = 1;
+				}
 			}
 		});
 	}
+}
+
+/**
+ * Create a span button to report spam / show spam reported / or say login to report.
+ *
+ * @param group, the group to report
+ */
+function createGroupSpamButton(group) {
+
+	// Add spam icon
+	var spamimg = document.createElement('img');
+	if(USER != ""){
+		if (group.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORTED; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+		} else if (group.status == <?php echo $CFG->USER_STATUS_ACTIVE; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORT_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORT; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
+			spamimg.id = group.groupid;
+			spamimg.style.cursor = 'pointer';
+			Event.observe(spamimg,'click',function () { reportGroupSpamAlert(this, group) } );
+		}
+	} else {
+		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_LOGIN_REPORT_ALT; ?>');
+		spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_LOGIN_REPORT; ?>');
+		spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+	}
+	return spamimg;
+}
+
+/**
+ * Create a span button to report spam / show spam reported / or say login to report.
+ *
+ * @param user the user to report
+ */
+function createUserSpamButton(user) {
+
+	// Add spam icon
+	var spamimg = document.createElement('img');
+	if(USER != ""){
+		if (user.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+		} else if (user.status == <?php echo $CFG->USER_STATUS_ACTIVE; ?>) {
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORT; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
+			spamimg.id = user.userid;
+			spamimg['data-label'] = user.name;
+			spamimg.style.cursor = 'pointer';
+			Event.observe(spamimg,'click',function (){ reportUserSpamAlert(this, user) } );
+		}
+	} else {
+		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>');
+		spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>');
+		spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag-grey.png"); ?>');
+	}
+	return spamimg;
 }
 
 /**
@@ -280,31 +369,6 @@ function renderUser(user){
 	var textDiv = new Element('div', {'class':''});
 	textCell.insert(textDiv);
 
-	// Add spam icon
-	var spamDiv = new Element("div");
-	var spamimg = document.createElement('img');
-	if(USER != ""){
-		if (user.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
-			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
-			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORTED; ?>');
-			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("spam-reported.png"); ?>');
-		} else if (user.status == <?php echo $CFG->USER_STATUS_ACTIVE; ?>) {
-			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>');
-			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORT; ?>');
-			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("spam.png"); ?>');
-			spamimg.id = user.userid;
-			spamimg.label = user.name;
-			spamimg.style.cursor = 'pointer';
-			Event.observe(spamimg,'click',function (){ reportUserSpamAlert(this, user) } );
-		}
-	} else {
-		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>');
-		spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>');
-		spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("spam-disabled.png"); ?>');
-	}
-	spamDiv.insert(spamimg);
-	imageCell.insert(spamDiv);
-
 	var uiDiv = new Element("div",{id:'contextinfo', "class":"col contextinfo"});
 	
 	if (user.searchid && user.searchid != "") {
@@ -312,6 +376,13 @@ function renderUser(user){
 	} else {
 		uiDiv.insert("<b><a href='user.php?userid="+ user.userid +"'>" + user.name + "</a></b>");
 	}
+
+	<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	// Add spam icon
+	var spamDiv = new Element("div");
+	spamDiv.insert(createUserSpamButton(user));
+	imageCell.insert(spamDiv);
+	<?php } ?>
 
 	if(USER != ""){
 		var followDiv = new Element("div");
@@ -455,6 +526,15 @@ function renderGroup(group, width, height, mainheading, cropdesc){
 	}
 
 	if (mainheading) {
+		<?php if ($CFG->SPAM_ALERT_ON) { ?>
+	    // Add spam icon
+	    const spamDiv = new Element("div");
+		spamDiv.className = "p-2";
+		const item = createGroupSpamButton(group);
+	    spamDiv.insert(item);
+	    toolbarDiv.insert(spamDiv);
+	    <?php } ?>
+
 		var jsonldButton = new Element("div", {'class':'p-2', 'title':'<?php echo $LNG->GRAPH_JSONLD_HINT_GROUP;?>'});
 		var jsonldButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('json-ld-data-24.png'); ?>", 'alt':'API call'});
 		jsonldButton.insert(jsonldButtonicon);

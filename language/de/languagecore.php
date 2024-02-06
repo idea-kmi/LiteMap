@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -84,7 +84,7 @@ $LNG->FOLLOWERS_NAME = "Follower";
 $LNG->VOTES_NAME = "Abstimmen";
 $LNG->COMMENTS_NAME = "Notizen";
 $LNG->COMMENTS_NAME_SHORT = "Notizen";
-$LNG->DEBATES_NAME = "Gespräche";
+$LNG->DEBATES_NAME = "Gesprï¿½che";
 
 /** Link Type Name **/
 $LNG->LINK_SOLUTION_ISSUE = 'beantwortet';
@@ -94,8 +94,8 @@ $LNG->LINK_COMMENT_NODE = 'ist Teil von';
 $LNG->LINK_ISSUE_CHALLENGE = 'ist Teil von';
 $LNG->LINK_NODE_SEE_ALSO = 'siehe auch';
 $LNG->LINK_COMMENT_BUILT_FROM = 'bezieht sich auf';
-$LNG->LINK_ISSUE_ISSUE = 'durch erhöhte';
-$LNG->LINK_ISSUE_SOLUTION = 'durch erhöhte';
-$LNG->LINK_SOLUTION_SOLUTION = 'gehört';
+$LNG->LINK_ISSUE_ISSUE = 'durch erhï¿½hte';
+$LNG->LINK_ISSUE_SOLUTION = 'durch erhï¿½hte';
+$LNG->LINK_SOLUTION_SOLUTION = 'gehï¿½rt';
 $LNG->LINK_IDEA_NODE = 'ist Teil von';
 ?>

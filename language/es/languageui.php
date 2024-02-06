@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -407,6 +407,7 @@ $LNG->VIEWS_EVIDENCE_MAP_HINT="Click para ver el gráfico de las redes de trabaj
 /** ERROR MESSAGES */
 $LNG->DATABASE_CONNECTION_ERROR = 'No se pudo conectar a la base de datos - por favor compruebe la configuración del servidor.';
 $LNG->ITEM_NOT_FOUND_ERROR = 'Item no encontrado';
+$LNG->ITEM_NOT_AVAILABLE_ERROR = 'Artículo no disponible';
 
 /** BUTTONS AND LINK HINTS **/
 $LNG->SIGN_IN_HINT = 'Entra para añadir a LiteMap';

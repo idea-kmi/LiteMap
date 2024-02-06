@@ -40,6 +40,7 @@ class Connection {
     public $fromcontexttypeid;
     public $tocontexttypeid;
     public $linktypeid;
+    public $status = 0;
 
     public $linktype;
     public $fromrole;
@@ -53,7 +54,7 @@ class Connection {
     //public $positivevotes;
     //public $negativevotes;
     //public $uservote;
-    //public $parentnode;
+    //public $parentnode; - LiteMap specific
 
     /**
      * Constructor
@@ -77,20 +78,19 @@ class Connection {
      */
     function load($style = 'long'){
         global $DB,$CFG,$HUB_SQL;
+
         try {
             $this->canview();
         } catch (Exception $e){
             return access_denied_error();
         }
+
 		$this->style = $style;
 
 		$params = array();
 		$params[0] = $this->connid;
     	$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
         if($count == 0){
 	 		$ERROR = new Hub_Error;
 	    	$ERROR->createConnectionNotFoundError($this->connid);
@@ -113,19 +113,18 @@ class Connection {
             $this->linktypeid = trim($array['LinkTypeID']);
             $this->private = $array['Private'];
            	$this->description = $array['Description'];
+
+            if (isset($array['CurrentStatus'])) {
+                $this->status = $array['CurrentStatus'];
+            }
         }
 
-        //now add in from/to nodes
-        $from = new CNode($fromid);
-        $this->from = $from->load($style);
+        //now add in from/to nodes. Try from the cache first?
+      	$from = new CNode($fromid);
+       	$this->from = $from->load($style);
 
-        // we need to for the resource node title
-        // $this->from->description = ""; // we don't need the long descriptions on connections - even if style for rest is long
         $to = new CNode($toid);
-        $this->to = $to->load($style);
-
-        // we need to for the resource node title
-        //$this->to->description = ""; // we don't need the long descriptions on connections - even if style for rest is long
+	    $this->to = $to->load($style);
 
         $r = new Role($this->fromcontexttypeid);
         $this->fromrole = $r->load();
@@ -133,7 +132,8 @@ class Connection {
         $r = new Role($this->tocontexttypeid);
         $this->torole = $r->load();
 
-		//If both ends of the connection are Comments, it's part of a chat tree.
+        // LiteMap specific
+        //If both ends of the connection are Comments, it's part of a chat tree.
         //and if the description holds a nodeid, load it as the parent item the chat is against
         if ((isset($this->fromrole->name) && $this->fromrole->name == "Comment")
         	|| (isset($this->torole->name) && $this->torole->name == "Comment")) {
@@ -154,6 +154,7 @@ class Connection {
 				}
         	}
         }
+        /// End LiteMap specific
 
         $l = new LinkType($this->linktypeid);
         $this->linktype = $l->load();
@@ -161,10 +162,7 @@ class Connection {
         if ($style == 'long'){
 	        // add in the groups
 			$resArray2 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_GROUP, $params);
-			$count2 = 0;
-			if (is_countable($resArray2)) {
-				$count2 = count($resArray2);
-			}
+			$count2 = (is_countable($resArray2)) ? count($resArray2) : 0;
 	        if($count2 > 0){
 	            $this->groups = array();
 				for ($i=0; $i<$count2; $i++) {
@@ -176,10 +174,7 @@ class Connection {
 
 	        //now add in any tags
 			$resArray3 = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_TAGS, $params);
-			$count3 = 0;
-			if (is_countable($resArray3)) {
-				$count3 = count($resArray3);
-			}
+			$count3 = (is_countable($resArray3)) ? count($resArray3) : 0;
 	        if($count3 > 0){
 	            $this->tags = array();
 				for ($i=0; $i<$count3; $i++) {
@@ -193,6 +188,7 @@ class Connection {
 		if ($style != 'cif') {
 	        $this->loadVotes();
 	    }
+
         return $this;
     }
 
@@ -207,10 +203,7 @@ class Connection {
 
         //load positive votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_POS, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -222,10 +215,7 @@ class Connection {
 
         //load negative votes
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTES_NEG, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -248,10 +238,7 @@ class Connection {
 		$params[1] = $this->connid;
 
 		$resArray = $DB->select($HUB_SQL->DATAMODEL_CONNECTION_SELECT_VOTETYPE, $params);
-		$count = 0;
-		if (is_countable($resArray)) {
-			$count = count($resArray);
-		}
+		$count = (is_countable($resArray)) ? count($resArray) : 0;
 		if($count > 0){
 			for ($i=0; $i<$count; $i++) {
 				$array = $resArray[$i];
@@ -384,7 +371,7 @@ class Connection {
         //now clear the users cache
         //clearUserCache();
 
-		$temp = $this->load();
+        $temp = $this->load();
         if (!auditConnection($USER->userid, $temp->connid, "", $fromnodeid, $tonodeid, $linktypeid, $fromroleid, $toroleid, $CFG->actionAdd,format_object('xml',$temp))) {
             return database_error();
         }
@@ -447,7 +434,7 @@ class Connection {
 		$params[7] = $toroleid;
 		$params[8] = $private;
 		$params[9] = $description;
-		$params[10] = $this->connid;
+		$params[10] =  $this->connid;
 		$params[11] = $currentuser;
 
 		$res = $DB->insert($HUB_SQL->DATAMODEL_CONNECTION_UPDATE_ALL, $params);
@@ -562,7 +549,7 @@ class Connection {
     function updateStatus($status){
         global $DB,$CFG,$USER,$HUB_SQL;
 
-		$dt = time();
+        $dt = time();
 
 		$params = array();
 		$params[0] = $status;
@@ -573,7 +560,7 @@ class Connection {
 			return database_error();
 		}
 
-        return $this->load();
+        return  $this->load();
     }
 
     function vote($vote){
@@ -675,7 +662,7 @@ class Connection {
 
         //check user member of group
         $group = new Group($groupid);
-        $group->load();
+        $group = $group->load();
         if(!$group->ismember($USER->userid)){
            return access_denied_error();
         }
@@ -725,7 +712,7 @@ class Connection {
 
         //check user member of group
         $group = new Group($groupid);
-        $group->load();
+        $group = $group->load();
         if(!$group->ismember($USER->userid)){
            return access_denied_error();
         }
@@ -762,7 +749,7 @@ class Connection {
         	return database_error();
         }
 
-        return  $this->load();
+        return $this->load();
     }
 
 
@@ -816,7 +803,7 @@ class Connection {
             }
         }
 
-        return $this->load();
+        return  $this->load();
     }
 
     /**

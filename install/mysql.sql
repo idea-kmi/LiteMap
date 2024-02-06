@@ -138,7 +138,7 @@ CREATE TABLE `AuditTriple` (
   `UserID` varchar(50) NOT NULL DEFAULT '',
   `ModificationDate` double NOT NULL DEFAULT '0',
   `ChangeType` varchar(255) NOT NULL DEFAULT '',
-  `TripleXML` text
+  `TripleXML` mediumtext DEFAULT NULL 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 246784 kB';
 
 /*

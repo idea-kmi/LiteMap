@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 The Open University UK                                   *
+ *  (c) Copyright 2015 - 2024 The Open University UK                            *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -481,7 +481,7 @@ function drawTree(allConnections, nodetofocusid) {
 
 	$('treedata').innerHTML="";
 
-// GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
+    // GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
 
 	var treePaths = {};
 

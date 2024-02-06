@@ -481,7 +481,7 @@ function drawTree(allConnections, nodetofocusid) {
 
 	$('treedata').innerHTML="";
 
-// GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
+    // GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
 
 	var treePaths = {};
 

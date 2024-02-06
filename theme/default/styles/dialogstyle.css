@@ -77,3 +77,21 @@ div.autocomplete ul li { list-style-type: none; display: block; margin: 0; paddi
 .nodeadder .itemtext { margin-left: 10px; }
 .nodeadder #nav-previous,
 .nodeadder #nav-next { padding-top: 5px !important; }
+
+.errors {
+    padding: 20px;
+    font-size: 14pt;
+}
+
+/* MB: We seem to have lost this class - matches a span to look like an anchor */
+.active {
+    color: #a91a70;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.active:hover {
+    color: #4E725F;
+    cursor: pointer;
+    font-weight: bold;
+}

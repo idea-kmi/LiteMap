@@ -52,7 +52,7 @@ if ($CFG->SPAM_ALERT_ON) {
 	} else {
 		$node = new CNode($id);
 		$node = $node->load();
-		$node->updateStatus($CFG->STATUS_SPAM);
+		$node->updateStatus($CFG->STATUS_REPORTED);
 		$type = $node->role->name;
 	}
 

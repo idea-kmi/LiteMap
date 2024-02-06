@@ -43,6 +43,16 @@
         include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
         die;
     } else {
+		// reported items are not visible.
+		// even admins can't see archived items - have to look at the content through the archived items admin screen
+		if ($node->status != $CFG->STATUS_ACTIVE 
+				&& (!isset($USER->userid) || $USER->getIsAdmin() == "N" || $node->status == $CFG->STATUS_ARCHIVED)) {
+			include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
+			echo "<div class='errors'>".$LNG->ITEM_NOT_AVAILABLE_ERROR."</div>";
+			include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+			die;
+		} 	
+
 		if ($node->role->name == "Map") {
 			if (isset($searchid) && $searchid != "") {
 				header('Location: '.$CFG->homeAddress.'map.php?id='.$nodeid.'&sid='.$searchid);

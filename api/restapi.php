@@ -352,11 +352,7 @@ if ($jsonld === FALSE) {
 					$params = array();
 					$resArray = $DB->select($HUB_SQL->AUDIT_USER_CHECK_ORIGINALID_EXISTS, $params);
 					if ($resArray !== false) {
-						$count = 0;
-						if (is_countable($resArray)) {
-							$count = count($resArray);
-						}
-
+						$count = (is_countable($resArray)) ? count($resArray) : 0;
 						if ($count > 0) {
 							$array = $resArray[0];
 							if (isset($array['OriginalID'])) {
@@ -364,11 +360,7 @@ if ($jsonld === FALSE) {
 								$params[0] = $id;
 								$resArray2 = $DB->select($HUB_SQL->AUDIT_USER_SELECT_ORIGINALID, $params);
 								if ($resArray2 !== false) {
-									$count2 = 0;
-									if (is_countable($resArray2)) {
-										$count2 = count($resArray2);
-									}
-
+									$count2 = (is_countable($resArray2)) ? count($resArray2) : 0;
 									if ($count2 > 0) {
 										$array2 = $resArray2[0];
 										$groupid = $array2['UserID'];

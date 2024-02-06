@@ -306,10 +306,7 @@ class format_jsonld extends format_base {
 
 	function addGroups($groupset) {
 		$groups = $groupset->groups;
-		$count = 0;
-		if (is_countable($groups)) {
-			$count = count($groups);
-		}
+		$count = (is_countable($groups)) ? count($groups) : 0;
 		for ($i=0; $i<$count; $i++) {
 			$this->addGroup($groups[$i]);
 		}

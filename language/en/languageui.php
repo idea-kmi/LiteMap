@@ -407,6 +407,7 @@ $LNG->VIEWS_EVIDENCE_MAP_HINT="Click to view the Network Graph for this item";
 /** ERROR MESSAGES */
 $LNG->DATABASE_CONNECTION_ERROR = 'Could not connect to database - please check the server configuration.';
 $LNG->ITEM_NOT_FOUND_ERROR = 'Item not found';
+$LNG->ITEM_NOT_AVAILABLE_ERROR = 'Item not available';
 
 /** BUTTONS AND LINK HINTS **/
 $LNG->SIGN_IN_HINT = 'Sign In to add to LiteMap';

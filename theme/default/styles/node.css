@@ -80,6 +80,12 @@ div.idea-user2 {
 
 div.idea-user img {
 	border:0px;
+	object-fit: contain;
+}
+
+div.idea-user2 img {
+	border:0px;
+	object-fit: contain;
 }
 
 div.idea-wrapper{
@@ -107,6 +113,7 @@ div.idea-desc {
 }
 
 div.idea-detail{
+	font-size: 10pt; /* over-ride table 0.9em or it deminishes going down a tree of nodes */
 }
 
 div.idea-action{
@@ -287,7 +294,7 @@ div.idea-li-wrapper{
 
 #maparrowdiv.boxshadowsquare .active input { cursor: pointer; }
 
-.toConnectionsTable { width: 100%; }
+.toConnectionsTable { width: 100%;}
 .toConnectionsTable tbody { width: 100%; }
 .toConnectionsTable tbody .nodecheckcell { padding-left: 5px; }
 .toConnectionsTable tbody .ideavotediv { margin: 0; padding: 0; width: 60px; }

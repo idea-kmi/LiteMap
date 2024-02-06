@@ -850,12 +850,6 @@ function renderMapNode(width, height, node, uniQ, role, includeUser, type, inclu
 		}
 	}
 
-	<?php if ($CFG->SPAM_ALERT_ON) { ?>
-	if (type == "active" && USER != "") { // IF LOGGED IN
-		toolbarDiv.insert(createSpamButton(node, role));
-	}
-	<?php } ?>		
-
 	if (type == "active") {
 		if (USER != "") {
 			var followbutton = new Element('img', {'class':' '});
@@ -1216,7 +1210,7 @@ function renderMapNodeHeading(width, height, node, uniQ, role, includeUser, type
 		}
 
 		<?php if ($CFG->SPAM_ALERT_ON) { ?>
-		if (USER != "") { // IF LOGGED IN
+		if (type == "active" && USER != "" && USER != user.userid) { // IF LOGGED IN AND NOT YOU
 			nextCell.insert(createSpamButton(node, role));
 		}
 		<?php } ?>
@@ -1371,6 +1365,23 @@ function renderEmbedMapNode(node, uniQ, role, includeUser, type, includeconnecte
 	return iDiv;
 }
 
+var TREE_OPEN_ARRAY = {};
+
+/**
+ * Open and close the knowledge tree
+ */
+function toggleItem(section, uniQ) {
+    $(section).toggle();
+
+    if($(section).visible()){
+    	TREE_OPEN_ARRAY[section] = true;
+    	$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
+	} else {
+    	TREE_OPEN_ARRAY[section] = false;
+		$('explorearrow'+uniQ).src='<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>';
+	}
+}
+
 /**
  * Render the given node from an associated connection in the knowledge tree.
  * @param node the node object do render
@@ -1447,25 +1458,26 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	itDiv.insert(nodeTable);
 
 	var row = nodeTable.insertRow(-1);
+	//console.log(role.name);
 
 	// ADD THE ARROW IF REQUIRED
 	if (node.istop) {
 		var expandArrow = null;
 		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
-			|| role.name == "Issue" || role.name == "Solution") {
+			|| role.name == "Issue" || role.name == "Solution" || role.name == "Map") {
 
 			var arrowCell = row.insertCell(-1);
 			arrowCell.vAlign="middle";
 			arrowCell.align="left";
 
-			if (DEBATE_TREE_OPEN_ARRAY["desc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["desc"+uniQ] == true) {
+			if (TREE_OPEN_ARRAY["desc"+uniQ] && TREE_OPEN_ARRAY["desc"+uniQ] == true) {
 				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>'});
 				expandArrow.uniqueid = uniQ;
 			} else {
 				expandArrow = new Element('img',{'id':'explorearrow'+uniQ, 'name':'explorearrow', 'alt':'>', 'title':'<?php echo $LNG->NODE_DEBATE_TOGGLE; ?>', 'style':'visibility:visible;margin-top:3px;','align':'left','border':'0','src': '<?php echo $HUB_FLM->getImagePath("arrow-right-blue.png"); ?>'});
 				expandArrow.uniqueid = uniQ;
 			}
-			Event.observe(expandArrow,'click',function (){ toggleDebate("treedesc"+uniQ,uniQ);});
+			Event.observe(expandArrow,'click',function (){ toggleItem("treedesc"+uniQ,uniQ);});
 			arrowCell.insert(expandArrow);
 		}
 	} else {
@@ -1665,10 +1677,10 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		});
 	}
 	if (node.istop) {
-		var expandArrow = null;
 		if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1 || role.name == "Challenge"
 			|| role.name == "Issue" || role.name == "Solution" || role.name == "Idea"
-			|| role.name == "Pro"  || role.name == "Con" || role.name == "Argument") {
+			|| role.name == "Pro"  || role.name == "Con" || role.name == "Argument"
+			|| role.name == "Map") {
 
 			var childCount = new Element('div',{'style':' margin-left:5px;margin-right:5px;margin-top:2px;', 'title':'<?php echo $LNG->NODE_DEBATE_TREE_COUNT_HINT; ?>'});
 			childCount.insert("(");
@@ -1689,15 +1701,16 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	var idDiv = new Element("div", {'class':'idea-detail'});
 
 	var expandDiv = new Element("div", {'id':'treedesc'+uniQ,'class':'ideadata', 'style':'padding:0px;margin-left:0px;color:Gray;'} );
-	if (node.istop) {
-		if (DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] && DEBATE_TREE_OPEN_ARRAY["treedesc"+uniQ] == true) {
-			expandDiv.style.display = 'block';
-		} else {
-			expandDiv.style.display = 'none';
+
+	if (node.children && node.children.length > 0) {
+		if (expandArrow && expandArrow != null) {
+			expandArrow.src='<?php echo $HUB_FLM->getImagePath("arrow-down-blue.png"); ?>';
 		}
-	} else {
 		expandDiv.style.display = 'block';
+	} else {
+		expandDiv.style.display = 'none';
 	}
+
 	var hint = alttext+": "+node.name;
 	hint += " <?php echo $LNG->NODE_GOTO_PARENT_HINT; ?>"
 
@@ -1775,8 +1788,48 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 	iuDiv.insert(dStr);
 
 	userbar.insert(iuDiv);
-
 	nextCell.insert(userbar);
+
+	// image
+	if (node.imagethumbnail != null && node.imagethumbnail != "") {
+		var imageDiv = new Element("div");
+
+		var originalurl = "";
+		if(node.urls && node.urls.length > 0){
+			for (var i=0 ; i< node.urls.length; i++){
+				var urlid = node.urls[i].url.urlid;
+				if (urlid == node.imageurlid) {
+					originalurl = node.urls[i].url.url;
+					break;
+				}
+			}
+		}
+		if (originalurl == "") {
+			originalurl = node.imagethumbnail;
+		}
+		var iconlink = new Element('a', {
+			'href':originalurl,
+			'title':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'target': '_blank' });
+		var nodeicon = new Element('img',{'alt':'<?php echo $LNG->NODE_TYPE_ICON_HINT; ?>', 'style':'clear:both;padding-right:5px;','align':'left', 'border':'0','src': URL_ROOT + node.imagethumbnail});
+		iconlink.insert(nodeicon);
+		imageDiv.insert(iconlink);
+		const row = nodeTable.insertRow(-1);
+		const nextCell = row.insertCell(-1);
+		nextCell.vAlign="middle";
+		nextCell.align="left";		
+		nextCell.insert(imageDiv);
+		//nodeArea.insert(alttext+": ");
+	} else if (node.image != null && node.image != "") {
+		var imageDiv = new Element("div");
+		var nodeicon = new Element('img',{'alt':alttext, 'title':alttext, 'style':'clear:both;padding-right:5px;','align':'left','border':'0','src': node.image});
+		imageDiv.insert(nodeicon);
+		const row = nodeTable.insertRow(-1);
+		const nextCell = row.insertCell(-1);
+		nextCell.vAlign="middle";
+		nextCell.align="left";		
+		nextCell.insert(imageDiv);
+		nextCell.insert(imageDiv);
+	} 
 
 	// META DATA - DESCRIPTION, URLS ETC
 
@@ -1819,17 +1872,19 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 		innerexpandDiv.insert(dStr);
 	}
 
-	var exploreButton = new Element("span", {'class':'active', 'style':'margin-top:5px;margin-bottom:5px;clear:both;font-size:10pt', 'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'} );
-	Event.observe(exploreButton,'click',function (e) {
-		viewNodeDetailsDiv(node.nodeid, role.name, node, e, 0, 0);
-	});
-	//Event.observe(exploreButton,'mouseover',function (event){ showBox('toolbardiv'+uniQ); });
-	exploreButton.insert("<?php echo $LNG->NODE_DETAIL_MENU_TEXT; ?>");
-	//exploreButton.href= "#";
-	innerexpandDiv.insert(exploreButton);
+	if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?> || node.status == <?php echo $CFG->STATUS_REPORTED; ?> ) {
+		var exploreButton = new Element("span", {'class':'active', 'style':'margin-top:5px;margin-bottom:5px;clear:both;font-size:10pt', 'title':'<?php echo $LNG->NODE_DETAIL_BUTTON_HINT; ?>'} );
+		Event.observe(exploreButton,'click',function (e) {
+			viewNodeDetailsDiv(node.nodeid, role.name, node, e, 0, 0);
+		});
+		//Event.observe(exploreButton,'mouseover',function (event){ showBox('toolbardiv'+uniQ); });
+		exploreButton.insert("<?php echo $LNG->NODE_DETAIL_MENU_TEXT; ?>");
+		//exploreButton.href= "#";
+		innerexpandDiv.insert(exploreButton);
+	}
 
 	// CHILD LISTS
-	if (node.children && DEBATE_TREE_SMALL) {
+	if (node.children) {
 		var nodes = node.children
 		if (nodes.length > 0) {
 
@@ -1853,33 +1908,6 @@ function renderConnectionNode(node, uniQ, role, includeUser, childCountSpan, par
 				}
 			}
 			displayConnectionNodes(childrenDiv, nodes, parseInt(0), true, uniQ, childCountSpan, parentrefreshhanlder);
-		}
-	} else if (DEBATE_TREE_SMALL == false) {
-		if (role.name == 'Challenge') {
-			childCell.insert('<div style="clear:both;"></div>');
-			var issueDiv = new Element("div", {'id':'issue'+uniQ, 'style':'clear:both;padding-left:10px;margin-bottom:5px;color:Gray;display:block;'} );
-			childCell.insert(issueDiv);
-			childload(issueDiv, node.nodeid, "Issues", "is related to", "Issue", focalnodeid, uniQ, childCountSpan);
-			childCell.insert('<div style="clear:both;"></div>');
-		} else if (role.name == 'Issue') {
-			childCell.insert('<div style="clear:both;"></div>');
-			var solutionDiv = new Element("div", {'id':'solution'+uniQ, 'style':'clear:both;padding-left:10px;margin-bottom:5px;color:Gray;display:block;'} );
-			childCell.insert(solutionDiv);
-			childload(solutionDiv ,node.nodeid,"Solutions", "addresses", "Solution", focalnodeid, uniQ, childCountSpan);
-			childCell.insert('<div style="clear:both;"></div>');
-		} else if (role.name == 'Solution') {
-			childCell.insert('<div style="clear:both;"></div>');
-			var supportDiv = new Element("div", {'id':'support'+uniQ, 'style':'clear:both;padding-left:10px;margin-bottom:5px;color:Gray;display:block;'} );
-			childCell.insert(supportDiv);
-			childload(supportDiv, node.nodeid,"Supporting Evidence", "supports", "Pro", focalnodeid, uniQ, childCountSpan);
-			childCell.insert('<div style="clear:both;"></div>');
-			var opposingDiv = new Element("div", {'id':'oppose'+uniQ, 'style':'clear:both;padding-left:10px;margin-bottom:5px;color:Gray;display:block;'} );
-			childCell.insert(opposingDiv);
-			childload(opposingDiv, node.nodeid, "Counter Evidence", "challenges", "Con", node.focalnodeid, uniQ, childCountSpan);
-			childCell.insert('<div style="clear:both;"></div>');
-		} else if (EVIDENCE_TYPES_STR.indexOf(role.name) != -1) {
-			childCell.insert('<div style="clear:both;"></div>');
-			childCell.insert('<div style="clear:both;"></div>');
 		}
 	} else {
 		lineCell.className=""; // = "1px solid white"; // hide the dot
@@ -4789,9 +4817,10 @@ function highlightDebateAddArea() {
 function reportNodeSpamAlert(obj, nodetype, node) {
 
 	var name = node.name;
+
 	var ans = confirm("<?php echo $LNG->SPAM_CONFIRM_MESSAGE_PART1; ?>\n\n"+name+"\n\n<?php echo $LNG->SPAM_CONFIRM_MESSAGE_PART2; ?>\n\n");
 	if (ans){
-		var reqUrl = URL_ROOT + "spamalert.php?type=idea&id="+node.nodeid;
+		var reqUrl = URL_ROOT + "ui/admin/spamalert.php?type=idea&id="+node.nodeid;
 		new Ajax.Request(reqUrl, { method:'get',
 			onError: function(error) {
 		   		alert(error);
@@ -4801,14 +4830,15 @@ function reportNodeSpamAlert(obj, nodetype, node) {
 				obj.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
 				if (obj.alt) {
 					obj.alt = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';
-					obj.src= '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>';
+					obj.src= '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>';
 					obj.style.cursor = 'auto';
+					$(obj).unbind("click");
 					Event.stopObserving(obj, 'click');
 				} else {
 					obj.innerHTML = '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>';
 				}
 				obj.className = "";
-				fadeMessage(name+"<br><br><?php echo $LNG->SPAM_SUCCESS_MESSAGE; ?>");
+				fadeMessage(name+"<br /><br /><?php echo $LNG->SPAM_SUCCESS_MESSAGE; ?>");
 			}
 		});
 	}
@@ -4824,7 +4854,7 @@ function createSpamMenuOption(node, nodetype) {
 
 	var spaming = new Element("span", {'class':'active','style':'margin-bottom:5px;clear:both;font-size:10pt'} );
 
-	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.insert("<?php echo $LNG->SPAM_REPORTED_TEXT; ?>");
 		spaming.title = '<?php echo $LNG->SPAM_REPORTED_HINT; ?>';
 		spaming.className = "";
@@ -4852,21 +4882,23 @@ function createSpamMenuOption(node, nodetype) {
 function createSpamButton(node, nodetype) {
 	// Add spam icon
 	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
-	if (node.status == <?php echo $CFG->STATUS_SPAM; ?>) {
+	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
 		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
 		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>');
+		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>');
 	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
 		if(USER != ""){
 			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
 			spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam.png'); ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag.png'); ?>');
+			spaming.className = "idea-report";
 			spaming.style.cursor = 'pointer';
 			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
 		} else {
 			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
 			spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>');
+			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('falg-grey.png'); ?>');
+			spaming.className = "idea-report";
 			spaming.style.cursor = 'pointer';
 			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
 		}
@@ -4978,3 +5010,144 @@ function getSelectedNodeIDs(){
 	return retArr;
 }
 
+/**
+ * For admin trees, sort the connections into their heirachies for drawing as a tree.
+ * @param allConnections - and array of Connection class objects in json format
+ */ 
+function getTreeMap(allConnections) {
+
+	// GROUP CONNECTIONS INTO THE NODE TYPES pointed TO - Maps connections reversed
+
+	var treePaths = {};
+
+	var fromNodeCheck = new Array();
+	var toNodeCheck = new Array();
+
+	var toNodeConnections = {};
+
+	for(var i=0; i< allConnections.length; i++) {
+		var c = allConnections[i];
+		if (c.connection) {
+			c = c.connection;
+		}
+		//console.log(c);
+		if (c) {
+			var fN = c.from[0].cnode;
+			var tN = c.to[0].cnode;
+			var fnRole = c.fromrole[0].role;
+			var tnRole = c.to[0].cnode.role[0].role;
+
+			// reverse direction to nest map under from node in linear view
+			if (tnRole.name == "Map") {
+				var hold = tN;
+				c.to[0].cnode = fN;
+				c.from[0].cnode = hold;
+				var holdrole = tnRole;
+				c.fromrole[0].role = holdrole;
+				c.torole[0].role = fnRole;
+
+				fN = c.from[0].cnode;
+				tN = c.to[0].cnode;
+			}
+
+			if (fromNodeCheck.indexOf(fN.nodeid) == -1) {
+				fromNodeCheck.push(fN.nodeid);
+			}
+			if (toNodeCheck.indexOf(tN.nodeid) == -1) {
+				toNodeCheck.push(tN.nodeid);
+			}
+
+			if (toNodeConnections[tN.nodeid]) {
+				toNodeConnections[tN.nodeid].push(c);
+			} else {
+				toNodeConnections[tN.nodeid] = new Array();
+				toNodeConnections[tN.nodeid].push(c);
+			}
+		}
+	}
+
+	var treetops = [];
+
+	toNodeCheck.forEach(function(key) {
+		if (-1 === fromNodeCheck.indexOf(key)) {
+			treetops.push(key);
+		}
+	}, this);
+
+	var checkNodes = new Array();
+	var treeTopNodes = new Array();
+
+	for(var i=0; i< treetops.length; i++) {
+		var tonodeid = treetops[i];
+
+		var myToConnections = toNodeConnections[tonodeid];
+
+		var toNode = "";
+
+		for(var j=0; j<myToConnections.length; j++) {
+			var c = myToConnections[j];
+
+			// node to main array once.
+			if (j == 0) {
+				toNode = c.to[0];
+				toNode.cnode['connection'] = c;
+				toNode.cnode['handler'] = "";
+				toNode.cnode.children = new Array();
+				checkNodes[toNode.cnode.nodeid] = toNode.cnode.nodeid;
+			}
+
+			var fromNode = c.from[0];
+			if (fromNode.cnode.name != "") {
+				if (checkNodes.indexOf(fromNode.cnode.nodeid) == -1) {
+					fromNode.cnode['connection'] = c;
+					fromNode.cnode['handler'] = "";
+
+					toNode.cnode.children.push(fromNode);
+					checkNodes[fromNode.cnode.nodeid] = fromNode.cnode.nodeid;
+
+					recurseNextTreeDepth(fromNode, checkNodes, toNodeConnections)
+				}
+			}
+		}
+
+		toNode.cnode.children.sort(alphanodesort);
+		treeTopNodes.push(toNode);
+	}
+
+	treeTopNodes.sort(alphanodesort);
+
+	return treeTopNodes;
+}
+
+function recurseNextTreeDepth(toNode, checkNodes, toNodeConnections) {
+
+if (toNodeConnections[toNode.cnode.nodeid]) {
+	var myToConnections = toNodeConnections[toNode.cnode.nodeid];
+	toNode.cnode.children = new Array();
+
+	for(var i=0; i<myToConnections.length; i++) {
+		var c = myToConnections[i];
+		var fromNode = c.from[0];
+
+		if (fromNode.cnode.nodeid == toNode.cnode.nodeid) {
+			continue;
+		}
+
+		if (checkNodes.indexOf(fromNode.cnode.nodeid) == -1) {
+			if (fromNode.cnode.name != "") {
+				fromNode.cnode['connection'] = c;
+				fromNode.cnode['handler'] = "";
+
+				toNode.cnode.children.push(fromNode);
+				checkNodes[fromNode.cnode.nodeid] = fromNode.cnode.nodeid;
+
+				recurseNextTreeDepth(fromNode, checkNodes, toNodeConnections)
+			}
+		}
+	}
+
+	if (toNode.cnode.children && toNode.cnode.children.length > 1) {
+		toNode.cnode.children.sort(alphanodesort);
+	}
+}
+}

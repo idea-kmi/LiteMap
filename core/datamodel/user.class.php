@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
  *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
+ *  (c) Copyright 2015 The Open University UK                                   *
  *                                                                              *
  *  This software is freely distributed in accordance with                      *
  *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
@@ -36,7 +36,7 @@ class user {
     private $interest;
     private $testgroup = 0;
 
-	// For spam icon on user list
+	// For spam icon on user lists
     public $status = 0;
 
     public $userid;
@@ -211,7 +211,8 @@ class user {
 								&& ( (!isset($array['LocationLng']) || $array['LocationLng'] == "") && (!isset($array['LocationLat']) || $array['LocationLat'] == "")) ) {
 
 							$coords = geoCode($this->location,$this->countrycode);
-							if($coords["lat"] != "" && $coords["lng"] != ""){
+							if(isset($coords["lat"]) && $coords["lat"] != ""
+										&& isset($coords["lng"]) && $coords["lng"] != ""){
 								$params = array();
 								$params[0] = $coords["lat"];
 								$params[1] = $coords["lng"];

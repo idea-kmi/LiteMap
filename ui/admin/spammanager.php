@@ -82,14 +82,13 @@
 	$ns = getNodesByStatus($CFG->STATUS_REPORTED, 0,-1,'name','ASC','long');
     $nodes = $ns->nodes;
 
-	$childnodes = [];	
 	$count = (is_countable($nodes)) ? count($nodes) : 0;
     for ($i=0; $i<$count;$i++) {
     	$node = $nodes[$i];
 		$nodetype = $node->role->name;
-		if ($nodetype == 'Map') {
-			$node->children = loadMapData($node, $CFG->STATUS_ACTIVE, $childids);
-		} 		
+		//if ($nodetype == 'Map') {
+		//	$node->children = loadMapData($node, $CFG->STATUS_ACTIVE);
+		//} 		
 	   	$reporterid = getSpamReporter($node->nodeid);
     	if ($reporterid != false) {
     		$reporter = new User($reporterid);
@@ -106,19 +105,20 @@
     $nodesarchivedinitial = $ns2->nodes;
 
 	$nodesarchived = [];
-	$childnodes2 = [];	
 	$count2 = (is_countable($nodesarchivedinitial)) ? count($nodesarchivedinitial) : 0;
     for ($i=0; $i<$count2;$i++) {
     	$node = $nodesarchivedinitial[$i];
 		$nodetype = $node->role->name;
-		if ($nodetype == 'Map') {
-			loadMapData($node, $CFG->STATUS_ACTIVE, $childids);
-		} 		
+		//if ($nodetype == 'Map') {
+		//	loadMapData($node, $CFG->STATUS_ARCHIVED);
+		//} 		
 		$reporterid = getSpamReporter($node->nodeid);
    		if ($reporterid != false) {
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$node->reporter = $reporter;
+			//$node->istop = true; 
+			array_push($nodesarchived, $node);
 		}
 		$jsonnodestr = $format_json->format($node);
 		$stripped_of_invalid_utf8_chars_string = iconv('UTF-8', 'UTF-8//IGNORE', $jsonnodestr); // in case older data has some
@@ -128,13 +128,13 @@
 	// only hold top level archived nodes that have a reporter 
 	// and are not children of another item also archived
 	// will this cover everything?
-	for ($i=0; $i<$count2;$i++) {
-    	$node = $nodesarchivedinitial[$i];
-		if (isset($node->reporter) && !in_array($node->nodeid, $childnodes2) ) {
-			$node->istop = true; 
-			array_push($nodesarchived, $node);
-    	}
-    }	
+	//for ($i=0; $i<$count2;$i++) {
+    //	$node = $nodesarchivedinitial[$i];
+	//	if (isset($node->reporter)) {
+	//		$node->istop = true; 
+	//		array_push($nodesarchived, $node);
+    //	}
+    //}	
 ?>
 
 <script type="text/javascript">
@@ -206,7 +206,7 @@
 		}
 	}
 
-	function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow) {
+	function viewItemTree(nodeid, nodetype, containerid, rootname, toggleRow, status) {
 
 		// close any opened row
 		const divsArray = document.getElementsByName(rootname);
@@ -227,36 +227,70 @@
 		// only draw the tree once, then after that just show it
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
-			containerObj.innerHTML = "";
 			
 			var node = allnodes[nodeid];
 			if (node.cnode && node.cnode.length > 0) {	node.cnode = node.cnode[0]; }
-			let items = [node];
 
-			if (nodetype == 'Map') {
-				let mapnode = node;
-				const allConnections = mapnode.cnode.connections[0].connectionset.connections;
+			if (nodetype == 'Map') {			
+				containerObj.innerHTML = '<span style="font-size: 0.9em;font-style:italic"><?php echo $LNG->ADMIN_TREEVIEW_LOADING; ?></span>';
+				var reqUrl = SERVICE_ROOT + "&method=adminloadmapchildnodes&nodeid="+nodeid+"&status="+status;
 
-				// sort the connections into trees
-				if (allConnections && Array.isArray(allConnections)) {
-					mapnode.cnode.children = getTreeMap(allConnections);
-				}
+				document.body.style.cursor = "wait"; 
 
-				const lonenodes = mapnode.cnode.nodes[0].nodeset.nodes;
-				if (lonenodes &&  Array.isArray(lonenodes)) {
-					// add in any lone nodes - not part of a connection in the map
-					for (let j=0; j<lonenodes.length; j++) {
-						mapnode.cnode.children.push(lonenodes[j]);
+				new Ajax.Request(reqUrl, { method:'get',
+					onSuccess: function(transport) {
+						var json = null;
+						try {
+							json = transport.responseText.evalJSON();
+						} catch(e) {
+							alert(e);
+						}
+						if(json.error){
+							alert(json.error[0].message);
+							return;
+						}
+
+						//console.log(json);
+
+						mapnode = node;
+						mapnode.cnode.connections = json.cnode[0].connections;
+						mapnode.cnode.nodes = json.cnode[0].nodes;
+
+						console.log(mapnode);
+
+						const allConnections = mapnode.cnode.connections[0].connectionset.connections;
+
+						// sort the connections into trees
+						if (allConnections && Array.isArray(allConnections)) {
+							mapnode.cnode.children = getTreeMap(allConnections);
+						}
+
+						const lonenodes = mapnode.cnode.nodes[0].nodeset.nodes;
+						if (lonenodes &&  Array.isArray(lonenodes)) {
+							// add in any lone nodes - not part of a connection in the map
+							for (let j=0; j<lonenodes.length; j++) {
+								mapnode.cnode.children.push(lonenodes[j]);
+							}
+						}
+
+						//console.log(mapnode.cnode.children.length);
+						if (mapnode.cnode.children.length > 0) {
+							mapnode.cnode.istop = true;
+						}
+					 
+						document.body.style.cursor = "pointer"; 
+						containerObj.innerHTML = "";
+
+						displayConnectionNodes(containerObj, [mapnode], parseInt(0), true, nodeid+"tree");
+					},
+					onFailure: function(transport) {
+						document.body.style.cursor = "pointer"; 
+						containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
 					}
-				}
-
-				//console.log(mapnode.cnode.children.length);
-				if (mapnode.cnode.children.length > 0) {
-					mapnode.cnode.istop = true;
-				}
-			} 
-
-			displayConnectionNodes(containerObj, items, parseInt(0), true, nodeid+"tree");
+				});
+			} else {
+				displayConnectionNodes(containerObj, [node], parseInt(0), true, nodeid+"tree");
+			}
 		}
 	}
 </script>
@@ -311,7 +345,7 @@
 												</td>
 												<td>
 													<?php 
-														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\', \'treediv\', \''.$node->nodeid.'treeRow\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
+														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv\', \'treediv\', \''.$node->nodeid.'treeRow\', \''.$CFG->STATUS_ACTIVE.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
 														//echo '<span class="active" onclick="viewSpamItemDetails(\''.$node->nodeid.'\', \''.$node->role->name.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
@@ -392,7 +426,7 @@
 												</td>
 												<td>
 													<?php 
-														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv2\', \'treediv2\', \''.$node->nodeid.'treeRow2\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
+														echo '<span class="active" onclick="viewItemTree(\''.$node->nodeid.'\', \''.$node->role->name.'\', \''.$node->nodeid.'treediv2\', \'treediv2\', \''.$node->nodeid.'treeRow2\', \''.$CFG->STATUS_ARCHIVED.'\');">'.$LNG->SPAM_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
 												<td>

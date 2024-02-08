@@ -38,6 +38,8 @@ $LNG->ADMIN_STATS_BUTTON_HINT = "Ir para as páginas Analíticas";
 $LNG->ADMIN_REGISTER_NEW_USER_LINK = 'Registrar novo usuário';
 $LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE = 'É necessário ser administrador para acessar a esta página';
 $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR = 'Ocorreu um problema para apagar o usuário com id:';
+$LNG->ADMIN_TREEVIEW_LOADING = 'Carregando dados da árvore. Por favor, aguarde....';
+$LNG->ADMIN_TREEVIEW_LOADING_FAILED = 'Falha ao carregar dados da árvore.';
 
 /** ADMIN USER REGISTRATION MANAGER **/
 $LNG->REGSITRATION_ADMIN_MANAGER_LINK = "Solicitações de inscrição";

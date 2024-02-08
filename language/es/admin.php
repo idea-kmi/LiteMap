@@ -37,6 +37,8 @@ $LNG->ADMIN_STATS_BUTTON_HINT = "Ir a las páginas de Analíticas";
 $LNG->ADMIN_REGISTER_NEW_USER_LINK = 'Registrar nuevo usuario';
 $LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE = 'Lo sentimos se necesita ser administrador para acceder a esta página';
 $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR = 'Había un problema para borrar el usuario con la id:';
+$LNG->ADMIN_TREEVIEW_LOADING = 'Cargando datos del árbol. Espere por favor....';
+$LNG->ADMIN_TREEVIEW_LOADING_FAILED = 'Error al cargar los datos del árbol.';
 
 /** ADMIN USER REGISTRATION MANAGER **/
 $LNG->REGSITRATION_ADMIN_MANAGER_LINK = "Solicitudes de inscripción";

@@ -49,6 +49,15 @@ if ($CFG->privateSite && $method != "login" && (!isset($USER->userid) || $USER->
     die;
 }
 
+// methods starting in 'admin' can only be called by users who are admins.
+if (strpos($method, "admin", 0) !== false && (!isset($USER->userid) || $USER->userid == "" || $USER->getIsAdmin() == "N")) {
+    global $ERROR;
+    $ERROR = new Hub_Error;
+    $ERROR->createAccessDeniedError();
+    include($HUB_FLM->getCodeDirPath("core/formaterror.php"));
+    die;
+}
+
 // optional params for ordering, max no and sorting sets of objects and filtering
 $start = optional_param("start",0,PARAM_INT);
 $max = optional_param("max",20,PARAM_INT);
@@ -741,7 +750,23 @@ switch($method) {
 
 		$response = getMapAlertsData($mapid,$url,$alerts,$timeout,$userids);
 		break;
-    default:
+
+        /** ADMIN ONLY */
+
+        case "adminloadgroupmapdata":
+            $groupid = required_param('groupid', PARAM_ALPHANUMEXT);
+            $response = adminLoadGroupMapData($groupid, $status);
+            break;
+
+        case "adminloadmapchildnodes":
+            $nodeid = required_param('nodeid', PARAM_ALPHANUMEXT);
+
+            $node = new CNode($nodeid);
+            $node->load();
+            $response = loadMapData($node, $status); 
+            break;   
+
+        default:
         //error as method not defined.
         global $ERROR;
         $ERROR = new error;

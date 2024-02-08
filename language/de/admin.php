@@ -38,6 +38,8 @@ $LNG->ADMIN_STATS_BUTTON_HINT = "F&uuml;hrt zur Seite Analyse";
 $LNG->ADMIN_REGISTER_NEW_USER_LINK = 'Registriere einen neuen Benutzer';
 $LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE = 'Sie m&uuml;ssen ein Adminstrator sein, um diese Seite besuchen zu k&ouml;nnen.';
 $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR = 'Es gab einen Fehler beim L&ouml;schen des Benutzers mit der folgenden ID:';
+$LNG->ADMIN_TREEVIEW_LOADING = 'Baumdaten werden geladen. Bitte warten....';
+$LNG->ADMIN_TREEVIEW_LOADING_FAILED = 'Das Laden der Baumdaten ist fehlgeschlagen.';
 
 /** ADMIN USER REGISTRATION MANAGER **/
 $LNG->REGSITRATION_ADMIN_MANAGER_LINK = "Anfrage zur Registrierung";

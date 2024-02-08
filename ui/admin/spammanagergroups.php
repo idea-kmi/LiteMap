@@ -90,7 +90,7 @@
 	$count = (is_countable($groups)) ? count($groups) : 0;
     for ($i=0; $i<$count;$i++) {
     	$group = $groups[$i];
-		$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ACTIVE);
+		//$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ACTIVE);
 		$reporterid = getSpamReporter($group->groupid);
 		if ($reporterid != false) {
     		$reporter = new User($reporterid);
@@ -115,7 +115,7 @@
     		$reporter = new User($reporterid);
     		$reporter = $reporter->load();
     		$group->reporter = $reporter;
-			$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ARCHIVED);
+			//$group->children = adminLoadGroupMapData($group->groupid, $CFG->STATUS_ARCHIVED);
 			array_push($archivedgroups, $group);
 		}		
 		$jsongroupstr = $format_json->format($group);
@@ -195,7 +195,7 @@
 		}
 	}
 
-	function viewGroupTree(groupid, containerid, rootname, toggleRow) {
+	function viewGroupTree(groupid, containerid, rootname, toggleRow, status) {
 
 		// close any opened divs
 		const divsArray = document.getElementsByName(rootname);
@@ -216,41 +216,65 @@
 		// only draw the tree once, then after that just show it
 		const containerObj = document.getElementById(containerid);	
 		if (containerObj.innerHTML == "&nbsp;") {
-			containerObj.innerHTML = "";
-
-			console.log(allgroups);
+			containerObj.innerHTML = '<span style="font-size: 0.9em;font-style:italic"><?php echo $LNG->ADMIN_TREEVIEW_LOADING; ?></span>';
 
 			var group = allgroups[groupid].group[0];
-			const childmaps = group.children;
 
-			// process each maps child connections and nodes ready for drawing.
-			for (let i=0; i< childmaps.length; i++) {
+			var reqUrl = SERVICE_ROOT + "&method=adminloadgroupmapdata&groupid="+groupid+"&status="+status;
 
-				let mapnode = childmaps[i];
-				const allConnections = childmaps[i].cnode.connections[0].connectionset.connections;
+			document.body.style.cursor = "wait"; 
 
-				// sort the connections into trees
-				if (allConnections && Array.isArray(allConnections)) {
-					childmaps[i].cnode.children = getTreeMap(allConnections);
-				}
-
-				const lonenodes = childmaps[i].cnode.nodes[0].nodeset.nodes;
-				if (lonenodes &&  Array.isArray(lonenodes)) {
-					// add in any lone nodes - not part of a connection in the map
-					for (let j=0; j<lonenodes.length; j++) {
-						childmaps[i].cnode.children.push(lonenodes[j]);
+			new Ajax.Request(reqUrl, { method:'get',
+				onSuccess: function(transport) {
+					var json = null;
+					try {
+						json = transport.responseText.evalJSON();
+					} catch(e) {
+						alert(e);
 					}
-				}
+					if(json.error){
+						alert(json.error[0].message);
+						return;
+					}
+					var childmaps = json.nodeset[0].nodes;
 
-				//console.log(childmaps[i].cnode.children.length);
-				if (childmaps[i].cnode.children.length > 0) {
-					childmaps[i].cnode.istop = true;
-				}
-			}
+					// process each maps child connections and nodes ready for drawing.
+					for (let i=0; i< childmaps.length; i++) {
 
-			if (childmaps.length > 0) {
-				displayConnectionNodes(containerObj, childmaps, parseInt(0), true, groupid+"tree");
-			}	
+						let mapnode = childmaps[i];
+						const allConnections = childmaps[i].cnode.connections[0].connectionset.connections;
+
+						// sort the connections into trees
+						if (allConnections && Array.isArray(allConnections)) {
+							childmaps[i].cnode.children = getTreeMap(allConnections);
+						}
+
+						const lonenodes = childmaps[i].cnode.nodes[0].nodeset.nodes;
+						if (lonenodes &&  Array.isArray(lonenodes)) {
+							// add in any lone nodes - not part of a connection in the map
+							for (let j=0; j<lonenodes.length; j++) {
+								childmaps[i].cnode.children.push(lonenodes[j]);
+							}
+						}
+
+						//console.log(childmaps[i].cnode.children.length);
+						if (childmaps[i].cnode.children.length > 0) {
+							childmaps[i].cnode.istop = true;
+						}
+					}
+
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "";
+
+					if (childmaps.length > 0) {
+						displayConnectionNodes(containerObj, childmaps, parseInt(0), true, groupid+"tree");
+					}	
+				},
+				onFailure: function(transport) {
+					document.body.style.cursor = "pointer"; 
+					containerObj.innerHTML = "<?php echo $LNG->ADMIN_TREEVIEW_LOADING_FAILED; ?>";
+				}
+			});
 		}
 	}
 
@@ -329,7 +353,8 @@
 															\''.$group->groupid.'\', 
 															\''.$group->groupid.'treediv\', 
 															\'treediv\', 
-															\''.$group->groupid.'treeRow\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
+															\''.$group->groupid.'treeRow\',
+															\''.$CFG->STATUS_ACTIVE.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 
 													<?php //echo '<span class="active" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; ?>
@@ -401,7 +426,8 @@
 															\''.$group->groupid.'\', 
 															\''.$group->groupid.'treediv2\', 
 															\'treediv2\', 
-															\''.$group->groupid.'treeRow2\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
+															\''.$group->groupid.'treeRow2\',
+															\''.$CFG->STATUS_ARCHIVED.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
 												</td>
 												<td>

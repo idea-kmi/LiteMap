@@ -37,6 +37,8 @@ $LNG->ADMIN_STATS_BUTTON_HINT = "Go to the Site Analytics pages";
 $LNG->ADMIN_REGISTER_NEW_USER_LINK = 'Register a New User';
 $LNG->ADMIN_NOT_ADMINISTRATOR_MESSAGE = 'Sorry you need to be an administrator to access this page';
 $LNG->ADMIN_MANAGE_USERS_DELETE_ERROR = 'There was an issue deleting the user with the id:';
+$LNG->ADMIN_TREEVIEW_LOADING = 'Loading tree data. Please wait....';
+$LNG->ADMIN_TREEVIEW_LOADING_FAILED = 'Loading tree data failed.';
 
 /** ADMIN USER REGISTRATION MANAGER **/
 $LNG->REGSITRATION_ADMIN_MANAGER_LINK = "Registration Requests";

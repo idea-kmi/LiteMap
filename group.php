@@ -219,22 +219,20 @@
 	echo "</script>";
 ?>
 
-<div class="container-fluid">
-	<div class="row">
-		<!-- LEFT COLUMN -->
-		<div id="maingroupdiv" class="col-md-12 col-lg-9"></div>
 
-		<!-- RIGHT COLUMN -->
-		<div class="col-md-12 col-lg-3">
-			<fieldset class="border border-2 mx-2 my-4 p-3">
-				<legend><h3><?php echo $LNG->GROUP_MEMBERS_LABEL; ?></h3></legend>
-				<div class="d-flex flex-row flex-wrap">
-					<?php foreach($members as $u){ ?>						
-						<a class="m-1" href='user.php?userid=<?php echo $u->userid; ?>' title='<?php echo $u->name; ?>'>
-							<img src='<?php echo $u->thumb; ?>' alt='<?php echo $u->name; ?> profile picture' class="img-fluid" />
-						</a>
-					<?php } ?>
-				</div>
+<div class="container-fluid">
+	<div class="d-flex flex-column">
+		<div class="d-flex flex-row flex-wrap justify-content-between">
+			<div id="maingroupdiv" class="col"></div>
+
+			<div class="p-3 d-flex flex-column mt-2 gap-2">
+
+				<?php if (($CFG->GROUP_DASHBOARD_VIEW == 'public') || (isset($USER->userid) && ($CFG->GROUP_DASHBOARD_VIEW == 'private')) ) { ?>
+					<div id="radiobuttonsum" class="d-grid">
+						<a class="btn btn-secondary text-dark fw-bold" href="<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></a>
+					</div>
+				<?php } ?>
+
 				<?php if (isset($USER->userid) && isGroupPendingMember($groupid,$USER->userid)) { ?>
 					<div>
 						<span><?php echo $LNG->GROUP_JOIN_PENDING_MESSAGE; ?></span>
@@ -248,26 +246,35 @@
 						<div>
 							<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post" class="d-grid gap-2">
 								<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>" />
-								<input class="btn btn-primary mt-2" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup" />
+								<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP; ?>" id="joingroup" name="joingroup" />
 							</form>
 						</div>
 					<?php } else if ($group->isopenjoining == 'N' && !isGroupRejectedMember($groupid,$USER->userid) && !isGroupReportedMember($groupid,$USER->userid)) {  ?>
 						<div>
 							<form id="joingroupform" name="joingroupform" action="" enctype="multipart/form-data" method="post" class="d-grid gap-2">
 								<input type="hidden" id="groupid" name="groupid" value="<?php echo $groupid; ?>" />
-								<input class="btn btn-primary mt-2" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup" />
+								<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_BUTTON_JOIN_GROUP_CLOSED; ?>" id="joingroup" name="joingroup" />
 							</form>
 						</div>
 					<?php } ?>
 				<?php } ?>
-			</fieldset>
+				<button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers" aria-expanded="false" aria-controls="collapseMembers">
+					Members <span class="badge rounded-pill bg-light text-dark"><?= $memberscount ?></span>
+				</button>
+			</div>
+		</div>
 
-			<?php if (($CFG->GROUP_DASHBOARD_VIEW == 'public') || (isset($USER->userid) && ($CFG->GROUP_DASHBOARD_VIEW == 'private')) ) { ?>
-				<div id="radiobuttonsum" class="d-grid gap-2 m-2">
-					<a class="btn btn-secondary text-dark fw-bold" href="<?php echo $CFG->homeAddress; ?>ui/stats/groups/index.php?groupid=<?php echo $groupid; ?>"><?php echo $LNG->PAGE_BUTTON_DASHBOARD; ?></a>
+		<div class="collapse p-2" id="collapseMembers">
+			<fieldset class="border border-2 mx-2 mb-4 p-3">
+				<legend><h3><?php echo $LNG->GROUP_MEMBERS_LABEL; ?></h3></legend>
+				<div class="d-flex flex-row flex-wrap align-items-center">
+					<?php foreach($members as $u){ ?>						
+						<a class="m-1" href='user.php?userid=<?php echo $u->userid; ?>' title='<?php echo $u->name; ?>'>
+							<img src='<?php echo $u->thumb; ?>' alt='<?php echo $u->name; ?> profile picture' class="img-fluid" />
+						</a>
+					<?php } ?>
 				</div>
-			<?php } ?>
-
+			</fieldset>
 		</div>
 	</div>
 					

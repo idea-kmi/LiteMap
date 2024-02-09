@@ -203,15 +203,15 @@
 				<?php if (isset($USER->userid) && $USER->userid != "" && $USER->userid != $user->userid) {
 					if ($user->getStatus() == $CFG->USER_STATUS_REPORTED) { ?>
 						<div class="d-block">
-							<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam-reported.png'); ?>" title="<?php echo $LNG->SPAM_USER_REPORTED; ?>" alt="<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>"/>
+							<img class="spamicon" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>" title="<?php echo $LNG->SPAM_USER_REPORTED; ?>" alt="<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>"/>
 						</div>
 					<?php } else if ($user->getStatus() == $CFG->USER_STATUS_ACTIVE)  { ?>
 						<div class="d-block">
-							<img class="active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('spam.png'); ?>" onclick="reportUserSpamAlert(this, '<?php echo $user->userid; ?>')" title="<?php echo $LNG->SPAM_USER_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>"/>
+							<img class="spamicon active" id="<?php echo $user->userid; ?>" label="<?php echo $user->name; ?>" src="<?php echo $HUB_FLM->getImagePath('flag.png'); ?>" onclick="reportUserSpamAlert(this, '<?php echo $user->userid; ?>')" title="<?php echo $LNG->SPAM_USER_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>"/>
 						</div>
 					<?php } else { ?>
 						<div class="d-block">
-							<img class="active" src="<?php echo $HUB_FLM->getImagePath('spam-disabled.png'); ?>" title="<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>"/>
+							<img class="spamicon" style="width:12px;" src="<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>" title="<?php echo $LNG->SPAM_USER_LOGIN_REPORT; ?>" alt="<?php echo $LNG->SPAM_USER_LOGIN_REPORT_ALT; ?>"/>
 						</div>
 					<?php } 
 				} ?>

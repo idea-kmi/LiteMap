@@ -275,6 +275,7 @@ function createGroupSpamButton(group) {
 
 	// Add spam icon
 	var spamimg = document.createElement('img');
+	spamimg.classList.add('spamicon');
 	if(USER != ""){
 		if (group.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
 			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORTED_ALT; ?>');
@@ -284,8 +285,8 @@ function createGroupSpamButton(group) {
 			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_GROUP_REPORT_ALT; ?>');
 			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_GROUP_REPORT; ?>');
 			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
+			spamimg.classList.add('active');
 			spamimg.id = group.groupid;
-			spamimg.style.cursor = 'pointer';
 			Event.observe(spamimg,'click',function () { reportGroupSpamAlert(this, group) } );
 		}
 	} else {
@@ -305,6 +306,7 @@ function createUserSpamButton(user) {
 
 	// Add spam icon
 	var spamimg = document.createElement('img');
+	spamimg.classList.add('spamicon');
 	if(USER != ""){
 		if (user.status == <?php echo $CFG->USER_STATUS_REPORTED; ?>) {
 			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORTED_ALT; ?>');
@@ -314,9 +316,9 @@ function createUserSpamButton(user) {
 			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_USER_REPORT_ALT; ?>');
 			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_USER_REPORT; ?>');
 			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath("flag.png"); ?>');
+			spamimg.classList.add('active');
 			spamimg.id = user.userid;
 			spamimg['data-label'] = user.name;
-			spamimg.style.cursor = 'pointer';
 			Event.observe(spamimg,'click',function (){ reportUserSpamAlert(this, user) } );
 		}
 	} else {

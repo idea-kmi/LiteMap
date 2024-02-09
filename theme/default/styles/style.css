@@ -27,6 +27,10 @@ body { color: #696969; font-family: "Avant Garde", Avantgarde, "Century Gothic",
     font-weight: bold;
 }
 
+.spamicon {
+    height: 12px;
+}
+
 /*******/
 /* Nav */
 /*******/

@@ -126,15 +126,15 @@
 									<td valign="top">
 									<?php if ($status == $CFG->USER_STATUS_REPORTED) { ?>
 										<div class="d-block">
-											<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_REPORTED ?>" alt="<?= $LNG->SPAM_GROUP_REPORTED_ALT ?>"/>
+											<img class="spamicon" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_REPORTED ?>" alt="<?= $LNG->SPAM_GROUP_REPORTED_ALT ?>"/>
 										</div>
 									<?php } else if ($status == $CFG->USER_STATUS_ACTIVE)  { ?>
 										<div class="d-block">
-											<img id="<?= $userid ?>" data-label="<?= $name ?>" class="active" src="<?= $HUB_FLM->getImagePath('flag.png') ?>" onclick="reportGroupSpamAlert(this)" title="<?= $LNG->SPAM_GROUP_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_REPORT_ALT ?>"/>
+											<img class="spamicon active" id="<?= $userid ?>" data-label="<?= $name ?>" src="<?= $HUB_FLM->getImagePath('flag.png') ?>" onclick="reportGroupSpamAlert(this)" title="<?= $LNG->SPAM_GROUP_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_REPORT_ALT ?>"/>
 										</div>
 									<?php } else { ?>
 										<div class="d-block">
-											<img class="active" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_LOGIN_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_LOGIN_REPORT_ALT ?>"/>
+											<img class="spamicon" src="<?= $HUB_FLM->getImagePath('flag-grey.png') ?>" title="<?= $LNG->SPAM_GROUP_LOGIN_REPORT ?>" alt="<?= $LNG->SPAM_GROUP_LOGIN_REPORT_ALT ?>"/>
 										</div>
 									<?php } ?>																		
 								</td>

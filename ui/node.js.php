@@ -4881,29 +4881,30 @@ function createSpamMenuOption(node, nodetype) {
  */
 function createSpamButton(node, nodetype) {
 	// Add spam icon
-	var spaming = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
+	var spamimg = new Element('img', {'style':'padding-top:0px;padding-right:10px;'});
+	spamimg.classList.add('spamicon');
 	if (node.status == <?php echo $CFG->STATUS_REPORTED; ?>) {
-		spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
-		spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
-		spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>');
+		spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_REPORTED_TEXT; ?>');
+		spamimg.setAttribute('title', '<?php echo $LNG->SPAM_REPORTED_HINT; ?>');
+		spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>');
 	} else if (node.status == <?php echo $CFG->STATUS_ACTIVE; ?>) {
 		if(USER != ""){
-			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
-			spaming.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag.png'); ?>');
-			spaming.className = "idea-report";
-			spaming.style.cursor = 'pointer';
-			Event.observe(spaming,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_REPORT_TEXT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_REPORT_HINT; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag.png'); ?>');
+			spamimg.classList.add('idea-report');
+			spamimg.style.cursor = 'pointer';
+			Event.observe(spamimg,'click',function (){ reportNodeSpamAlert(this, nodetype, node); } );
 		} else {
-			spaming.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
-			spaming.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
-			spaming.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('falg-grey.png'); ?>');
-			spaming.className = "idea-report";
-			spaming.style.cursor = 'pointer';
-			Event.observe(spaming,'click',function (){ $('loginsubmit').click(); return true; } );
+			spamimg.setAttribute('alt', '<?php echo $LNG->SPAM_LOGIN_REPORT_TEXT; ?>');
+			spamimg.setAttribute('title', '<?php echo $LNG->SPAM_LOGIN_REPORT_HINT; ?>');
+			spamimg.setAttribute('src', '<?php echo $HUB_FLM->getImagePath('flag-grey.png'); ?>');
+			spamimg.classList.add('idea-report');
+			spamimg.style.cursor = 'pointer';
+			Event.observe(spamimg,'click',function (){ $('loginsubmit').click(); return true; } );
 		}
 	}
-	return spaming;
+	return spamimg;
 }
 
 function getNodeIconElement(node) {

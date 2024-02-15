@@ -207,7 +207,7 @@ class user {
 						}
 
 						// REPAIR MISSING COODINATES
-						if (isset($this->location) && isset($this->countrycode) && $this->location != "" && $this->countrycode != ""
+						/*if (isset($this->location) && isset($this->countrycode) && $this->location != "" && $this->countrycode != ""
 								&& ( (!isset($array['LocationLng']) || $array['LocationLng'] == "") && (!isset($array['LocationLat']) || $array['LocationLat'] == "")) ) {
 
 							$coords = geoCode($this->location,$this->countrycode);
@@ -221,7 +221,7 @@ class user {
 								$this->locationlat = $coords["lat"];
 								$this->locationlng = $coords["lng"];
 							}
-						}
+						}*/
 					}
 				}
             }
@@ -752,7 +752,7 @@ class user {
 		$res = $DB->insert($HUB_SQL->DATAMODEL_USER_LOCATION_UPDATE, $params);
 		if ($res) {
 			//try to geocode
-			if ($location != "" && $loccountry != "" && ($location != $this->location || $loccountry != $this->countrycode)){
+			/*if ($location != "" && $loccountry != "" && ($location != $this->location || $loccountry != $this->countrycode)){
 				$coords = geoCode($location,$loccountry);
 				if($coords["lat"] != "" && $coords["lng"] != ""){
 					$params = array();
@@ -767,7 +767,7 @@ class user {
 					$params[2] = $this->userid;
 					$res = $DB->insert($HUB_SQL->DATAMODEL_USER_LATLONG_UPDATE, $params);
 				}
-			}
+			}*/
 
 	        return $this->load();
 		} else {

@@ -1553,7 +1553,7 @@ class CNode {
 		$res = $DB->insert($HUB_SQL->DATAMODEL_NODE_LOCATION_UPDATE, $params);
 		if ($res) {
 			//try to geocode
-			if ($location != "" && $loccountry != "" &&
+			/*if ($location != "" && $loccountry != "" &&
 				($location != $this->location || $loccountry != $this->countrycode || $address1 != $this->locationaddress1 || $address2 != $this->locationaddress2 || $postcode != $this->locationpostcode)){
 
 				$coords = geoCodeAddress($address1, $address2, $postcode, $location, $loccountry);
@@ -1570,7 +1570,7 @@ class CNode {
 					$params[2] = $this->nodeid;
 					$res = $DB->insert($HUB_SQL->DATAMODEL_NODE_LATLONG_UPDATE, $params);
 				}
-			}
+			}*/
 		} else {
 			return database_error();
 		}

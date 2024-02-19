@@ -195,7 +195,7 @@
 	*/
 	function clearSession() {
 		$_SESSION["session_userid"] = "";
-		setcookie("litemapuser","",time()-3600, "/");
+		setcookie("litemap","",time()-3600, "/");
 	}
 
 	/**
@@ -204,7 +204,7 @@
 	*/
 	function createSession($user) {
 		$_SESSION["session_userid"] = $user->userid;
-		setcookie("litemapuser",$user->userid,time()+99999999,"/");
+		setcookie("litemap",$user->userid,time()+99999999,"/");
 		$user->updateLastLogin();
 	}
 

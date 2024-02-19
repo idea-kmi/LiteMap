@@ -193,18 +193,18 @@
 	* Clear all session variables
 	*
 	*/
-	function clearSession() {
+	function clearSession($ses = 'litemap') {
 		$_SESSION["session_userid"] = "";
-		setcookie("litemap","",time()-3600, "/");
+		setcookie($ses,"",time()-3600, "/");
 	}
 
 	/**
 	 * Create the user session details.
 	* (also updates the last login date/time)
 	*/
-	function createSession($user) {
+	function createSession($user, $time = 99999999, $ses = 'litemap') {
 		$_SESSION["session_userid"] = $user->userid;
-		setcookie("litemap",$user->userid,time()+99999999,"/");
+		setcookie($ses,$user->userid,time() + $time,"/");
 		$user->updateLastLogin();
 	}
 

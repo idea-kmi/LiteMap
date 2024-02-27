@@ -1,27 +1,27 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 - 2024 The Open University UK                            *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
     include_once("../../config.php");
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
@@ -57,14 +57,7 @@
     $confirmpassword = trim(optional_param("confirmpassword","",PARAM_TEXT));
     $fullname = trim(optional_param("fullname","",PARAM_TEXT));
     $interest = trim(optional_param("interest","",PARAM_TEXT));
-
-    $homepage = trim(optional_param("homepage","http://",PARAM_URL));
-
     $description = optional_param("description","",PARAM_TEXT);
-
-    $location = optional_param("location","",PARAM_TEXT);
-    $loccountry = optional_param("loccountry","",PARAM_TEXT);
-
     $agreeconditions = optional_param("agreeconditions","",PARAM_TEXT);
     $recentactivitiesemail = optional_param("recentactivitiesemail","N",PARAM_TEXT);
     if ($recentactivitiesemail == "") {
@@ -103,17 +96,6 @@
 					array_push($errors, $LNG->FORM_ERROR_INTEREST_MISSING);
 				}
 
-				// check url
-				if ($homepage == "http://") {
-					$homepage = "";
-				}
-				if ($homepage != "") {
-					$URLValidator = new mrsnk_URL_validation($homepage, MRSNK_URL_DO_NOT_PRINT_ERRORS, MRSNK_URL_DO_NOT_CONNECT_2_URL);
-					if($homepage != "" && !$URLValidator->isValid()){
-						 array_push($errors, $LNG->FORM_ERROR_URL_INVALID);
-					}
-				}
-
 				if (empty($errors)) {
 					// check email not already in use
 					$u = new User();
@@ -140,9 +122,8 @@
 							// only create user if no error so far
 							// create new user
 
-							$u->add($email,$fullname,$password,$homepage,'N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNVALIDATED);
+							$u->add($email,$fullname,$password,'','N',$CFG->AUTH_TYPE_EVHUB,$description,$CFG->USER_STATUS_UNVALIDATED);
 							$u->updatePrivate($privatedata);
-							$u->updateLocation($location,$loccountry);
 							$u->setInterest($interest);
 
 							// Recent Activities Email
@@ -191,8 +172,6 @@
 			}
 		}
     }
-
-    $countries = getCountryList();
 ?>
 
 <div class="container-fluid">
@@ -259,35 +238,6 @@
 					<textarea class="form-control" id="interest" name="interest" rows="3"><?php print $interest; ?></textarea>
 				</div>
 			</div>
-			<div class="mb-3 row">
-				<label class="col-sm-3 col-form-label" for="location"><?php echo $LNG->FORM_REGISTER_LOCATION; ?></label>
-				<div class="col-sm-5">
-					<input class="form-control" id="location" name="location" value="<?php echo $location; ?>">
-				</div>
-				<div class="col-sm-4">
-					<select id="loccountry" name="loccountry" class="form-select" aria-label="Select country" >
-						<option value="" ><?php echo $LNG->FORM_REGISTER_COUNTRY; ?></option>
-						<?php
-							foreach($countries as $code=>$c){
-								echo "<option value='".$code."'";
-								if($code == $loccountry){
-									echo " selected='true'";
-								}
-								echo ">".$c."</option>";
-							}
-						?>
-					</select>
-				</div>
-			</div>	
-
-			<?php if ($CFG->hasUserHomePageOption) { ?>
-				<div class="mb-3 row">
-					<label class="col-sm-3 col-form-label" for="homepage"><?php echo $LNG->FORM_REGISTER_HOMEPAGE; ?></label>
-					<div class="col-sm-9">
-						<input class="form-control" type="text" id="homepage" name="homepage" value="<?php print $homepage; ?>">
-					</div>
-				</div>
-			<?php } ?>
 
 			<div class="mb-3 row">
 				<label class="col-sm-3 col-form-label" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
@@ -362,6 +312,7 @@
 		<?php } ?>
 	</div>
 </div>
+
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 ?>

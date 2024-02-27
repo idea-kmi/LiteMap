@@ -1,27 +1,27 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2015 - 2024 The Open University UK                            *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2015 - 2024 The Open University UK                            *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
 
 	include_once("../../config.php");
 
@@ -40,8 +40,6 @@
     $fullname = optional_param("fullname",$USER->name,PARAM_TEXT);
     $description = optional_param("description",$USER->description,PARAM_TEXT);
 
-    $homepage = optional_param("homepage",$USER->website,PARAM_URL);
-    $homepage2 = optional_param("homepage",$USER->website,PARAM_TEXT);
     $privatedata = optional_param("defaultaccess",$USER->privatedata,PARAM_ALPHA);
 
     $recentactivitiesemail = optional_param("recentactivitiesemail","",PARAM_TEXT);
@@ -49,13 +47,8 @@
     	$recentactivitiesemail = 'N';
     }
 
-    $location = optional_param("location",$USER->location,PARAM_TEXT);
-    $loccountry = optional_param("loccountry",$USER->countrycode,PARAM_TEXT);
-
 	$u = new User($USER->userid);
 	$user = $u->load();
-
-    $countries = getCountryList();
 
 	if(isset($_POST["update"])){
 
@@ -95,16 +88,7 @@
         // update description and homepage
         $user->updateDescription($description);
 
-        if($homepage2 != "" && $homepage != $homepage2){
-            array_push($errors, $LNG->PROFILE_HOMEPAGE_URL_ERROR);
-            $homepage = $homepage2;
-        } else {
-            $user->updateWebsite($homepage);
-        }
-
         $user->updatePrivate($privatedata);
-
-        $user->updateLocation($location,$loccountry);
 
         // update photo
         $photofilename = uploadImage('photo',$errors,$CFG->IMAGE_WIDTH);
@@ -256,35 +240,6 @@
 						<textarea class="form-control" id="description" name="description"><?php print $description; ?></textarea>
 					</div>
 				</div>
-				<div class="mb-3 row">
-					<label class="col-sm-3 col-form-label" for="location"><?php echo $LNG->PROFILE_LOCATION; ?></label>
-					<div class="col-sm-5">
-						<input class="form-control" id="location" name="location" value="<?php echo $location; ?>">
-					</div>
-					<div class="col-sm-4">
-						<select id="loccountry" name="loccountry" class="form-select" aria-label="select country">
-							<option value="" ><?php echo $LNG->PROFILE_COUNTRY; ?></option>
-							<?php
-								foreach($countries as $code=>$c){
-									echo "<option value='".$code."'";
-									if($code == $loccountry || ($loccountry == "" && $c == $LNG->DEFAULT_COUNTRY)){
-										echo " selected='true'";
-									}
-									echo ">".$c."</option>";
-								}
-							?>
-						</select>
-					</div>
-				</div>
-
-				<?php if ($CFG->hasUserHomePageOption) { ?>
-					<div class="mb-3 row">
-						<label class="col-sm-3 col-form-label" for="homepage"><?php echo $LNG->PROFILE_HOMEPAGE; ?></label>
-						<div class="col-sm-9">
-							<input class="form-control" type="text" id="homepage" name="homepage" value="<?php print $homepage; ?>">
-						</div>
-					</div>
-				<?php } ?>
 
 				<div class="mb-3 row">
 					<label class="col-sm-3 col-form-label"><?php echo $LNG->PROFILE_PRIVACY_MESSAGE; ?></label>

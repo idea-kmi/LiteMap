@@ -46,19 +46,10 @@
 	</div>
 
 	<dl class="row">
-		<?php if($user->location != ""){ ?>				
-			<dt class="col-md-2 col-sm-12"><?php echo $LNG->USER_HOME_LOCATION_LABEL; ?></dt>
-			<dd class="col-md-10 col-sm-12"><?php echo $user->location; ?><?php if (isset($user->country) && $user->country != "") { ?>, <?php echo $user->country; ?><?php } ?></dd>
+		<?php if($user->description != ""){ ?>
+			<dt class="col-md-2 col-sm-12"><?php echo $LNG->PROFILE_DESC_LABEL; ?></dt>
+			<dd class="col-md-10 col-sm-12"><?php echo $user->description; ?></dd>
 		<?php } ?>
-		<?php if($user->website != ""){ ?>
-				<dt class="col-md-2 col-sm-12"><?php echo $LNG->PROFILE_HOMEPAGE; ?></dt>
-				<dd class="col-md-10 col-sm-12"><a href='<?php echo $user->website; ?>'><?php echo $user->website; ?></a></dd>
-			<?php }
-			if($user->description != ""){ ?>
-				<dt class="col-md-2 col-sm-12"><?php echo $LNG->PROFILE_DESC_LABEL; ?></dt>
-				<dd class="col-md-10 col-sm-12"><?php echo $user->description; ?></dd>
-			<?php } 
-		?>
 	</dl>
 
 	<p class="text-end"><a class="active" title="<?php echo $LNG->USER_HOME_ANALYTICS_LINK_HINT; ?>" onclick="javascript:loadDialog('viewuseranalytics','<?php echo $CFG->homeAddress; ?>ui/stats/userContextStats.php?userid=<?php echo $user->userid; ?>', 800, 600);"><?php echo $LNG->USER_HOME_ANALYTICS_LINK_TEXT; ?></a></p>

@@ -62,8 +62,9 @@
 					<thead class="table-light">
 						<tr class="align-middle">
 							<th></th>
-							<th>Name</th>
+							<th style="max-width: 200px;">Name</th>
 							<th style="max-width: 600px;">Description</th>
+							<th style="max-width: 600px;">Interest</th>
 							<th>Website</th>
 							<th>Location</th>
 							<th>Creation Date</th>
@@ -78,12 +79,13 @@
 								$countUsers = count($registeredUsers);
 							}
 							if ($countUsers > 0) {
-								for ($i=0; $i < $countUsers; $i++) {
+								for ($i = 0; $i < $countUsers; $i++) {
 									$array = $registeredUsers[$i];
 									$name = $array['Name'];
 									$userid = $array['UserID'];
 									$date = $array['CreationDate'];
 									$desc = $array['Description'];
+									$interest = $array['Interest'];
 									$website = $array['Website'];
 									$lastlogin = $array['LastLogin'];
 									$photo = '';
@@ -129,6 +131,9 @@
 										</td>
 										<td valign="top">
 											<?= $desc ?>
+										</td>
+										<td valign="top">
+											<?= $interest ?>
 										</td>
 										<td valign="top">
 											<?php if ($website != null && $website != "") { ?>
@@ -186,7 +191,7 @@
 			"columnDefs": [
 				{ "orderable": false, "targets": 0 }
 			],
-			"order": [[5, "desc"]]
+			"order": [[6, "desc"]]
 		});
 	});
 </script>

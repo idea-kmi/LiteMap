@@ -43,7 +43,7 @@
 	//convert brackets
 	$handler = parseToJSON($handler);
 
-    $resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
+    //$resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
     $identifierarray = optional_param("identifierarray","",PARAM_TEXT);
     $resourcetitlearray = optional_param("resourcetitlearray","",PARAM_TEXT);
     $resourceurlarray = optional_param("resourceurlarray","",PARAM_URL);
@@ -224,7 +224,7 @@
 			}
 			for ($i=0; $i<$count;$i++) {
 				$url = $urls[$i];
-				$resourcetypesarray[$i] = $url;
+				//$resourcetypesarray[$i] = $url;
 				$identifierarray[$i] = $url->identifier;
 				$resourcetitlearray[$i] = $url->title;
 				$resourceurlarray[$i] = $url->url;

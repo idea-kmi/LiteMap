@@ -236,8 +236,9 @@ function insertLocation($hintstem) {
 <?php }
 
 function insertResourceForm($hintname, $title = "") {
-	global $CFG, $LNG, $HUB_FLM, $resourceurlarray, $resourcetypesarray, $resourcetitlearray, $identifierarray, $resourcenodeidsarray, $resourcecliparray, $resourceclippatharray;
-
+	global $CFG, $LNG, $HUB_FLM, $resourceurlarray, $resourcetitlearray, $identifierarray, $resourcenodeidsarray, $resourcecliparray, $resourceclippatharray;
+	// removed $resourcetypesarray - not used anymore?
+	
 	if ($title == "") {
 		$title = $LNG->FORM_LABEL_RESOURCES;
 	}

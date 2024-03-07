@@ -54,7 +54,7 @@
 	//convert any possible brackets
 	$handler = parseToJSON($handler);
 
-    $resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
+    //$resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
     $resourcetitlearray = optional_param("resourcetitlearray","",PARAM_TEXT);
     $resourceurlarray = optional_param("resourceurlarray","",PARAM_URL);
     $identifierarray = optional_param("identifierarray","",PARAM_TEXT);

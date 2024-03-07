@@ -72,6 +72,7 @@ p { font-size: 0.9em; }
 a { font-size: 0.9em; }
 p a { font-size: 1em; }
 input { font-size: 0.9em; cursor: pointer; }
+
 .form-control { font-size: 0.9em; }
 .form-check-label { font-size: 0.9em; } 
 .form-select { font-size: 0.9em; }

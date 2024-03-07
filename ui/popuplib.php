@@ -275,7 +275,7 @@ function insertResourceForm($hintname, $title = "") {
 							<input type="hidden" id="identifierarray-<?php echo $i; ?>" name="identifierarray[]" value="<?php if (isset($identifierarray[$i])) { echo $identifierarray[$i]; } ?>" />
 
 							<div class="mb-3 row" id="resourceurldiv-<?php echo $i; ?>">
-								<label  class="col-sm-3 col-form-label" for="resourceurl-<?php echo $i; ?>">
+								<label  class="col-sm-2 col-form-label" for="resourceurl-<?php echo $i; ?>">
 									<?php echo $LNG->FORM_LABEL_URL; ?>
 									<a href="javascript:void(0)" onMouseOver="showFormHint('ResourceURL', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
 										<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
@@ -283,14 +283,14 @@ function insertResourceForm($hintname, $title = "") {
 									</a>
 									<span class="required">*</span>
 								</label>
-								<div class="col-sm-9">
-									<input class="special form-control" style="float:left" id="resourceurl-<?php echo $i; ?>" name="resourceurlarray[]" value="<?php echo( htmlspecialchars($resourceurlarray[$i]) ); ?>" />
-									<img class="active" style="float:left;margin-left:5px; margin-top:10px;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(<?php echo $i; ?>)" onkeypress="enterKeyPressed(event)" />
+								<div class="col-sm-10 d-flex flex-row align-items-center">
+									<input class="form-control" id="resourceurl-<?php echo $i; ?>" name="resourceurlarray[]" value="<?php echo( htmlspecialchars($resourceurlarray[$i]) ); ?>" />
+									<img class="active" style="vertical-align: middle; padding-bottom: 2px; margin-left:4px; height: 19px; width: auto;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(<?php echo $i; ?>)" onkeypress="enterKeyPressed(event)" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
-								<label  class="col-sm-3 col-form-label" for="resourcetitle-<?php echo $i; ?>">
+								<label  class="col-sm-2 col-form-label" for="resourcetitle-<?php echo $i; ?>">
 									<?php echo $LNG->FORM_LABEL_TITLE; ?>
 									<a href="javascript:void(0)" onMouseOver="showFormHint('ResourceTitle', event, 'hgrhint'); return false;" onMouseOut="hideHints(); return false;" onClick="hideHints(); return false;" onkeypress="enterKeyPressed(event)">
 										<i class="far fa-question-circle fa-lg me-2" aria-hidden="true" ></i> 
@@ -298,7 +298,7 @@ function insertResourceForm($hintname, $title = "") {
 									</a>
 									<span class="required">*</span>
 								</label>
-								<div class="col-sm-9">
+								<div class="col-sm-10">
 									<input class="form-control" id="resourcetitle-<?php echo $i; ?>" name="resourcetitlearray[]" value="<?php echo( $resourcetitlearray[$i] ); ?>">
 								</div>
 							</div>

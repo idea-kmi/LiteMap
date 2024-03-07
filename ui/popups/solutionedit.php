@@ -166,7 +166,7 @@
 		if(isset($node->urls)) {
 
 			$urls = $node->urls;
-			$count = is_countable($urls)? count($urls) | 0;
+			$count = is_countable($urls) ? count($urls) : 0;
 
 			for ($i=0; $i<$count;$i++) {
 				$url = $urls[$i];

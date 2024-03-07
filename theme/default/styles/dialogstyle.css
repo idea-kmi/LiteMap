@@ -31,6 +31,9 @@ input { font-size: 0.9em; }
 input[type=file],
 select { cursor: pointer; }
 .form-control { font-size: 0.9em; }
+
+.special.form-control { width: 90% }
+
 .form-check-label { font-size: 0.9em; } 
 .form-select { font-size: 0.9em; }
 #editprofile .form-select { font-size: 0.9em; }

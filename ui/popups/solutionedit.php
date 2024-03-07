@@ -48,13 +48,13 @@
 	$desc = optional_param("desc","",PARAM_HTML);
 	$imagefilename = optional_param("imagefilename","",PARAM_TEXT);
 
-    //$resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
-    $resourcetitlearray = optional_param("resourcetitlearray","",PARAM_TEXT);
-    $resourceurlarray = optional_param("resourceurlarray","",PARAM_URL);
-    $identifierarray = optional_param("identifierarray","",PARAM_TEXT);
-    $resourcenodeidsarray = optional_param("resourcenodeidsarray","",PARAM_TEXT);
-    $resourcecliparray = optional_param("resourcecliparray","",PARAM_TEXT);
-    $resourceclippatharray = optional_param("resourceclippatharray","",PARAM_TEXT);
+    //$resourcetypesarray = optional_param("resourcetypesarray",[],PARAM_TEXT);
+    $resourcetitlearray = optional_param("resourcetitlearray",[],PARAM_TEXT);
+    $resourceurlarray = optional_param("resourceurlarray",[],PARAM_URL);
+    $identifierarray = optional_param("identifierarray",[],PARAM_TEXT);
+    $resourcenodeidsarray = optional_param("resourcenodeidsarray",[],PARAM_TEXT);
+    $resourcecliparray = optional_param("resourcecliparray",[],PARAM_TEXT);
+    $resourceclippatharray = optional_param("resourceclippatharray",[],PARAM_TEXT);
 
     if( isset($_POST["editsolution"]) ) {
 		if ($solution == ""){
@@ -166,6 +166,7 @@
 		if(isset($node->urls)) {
 
 			$urls = $node->urls;
+			error_log(print_r($urls, true));
 			$count = is_countable($urls) ? count($urls) : 0;
 
 			for ($i=0; $i<$count;$i++) {

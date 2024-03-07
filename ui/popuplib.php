@@ -238,7 +238,7 @@ function insertLocation($hintstem) {
 function insertResourceForm($hintname, $title = "") {
 	global $CFG, $LNG, $HUB_FLM, $resourceurlarray, $resourcetitlearray, $identifierarray, $resourcenodeidsarray, $resourcecliparray, $resourceclippatharray;
 	// removed $resourcetypesarray - not used anymore?
-	
+
 	if ($title == "") {
 		$title = $LNG->FORM_LABEL_RESOURCES;
 	}
@@ -256,10 +256,7 @@ function insertResourceForm($hintname, $title = "") {
 			<div class="col-sm-9">
 				<div id="resourceform">
 					<?php
-						$count = 0;
-						if ( is_countable($resourceurlarray) ){
-							$count = count($resourceurlarray);
-						}
+						$count =  is_countable($resourceurlarray) ? count($resourceurlarray) : 0;
 						for($i=0; $i<$count; $i++){
 							if($i != 0){
 								echo '<hr id="resourcehr<?php echo $i; ?>" class="urldivider"/>';
@@ -287,8 +284,8 @@ function insertResourceForm($hintname, $title = "") {
 									<span class="required">*</span>
 								</label>
 								<div class="col-sm-9">
-									<input class="form-control" id="resourceurl-<?php echo $i; ?>" name="resourceurlarray[]" value="<?php echo( htmlspecialchars($resourceurlarray[$i]) ); ?>" />
-									<img class="active" style="vertical-align: middle; padding-bottom: 2px;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(<?php echo $i; ?>)" onkeypress="enterKeyPressed(event)" />
+									<input class="special form-control" style="float:left" id="resourceurl-<?php echo $i; ?>" name="resourceurlarray[]" value="<?php echo( htmlspecialchars($resourceurlarray[$i]) ); ?>" />
+									<img class="active" style="float:left;margin-left:5px; margin-top:10px;" title="<?php echo $LNG->FORM_AUTOCOMPLETE_TITLE_HINT; ?>" src="<?php echo $HUB_FLM->getImagePath('autofill.png'); ?>" onClick="autoCompleteWebsiteDetailsMulti(<?php echo $i; ?>)" onkeypress="enterKeyPressed(event)" />
 								</div>
 							</div>
 

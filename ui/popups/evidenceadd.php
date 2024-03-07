@@ -51,13 +51,13 @@
         $private = optional_param("private",$USER->privatedata,PARAM_ALPHA);
 	}
 
-    //$resourcetypesarray = optional_param("resourcetypesarray","",PARAM_TEXT);
-    $resourcetitlearray = optional_param("resourcetitlearray","",PARAM_TEXT);
-    $resourceurlarray = optional_param("resourceurlarray","",PARAM_URL);
-    $identifierarray = optional_param("identifierarray","",PARAM_TEXT);
-    $resourcenodeidsarray = optional_param("resourcenodeidsarray","",PARAM_TEXT);
-    $resourcecliparray = optional_param("resourcecliparray","",PARAM_TEXT);
-    $resourceclippatharray = optional_param("resourceclippatharray","",PARAM_TEXT);
+    //$resourcetypesarray = optional_param("resourcetypesarray",[],PARAM_TEXT);
+    $resourcetitlearray = optional_param("resourcetitlearray",[],PARAM_TEXT);
+    $resourceurlarray = optional_param("resourceurlarray",[],PARAM_URL);
+    $identifierarray = optional_param("identifierarray",[],PARAM_TEXT);
+    $resourcenodeidsarray = optional_param("resourcenodeidsarray",[],PARAM_TEXT);
+    $resourcecliparray = optional_param("resourcecliparray",[],PARAM_TEXT);
+    $resourceclippatharray = optional_param("resourceclippatharray",[],PARAM_TEXT);
 
 	$nodetypename = optional_param("nodetypename","",PARAM_TEXT);
 

@@ -565,6 +565,7 @@ $LNG->FORM_ERROR_NAME_MISSING = 'Please enter your full name.';
 $LNG->FORM_ERROR_INTEREST_MISSING = "Please enter your interest in having an account with us.";
 $LNG->FORM_ERROR_URL_INVALID = "Please enter a valid URL (including 'http://').";
 $LNG->FORM_ERROR_EMAIL_INVALID = "Please enter a valid email address.";
+$LNG->FORM_ERROR_EMAIL_NOT_ALLOWED = "Registrations from this email domain are not allowed.";
 $LNG->FORM_ERROR_EMAIL_USED = "This email address is already in use, please either Sign In or select a different email address.";
 $LNG->FORM_ERROR_CAPTCHA_INVALID = "The reCAPTCHA wasn't entered correctly. Please try it again.";
 

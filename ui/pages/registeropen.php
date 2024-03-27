@@ -70,6 +70,10 @@
 
     $ref = optional_param("ref",$CFG->homeAddress."index.php",PARAM_URL);
 
+	/* block list for emails to try reduce spammers */
+	$emailBlocklist = include_once($HUB_FLM->getCodeDirPath("core/email-blacklist.php"));
+	$emailDomain = substr(strrchr($email, "@"), 1);
+
     if(isset($_POST["register"])){
     	if ($CFG->hasConditionsOfUseAgreement && $agreeconditions != "Y") {
             array_push($errors, $LNG->CONDITIONS_AGREE_FAILED_MESSAGE);
@@ -77,6 +81,8 @@
 			// check email, password & full name provided
 			if (!validEmail($email)) {
 				array_push($errors, $LNG->FORM_ERROR_EMAIL_INVALID);
+			} else if (in_array($emailDomain, $emailBlocklist)) {
+				array_push($errors, $LNG->FORM_ERROR_EMAIL_NOT_ALLOWED);
 			} else {
 				if ($password == ""){
 					array_push($errors, $LNG->FORM_ERROR_PASSWORD_MISSING);

@@ -6,8 +6,6 @@ body { color: #696969; font-family: "Avant Garde", Avantgarde, "Century Gothic",
 
 .focusedback { background: #F9FABC; }
 
-.messagediv { background-color: #696969; color: #fff; display: none; font-weight: bold; height: 80px; left: 0px; padding: 5px; position: absolute; overflow: auto; top: 0px; width: 250px; }
-
 .footer-logo { margin-left: 15px; max-width: 200px; }
 
 .errors { color:red; clear:both; padding:10px; }
@@ -44,7 +42,7 @@ nav div ul.nav li.nav-item a.nav-link { background-color: transparent; }
 nav div ul.nav li.nav-item form { background-color: transparent; }
 nav div ul.nav li.nav-item form input.nav-link { background-color: transparent; border: none; font-weight: bold; }
 
-.messagediv { background-color: #696969; color: #fff; display: none; font-weight: bold; height: 80px; left: 0px; padding: 5px; position: absolute; overflow: auto; top: 0px; width: 250px; }
+.messagediv { background-color: rgb(206, 212, 218); border: 1px solid #adb5bd; border-radius: 0.375rem; color: rgb(73, 80, 87); display: none; font-weight: bold; left: 0px; margin: auto; padding: 20px 10px; position: absolute; overflow: auto; top: 0px; width: auto; max-width: 40%; min-width: 250px; transition: opacity 1s ease-in-out; opacity: 0; text-align: center; right: 0px; z-index: 100; }
 
 .prompttext { position: fixed; top: 0; left: 0; z-index: 1055; display: none; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; outline: 0; }
 .prompttext .prompttext-inner { background-color: #fff; background-clip: padding-box; border: 1px solid rgba(0,0,0,.2); border-radius: .3rem; max-width: 500px; margin: 3rem auto; padding: 1rem; pointer-events: auto; position: relative; outline: 0; width: 100%; }

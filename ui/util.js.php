@@ -784,19 +784,21 @@ function textAreaPrompt(messageStr, text, connid, handler, refresher, width, hei
 }
 
 function fadeMessage(messageStr) {
-	var viewportHeight = getWindowHeight();
-	var viewportWidth = getWindowWidth();
-	var x = (viewportWidth-300)/2;
-	var y = (viewportHeight-100)/2;
-	$('message').style.left = x+getPageOffsetX()+"px";
-	$('message').style.top = y+getPageOffsetY()+"px";
+    var viewportHeight = getWindowHeight();
+    var viewportWidth = getWindowWidth();
+    var x = (viewportWidth - 300) / 2;
+    var y = (viewportHeight - 200) / 2;
+
 	$('message').update("");
 	$('message').update(messageStr);
+	
+	$('message').style.top = y + 'px';
 	$('message').style.display = "block";
-	fadein();
-    var fade=setTimeout("fadeout()",2500);
-}
 
+	setTimeout(() => { $('message').style.opacity = 1; }, 10);
+    setTimeout(() => { $('message').style.opacity = 0; }, 3500);
+	setTimeout(() => { $('message').style.display = 'none'; }, 4500);
+}
 
 function fadein(){
 	var element = document.getElementById("message");

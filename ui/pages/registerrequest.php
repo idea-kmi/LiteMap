@@ -49,7 +49,7 @@
     include_once($HUB_FLM->getCodeDirPath("ui/headerlogin.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/recaptcha/autoload.php"));
     require_once($HUB_FLM->getCodeDirPath("core/lib/url-validation.class.php"));
-
+	
     $errors = array();
 
     $email = trim(optional_param("email","",PARAM_TEXT));
@@ -66,6 +66,10 @@
     }
     $privatedata = optional_param("defaultaccess","N",PARAM_ALPHA);
 
+	/* black list for emails to try reduce spammers */
+	$emailBlocklist = include_once($HUB_FLM->getCodeDirPath("core/email-blocklist.php"));
+	$emailDomain = substr(strrchr($email, "@"), 1);
+
     if(isset($_POST["register"])){
     	if ($CFG->hasConditionsOfUseAgreement && $agreeconditions != "Y") {
             array_push($errors, $LNG->CONDITIONS_AGREE_FAILED_MESSAGE);
@@ -73,6 +77,8 @@
 			// check email & full name provided
 			if (!validEmail($email)) {
 				array_push($errors, $LNG->FORM_ERROR_EMAIL_INVALID);
+			} else if (in_array($emailDomain, $emailBlocklist)) {
+				array_push($errors, $LNG->FORM_ERROR_EMAIL_NOT_ALLOWED);
 			} else {
 				if ($password == ""){
 					array_push($errors, $LNG->FORM_ERROR_PASSWORD_MISSING);
@@ -109,9 +115,6 @@
 							);
 
 							if ($response == null || !$response->isSuccess()) {
-								if (isset($response) && $response != null) {
-									error_log($response->getErrorCodes());
-								}
 								array_push($errors, $LNG->FORM_ERROR_CAPTCHA_INVALID);
 							}
 						}
@@ -172,7 +175,7 @@
 								$paramArray = array ($fullname,$LNG->WELCOME_REGISTER_REQUEST_BODY);
 								sendMail("plain",$LNG->WELCOME_REGISTER_REQUEST_SUBJECT,$email,$paramArray);
 
-								echo "<h1>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_TITLE."</h1><p>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE."</p>";
+								echo "<div class=\"container-fluid\"><div class=\"row p-4 justify-content-center\"><div class=\"col-sm-12\"><h1>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_TITLE."</h1><p>".$LNG->REGISTRATION_REQUEST_SUCCESSFUL_MESSAGE."</p></div></div></div>";
 
 								include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
 								die;
@@ -185,104 +188,148 @@
 			}
         }
     }
-
 ?>
-<h1><?php echo $LNG->FORM_REGISTER_REQUEST_TITLE; ?></h1>
 
-<?php
-    if(!empty($errors)){
-        echo "<div class='errors'>".$LNG->FORM_ERROR_MESSAGE_REGISTRATION;
-        foreach ($errors as $error){
-            echo "<li>".$error."</li>";
-        }
-        echo "</ul></div>";
-    }
-?>
-<script type="text/javascript">
-function checkForm() {
-	if ($('agreeconditions') && $('agreeconditions').checked == false){
-	   alert("<?php echo $LNG->CONDITIONS_AGREE_FAILED_MESSAGE; ?>");
-	   return false;
-    }
+<div class="container-fluid">
+	<div class="row p-4 justify-content-center">	
+		<div class="col-sm-12 col-lg-8">
+			<h1><?php echo $LNG->FORM_REGISTER_REQUEST_TITLE; ?></h1>
+			<?php
+				if(!empty($errors)){
+					echo "<div class='alert alert-danger'>".$LNG->FORM_ERROR_MESSAGE_REGISTRATION."<ul>";
+					foreach ($errors as $error){
+						echo "<li>".$error."</li>";
+					}
+					echo "</ul></div>";
+				}
+			?>
+			<script type="text/javascript">
+				function checkForm() {
+					if ($('agreeconditions') && $('agreeconditions').checked == false){
+					alert("<?php echo $LNG->CONDITIONS_AGREE_FAILED_MESSAGE; ?>");
+					return false;
+					}
+					$('register').style.cursor = 'wait';
+					return true;
+				}
+			</script>
+			<p class="text-end"><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
+		</div>
 
-    $('register').style.cursor = 'wait';
+		<form name="register" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();" class="col-sm-12 col-lg-8">
 
-	return true;
-}
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
+				<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="email" name="email" value="<?php print $email; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?>
+				<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="password" name="password" type="password" value="<?php print $password; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?>
+				<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" id="confirmpassword" name="confirmpassword" type="password" value="<?php print $confirmpassword; ?>">
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?>
+				<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input class="form-control" type="text" id="fullname" name="fullname" value="<?php print $fullname; ?>">
+					<div id="validationFullname" class="form-text text-danger"></div>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="description"><?php echo $LNG->FORM_REGISTER_REQUEST_DESC; ?></label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="description" name="description" rows="3"><?php print $description; ?></textarea>
+				</div>
+			</div>
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?>
+				<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="interest" name="interest" rows="3"><?php print $interest; ?></textarea>
+				</div>
+			</div>
+
+			<div class="mb-3 row">
+				<label class="col-sm-3 col-form-label" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
+				<div class="col-sm-9">
+					<input class="form-control" type="file" id="photo" name="photo">
+				</div>
+			</div>
+
+			<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
+					<div class="col-sm-9">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="recentactivitiesemail" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" /> 
+							<label class="form-check-label" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?></label> 
+						</div>
+					</div>
+				</div>
+			<?php } ?>
+
+			<?php if($CFG->CAPTCHA_ON) { ?>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label" for="g-recaptcha-response"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?> <span class="required">*</span></label>
+					<div class="col-sm-9">
+						<div class="g-recaptcha" data-sitekey="<?php echo $CFG->CAPTCHA_PUBLIC; ?>"></div>
+					</div>
+				</div>
+			<?php } ?>
+
+			<div class="mb-3 pt-3 row">
+				<hr />
+				<?php if ($CFG->hasConditionsOfUseAgreement) { ?>
+					<div class="col">
+						<h2><?php echo $LNG->CONDITIONS_REGISTER_FORM_TITLE; ?></h2>
+						<p><?php echo $LNG->CONDITIONS_REGISTER_FORM_MESSAGE; ?></p>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="agreeconditions" id="agreeconditions" value="Y" /> 
+							<label class="form-check-label" for="agreeconditions"><span class="required">*</span> <?php echo $LNG->CONDITIONS_AGREE_FORM_REGISTER_MESSAGE; ?></label>
+						</div>
+					</div>
+				<?php }?>
+				<div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+					<input class="btn btn-primary" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	document.getElementById('fullname').addEventListener('input', function() {
+		var nameInput = this;
+		var errorDiv = document.getElementById('validationFullname');
+    	var submitBtn = document.getElementById('register');
+		// Pattern to include Unicode characters
+		var regex = /^[\p{L}\s'-]+$/u;
+		
+		if (!regex.test(nameInput.value)) {
+			// Disable the submit button
+			submitBtn.disabled = true;
+			// Display error message if validation fails
+			errorDiv.textContent = "Name can only contain letters, spaces, hyphens, and apostrophes.";
+		} else {
+			// Enable  the submit button
+			submitBtn.disabled = false;
+			// Clear error message if validation passes
+			errorDiv.textContent = '';
+		}		
+	});
 </script>
-
-<p><span class="required">*</span> <?php echo $LNG->FORM_REQUIRED_FIELDS; ?></p>
-
-<form name="register" action="" method="post" enctype="multipart/form-data" onsubmit="return checkForm();">
-
-    <div class="formrow">
-        <label class="formlabelbig" for="email"><?php echo $LNG->FORM_REGISTER_EMAIL; ?>
-		<span class="required">*</span></label>
-        <input class="forminput" id="email" name="email" size="40" value="<?php print $email; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="password"><?php echo $LNG->FORM_REGISTER_PASSWORD; ?>
-		<span class="required">*</span></label>
-        <input class="forminput" id="password" name="password" type="password"  size="30" value="<?php print $password; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="confirmpassword"><?php echo $LNG->FORM_REGISTER_PASSWORD_CONFIRM; ?>
-        <span class="required">*</span></label>
-        <input class="forminput" id="confirmpassword" name="confirmpassword" type="password" size="30" value="<?php print $confirmpassword; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?>
-        <span class="required">*</span></label>
-        <input class="forminput" type="text" id="fullname" name="fullname" size="40" value="<?php print $fullname; ?>">
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="description"><?php echo $LNG->FORM_REGISTER_REQUEST_DESC; ?></label>
-        <textarea class="forminput" id="description" name="description" cols="40" rows="3"><?php print $description; ?></textarea>
-    </div>
-    <div class="formrow">
-        <label class="formlabelbig" for="interest"><?php echo $LNG->FORM_REGISTER_INTEREST; ?>
-		<span class="required">*</span></label>
-        <textarea class="forminput" id="interest" name="interest" cols="40" rows="3"><?php print $interest; ?></textarea>
-    </div>
-
-    <div class="formrow">
-        <label class="formlabelbig" for="photo"><?php echo $LNG->PROFILE_PHOTO_LABEL; ?></label>
-        <input class="forminput" type="file" id="photo" name="photo" size="40">
-    </div>
-
-	<?php if ($CFG->RECENT_EMAIL_SENDING_ON) { ?>
-		<div class="formrow">
-			<label class="formlabelbig" for="recentactivitiesemail"><?php echo $LNG->RECENT_EMAIL_DIGEST_LABEL; ?></label>
-			<input class="forminput" type="checkbox" name="recentactivitiesemail" <?php if ($recentactivitiesemail == 'Y') { echo "checked='true'"; } ?> value="Y" /> <?php echo $LNG->RECENT_EMAIL_DIGEST_REGISTER_MESSAGE; ?>
-		</div>
-	<?php } ?>
-
-	<?php if($CFG->CAPTCHA_ON) { ?>
-		<div class="formrow" style="width:800px;">
-			<label class="formlabelbig" for="g-recaptcha"><?php echo $LNG->FORM_REGISTER_CAPTCHA; ?></label>
-			<div class="g-recaptcha" data-sitekey="<?php echo $CFG->CAPTCHA_PUBLIC; ?>" style="float:left;margin-left:5px;"></div>
-		</div>
-	<?php } ?>
-
-	<?php if ($CFG->hasConditionsOfUseAgreement) { ?>
-		<div class="formrow" style="margin-left:10px;">
-			<h2><?php echo $LNG->CONDITIONS_REGISTER_FORM_TITLE; ?><span class="required">*</span></h2>
-			<p><?php echo $LNG->CONDITIONS_REGISTER_FORM_MESSAGE; ?></p>
-			<input class="forminput" style="margin-right:10px;" type="checkbox" name="agreeconditions" id="agreeconditions" value="Y" /> <?php echo $LNG->CONDITIONS_AGREE_FORM_REGISTER_MESSAGE; ?>
-		</div>
-
-		<div class="formrow" style="margin-left:10px;margin-top:10px;">
-			<label class="formlabelbig" for="register">&nbsp;</label>
-			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
-		</div>
-    <?php } else { ?>
-		<div class="formrow">
-			<label class="formlabelbig" for="register">&nbsp;</label>
-			<input class="forminput" type="submit" value="<?php echo $LNG->FORM_REGISTER_SUBMIT_BUTTON; ?>" id="register" name="register">
-		</div>
-    <?php }?>
-
-</form>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

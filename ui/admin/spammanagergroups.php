@@ -278,36 +278,6 @@
 		}
 	}
 
-	/*
-	function viewGroupTree(groupid, containerid, rootname, toggleRow) {
-
-		// close any opened divs
-		const divsArray = document.getElementsByName(rootname);
-		for (let i=0; i < divsArray.length; i++) {
-			if (divsArray[i].id !== toggleRow) {
-				divsArray[i].style.display = 'none';
-			}
-		}
-		
-		// Toggle row
-		const row = document.getElementById(toggleRow);
-		if (row.style.display == "none") {
-			row.style.display = "";
-		} else {
-			row.style.display = "none";
-		}
-
-		var group = allgroups[groupid];
-
-		const containerObj = document.getElementById(containerid);	
-		if (containerObj.innerHTML == "&nbsp;") {
-			containerObj.innerHTML = "";
-			if (group && group.children.length > 0) {			
-				displayConnectionNodes(containerObj, group.children, parseInt(0), true, groupid+"tree");
-			}					
-		}
-	} */
-
 	window.onload = init;
 </script>
 
@@ -335,7 +305,7 @@
 								if ($count == 0) { ?>
 									<p><?= $LNG->SPAM_GROUP_ADMIN_NONE_MESSAGE ?></p>
 								<?php } else { ?>		
-									<table class='table table-sm'>
+									<table class='table table-sm table-striped table-hover compact'>
 										<tr>
 											<th width='50%'><?= $LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 ?></th>
 											<th width='10%'><?= $LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 ?></th>
@@ -356,8 +326,6 @@
 															\''.$group->groupid.'treeRow\',
 															\''.$CFG->STATUS_ACTIVE.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; 
 													?>
-
-													<?php //echo '<span class="active" onclick="viewSpamGroupDetails(\''.$group->groupid.'\');">'.$LNG->SPAM_GROUP_ADMIN_VIEW_BUTTON.'</span>'; ?>
 												</td>
 												<td>
 													<?php echo '<form id="second-'.$group->groupid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRestore(\''.htmlspecialchars($group->name).'\');">'; ?>
@@ -388,7 +356,8 @@
 												<td colspan="6">
 													<div id="<?= $group->groupid ?>treediv">&nbsp;</div>
 												</td>
-											</tr>										<?php } ?>
+											</tr>										
+										<?php } ?>
 									</table>
 								<?php }
         					?>
@@ -408,7 +377,7 @@
 								if ($countu == 0) { ?>
 									<p><?= $LNG->SPAM_GROUP_ADMIN_NONE_ARCHIVED_MESSAGE ?></p>
 								<?php } else { ?>
-									<table class='table table-sm'>
+									<table class='table table-sm table-striped table-hover compact'>
 										<tr>
 											<th width='50%'><?= $LNG->SPAM_GROUP_ADMIN_TABLE_HEADING1 ?></th>
 											<th width='10%'><?= $LNG->SPAM_GROUP_ADMIN_TABLE_HEADING2 ?></th>

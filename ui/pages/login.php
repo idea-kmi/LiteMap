@@ -117,7 +117,7 @@
 			<?php if ($CFG->signupstatus == $CFG->SIGNUP_OPEN) { ?>
 				<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/registeropen.php"><?php echo $LNG->LOGIN_SIGNUP_OPEN_LINK; ?></a>
 			<?php } else if ($CFG->signupstatus == $CFG->SIGNUP_REQUEST) { ?>
-				<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/requestregister.php"><?php echo $LNG->LOGIN_SIGNUP_REGISTER_LINK; ?></a>
+				<p><?php echo $LNG->LOGIN_NOT_REGISTERED_MESSAGE; ?> <a href="<?php echo $CFG->homeAddress; ?>ui/pages/registerrequest.php"><?php echo $LNG->LOGIN_SIGNUP_REGISTER_LINK; ?></a>
 			<?php } else { ?>
 				<p><?php echo $LNG->LOGIN_INVITIATION_ONLY_MESSAGE; ?></p>
 			<?php } ?>

@@ -1,27 +1,27 @@
 <?php
-/********************************************************************************
- *                                                                              *
- *  (c) Copyright 2013-2023 The Open University UK                              *
- *                                                                              *
- *  This software is freely distributed in accordance with                      *
- *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
- *  as published by the Free Software Foundation.                               *
- *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
- *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
- *                                                                              *
- *  This software is provided by the copyright holders and contributors "as is" *
- *  and any express or implied warranties, including, but not limited to, the   *
- *  implied warranties of merchantability and fitness for a particular purpose  *
- *  are disclaimed. In no event shall the copyright owner or contributors be    *
- *  liable for any direct, indirect, incidental, special, exemplary, or         *
- *  consequential damages (including, but not limited to, procurement of        *
- *  substitute goods or services; loss of use, data, or profits; or business    *
- *  interruption) however caused and on any theory of liability, whether in     *
- *  contract, strict liability, or tort (including negligence or otherwise)     *
- *  arising in any way out of the use of this software, even if advised of the  *
- *  possibility of such damage.                                                 *
- *                                                                              *
- ********************************************************************************/
+	/********************************************************************************
+	 *                                                                              *
+	 *  (c) Copyright 2013-2023 The Open University UK                              *
+	 *                                                                              *
+	 *  This software is freely distributed in accordance with                      *
+	 *  the GNU Lesser General Public (LGPL) license, version 3 or later            *
+	 *  as published by the Free Software Foundation.                               *
+	 *  For details see LGPL: http://www.fsf.org/licensing/licenses/lgpl.html       *
+	 *               and GPL: http://www.fsf.org/licensing/licenses/gpl-3.0.html    *
+	 *                                                                              *
+	 *  This software is provided by the copyright holders and contributors "as is" *
+	 *  and any express or implied warranties, including, but not limited to, the   *
+	 *  implied warranties of merchantability and fitness for a particular purpose  *
+	 *  are disclaimed. In no event shall the copyright owner or contributors be    *
+	 *  liable for any direct, indirect, incidental, special, exemplary, or         *
+	 *  consequential damages (including, but not limited to, procurement of        *
+	 *  substitute goods or services; loss of use, data, or profits; or business    *
+	 *  interruption) however caused and on any theory of liability, whether in     *
+	 *  contract, strict liability, or tort (including negligence or otherwise)     *
+	 *  arising in any way out of the use of this software, even if advised of the  *
+	 *  possibility of such damage.                                                 *
+	 *                                                                              *
+	 ********************************************************************************/
     include_once("../../config.php");
 
     $me = substr($_SERVER["PHP_SELF"], 1); // remove initial '/'
@@ -124,6 +124,7 @@
 	$users = array();
 	if ($us instanceof UserSet) {
 	    $users = $us->users;
+		$countRequests = count($users);
 	} else {
 		echo "$us->message";
 	}
@@ -132,6 +133,7 @@
 	$users2 = array();
 	if ($us2 instanceof UserSet) {
 	    $users2 = $us2->users;
+		$countUnvalidated = count($users2);
 	} else {
 		echo "$us2->message";
 	}
@@ -216,156 +218,121 @@
 <div class="container-fluid">
 	<div class="row p-4 pt-0">
 		<div class="col">
-
 			<h1 class="mb-3"><?php echo $LNG->REGSITRATION_ADMIN_TITLE; ?></h1>
-
-			<div id="spamdiv">
-				<div class="mb-3">
-
-					<div class="formrow">
-						<h3><?php echo $LNG->REGSITRATION_ADMIN_UNREGISTERED_TITLE;?></h3>
+			<div id="spamdiv"class="spamdiv">
+				<div class="mb-5">
+					<h3 class="mb-3 d-flex align-items-center gap-3">
+						<?php echo $LNG->REGSITRATION_ADMIN_UNREGISTERED_TITLE;?>
+						<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.6em;"><?=$countRequests?></span>
+					</h3>
+					<div class="mb-3">
 						<div id="users" class="forminput">
 							<?php
-								$count = 0;
-								if (is_countable($users)) {
-									$count = count($users);
-								}
-								if ($count == 0) {
-									echo "<p>".$LNG->REGSITRATION_ADMIN_NONE_MESSAGE."</p>";
-								} else {
-									echo "<table class='table'>";
-									echo "<tr>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
-									echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
-									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
-									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
-									echo "<th width='15%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-
-									echo "</tr>";
-									foreach($users as $user){
-										echo '<tr>';
-
-										echo '<td valign="top">';
-										echo date('d M Y', $user->creationdate);
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->name;
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->description;
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->getInterest();
-										echo '</td>';
-
-										echo '<td valign="top">';
-											if (isset($user->website) && $user->website!="") {
-												echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
-											} else {
-												echo '&nbsp;';
-											}
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="acceptuser" name="acceptuser" value="" />';
-										echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="rejectuser" name="rejectuser" value="" />';
-										echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
-
-										echo '</tr>';
-									}
-									echo "</table>";
-								}
+								$count = (is_countable($users)) ? count($users) : 0;
+								if ($count == 0) { ?>
+									<p><?= $LNG->REGSITRATION_ADMIN_NONE_MESSAGE ?></p>
+								<?php } else { ?>
+									<table class='table table-sm table-striped table-hover compact'>
+										<tr>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_EMAIL ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION ?></th>
+										</tr>
+										
+										<?php foreach($users as $user){ ?>
+											<tr>
+												<td><?= date('d M Y', $user->creationdate) ?></td>
+												<td><?= $user->name ?></td>
+												<td><?= $user->getEmail() ?></td>
+												<td><?= $user->description ?></td>
+												<td><?= $user->getInterest() ?></td>
+												<td>
+													<?php if (isset($user->website) && $user->website!="") { ?>	
+														<a href="<?= $user->website ?>" target="_blank"><?= $user->website ?></a>
+													<?php } ?>
+												</td>
+												<td>
+													<?php echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">
+														<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />'; ?>
+														<input type="hidden" id="acceptuser" name="acceptuser" value="" />
+														<?php echo '<span class="active" onclick="if (checkFormAccept(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="acceptuser" name="acceptuser">'.$LNG->REGSITRATION_ADMIN_ACCEPT_BUTTON.'</span>'; ?>
+													</form>
+												</td>
+												<td>
+													<?php echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">'; ?>
+														<input type="hidden" id="userid" name="userid" value="<?= $user->userid ?>" />
+														<input type="hidden" id="rejectuser" name="rejectuser" value="" />
+														<?php echo '<span class="active" onclick="if (checkFormReject(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="rejectuser" name="rejectuser">'.$LNG->REGSITRATION_ADMIN_REJECT_BUTTON.'</span>'; ?>
+													</form>
+												</td>
+											</tr>
+										<?php } ?>
+									</table>
+								<?php } 
 							?>
 						</div>
 					</div>
 				</div>
 				
-				<div class="mb-3">
-					<div class="formrow">
-						<h3><?php echo $LNG->REGSITRATION_ADMIN_UNVALIDATED_TITLE;?></h3>
+				<div class="mb-5">
+					<h3 class="mb-3 d-flex align-items-center gap-3">
+						<?php echo $LNG->REGSITRATION_ADMIN_UNVALIDATED_TITLE;?>
+						<span class="badge rounded-pill" style="background-color: #4E725F; font-size: 0.6em;"><?=$countUnvalidated?></span>
+					</h3>
+					<div class="mb-3">
 						<div id="users2" class="forminput">
 							<?php
-
-								$count = 0;
-								if (is_countable($users2)) {
-									$count = count($users2);
-								}
-								if ($count == 0) {
-									echo "<p>".$LNG->REGSITRATION_ADMIN_VALIDATION_NONE_MESSAGE."</p>";
-								} else {
-									echo "<table width='800' class='table' cellspacing='0' cellpadding='3' style='margin: 0px;' border='0'>";
-									echo "<tr>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE."</th>";
-									echo "<th width='14%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME."</th>";
-									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC."</th>";
-									echo "<th width='25%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST."</th>";
-									echo "<th width='10%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE."</th>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-									echo "<th width='7%'>".$LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION."</th>";
-									echo "</tr>";
-									foreach($users2 as $user){
-										echo '<tr>';
-
-										echo '<td valign="top">';
-										echo date('d M Y', $user->creationdate);
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->name;
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->description;
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo $user->getInterest();
-										echo '</td>';
-
-										echo '<td valign="top">';
-											if (isset($user->website) && $user->website!="") {
-												echo '<a href="'.$user->website.'" target="_blank">'.$user->website.'</a>';
-											} else {
-												echo '&nbsp;';
-											}
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormAccept(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="revalidateuser" name="revalidateuser" value="" />';
-										echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
-
-										echo '<td valign="top">';
-										echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormReject(\''.htmlspecialchars($user->name).'\');">';
-										echo '<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />';
-										echo '<input type="hidden" id="removeuser" name="removeuser" value="" />';
-										echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</a>';
-										echo '</form>';
-										echo '</td>';
-
-										echo '</tr>';
-									}
-									echo "</table>";
-								}
+								$count = (is_countable($users2)) ? count($users2) : 0;
+								if ($count == 0) { ?>
+									<p><?= $LNG->REGSITRATION_ADMIN_VALIDATION_NONE_MESSAGE ?></p>
+								<?php } else { ?>
+									<table class='table table-sm table-striped table-hover compact'>
+										<tr>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_DATE ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_NAME ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_EMAIL ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_DESC ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_INTEREST ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_WEBSITE ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION ?></th>
+											<th><?= $LNG->REGSITRATION_ADMIN_TABLE_HEADING_ACTION ?></th>
+										</tr>
+										
+										<?php foreach($users2 as $user){ ?>
+											<tr>
+												<td><?= date('d M Y', $user->creationdate) ?></td>
+												<td><?= $user->name ?></td>
+												<td><?= $user->getEmail() ?></td>
+												<td><?= $user->description ?></td>
+												<td><?= $user->getInterest() ?></td>
+												<td>
+													<?php if (isset($user->website) && $user->website!="") { ?>	
+														<a href="<?= $user->website ?>" target="_blank"><?= $user->website ?></a>
+													<?php } ?>
+												</td>
+												<td>
+													<?php echo '<form id="second-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRevalidate(\''.htmlspecialchars($user->name).'\');">
+														<input type="hidden" id="userid" name="userid" value="'.$user->userid.'" />'; ?>
+														<input type="hidden" id="revalidateuser" name="revalidateuser" value="" />
+														<?php echo '<span class="active" onclick="if (checkFormRevalidate(\''.htmlspecialchars($user->name).'\')){ $(\'second-'.$user->userid.'\').submit(); }" id="revalidateuser" name="revalidateuser">'.$LNG->REGSITRATION_ADMIN_REVALIDATE_BUTTON.'</span>'; ?>
+													</form>
+												</td>
+												<td>
+													<?php echo '<form id="third-'.$user->userid.'" action="" enctype="multipart/form-data" method="post" onsubmit="return checkFormRemove(\''.htmlspecialchars($user->name).'\');">'; ?>
+														<input type="hidden" id="userid" name="userid" value="<?= $user->userid ?>" />
+														<input type="hidden" id="removeuser" name="removeuser" value="" />
+														<?php echo '<span class="active" onclick="if (checkFormRemove(\''.htmlspecialchars($user->name).'\')) { $(\'third-'.$user->userid.'\').submit(); }" id="removeuser" name="removeuser">'.$LNG->REGSITRATION_ADMIN_REMOVE_BUTTON.'</span>'; ?>
+													</form>
+												</td>
+											</tr>
+										<?php } ?>
+									</table>
+								<?php } 
 							?>
 						</div>
 					</div>

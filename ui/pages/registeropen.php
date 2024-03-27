@@ -230,6 +230,7 @@
 				<label class="col-sm-3 col-form-label" for="fullname"><?php echo $LNG->FORM_REGISTER_NAME; ?> <span class="required">*</span></label>
 				<div class="col-sm-9">
 					<input class="form-control" type="text" id="fullname" name="fullname" value="<?php print $fullname; ?>">
+					<div id="validationFullname" class="form-text text-danger"></div>
 				</div>
 			</div>
 			<div class="mb-3 row">
@@ -318,6 +319,28 @@
 		<?php } ?>
 	</div>
 </div>
+
+<script>
+	document.getElementById('fullname').addEventListener('input', function() {
+		var nameInput = this;
+		var errorDiv = document.getElementById('validationFullname');
+    	var submitBtn = document.getElementById('register');
+		// Pattern to include Unicode characters
+		var regex = /^[\p{L}\s'-]+$/u;
+		
+		if (!regex.test(nameInput.value)) {
+			// Disable the submit button
+			submitBtn.disabled = true;
+			// Display error message if validation fails
+			errorDiv.textContent = "Name can only contain letters, spaces, hyphens, and apostrophes.";
+		} else {
+			// Enable  the submit button
+			submitBtn.disabled = false;
+			// Clear error message if validation passes
+			errorDiv.textContent = '';
+		}		
+	});
+</script>
 
 <?php
     include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));

@@ -697,7 +697,7 @@ function sendMail($template,$subject,$to,$params){
 		$headers = "Content-type: text/html; charset=utf-8\r\n";
 		ini_set("sendmail_from", $CFG->EMAIL_FROM_ADDRESS );
 		$headers .= "From: ".$CFG->EMAIL_FROM_NAME ." <".$CFG->EMAIL_FROM_ADDRESS .">\r\n";
-		$headers .= "Reply-To: ".$CFG->EMAIL_REPLY_TO."\r\n";
+		$headers .= "Reply-To: ".$CFG->EMAIL_FROM_ADDRESS."\r\n";
 
         mail($to,$subject,$message,$headers);
     }
@@ -727,7 +727,7 @@ function sendMailMessage($subject,$to,$message){
 		$headers = "Content-type: text/html; charset=utf-8\r\n";
 		ini_set("sendmail_from", $CFG->EMAIL_FROM_ADDRESS );
 		$headers .= "From: ".$CFG->EMAIL_FROM_NAME ." <".$CFG->EMAIL_FROM_ADDRESS .">\r\n";
-		$headers .= "Reply-To: ".$CFG->EMAIL_REPLY_TO."\r\n";
+		$headers .= "Reply-To: ".$CFG->EMAIL_FROM_ADDRESS."\r\n";
 
         mail($to,$subject,$message,$headers);
     }

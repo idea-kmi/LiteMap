@@ -1188,7 +1188,7 @@ function addEmbedButtons(contentarea) {
 	var embedButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('embededit.png'); ?>", 'alt':'embed edit'});
 	embedButton.insert(embedButtonicon);
 	var embedButtonhandler = function() {
-		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/editmap.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
+		var code = '<iframe title="<?php echo $LNG->IFRAME_MAP_EMBEDEDIT; ?>" src="<?php echo $CFG->homeAddress; ?>ui/embed/editmap.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
 		textAreaPrompt('<?php echo $LNG->GRAPH_EMBEDEDIT_MESSAGE; ?>', code, "", "", "", 400, 300);
 	};
 	Event.observe(embedButton,"click", embedButtonhandler);
@@ -1198,7 +1198,7 @@ function addEmbedButtons(contentarea) {
 	var embedButtonicon = new Element("img", {'src':"<?php echo $HUB_FLM->getImagePath('embed.png'); ?>", 'alt':'embed'});
 	embedButton.insert(embedButtonicon);
 	var embedButtonhandler = function() {
-		var code = '<iframe src="<?php echo $CFG->homeAddress; ?>ui/embed/map.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
+		var code = '<iframe title="<?php echo $LNG->IFRAME_MAP_EMBED; ?>" src="<?php echo $CFG->homeAddress; ?>ui/embed/map.php?lang=<?php echo $CFG->language; ?>&id='+NODE_ARGS['nodeid']+'" width="900" height="700" scrolling="no" frameborder="1"></iframe>';
 		textAreaPrompt('<?php echo $LNG->GRAPH_EMBED_MESSAGE; ?>', code, "", "", "");
 	};
 	Event.observe(embedButton,"click", embedButtonhandler);

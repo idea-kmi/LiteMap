@@ -25,7 +25,7 @@
 
 $LNG->PAGE_ABOUT_TITLE = "Acerca de ".$CFG->SITE_TITLE;
 
-$LNG->PAGE_ABOUT_BODY = '<div alinear="izquierda" estilo="margin-bottom:20px;"><iframe width="560" height="315" src="//www.youtube.com/embed/3Sv5c6MRiZo" frameborder="0" allowfullscreen></iframe></div>';
+$LNG->PAGE_ABOUT_BODY = '<div alinear="izquierda" estilo="margin-bottom:20px;"><iframe title="'.$LNG->IFRAME_ABOUT_LITEMAP.'" width="560" height="315" src="//www.youtube.com/embed/3Sv5c6MRiZo" frameborder="0" allowfullscreen></iframe></div>';
 $LNG->PAGE_ABOUT_BODY .= '<p>'.$CFG->SITE_TITLE.' es desarrollado por el ';
 $LNG->PAGE_ABOUT_BODY .= '<a href="http://idea.kmi.open.ac.uk/">Knowledge Media Institute</a> ';
 $LNG->PAGE_ABOUT_BODY .= 'equipo (';

@@ -78,6 +78,9 @@ loadLanguageFile('emails.php');
 loadLanguageFile('stats.php');
 loadLanguageFile('core.php');
 
+// put last as it references other above but is used by below pages
+loadLanguageFile('accessibility.php');
+
 /** LOAD COUNTRIES LIST **/
 loadLanguageFile('countries.php');
 if (!empty($LNG->COUNTRIES_LIST)) {

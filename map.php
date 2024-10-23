@@ -349,19 +349,19 @@
 							<div id="tab-content-vis" class="tab-content border border-top-0">
 								<div id="tab-content-vis-message" style="width:1000px;"></div>
 								<div id="tab-content-vis-network-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-vis-network" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_VIS_NETWORK; ?>" id="tab-content-vis-network" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 								</div>
            						<div id="tab-content-vis-circles-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-vis-circles" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_VIS_CIRCLES; ?>" id="tab-content-vis-circles" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 								</div>
            						<div id="tab-content-vis-sunburst-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-vis-sunburst" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_VIS_SUNBURST; ?>" id="tab-content-vis-sunburst" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
            						<div id="tab-content-vis-treemap-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-vis-treemap" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_VIS_TREEMAP; ?>" id="tab-content-vis-treemap" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
            						<div id="tab-content-vis-treemaptd-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-vis-treemaptd" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_VIS_TREEMAPDT; ?>" id="tab-content-vis-treemaptd" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
 							</div>
 						</div>
@@ -387,22 +387,22 @@
 							<div id="tab-content-analytics" class="tab-content border border-top-0">
 								<div id="tab-content-analytics-message" style="width:1000px;"></div>
 								<div id="tab-content-analytics-overview-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-overview" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_OVERVIEW; ?>" id="tab-content-analytics-overview" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 								</div>
            						<div id="tab-content-analytics-social-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-social" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_SOCIAL; ?>" id="tab-content-analytics-social" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
 								</div>
            						<div id="tab-content-analytics-ring-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-ring" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_RING; ?>" id="tab-content-analytics-ring" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
            						<div id="tab-content-analytics-activity-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-activity" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_ACTIVITY; ?>" id="tab-content-analytics-activity" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
            						<div id="tab-content-analytics-useractivity-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-useractivity" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_USERACTIVITY; ?>" id="tab-content-analytics-useractivity" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
            						<div id="tab-content-analytics-stream-div" class="tabcontentuser" style="display:none">
-									<iframe id="tab-content-analytics-stream" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
+									<iframe title="<?php echo $LNG->IFRAME_MAP_ANALYTICS_STREAM; ?>" id="tab-content-analytics-stream" width="1000px;" height="1000px;" src="" style="overflow-y:auto;overflow-x:hidden" scrolling="no" frameborder="0"></iframe>
            						</div>
 							</div>
 						</div>

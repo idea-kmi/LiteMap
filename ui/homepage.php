@@ -305,11 +305,11 @@
 			<hr class="my-4" />
 			<div class="col">
 				<h2 class="mb-4"><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h2>
-				<iframe src="//www.youtube.com/embed/3Sv5c6MRiZo" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+				<iframe title="<?php echo $LNG->IFRAME_ABOUT_LITEMAP; ?>" src="//www.youtube.com/embed/3Sv5c6MRiZo" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 			</div>
 			<div class="col">
 				<h2 class="mb-4"><?php echo $LNG->PAGE_HELP_MOVIE_INTRO;?> <span class="text-secondary fs-6">(5m 28s)</span></h2>
-				<video poster="<?php echo $CFG->homeAddress; ?>ui/movies/LiteMap-Overview.png" width="480px" height="270px" autobuffer="autobuffer" controls="controls">
+				<video title="<?php echo $LNG->IFRAME_HELP_CREATING_ACCOUNT; ?>" poster="<?php echo $CFG->homeAddress; ?>ui/movies/LiteMap-Overview.png" width="480px" height="270px" autobuffer="autobuffer" controls="controls">
 					<source src="<?php echo $CFG->homeAddress; ?>ui/movies/LiteMap-Overview.mp4" type="video/mp4;" codecs="avc1.42E01E, mp4a.40.2">
 				</video>
 			</div>

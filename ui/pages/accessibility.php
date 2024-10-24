@@ -22,32 +22,18 @@
  *  possibility of such damage.                                                 *
  *                                                                              *
  ********************************************************************************/
+    include_once("../../config.php");
+	
+    include_once($HUB_FLM->getCodeDirPath("ui/header.php"));
 ?>
-		</div> <!-- end content -->
-		</div> <!-- end main -->
+	
+<div class="container-fluid" style="padding-top:20px;">
+    <div class="page">
+		<h1><?php echo $LNG->PAGE_ACCESSIBILITY_TITLE; ?></h1>
+		<?php echo $LNG->PAGE_ACCESSIBILITY_BODY; ?>
+	</div>
+</div>
 
-		<div id="footer" class="footerback footer bg-light border-top mt-4">
-			<div class="container">
-				<div class="d-flex d-column p-4 justify-content-between">
-					<div class="d-block px-4">
-						<span><?php echo $LNG->FOOTER_DEVELOPED_BY; ?> </span>
-						<a href="http://idea.kmi.open.ac.uk/">
-							<img alt="Idea logo" class="footer-logo" src="<?php echo $HUB_FLM->getImagePath('IDea-logo-URL-hi-res.png'); ?>" />
-						</a>
-					</div>
-					<div class="d-block px-4 mb-2 text-end">
-						<a href="<?php print($CFG->homeAddress);?>ui/pages/conditionsofuse.php"><?php echo $LNG->FOOTER_TERMS_LINK; ?></a> |
-						<a href="<?php print($CFG->homeAddress);?>ui/pages/accessibility.php"><?php echo $LNG->FOOTER_ACCESSIBILITY; ?></a> |
-						<a href="<?php print($CFG->homeAddress);?>ui/pages/privacy.php"><?php echo $LNG->FOOTER_PRIVACY_LINK; ?></a> |
-						<a href="<?php print($CFG->homeAddress);?>ui/pages/cookies.php"><?php echo $LNG->FOOTER_COOKIES_LINK; ?></a> |
-						<a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $LNG->FOOTER_CONTACT_LINK; ?></a>
-					</div>
-				</div>
-				<div class="d-block text-center"><small><a href="<?php echo $HUB_FLM->getCodeWebPath('ui/pages/releases.php'); ?>" target="blank">version: <?php echo $CFG->VERSION; ?></a></small></div>
-			</div>
-		</div>
-	</body>
-</html>
-
-
-
+<?php
+	include_once($HUB_FLM->getCodeDirPath("ui/footer.php"));
+?>

@@ -111,8 +111,12 @@ $LNG->PAGE_COOKIES_BODY .= '</table>';
 $LNG->PAGE_COOKIES_BODY .= '<p></p>';
 
 $LNG->PAGE_COOKIES_BODY .= '<h3>Cookies we use to track visits to our site</h3>';
-$LNG->PAGE_COOKIES_BODY .= '<p>';
+$LNG->PAGE_COOKIES_BODY .= '<p>We use Google Analytics GA4 for tracking analytics on the use of our site. ';
+$LNG->PAGE_COOKIES_BODY .= 'These cookies allow us to understand how often ';
+$LNG->PAGE_COOKIES_BODY .= 'users visit our site, how long they spend there, and the pages they ';
+$LNG->PAGE_COOKIES_BODY .= 'interact with. Google Analytics collects information anonymously. ';
 $LNG->PAGE_COOKIES_BODY .= '</p>';
+
 $LNG->PAGE_COOKIES_BODY .= '<table class="cookies" cellpadding="1" cellspacing="1" width="95%">';
 $LNG->PAGE_COOKIES_BODY .= '<thead>';
 $LNG->PAGE_COOKIES_BODY .= '<tr>';
@@ -124,29 +128,31 @@ $LNG->PAGE_COOKIES_BODY .= '<th scope="col" valign="top" width="10%">Expires</th
 $LNG->PAGE_COOKIES_BODY .= '</tr>';
 $LNG->PAGE_COOKIES_BODY .= '</thead>';
 $LNG->PAGE_COOKIES_BODY .= '<tbody>';
+
 $LNG->PAGE_COOKIES_BODY .= '<tr>';
-$LNG->PAGE_COOKIES_BODY .= '<td rowspan="2" valign="top" width="20%">';
-$LNG->PAGE_COOKIES_BODY .= '<p>Google Analytics</p>';
-$LNG->PAGE_COOKIES_BODY .= '</td>';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">__utmc</td>';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="30%">Some sections of our website ';
-$LNG->PAGE_COOKIES_BODY .= 'use Google Analytics. These cookies allow us to understand how often ';
-$LNG->PAGE_COOKIES_BODY .= 'users visit our site, how long they spend there, and the pages they ';
-$LNG->PAGE_COOKIES_BODY .= 'interact with. Google Analytics collects information anonymously. It ';
-$LNG->PAGE_COOKIES_BODY .= 'reports website trends without identifying individual visitors.</td> ';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">Performance</td> ';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="10%">Session</td> ';
-$LNG->PAGE_COOKIES_BODY .= '</tr>';
-$LNG->PAGE_COOKIES_BODY .= '<tr>';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">__utma __utmb __utmz</td>';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="30%">Some sections of our website ';
-$LNG->PAGE_COOKIES_BODY .= 'use Google Analytics. These cookies allow us to understand how often ';
-$LNG->PAGE_COOKIES_BODY .= 'users visit our site, how long they spend there, and the pages they ';
-$LNG->PAGE_COOKIES_BODY .= 'interact with. Google Analytics collects information anonymously. It ';
-$LNG->PAGE_COOKIES_BODY .= 'reports website trends without identifying individual visitors.</td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="20%"><p>Google Analytics</p></td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">_ga</td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="30%">This cookie is used by Google to distinguish users on a domain</td>';
 $LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">Performance</td>';
-$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="10%">Persistent</td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="10%">2 Years</td>';
 $LNG->PAGE_COOKIES_BODY .= '</tr>';
+
+$LNG->PAGE_COOKIES_BODY .= '<tr>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="20%"><p>Google Analytics</p></td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">_ga_container-id</td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="30%">This cookie is used by Google to persist session state.</td> ';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">Performance</td> ';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="10%">2 years</td> ';
+$LNG->PAGE_COOKIES_BODY .= '</tr>';
+
+$LNG->PAGE_COOKIES_BODY .= '<tr>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="20%"><p>Google Analytics</p></td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">_gid</td>';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="30%">This cookie is used by Google to distinguish users.</td> ';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="15%">Performance</td> ';
+$LNG->PAGE_COOKIES_BODY .= '<td valign="top" width="10%">24 hours</td> ';
+$LNG->PAGE_COOKIES_BODY .= '</tr>';
+
 $LNG->PAGE_COOKIES_BODY .= '</tbody>';
 $LNG->PAGE_COOKIES_BODY .= '</table>';
 $LNG->PAGE_COOKIES_BODY .= '<p></p>';

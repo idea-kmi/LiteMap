@@ -316,6 +316,7 @@
      * $CFG->safeurls[11] = 'xyz.zom/';
      */
     $CFG->safeurls[0] = 'www.youtube.com/embed/';
+    $CFG->safeurls[0] = 'www.youtube-nocookie.com/embed/';   
     $CFG->safeurls[1] = 'player.vimeo.com/video/';
     $CFG->safeurls[2] = 'www.ustream.tv/';
     $CFG->safeurls[3] = 'www.schooltube.com/';

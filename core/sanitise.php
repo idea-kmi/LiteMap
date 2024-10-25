@@ -453,6 +453,7 @@ function clean_text($text) {
 		}
 	} else {
 		$safeurls .= 'www.youtube.com/embed/';
+		$safeurls .= 'www.youtube-nocookie.com/embed/';        
 		$safeurls .= '|player.vimeo.com/video/';
 		$safeurls .= '|cohere.open.ac.uk/';
 		$safeurls .= '|www.ustream.tv/';

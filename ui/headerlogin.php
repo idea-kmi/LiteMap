@@ -76,9 +76,19 @@
 	</head>
 	<body>
 		<div class="alert alert-dark alert-dismissible fade show m-0 fixed-bottom" role="alert" id="cookieConsent" style="display: none;">
-			This website uses cookies to ensure you get the best experience on our website. <a href="ui/pages/cookies.php">Learn more</a>
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="closeCookieConsent"></button>
+			<div style="display: flex; align-items: center; flex-direction: column;">
+				We use essential cookies to handle sessions and logins, and Google Analytics cookies to gather data on how you use this site.<br/>
+				<div>This data is extremely valuable for our research and helps us improve our analysis.</div>				
+				<div>
+					Are you happy to help with our research by allowing Google Analytics cookies? 
+					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="Yes" id="acceptAnlyticsCookies">Yes</button>
+					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
+				</div>
+				<br/>
+				<a href="ui/pages/cookies.php">Read our cookie policy</a>
+			</div>
 		</div>
+
         <header class="py-3 mb-0 border-bottom" id="header">
 			<div class="container-fluid d-flex flex-wrap justify-content-center">
 				<div id="dialoglogo" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">

@@ -29,6 +29,32 @@ body { color: #696969; font-family: "Avant Garde", Avantgarde, "Century Gothic",
     height: 12px;
 }
 
+.cookieConsentButton {
+    background-color: #a91a70; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 10px 20px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make the buttons appear side by side */
+    font-size: 16px; /* Increase font size */
+    margin: 4px 2px; /* Some margin */
+    cursor: pointer; /* Pointer/hand icon */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.cookieConsentButton:hover {
+    background-color: #4E725F; 
+}
+
+.cookieConsentButton:focus {
+    background-color: #4E725F; 
+}
+
+/*.cookieConsentButton { text-decoration: none; padding: 0.375rem 0.75rem; color: #a91a70; font-weight: bold; }
+.cookieConsentButton { color: #4E725F; }*/
+
 /*******/
 /* Nav */
 /*******/

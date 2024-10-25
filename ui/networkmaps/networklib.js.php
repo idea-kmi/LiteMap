@@ -29,160 +29,107 @@ include_once($_SERVER['DOCUMENT_ROOT'].'/config.php');
 
 var SELECTED_GRAPH_NODE = "";
 
-var MAP_ROLLOVER_COOKIE_NAME = 'litemaprollovertext';
-var MAP_LINKTEXT_COOKIE_NAME = 'litemaplinktext';
-var MAP_CURVED_LINKS_NAME = 'litemapcurvedlinks';
-var MAP_REPLAY_SPEED_NAME = 'litemapreplayspeedtext';
+var MAP_ROLLOVER_STORAGE_NAME = 'litemaprollovertext';
+var MAP_LINKTEXT_STORAGE_NAME = 'litemaplinktext';
+var MAP_CURVED_LINKS_STORAGE_NAME = 'litemapcurvedlinks';
+var MAP_REPLAY_SPEED_STORAGE_NAME = 'litemapreplayspeedtext';
 
 var mapPlayer = undefined;
 
 /**
- * Set in cookie map replay speed
+ * Set into local storage map replay speed
  */
 function setReplaySpeed(newspeed) {
 	var speed = 1000;
 	if (parseInt(newspeed)) {
 		speed = parseInt(newspeed);
 	}
-	var date = new Date();
-	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-	document.cookie = MAP_REPLAY_SPEED_NAME + "=" + speed + "; expires=" + date.toGMTString();
+	localStorage.setItem(MAP_REPLAY_SPEED_STORAGE_NAME, speed);
 }
 
 /**
- * if set in cookie return map replay speed
+ * Get from local storage, if set, and return map replay speed
  */
 function getReplaySpeed() {
 
-	var speed = 1000;
+	let speed = 1000;
 
-	var allcookies = document.cookie;
-	if (allcookies != null) {
-		var cookiearray  = allcookies.split(';');
-
-		for(var i=0; i<cookiearray.length; i++){
-			var param = cookiearray[i].split('=')
-			var name = param[0];
-			var value = param[1];
-			if (name.trim() == MAP_REPLAY_SPEED_NAME) {
-				speed = parseInt(value);
-			}
-		}
+	const storedspeed = localStorage.getItem(MAP_REPLAY_SPEED_STORAGE_NAME);
+	if (storedspeed !== null && storedspeed !== "") {
+		speed = parseInt(storedspeed);
 	}
 
 	return speed;
 }
 
 /**
- * if set in cookie return
+ * Set into local storage, the rollover option chosen
  */
 function setNodeRollover(rolloveron) {
-	var rollover = 'true';
+	let rollover = 'true';
 	if (!rolloveron) {
 		rollover = 'false';
 	}
-	var date = new Date();
-	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-	document.cookie = MAP_ROLLOVER_COOKIE_NAME + "=" + rollover + "; expires=" + date.toGMTString();
+    localStorage.setItem(MAP_ROLLOVER_STORAGE_NAME, rollover);
 }
 
 /**
- * if set in cookie return rollover
+ * Get from local storage, if set, and return rollover option chosen
  */
 function getNodeRollover() {
-
-	var rollover = 'true';
-
-	var allcookies = document.cookie;
-	if (allcookies != null) {
-		var cookiearray  = allcookies.split(';');
-
-		for(var i=0; i<cookiearray.length; i++){
-			var param = cookiearray[i].split('=')
-			var name = param[0];
-			var value = param[1];
-			if (name.trim() == MAP_ROLLOVER_COOKIE_NAME) {
-				rollover = value;
-			}
-		}
+	let rollover = 'true';
+	const storedrollover = localStorage.getItem(MAP_ROLLOVER_STORAGE_NAME);
+	if (storedrollover !== null && storedrollover !== "") {
+		rollover = storedrollover;
 	}
-
 	return rollover;
 }
 
-
-
 /**
- * if set in cookie return
+ * Set into local storage the link text choice
  */
 function setLinkText(linktextron) {
 	var linktext = 'true';
 	if (linktextron == false) {
 		linktext = 'false'
 	}
-	var date = new Date();
-	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-	document.cookie = (MAP_LINKTEXT_COOKIE_NAME+NODE_ARGS['nodeid'])+ "=" + linktext + "; expires=" + date.toGMTString();
+	const name = MAP_LINKTEXT_STORAGE_NAME+NODE_ARGS['nodeid']
+	localStorage.setItem(name, linktext);
 }
 
 /**
- * if set in cookie return rollover
+ * Get from local storage, if set, and return the link text choice
  */
 function getLinkText() {
-
 	var linktext = 'true';
-
-	var allcookies = document.cookie;
-	if (allcookies != null) {
-		var cookiearray  = allcookies.split(';');
-
-		for(var i=0; i<cookiearray.length; i++){
-			var param = cookiearray[i].split('=')
-			var name = param[0];
-			var value = param[1];
-			if (name.trim() == (MAP_LINKTEXT_COOKIE_NAME+NODE_ARGS['nodeid'])) {
-				linktext = value;
-			}
-		}
+	const storedlinktext = localStorage.getItem(MAP_LINKTEXT_STORAGE_NAME+NODE_ARGS['nodeid']);
+	if (storedlinktext !== null && storedlinktext !== "") {
+		linktext = storedlinktext;
 	}
-
 	return linktext;
 }
 
 /**
- * if set in cookie return
+ * Set into local storage the link curve choice
  */
 function setLinkCurve(linkcurveon) {
 	var linkcurve = 'false';
 	if (linkcurveon == true) {
 		linkcurve = 'true'
 	}
+	localStorage.setItem(MAP_CURVED_LINKS_STORAGE_NAME+NODE_ARGS['nodeid'], linkcurve);
 	var date = new Date();
-	date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-	document.cookie = (MAP_CURVED_LINKS_NAME+NODE_ARGS['nodeid']) + "=" + linkcurve + "; expires=" + date.toGMTString();
 }
 
 /**
- * if set in cookie return rollover
+ * Get from local storage, if set, and return the link curve choice.
  */
 function getLinkCurve() {
-
 	var linkcurve = 'false';
-
-	var allcookies = document.cookie;
-	if (allcookies != null) {
-		var cookiearray  = allcookies.split(';');
-
-		for(var i=0; i<cookiearray.length; i++){
-			var param = cookiearray[i].split('=')
-			var name = param[0];
-			var value = param[1];
-			if (name.trim() == (MAP_CURVED_LINKS_NAME+NODE_ARGS['nodeid'])) {
-				linkcurve = value;
-			}
-		}
+	const storedlinkcurve = localStorage.getItem(MAP_CURVED_LINKS_STORAGE_NAME+NODE_ARGS['nodeid']);
+	if (storedlinkcurve !== null && storedlinkcurve !== "") {
+		linkcurve = storedlinkcurve;
 	}
-
 	return linkcurve;
 }
 

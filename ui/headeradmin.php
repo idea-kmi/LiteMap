@@ -151,9 +151,19 @@
 	</head>
 	<body <?php echo $BODY_ATT; ?>>
 		<div class="alert alert-dark alert-dismissible fade show m-0 fixed-bottom" role="alert" id="cookieConsent" style="display: none;">
-			This website uses cookies to ensure you get the best experience on our website. <a href="ui/pages/cookies.php">Learn more</a>
-			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="closeCookieConsent"></button>
+			<div style="display: flex; align-items: center; flex-direction: column;">
+				We use essential cookies to handle sessions and logins, and Google Analytics cookies to gather data on how you use this site.<br/>
+				<div>This data is extremely valuable for our research and helps us improve our analysis.</div>				
+				<div>
+					Are you happy to help with our research by allowing Google Analytics cookies? 
+					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="Yes" id="acceptAnlyticsCookies">Yes</button>
+					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
+				</div>
+				<br/>
+				<a href="ui/pages/cookies.php">Read our cookie policy</a>
+			</div>
 		</div>
+		
 		<nav class="py-2 bg-light border-bottom">
 			<div class="container-fluid d-flex flex-wrap justify-content-end">
 				<ul class="nav" id="menu">

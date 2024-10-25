@@ -44,30 +44,13 @@ function getExploreViz(viz) {
 		(viz != "linear" && viz != "widget" && viz != "net")) {
 
 		viz = DEFAULT_VIZ;
-
-		var allcookies = document.cookie;
-		if (allcookies != null) {
-			var cookiearray  = allcookies.split(';');
-
-			for(var i=0; i<cookiearray.length; i++){
-				var param = cookiearray[i].split('=');
-				var name = param[0];
-			    var value = param[1];
-				if (name.trim() == COOKIE_NAME) {
-					viz = value;
-				}
-			}
-		}
-
-		if (viz == "") {
+		const storedviz = localStorage.getItem(VIZ_STORAGE_NAME);
+		if (storedviz == null || storedviz == "") {
 			viz = DEFAULT_VIZ;
 		}
 	} else {
 		if (viz != "net") {
-			var date = new Date();
-			date.setTime(date.getTime()+(365*24*60*60*1000)); // 365 days
-			document.cookie = COOKIE_NAME + "=" + viz + "; expires=" + date.toGMTString();
-			//document.cookie = COOKIE_NAME + "=" + viz;
+			localStorage.setItem(VIZ_STORAGE_NAME, viz);
 		}
 	}
 	return viz;

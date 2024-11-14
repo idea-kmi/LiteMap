@@ -362,17 +362,40 @@ function auditViewTriple($userid, $viewid, $tripleid, $changetype) {
 
 /**
  * Try to determine if the current call causing the audit is from a real browser/person.
- * Requires core/lib/useragent-1.0/userAgent.class.php
  *
  * @return booelan TRUE if it thinks it is a real user else FALSE.
  */
 function isProbablyRealWebUser() {
-	global $CFG;
 
-    require_once($CFG->dirAddress.'core/lib/useragent-1.0/userAgent.class.php');
-    $userAgent = new UserAgent();
-    $isNotRealWebUser = $userAgent->isUnknown();
-	return !$isNotRealWebUser;
+	$userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+	// List of common bot user agents
+	$bots = [
+		'Googlebot',
+		'Bingbot',
+		'Slurp',
+		'DuckDuckBot',
+		'Baiduspider',
+		'YandexBot',
+		'Sogou',
+		'Exabot',
+		'facebot',
+		'ia_archiver'
+	];
+
+	// Check if the user agent matches any known bots
+	foreach ($bots as $bot) {
+		if (stripos($userAgent, $bot) !== false) {
+			return false; // It's a bot
+		}
+	}
+
+	// Check if the browser name is empty
+	if (empty($userAgent)) {
+		return false; // No user agent provided
+	}
+
+	return true; // It's likely a real user	
 }
 
 /**

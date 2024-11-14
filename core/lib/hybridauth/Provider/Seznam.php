@@ -13,55 +13,50 @@ use Hybridauth\Data;
 use Hybridauth\User;
 
 /**
- * Dribbble OAuth2 provider adapter.
+ * Seznam OAuth2 provider adapter.
  */
-class Dribbble extends OAuth2
+class Seznam extends OAuth2
 {
     /**
      * {@inheritdoc}
      */
-    protected $apiBaseUrl = 'https://api.dribbble.com/v2/';
+    protected $apiBaseUrl = 'https://login.szn.cz/';
 
     /**
      * {@inheritdoc}
      */
-    protected $authorizeUrl = 'https://dribbble.com/oauth/authorize';
+    protected $authorizeUrl = 'https://login.szn.cz/api/v1/oauth/auth';
 
     /**
      * {@inheritdoc}
      */
-    protected $accessTokenUrl = 'https://dribbble.com/oauth/token';
+    protected $accessTokenUrl = 'https://login.szn.cz/api/v1/oauth/token';
 
     /**
      * {@inheritdoc}
      */
-    protected $apiDocumentation = 'http://developer.dribbble.com/v2/oauth/';
+    protected $apiDocumentation = 'https://vyvojari.seznam.cz/oauth/doc';
 
     /**
      * {@inheritdoc}
      */
     public function getUserProfile()
     {
-        $response = $this->apiRequest('user');
+        $response = $this->apiRequest('api/v1/user', 'GET', ['format' => 'json']);
 
         $data = new Data\Collection($response);
 
-        if (!$data->exists('id')) {
+        if (!$data->exists('oauth_user_id')) {
             throw new UnexpectedApiResponseException('Provider API returned an unexpected response.');
         }
 
         $userProfile = new User\Profile();
 
-        $userProfile->identifier = $data->get('id');
-        $userProfile->profileURL = $data->get('html_url');
+        $userProfile->identifier = $data->get('oauth_user_id');
+        $userProfile->email = $data->get('account_name');
+        $userProfile->firstName = $data->get('firstname');
+        $userProfile->lastName = $data->get('lastname');
         $userProfile->photoURL = $data->get('avatar_url');
-        $userProfile->description = $data->get('bio');
-        $userProfile->region = $data->get('location');
-        $userProfile->displayName = $data->get('name');
-
-        $userProfile->displayName = $userProfile->displayName ?: $data->get('username');
-
-        $userProfile->webSiteURL = $data->filter('links')->get('web');
 
         return $userProfile;
     }

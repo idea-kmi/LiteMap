@@ -305,7 +305,7 @@
 			<hr class="my-4" />
 			<div class="col">
 				<h2 class="mb-4"><?php echo $LNG->PAGE_ABOUT_TITLE; ?></h2>
-				<iframe title="<?php echo $LNG->IFRAME_ABOUT_LITEMAP; ?>" src="//www.youtube.com/embed/3Sv5c6MRiZo" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+				<iframe title="<?php echo $LNG->IFRAME_ABOUT_LITEMAP; ?>" src="//www.youtube-nocookie.com/embed/3Sv5c6MRiZo" width="480" height="270" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
 			</div>
 			<div class="col">
 				<h2 class="mb-4"><?php echo $LNG->PAGE_HELP_MOVIE_INTRO;?> <span class="text-secondary fs-6">(5m 28s)</span></h2>

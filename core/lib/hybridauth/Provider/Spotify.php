@@ -17,11 +17,10 @@ use Hybridauth\User;
  */
 class Spotify extends OAuth2
 {
-
     /**
      * {@inheritdoc}
      */
-    public $scope = 'user-read-email';
+    protected $scope = 'user-read-email';
 
     /**
      * {@inheritdoc}
@@ -37,6 +36,11 @@ class Spotify extends OAuth2
      * {@inheritdoc}
      */
     protected $accessTokenUrl = 'https://accounts.spotify.com/api/token';
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $apiDocumentation = 'https://developer.spotify.com/documentation/general/guides/authorization-guide/';
 
     /**
      * {@inheritdoc}
@@ -78,7 +82,7 @@ class Spotify extends OAuth2
      */
     protected function fetchBirthday(User\Profile $userProfile, $birthday)
     {
-        $result = (new Data\Parser())->parseBirthday($birthday, '-');
+        $result = (new Data\Parser())->parseBirthday($birthday);
 
         $userProfile->birthDay = (int)$result[0];
         $userProfile->birthMonth = (int)$result[1];

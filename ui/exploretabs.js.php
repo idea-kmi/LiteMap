@@ -33,7 +33,7 @@ var ORGVIZ = {"chat":true, "widget":true, "net":true};
 
 var DEFAULT_VIZ = 'widget';
 var CURRENT_VIZ = DEFAULT_VIZ;
-var COOKIE_NAME = 'evidencehubviz';
+var VIZ_STORAGE_NAME = 'evidencehubviz';
 
 var DATA_LOADED = {"chat":false, "linear":false, "widget":false, "net":false};
 

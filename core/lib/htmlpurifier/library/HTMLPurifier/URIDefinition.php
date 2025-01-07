@@ -35,7 +35,7 @@ class HTMLPurifier_URIDefinition extends HTMLPurifier_Definition
 
 		// added by MB:
         $this->registerFilter(new HTMLPurifier_URIFilter_SafeEmbed());
-        $this->registerFilter(new HTMLPurifier_URIFilter_SafeObject());
+        $this->registerFilter(new HTMLPurifier_URIFilter_SafeObject());          
     }
 
     public function registerFilter($filter)

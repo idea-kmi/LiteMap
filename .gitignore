@@ -10,3 +10,4 @@ setup.php
 ._*
 .vs
 .vscode
+**/DefinitionCache/

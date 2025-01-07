@@ -20,7 +20,7 @@ class LinkedIn extends OAuth2
     /**
      * {@inheritdoc}
      */
-    public $scope = 'r_liteprofile r_emailaddress w_member_social';
+    protected $scope = 'r_liteprofile r_emailaddress';
 
     /**
      * {@inheritdoc}
@@ -45,6 +45,21 @@ class LinkedIn extends OAuth2
     /**
      * {@inheritdoc}
      */
+    protected function initialize()
+    {
+        parent::initialize();
+
+        if ($this->isRefreshTokenAvailable()) {
+            $this->tokenRefreshParameters += [
+                'client_id' => $this->clientId,
+                'client_secret' => $this->clientSecret
+            ];
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getUserProfile()
     {
         $fields = [
@@ -55,8 +70,8 @@ class LinkedIn extends OAuth2
         ];
 
 
-        $response = $this->apiRequest('me?projection=(' . implode(',', $fields) . ')');
-        $data     = new Data\Collection($response);
+        $response = $this->apiRequest('me', 'GET', ['projection' => '(' . implode(',', $fields) . ')']);
+        $data = new Data\Collection($response);
 
         if (!$data->exists('id')) {
             throw new UnexpectedApiResponseException('Provider API returned an unexpected response.');
@@ -66,14 +81,14 @@ class LinkedIn extends OAuth2
 
         // Handle localized names.
         $userProfile->firstName = $data
-          ->filter('firstName')
-          ->filter('localized')
-          ->get($this->getPreferredLocale($data, 'firstName'));
+            ->filter('firstName')
+            ->filter('localized')
+            ->get($this->getPreferredLocale($data, 'firstName'));
 
         $userProfile->lastName = $data
-          ->filter('lastName')
-          ->filter('localized')
-          ->get($this->getPreferredLocale($data, 'lastName'));
+            ->filter('lastName')
+            ->filter('localized')
+            ->get($this->getPreferredLocale($data, 'lastName'));
 
         $userProfile->identifier = $data->get('id');
         $userProfile->email = $this->getUserEmail();
@@ -123,8 +138,11 @@ class LinkedIn extends OAuth2
      */
     public function getUserEmail()
     {
-        $response = $this->apiRequest('emailAddress?q=members&projection=(elements*(handle~))');
-        $data     = new Data\Collection($response);
+        $response = $this->apiRequest('emailAddress', 'GET', [
+            'q' => 'members',
+            'projection' => '(elements*(handle~))',
+        ]);
+        $data = new Data\Collection($response);
 
         foreach ($data->filter('elements')->toArray() as $element) {
             $item = new Data\Collection($element);
@@ -141,9 +159,14 @@ class LinkedIn extends OAuth2
      * {@inheritdoc}
      *
      * @see https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin
+     * @throws \Exception
      */
     public function setUserStatus($status, $userID = null)
     {
+        if (strpos($this->scope, 'w_member_social') === false) {
+            throw new \Exception('Set user status requires w_member_social permission!');
+        }
+
         if (is_string($status)) {
             $status = [
                 'author' => 'urn:li:person:' . $userID,
@@ -165,8 +188,8 @@ class LinkedIn extends OAuth2
 
         $headers = [
             'Content-Type' => 'application/json',
-            'x-li-format'  => 'json',
-            'X-Restli-Protocol-Version'  => '2.0.0',
+            'x-li-format' => 'json',
+            'X-Restli-Protocol-Version' => '2.0.0',
         ];
 
         $response = $this->apiRequest("ugcPosts", 'POST', $status, $headers);

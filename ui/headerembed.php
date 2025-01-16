@@ -60,7 +60,7 @@ if ($CFG->privateSite) {
 
 		<link rel="icon" href="<?php echo $HUB_FLM->getImagePath("favicon.ico"); ?>" type="images/x-icon" />
 
-		<script src="https://www.youtube.com/iframe_api" type="text/javascript"></script>
+		<script src="https://www.youtube-nocookie.com/iframe_api" type="text/javascript"></script>
 		<script src="https://player.vimeo.com/api/player.js"></script>
 
 		<script src="<?php echo $HUB_FLM->getCodeWebPath('ui/util.js.php'); ?>" type="text/javascript"></script>

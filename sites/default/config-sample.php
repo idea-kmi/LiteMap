@@ -315,18 +315,16 @@
      * To add a new one repeat the pattern but increase the number, e.g.
      * $CFG->safeurls[11] = 'xyz.zom/';
      */
-    $CFG->safeurls[0] = 'www.youtube.com/embed/';
-    $CFG->safeurls[1] = 'www.youtube-nocookie.com/embed/';   
-    $CFG->safeurls[2] = 'player.vimeo.com/video/';
-    $CFG->safeurls[3] = 'www.ustream.tv/';
-    $CFG->safeurls[4] = 'www.schooltube.com/';
-    $CFG->safeurls[5] = 'archive.org/';
-    $CFG->safeurls[6] = 'www.blogtv.com/';
-    $CFG->safeurls[7] = 'uk.video.yahoo.com/';
-    $CFG->safeurls[8] = 'www.teachertube.com/';
-    $CFG->safeurls[9] = 'sciencestage.com/';
-    $CFG->safeurls[10] = 'www.flickr.com/';
-    $CFG->safeurls[11] = 'cohere.open.ac.uk/';
+    $CFG->safeurls[0] = 'www.youtube-nocookie.com/embed/';    
+    $CFG->safeurls[1] = 'player.vimeo.com/video/';
+    $CFG->safeurls[2] = 'www.ustream.tv/';
+    $CFG->safeurls[3] = 'www.schooltube.com/';
+    $CFG->safeurls[4] = 'archive.org/';
+    $CFG->safeurls[5] = 'www.blogtv.com/';
+    $CFG->safeurls[6] = 'uk.video.yahoo.com/';
+    $CFG->safeurls[7] = 'www.teachertube.com/';
+    $CFG->safeurls[8] = 'sciencestage.com/';
+    $CFG->safeurls[9] = 'www.flickr.com/';
 
     /** SPAM ALERT **/
     // Do you want to use Spam reporting on this site? (true/false)

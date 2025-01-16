@@ -407,7 +407,7 @@ function renderNodeFromLocalJSon(node, uniQ, role, includemenu, type) {
 			var exploreButton = new Element("a", {'title':'<?php echo $LNG->NODE_EXPLORE_BUTTON_HINT; ?>'} );
 			exploreButton.insert("<?php echo $LNG->NODE_EXPLORE_BUTTON_TEXT;?>");
 			exploreButton.href= URL_ROOT+"explore.php?id="+node.nodeid;
-			exploreButton.target = 'coheremain';
+			exploreButton.target = 'litemapmain';
 
 			headerDiv.insert(exploreButton);
 		}

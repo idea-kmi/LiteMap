@@ -99,6 +99,13 @@ global $HUB_FLM;
 		<script src="<?php echo $CFG->homeAddress; ?>ui/networkmaps/visualisations/streamgraphlib.js.php" type="text/javascript"></script>
 		<script src="<?php echo $CFG->homeAddress; ?>ui/networkmaps/visualisations/crossfilterlib.js.php" type="text/javascript"></script>
 
+		<script type="text/javascript">
+			function init(){
+				document.getElementById('cookie-policy-link').focus();
+			}
+			window.onload = init;
+		</script>
+
 		<?php
 		$custom = $HUB_FLM->getCodeDirPath("ui/headerstatsCustom.php");
 		if (file_exists($custom)) {
@@ -121,13 +128,13 @@ global $HUB_FLM;
 			<div style="display: flex; align-items: center; flex-direction: column;">
 				We use essential cookies to handle sessions and logins, and Google Analytics cookies to gather data on how you use this site.<br/>
 				<div>This data is extremely valuable for our research and helps us improve our analysis.</div>				
+				<a href="<?php echo $CFG->homeAddress; ?>ui/pages/cookies.php">Read our cookie policy</a>
 				<div>
 					Are you happy to help with our research by allowing Google Analytics cookies? 
 					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="Yes" id="acceptAnlyticsCookies">Yes</button>
 					<button type="button" class="cookieConsentButton" data-bs-dismiss="alert" aria-label="No" id="declineAnlyticsCookies">No</button>
 				</div>
 				<br/>
-				<a href="ui/pages/cookies.php">Read our cookie policy</a>
 			</div>
 		</div>
 

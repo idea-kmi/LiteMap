@@ -185,11 +185,13 @@ $LNG->PAGE_COOKIES_BODY .= '<p>You can find information on disabling cookies at 
 $LNG->PAGE_COOKIES_BODY .= '<h2>Further reading</h2>';
 $LNG->PAGE_COOKIES_BODY .= '<p><strong>Information about cookies</strong><br>';
 $LNG->PAGE_COOKIES_BODY .= 'Useful information about cookies can be found at: <a href="http://www.allaboutcookies.org/">www.allaboutcookies.org</a></p>';
+
 $LNG->PAGE_COOKIES_BODY .= '<p><strong>Internet Advertising Bureau</strong><br>';
 $LNG->PAGE_COOKIES_BODY .= 'A guide to behavioural advertising and online privacy has been produced ';
 $LNG->PAGE_COOKIES_BODY .= 'by the internet advertising industry which can be found at: <a href="http://www.youronlinechoices.com/">www.youronlinechoices.com</a></p>';
-$LNG->PAGE_COOKIES_BODY .= '<p><strong>International Chamber of Commerce United Kingdom</strong><br>';
-$LNG->PAGE_COOKIES_BODY .= 'Information on the ICC (UK) UK cookie guide can be found on the ICC website section: <a href="http://www.international-chamber.co.uk/our-expertise/digitaleconomy">www.international-chamber.co.uk/our-expertise/digitaleconomy</a></p>';
+
+$LNG->PAGE_COOKIES_BODY .= '<p><strong>Information Commissioner\'s Office (ICO), United Kingdom</strong><br>';
+$LNG->PAGE_COOKIES_BODY .= 'The ICO\'s cookie guide can be found at: <a href="http://https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guide-to-pecr/cookies-and-similar-technologies/">Cookies and similar technologies - ICO</a></p>';
 $LNG->PAGE_COOKIES_BODY .= '<p>&nbsp;</p>';
 $LNG->PAGE_COOKIES_BODY .= '</div>';
 

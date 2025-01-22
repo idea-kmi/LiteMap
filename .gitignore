@@ -10,4 +10,5 @@ setup.php
 ._*
 .vs
 .vscode
-**/DefinitionCache/
+**/DefinitionCache/*
+/core/lib/htmlpurifier/library/HTMLPurifier/DefinitionCache

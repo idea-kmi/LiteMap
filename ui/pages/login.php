@@ -158,7 +158,7 @@
 						<?php if ($CFG->send_mail) { ?>
 							<p><a href="<?php echo $CFG->homeAddress; ?>ui/pages/forgot.php"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_LINK; ?></a></p>
 						<?php } else { ?>
-							<p><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART1; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART2; ?></a></p>
+							<p><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART1; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $LNG->LOGIN_FORGOT_PASSWORD_MESSAGE_PART2; ?></a></p>
 						<?php } ?>						
 						<input class="btn btn-primary" type="submit" value="<?php echo $LNG->LOGIN_LOGIN_BUTTON; ?>" id="login" name="login" />
 					</div>

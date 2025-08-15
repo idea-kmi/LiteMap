@@ -38,7 +38,7 @@
 	<h1>404: Page Not Found</h1>
 	<p>We're very sorry, but the page you requested cannot be found on this server.</p>
 	<p>Try going to the root page of the <a href="<?php echo $CFG->homeAddress ;?>"><?php echo $CFG->SITE_TITLE ;?> website</a> instead.</p>
-	<span>Questions or problems regarding this web site should be directed to <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $CFG->SITE_TITLE ;?> Support</a>.<br></span>
+	<span>Questions or problems regarding this web site should be directed to <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $CFG->SITE_TITLE ;?> Support</a>.<br></span>
 </div>
 
 <?php

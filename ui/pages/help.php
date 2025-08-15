@@ -98,7 +98,7 @@
 		</div>
 
 		<div class="mt-5">
-			<p><?php echo $LNG->PAGE_HELP_PARA2_A; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $LNG->PAGE_HELP_PARA2_B; ?></a>.</p>
+			<p><?php echo $LNG->PAGE_HELP_PARA2_A; ?> <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $LNG->PAGE_HELP_PARA2_B; ?></a>.</p>
 		</div>
 	</div>
 </div>

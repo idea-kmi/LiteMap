@@ -38,7 +38,7 @@
 	<h1>403: Forbidden</h1>
 	<p>We're very sorry, but you cannot view the page you have requested.</p>
 	<p>Try going to the root page of the <a href="<?php echo $CFG->homeAddress ;?>"><?php echo $CFG->SITE_TITLE ;?></a> website instead.</p>
-	<span>Questions or problems regarding this web site should be directed to <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>"><?php echo $CFG->SITE_TITLE ;?> Hub Support</a>.<br></span>
+	<span>Questions or problems regarding this web site should be directed to <a href="mailto:<?php echo $CFG->EMAIL_REPLY_TO; ?>?subject=<?php echo $CFG->SITE_TITLE; ?>"><?php echo $CFG->SITE_TITLE ;?> Hub Support</a>.<br></span>
 </div>
 
 <?php

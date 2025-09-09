@@ -27,8 +27,8 @@
  *
  * Michelle Bachler (KMi)
  */
-$LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Carga de una visualización en vivo desde <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
-$LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Cargando Visual Analytics en directo de <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
+$LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Carga de una visualización en vivo desde <a/href="https://cidashboard.net" target="_blank">CIDashboard</a>...';
+$LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Cargando Visual Analytics en directo de <a/href="https://cidashboard.net" target="_blank">CIDashboard</a>...';
 
 $LNG->STATS_GO_BACK = "Regresa";
 

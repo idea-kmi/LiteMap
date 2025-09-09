@@ -28,8 +28,8 @@
  * Michelle Bachler (KMi)
  */
 
-$LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Loading a Live Visualisation from <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
-$LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Loading Live Visual Analytics from <a/href="https://cidashbaord.net" target="_blank">CIDashboard</a>...';
+$LNG->LOADING_CIDASHBOARD_VISUALISATION = 'Loading a Live Visualisation from <a/href="https://cidashboard.net" target="_blank">CIDashboard</a>...';
+$LNG->LOADING_CIDASHBOARD_ANALYTICS = 'Loading Live Visual Analytics from <a/href="https://cidashboard.net" target="_blank">CIDashboard</a>...';
 
 $LNG->STATS_GO_BACK = "Go back";
 

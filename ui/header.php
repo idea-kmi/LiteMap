@@ -115,6 +115,29 @@
 	</head>
 	<body <?php echo $BODY_ATT; ?> id="cohere-body">
 
+		<div class="alert alert-warning text-center" role="alert" style="margin-top: 20px;">
+			<h4 class="alert-heading" style="font-size: 1.3em">⚠️ Important Notice: Site Retirement</h4>
+			<p>
+				It is with a heavy heart that we announce the retirement of this research site after more than a decade of service.
+				The underlying code has become outdated and increasingly difficult to maintain securely, and we are no longer able to keep the site online.
+			</p>
+			<p>
+				We are incredibly proud of the role this tool has played in supporting research and collaboration over the years. 
+				Thank you to everyone who has used and contributed to it.
+			</p>
+			<p>
+				The site will be taken offline on <strong>10th October 2025</strong>.
+			</p>
+			<p>
+				If you wish to preserve any of your work, please
+				<strong>export your data to JSON using the export button on Maps
+				<img src="/images/json-ld-data-24.png" alt="Export JSON icon" style="height: 20px; vertical-align: middle;">
+				, take screenshots, or print your content before this date</strong>.
+			</p>
+			<hr>
+			<p class="mb-0">Thank you for being part of this journey.</p>
+		</div>
+
 		<div class="alert alert-dark alert-dismissible fade show m-0 fixed-bottom" role="alert" id="cookieConsent" style="display: none;">
 			<div style="display: flex; align-items: center; flex-direction: column;">
 				We use essential cookies to handle sessions and logins, and Google Analytics cookies to gather data on how you use this site.<br/>

@@ -1,3 +1,10 @@
+!IMPORTANT
+This code base was developed as part of research conducted at the Knowledge Media Institute at the Open University. This code base is no longer in active development. The majority of the code was originally developed between 2012 and 2015 with various updates and tweaks over the following years. So, a lot of the code is old in style and development practises.
+
+!WARNING
+Some of this documentation may be out-of-date.
+
+---------------------------------------------------
 
 We are currently in the process of merging in a newer copy of LiteMap.
 All code that was previously in the /src folder, has been moved to the top level ready to merge into the latest running version.

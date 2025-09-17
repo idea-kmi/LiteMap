@@ -46,16 +46,16 @@ LiteMap is one of the Catalyst’s ecosystem of Collective Intelligence Tools to
 
 ## Screenshots
 
-### Example Litemap homepage
+### Example LiteMap homepage
 ![LiteMap Homepage](docs/images/homepage.png)
 
-### Example Litemap groups page
+### Example LiteMap groups page
 ![LiteMap Groups page](docs/images/groups.png)
 
-### Example Litemap maps page
+### Example LiteMap maps page
 ![LiteMap Groups page](docs/images/maps.png)
 
-### Example Litemap map page
+### Example LiteMap map page
 ![LiteMap Groups page](docs/images/map.png)
 
 ## Acknowledgments

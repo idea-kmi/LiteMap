@@ -53,10 +53,10 @@ LiteMap is one of the Catalyst’s ecosystem of Collective Intelligence Tools to
 ![LiteMap Groups page](docs/images/groups.png)
 
 ### Example LiteMap maps page
-![LiteMap Groups page](docs/images/maps.png)
+![LiteMap Maps page](docs/images/maps.png)
 
 ### Example LiteMap map page
-![LiteMap Groups page](docs/images/map.png)
+![LiteMap Map page](docs/images/map.png)
 
 ## Acknowledgments
 LiteMap’s design, development and testing was undertaken as part of the FP7 Project Catalyst on *Collective Applied Intelligence and Analytics for Social Innovation*  - by the  team (Anna De Liddo, and Michelle Bachler) at the Open University. We are indebted to Harriett Cornish for graphic design.

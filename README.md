@@ -1,9 +1,9 @@
 ![LiteMap Logo](docs/images/litemap-logo.png)
 
-> **Important**
+> [!IMPORTANT]
 > This code base was developed as part of research conducted at the Knowledge Media Institute at The Open University. This code base is no longer in active development. The majority of the code was originally developed between 2012 and 2015 with various updates and tweaks over the following years, so a lot of the code is old in style and development practices.
 
-> **Warning**
+> [!WARNING]  
 > Some of the documentation in the `docs` folder may be out of date.
 
 ## License

@@ -115,7 +115,7 @@
 	</head>
 	<body <?php echo $BODY_ATT; ?> id="cohere-body">
 
-		<div class="alert alert-warning text-center" role="alert" style="margin-top: 20px;">
+		<!-- div class="alert alert-warning text-center" role="alert" style="margin-top: 20px;">
 			<h4 class="alert-heading" style="font-size: 1.3em">⚠️ Important Notice: Site Retirement</h4>
 			<p>
 				It is with a heavy heart that we announce the retirement of this research site after more than a decade of service.
@@ -136,7 +136,7 @@
 			</p>
 			<hr>
 			<p class="mb-0">Thank you for being part of this journey.</p>
-		</div>
+		</div -->
 
 		<div class="alert alert-dark alert-dismissible fade show m-0 fixed-bottom" role="alert" id="cookieConsent" style="display: none;">
 			<div style="display: flex; align-items: center; flex-direction: column;">
